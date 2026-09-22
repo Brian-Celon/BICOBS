@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Taurus Bike</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <!-- Outer Dashboard Frame (Matching Desktop Mockup) -->
+    <div class="dashboard-frame">
+        <div class="dashboard-body">
+
+            <!-- Sidebar (Left Navigation) -->
+            <aside class="sidebar">
+                <!-- Top Brand Banner -->
+                <div class="brand-banner">
+                    <img src="../Pictures/logo.png" alt="Taurus Bike Logo" class="brand-logo">
+                    <span class="brand-name">Taurus Bike</span>
+                </div>
+
+                <!-- Customer Dashboard Header -->
+                <div class="sidebar-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    <span>Customer Dashboard</span>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span class="nav-text">Overview</span>
+                        <span class="badge badge-core">Core</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l2-5h14l2 5"/>
+                            <path d="M21 9v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9"/>
+                            <path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>
+                        </svg>
+                        <span class="nav-text">Shop Products</span>
+                        <span class="badge badge-core">Core</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="nav-text">My Cart</span>
+                        <span class="badge badge-core">Core</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        <span class="nav-text">My Orders</span>
+                        <span class="badge badge-core">Core</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2"/>
+                            <line x1="2" y1="10" x2="22" y2="10"/>
+                        </svg>
+                        <span class="nav-text">Payments</span>
+                        <span class="badge badge-core">Core</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span class="nav-text">My Profile</span>
+                        <span class="badge badge-core">Core</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                        <span class="nav-text">Support Tickets</span>
+                        <span class="badge badge-recommended">Recommended</span>
+                    </a>
+                </nav>
+
+                <!-- Sidebar Footer / Logout -->
+                <div class="sidebar-footer">
+                    <a href="#" class="logout-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        <span>Log Out</span>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <h1 class="page-title">My Account Overview</h1>
+
+                <!-- Section: Quick Stats -->
+                <section class="stats-section">
+                    <h2 class="section-title">Quick Stats</h2>
+                    <div class="stats-grid">
+                        <!-- Stat Card 1: Total Orders -->
+                        <div class="dash-card stat-card">
+                            <div class="stat-card-header">
+                                <span class="stat-label">Total Orders</span>
+                                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                </svg>
+                            </div>
+                            <div class="stat-card-body">
+                                <span class="stat-value">12</span>
+                                <!-- Upward Trend Sparkline matching mockup -->
+                                <div class="stat-sparkline-wrapper">
+                                    <svg class="stat-sparkline" viewBox="0 0 100 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#E53935" stop-opacity="0.32"/>
+                                                <stop offset="100%" stop-color="#E53935" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                            <marker id="arrowhead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                <path d="M 0 1 L 9 5 L 0 9 z" fill="#D32F2F" />
+                                            </marker>
+                                        </defs>
+                                        <path d="M 5 35 L 28 35 L 42 24 L 56 30 L 92 8" fill="none" stroke="#D32F2F" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+                                        <path d="M 5 35 L 28 35 L 42 24 L 56 30 L 92 8 L 92 44 L 5 44 Z" fill="url(#trendGradient)"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stat Card 2: Cart Items -->
+                        <div class="dash-card stat-card">
+                            <div class="stat-card-header">
+                                <span class="stat-label">Cart Items</span>
+                                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                            </div>
+                            <div class="stat-card-body">
+                                <span class="stat-value">4</span>
+                                <a href="#" class="btn-red">View Cart</a>
+                            </div>
+                        </div>
+
+                        <!-- Stat Card 3: Unread Messages -->
+                        <div class="dash-card stat-card">
+                            <div class="stat-card-header">
+                                <span class="stat-label">Unread Messages</span>
+                                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    <line x1="7" y1="8" x2="17" y2="8"/>
+                                    <line x1="7" y1="12" x2="13" y2="12"/>
+                                </svg>
+                            </div>
+                            <div class="stat-card-body">
+                                <span class="stat-value">2</span>
+                                <a href="#" class="btn-red">View Tickets</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Recent Orders -->
+                <section class="dash-card recent-orders-card">
+                    <h2 class="section-title">Recent Orders</h2>
+                    <div class="orders-table-wrapper">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="order-id">#TBR1045</td>
+                                    <td>2024-05-15</td>
+                                    <td>
+                                        <span class="status-badge">
+                                            <span class="status-dot"></span>
+                                            Processing
+                                        </span>
+                                    </td>
+                                    <td>$1299.00</td>
+                                    <td><a href="#" class="link-action">View Details</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section: Bottom Grid (Recommended for You & My Saved Addresses) -->
+                <div class="bottom-grid">
+                    <!-- Recommended Products Card -->
+                    <section class="dash-card recommended-card">
+                        <h2 class="section-title">Recommended for You</h2>
+                        <div class="carousel-container">
+                            <button class="carousel-nav-btn" aria-label="Previous product">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6"/>
+                                </svg>
+                            </button>
+                            <div class="products-carousel">
+                                <!-- Product 1: Bike Frame (uses vector preview; replace with your image or placeholder.png anytime) -->
+                                <div class="product-item">
+                                    <div class="product-image-box">
+                                        <img src="../Pictures/bike-frame.svg" alt="Recommended Bike Frame">
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="product-name" title="Recommended for You">Recommended for You</span>
+                                        <span class="product-price">Pp99.00</span>
+                                        <button class="btn-red btn-add-cart">Add to Cart</button>
+                                    </div>
+                                </div>
+
+                                <!-- Product 2: MTB Tire (uses vector preview; replace with your image or placeholder.png anytime) -->
+                                <div class="product-item">
+                                    <div class="product-image-box">
+                                        <img src="../Pictures/bike-tire.svg" alt="Taurus ATTB Green Tree Tire">
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="product-name" title="Tauræ ATTB Dreen Tree">Tauræ ATTB Dreen Tree</span>
+                                        <span class="product-price">Pp50.00</span>
+                                        <button class="btn-red btn-add-cart">Add to Cart</button>
+                                    </div>
+                                </div>
+
+                                <!-- Product 3: Bike Cleats (uses vector preview; replace with your image or placeholder.png anytime) -->
+                                <div class="product-item">
+                                    <div class="product-image-box">
+                                        <img src="../Pictures/bike-pedal.svg" alt="Taurus Bike & Black Cleats">
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="product-name" title="Taurus Bike & Blac Cles">Taurus Bike & Blac Cles</span>
+                                        <span class="product-price">Pp90.00</span>
+                                        <button class="btn-red btn-add-cart">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-nav-btn" aria-label="Next product">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Saved Addresses Card -->
+                    <section class="dash-card addresses-card">
+                        <h2 class="section-title">My Saved Addresses</h2>
+                        <div class="addresses-content">
+                            <div class="address-row">
+                                <div class="address-col">
+                                    <strong>Shipping Addresses</strong>
+                                    1991 Roat State<br>
+                                    5425 Woriseld Sat<br>
+                                    1444 Sadn. 19491
+                                </div>
+                                <div class="address-col">
+                                    <strong>Billing Addresses</strong>
+                                    3001 Roat State<br>
+                                    5281 Wierifeld Ste<br>
+                                    Viest Bartor 11501
+                                </div>
+                            </div>
+                            <div class="address-single">
+                                <strong>Billing Addressee</strong>
+                                2050 Roat State<br>
+                                1235 Htanriston St<br>
+                                Norh Brews 12292
+                            </div>
+                        </div>
+                        <div class="addresses-footer">
+                            <a href="#" class="manage-addresses-link">Manage Addresses</a>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <!-- Bottom Footer Bar (Info / Contact Strip) -->
+        <footer class="dashboard-footer">
+            <a href="#" class="footer-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Taurus Bike/cale.tn</span>
+            </a>
+            <a href="tel:2024-0541" class="footer-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                <span>2024-0541</span>
+            </a>
+            <a href="#" class="footer-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>Contact Info Information</span>
+            </a>
+            <a href="#" class="footer-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>Manage Contact</span>
+            </a>
+        </footer>
+    </div>
+
+    <!-- Optional JS Script -->
+    <script src="../js/app.js"></script>
+</body>
+</html>

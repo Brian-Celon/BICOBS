@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 120" width="100%" height="100%">
+  <!-- Bike Frame Illustration -->
+  <defs>
+    <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="50%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <!-- Dropouts and BB -->
+  <circle cx="35" cy="85" r="5" fill="#475569" />
+  <circle cx="85" cy="85" r="7" fill="#334155" />
+  <circle cx="145" cy="35" r="5" fill="#475569" />
+  <!-- Seatstay -->
+  <line x1="35" y1="85" x2="80" y2="40" stroke="url(#frameGrad)" stroke-width="5" stroke-linecap="round" />
+  <!-- Chainstay -->
+  <line x1="35" y1="85" x2="85" y2="85" stroke="url(#frameGrad)" stroke-width="5.5" stroke-linecap="round" />
+  <!-- Seat Tube -->
+  <line x1="85" y1="85" x2="78" y2="30" stroke="url(#frameGrad)" stroke-width="6.5" stroke-linecap="round" />
+  <!-- Top Tube -->
+  <line x1="78" y1="40" x2="140" y2="35" stroke="url(#frameGrad)" stroke-width="6" stroke-linecap="round" />
+  <!-- Down Tube -->
+  <line x1="85" y1="85" x2="142" y2="40" stroke="url(#frameGrad)" stroke-width="8" stroke-linecap="round" />
+  <!-- Head Tube -->
+  <line x1="140" y1="30" x2="144" y2="48" stroke="url(#frameGrad)" stroke-width="8" stroke-linecap="round" />
+  <!-- Seatpost stub -->
+  <line x1="78" y1="30" x2="76" y2="20" stroke="#64748b" stroke-width="4.5" stroke-linecap="round" />
+</svg>
