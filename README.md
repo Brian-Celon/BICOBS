@@ -41,6 +41,12 @@ This project is developed as part of the requirements for the Bachelor of Scienc
 
 ---
 
+## 🎨 UI & UX Design
+- **Figma Design File:** [Taurus Landing Page (Figma Link)](https://www.figma.com/design/AkZWOM7c2dQ0Xr9MVoSpak/Taurus_Landing_Page?node-id=0-1&t=PIKTSLDurRydHRe9-1)
+![BICOBS UI Design](Docs/Design/Figma%20Design%20of%20System%20Website.png)
+
+
+
 ## 👥 Project Members
 The names and designated roles of the case study team members are listed below:
 
