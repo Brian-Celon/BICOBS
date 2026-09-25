@@ -1,4 +1,4 @@
-# Dashboard Project Rules and Conversations
+# Dashboard Project Rules
 
 ## Protect existing code
 Do not delete, overwrite, or rewrite existing code unless explicitly authorized by the user or required for the assigned feature.
@@ -58,3 +58,50 @@ All HTML IDs, classes, and other attributes must use **snake_case**.
 <div id="inventory_container" class="product_card">
   <h2 class="product_title">Product Name</h2>
 </div>
+
+
+### Responsive Design & Screen Maximization
+
+**Screen Size Compatibility:** All system pages, dashboards, components, and features must fully utilize the available screen space and be responsive across all screen sizes, including desktop monitors, laptops, tablets, and mobile devices. The layout must adapt dynamically to different screen resolutions and aspect ratios without breaking, overflowing, or hiding essential content.
+
+* Use responsive layouts that adjust automatically based on the available viewport width and height.
+* Ensure the system uses the available screen space efficiently without unnecessary fixed-width containers or excessive empty space.
+* Support common screen resolutions, including small laptop screens, large desktop monitors, tablets, and mobile devices.
+* Prevent horizontal scrolling unless it is intentionally required for specific content, such as data tables.
+* Ensure navigation bars, sidebars, cards, forms, tables, and other UI components adapt appropriately to different screen sizes.
+* Use CSS media queries, flexible layouts, and responsive sizing where necessary.
+* Do not design features exclusively for a single screen resolution or device.
+* Preserve usability, readability, and accessibility across supported screen sizes.
+* Test every developed feature at different viewport widths before considering it complete.
+* Maintain consistency with the existing system design and do not modify unrelated features or layouts without authorization.
+
+**Screen Maximization & Layout Integrity:**
+
+* The system must maximize the available viewport space when appropriate, ensuring that pages utilize the full available width and height without unnecessary empty areas.
+* **Do not force the interface to stretch beyond its usable dimensions or use fixed full-screen sizes that cause content to overflow.** The system must maximize the available screen space on large monitors while allowing content to reflow, resize, or stack naturally on smaller screens.
+* Avoid excessive use of fixed widths, fixed heights, and rigid positioning that can cause layout breaks on different screen sizes.
+* Use responsive CSS units, flexible containers, and appropriate maximum and minimum dimensions to maintain a stable layout.
+* Ensure that maximizing the interface does not cause essential content, buttons, forms, navigation, or information to become inaccessible or hidden.
+* Every feature must adapt to the available viewport rather than relying on a specific screen resolution.
+
+**Implementation Requirement:** Every AI developer must ensure that their assigned feature is fully responsive and integrates seamlessly with the overall BICOBS system. The feature must not cause layout breaks, overflow issues, or inconsistent sizing when viewed on different devices or screen resolutions. The AI must test the feature at multiple viewport sizes before considering it complete and must not modify unrelated features or layouts without authorization.
+
+### Semantic HTML & Structured Markup
+
+**Semantic Tag Usage:** All AI developers must use appropriate semantic HTML5 elements when developing system pages, components, and features. HTML elements must accurately represent the meaning and purpose of their content instead of relying solely on generic `<div>` and `<span>` elements. The goal is to maintain a well-structured, accessible, readable, and maintainable codebase across the entire TaurOS system.
+
+* Use semantic HTML elements whenever applicable, such as `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, and `<footer>`.
+* Use appropriate heading elements (`<h1>` through `<h6>`) to establish a logical content hierarchy. Do not use headings solely for visual styling.
+* Use `<button>` for actions and `<a>` for navigation links. Do not use generic `<div>` or `<span>` elements as substitutes for interactive controls.
+* Use semantic form elements, including `<form>`, `<label>`, `<input>`, `<select>`, `<textarea>`, and `<button>`, where appropriate.
+* Use lists (`<ul>`, `<ol>`, and `<li>`) for groups of related items that represent lists, such as navigation menus or product categories.
+* Use `<table>`, `<thead>`, `<tbody>`, `<th>`, and `<td>` appropriately when displaying structured tabular data, such as inventory records, sales reports, and transaction details.
+* Use `<section>` and `<article>` only when they represent meaningful content groupings. Do not add semantic elements unnecessarily.
+* Maintain proper HTML nesting and ensure that each element is used according to its intended purpose.
+* Avoid using generic containers when a suitable semantic HTML element exists.
+* Ensure semantic elements do not interfere with the existing design, responsiveness, or functionality of the system.
+* Use ARIA attributes only when necessary to supplement native HTML semantics. Do not use ARIA as a replacement for appropriate native HTML elements.
+* Maintain consistency in semantic markup across all feature branches and integrate new features without unnecessarily changing unrelated components.
+
+**Implementation Requirement:** Every AI developer must prioritize semantic HTML when creating or modifying frontend features. Before considering a feature complete, the AI must verify that HTML elements accurately represent their content and functionality, interactive components are accessible, and the markup does not introduce unnecessary structural or accessibility issues.
+
