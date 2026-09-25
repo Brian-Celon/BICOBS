@@ -393,3 +393,6 @@ body {
         border-bottom: 1px solid #ddd;
     }
 }
+
+/* remove list styling for semantic uls */
+ul.nav_list, ul.products_scroll { list-style: none; padding: 0; margin: 0; }

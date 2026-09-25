@@ -29,55 +29,71 @@
 
             <!-- navigation links -->
             <nav class="sidebar_nav">
-                <a href="#" class="nav_item active">
-                    <div class="nav_item_left">
-                        <i class="fas fa-home"></i>
-                        <span>Overview</span>
-                    </div>
-                    <span class="nav_badge">Core</span>
-                </a>
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>Shop Products</span>
-                    </div>
-                    <span class="nav_badge">Core</span>
-                </a>
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>My Cart</span>
-                    </div>
-                    <span class="nav_badge">Core</span>
-                </a>
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-box"></i>
-                        <span>My Orders</span>
-                    </div>
-                    <span class="nav_badge">Core</span>
-                </a>
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-credit-card"></i>
-                        <span>Payments</span>
-                    </div>
-                    <span class="nav_badge">Core</span>
-                </a>
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-user"></i>
-                        <span>My Profile</span>
-                    </div>
-                    <span class="nav_badge">Core</span>
-                </a>
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-comment-dots"></i>
-                        <span>Support Tickets</span>
-                    </div>
-                    <span class="nav_badge badge_recommended">Recommended</span>
-                </a>
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item active" target="_self">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                            <span class="nav_badge">Core</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="products.html" class="nav_item" target="_self">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Shop Products</span>
+                            </div>
+                            <span class="nav_badge">Core</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="nav_badge">Core</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                            <span class="nav_badge">Core</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                            <span class="nav_badge">Core</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <span class="nav_badge">Core</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                            <span class="nav_badge badge_recommended">Recommended</span>
+                        </a>
+                    </li>
+                </ul>
             </nav>
 
             <!-- logout section -->
@@ -101,36 +117,36 @@
             <section class="stats_section">
                 <h3 class="section_title">Quick Stats</h3>
                 <div class="stats_grid">
-                    <div class="stat_card">
+                    <article class="stat_card">
                         <div class="stat_card_top">
-                            <span class="stat_label">Total Orders</span>
+                            <h4 class="stat_label">Total Orders</h4>
                             <i class="fas fa-box stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <span class="stat_value">12</span>
+                            <p class="stat_value">12</p>
                             <i class="fas fa-chart-line stat_trend"></i>
                         </div>
-                    </div>
-                    <div class="stat_card">
+                    </article>
+                    <article class="stat_card">
                         <div class="stat_card_top">
-                            <span class="stat_label">Cart Items</span>
+                            <h4 class="stat_label">Cart Items</h4>
                             <i class="fas fa-shopping-cart stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <span class="stat_value">4</span>
+                            <p class="stat_value">4</p>
                             <button class="action_button">View Cart</button>
                         </div>
-                    </div>
-                    <div class="stat_card">
+                    </article>
+                    <article class="stat_card">
                         <div class="stat_card_top">
-                            <span class="stat_label">Unread Messages</span>
+                            <h4 class="stat_label">Unread Messages</h4>
                             <i class="fas fa-comments stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <span class="stat_value">2</span>
+                            <p class="stat_value">2</p>
                             <button class="action_button">View Tickets</button>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </section>
 
@@ -162,46 +178,46 @@
             </section>
 
             <!-- bottom split section -->
-            <section class="bottom_section">
+            <div class="bottom_section">
                 <!-- recommended products -->
-                <div class="recommended_container">
+                <section class="recommended_container">
                     <h3 class="section_title">Recommended for You</h3>
-                    <div class="products_scroll">
-                        <div class="product_card">
+                    <ul class="products_scroll">
+                        <li class="product_card">
                             <div class="product_image_placeholder"><i class="fas fa-bicycle"></i></div>
-                            <span class="product_name">Recommended for You</span>
-                            <span class="product_price">Pp99.00</span>
+                            <h4 class="product_name">Recommended for You</h4>
+                            <p class="product_price">Pp99.00</p>
                             <button class="action_button">Add to Cart</button>
-                        </div>
-                        <div class="product_card">
+                        </li>
+                        <li class="product_card">
                             <div class="product_image_placeholder"><i class="fas fa-life-ring"></i></div>
-                            <span class="product_name">Taure ATTB Dreen Tree</span>
-                            <span class="product_price">Pp50.00</span>
+                            <h4 class="product_name">Taure ATTB Dreen Tree</h4>
+                            <p class="product_price">Pp50.00</p>
                             <button class="action_button">Add to Cart</button>
-                        </div>
-                        <div class="product_card">
+                        </li>
+                        <li class="product_card">
                             <div class="product_image_placeholder"><i class="fas fa-cogs"></i></div>
-                            <span class="product_name">Taurus Bikes Blac Cles</span>
-                            <span class="product_price">Pp90.00</span>
+                            <h4 class="product_name">Taurus Bikes Blac Cles</h4>
+                            <p class="product_price">Pp90.00</p>
                             <button class="action_button">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
+                        </li>
+                    </ul>
+                </section>
 
                 <!-- saved addresses -->
-                <div class="addresses_container">
+                <section class="addresses_container">
                     <h3 class="section_title">My Saved Addresses</h3>
-                    <div class="address_block">
-                        <span class="address_label">Shipping Address</span>
+                    <address class="address_block">
+                        <h4 class="address_label">Shipping Address</h4>
                         <p class="address_text">1991 Roat State<br>$425 Wonseld Sat<br>1444 Sadn, 19491</p>
-                    </div>
-                    <div class="address_block">
-                        <span class="address_label">Billing Address</span>
+                    </address>
+                    <address class="address_block">
+                        <h4 class="address_label">Billing Address</h4>
                         <p class="address_text">2050 Roat State<br>1235 Htoriston St<br>Norh Brews 12292</p>
-                    </div>
+                    </address>
                     <a href="#" class="action_link">Manage Addresses</a>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <!-- footer -->
             <footer class="dashboard_footer">
