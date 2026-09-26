@@ -6,25 +6,37 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
 /* main body layout with flex column for sticky footer */
 body {
     background-color: #e9edf2;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
     color: #333333;
 }
 
 /* global top navigation bar */
 .top_navbar {
+    width: 100% !important;
     background-color: #8b1e28;
     color: #ffffff;
     padding: 12px 30px;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 /* top nav left section holding logo and portal label */
@@ -1064,29 +1076,54 @@ body {
 
 /* responsive media queries for tablet and mobile */
 @media (max-width: 900px) {
-    /* stack sidebar and main content vertically */
-    .dashboard_layout {
-        flex-direction: column;
-        padding: 15px;
+    body {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
     }
-    
-    /* full width sidebar on mobile */
-    .sidebar_container {
-        width: 100%;
-        min-height: auto;
-    }
-    
-    /* top nav stack on mobile */
+
+    /* top nav full width horizontal bar across top */
     .top_navbar {
-        flex-direction: column;
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch;
         gap: 12px;
-        padding: 15px;
+        padding: 15px 20px;
+        box-sizing: border-box;
     }
     
+    .top_nav_left {
+        justify-content: space-between;
+        width: 100%;
+    }
+
     /* search bar full width */
     .top_nav_center {
         width: 100%;
         padding: 0;
+    }
+
+    .top_nav_right {
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    /* stack sidebar and main content vertically */
+    .dashboard_layout {
+        width: 100% !important;
+        flex-direction: column !important;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+    
+    /* full width sidebar on mobile */
+    .sidebar_container {
+        width: 100% !important;
+        min-height: auto;
+    }
+
+    .main_content {
+        width: 100% !important;
     }
 }
 
