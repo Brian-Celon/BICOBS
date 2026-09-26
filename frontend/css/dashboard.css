@@ -1705,3 +1705,220 @@ body {
     font-size: 14px;
 }
 
+/* User Avatar Clickable Link Styling */
+.user_avatar {
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.user_avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* Empty Cart State */
+.cart_empty_state {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    color: #666666;
+    width: 100%;
+}
+.cart_empty_icon {
+    font-size: 50px;
+    color: #cccccc;
+    margin-bottom: 16px;
+}
+.cart_empty_state h3 {
+    font-size: 20px;
+    color: #333333;
+    margin-bottom: 8px;
+}
+.cart_empty_state p {
+    font-size: 14px;
+    color: #777777;
+}
+
+/* Quantity Control Buttons & Delete Button */
+.qty_btn {
+    user-select: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+.qty_btn:hover {
+    background-color: #e2e8f0;
+}
+.delete_btn {
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+.delete_btn:hover {
+    color: #dc2626 !important;
+    transform: scale(1.1);
+}
+
+/* Cart item removal transition */
+.cart_item_card.removing {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Discount Text Styling */
+.discount_text {
+    color: #16a34a !important;
+    font-weight: 600;
+}
+
+/* Checkout Modal Custom Content */
+.checkout_modal_container {
+    max-width: 540px !important;
+    width: 100%;
+}
+.checkout_items_box {
+    margin-bottom: 18px;
+}
+.checkout_box_title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.checkout_items_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 160px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8fafc;
+}
+.checkout_item_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+.checkout_item_row:last-child {
+    border-bottom: none;
+}
+.checkout_item_name {
+    font-weight: 500;
+    color: #1e293b;
+    flex: 1;
+    padding-right: 12px;
+}
+.checkout_item_qty {
+    color: #64748b;
+    margin-right: 12px;
+    font-weight: 500;
+}
+.checkout_item_price {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* Discount Code Section */
+.discount_section {
+    margin: 18px 0;
+    background-color: #f1f5f9;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1;
+}
+.discount_input_group {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+.discount_input {
+    flex: 1;
+    background-color: #ffffff !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.btn_apply_discount {
+    background-color: #8b1e28;
+    color: #ffffff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s ease;
+}
+.btn_apply_discount:hover {
+    background-color: #6e151e;
+}
+.discount_msg {
+    font-size: 12px;
+    margin-top: 8px;
+    font-weight: 500;
+}
+.discount_msg.success {
+    color: #16a34a;
+}
+.discount_msg.error {
+    color: #dc2626;
+}
+
+/* Checkout Totals Box */
+.checkout_totals_box {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+}
+.checkout_totals_box .summary_row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #475569;
+}
+.checkout_totals_box .total_row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #cbd5e1;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* Order Success Modal */
+.text_center {
+    text-align: center;
+}
+.success_icon_box {
+    margin: 10px auto 16px auto;
+}
+.success_icon {
+    font-size: 56px;
+    color: #16a34a;
+}
+.success_summary_box {
+    margin: 20px 0;
+    padding: 16px;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.8;
+}
+.flex_center {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+

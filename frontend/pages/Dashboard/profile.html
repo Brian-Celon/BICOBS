@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taurus Bike Store - Support Tickets</title>
+    <title>Taurus Bike Store - My Profile</title>
     <!-- link to designated dashboard styles -->
     <link rel="stylesheet" href="/frontend/css/dashboard.css">
     <!-- external fontawesome for icons -->
@@ -36,7 +36,7 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart_badge_top">4</span>
             </a>
-            <div class="user_avatar">JD</div>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
         </div>
 
         <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
@@ -103,7 +103,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="profile.html" class="nav_item">
+                        <a href="profile.html" class="nav_item active">
                             <div class="nav_item_left">
                                 <i class="fas fa-user"></i>
                                 <span>My Profile</span>
@@ -111,7 +111,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="support.html" class="nav_item active">
+                        <a href="support.html" class="nav_item">
                             <div class="nav_item_left">
                                 <i class="fas fa-comment-dots"></i>
                                 <span>Support Tickets</span>
@@ -134,44 +134,67 @@
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
                 <div>
-                    <h1 class="header_title">Customer Support Tickets</h1>
-                    <p class="header_subtitle">Need help with parts assembly or shipping? Open a ticket with our support team.</p>
-                </div>
-                <div>
-                    <a href="#" class="action_button" id="btn_open_ticket_modal">
-                        <i class="fas fa-plus"></i> Create New Ticket
-                    </a>
+                    <h1 class="header_title">My Profile Settings</h1>
+                    <p class="header_subtitle">Update your personal account credentials and notification preferences.</p>
                 </div>
             </header>
 
-            <!-- support tickets list section -->
-            <section>
-                <ul class="ticket_list">
-                    <!-- ticket 1 -->
-                    <li class="ticket_card">
-                        <div class="ticket_info">
-                            <div class="ticket_title_row">
-                                <h4 class="ticket_title">#TCK-4091: Inquiry on Frame Torque Specifications</h4>
-                                <span class="ticket_status_open">Open</span>
-                            </div>
-                            <p class="ticket_meta">Created on 2026-05-20 • 3 messages in thread</p>
+            <!-- profile form -->
+            <form id="profile_form" class="profile_form">
+                <!-- personal information section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Personal Information</h3>
+                    <div class="form_row_two">
+                        <div class="form_group">
+                            <label class="form_label" for="full_name_input">Full Name</label>
+                            <input class="form_input" type="text" id="full_name_input" value="Juan Dela Cruz" required>
                         </div>
-                        <a href="#" class="btn_open_chat">Open Chat</a>
-                    </li>
+                        <div class="form_group">
+                            <label class="form_label" for="email_address_input">Email Address</label>
+                            <input class="form_input" type="email" id="email_address_input" value="juan@taurusbike.ph" required>
+                        </div>
+                    </div>
+                    <div class="form_group" style="margin-bottom: 0;">
+                        <label class="form_label" for="phone_number_input">Phone Number</label>
+                        <input class="form_input" type="tel" id="phone_number_input" value="+63 917 555 1234">
+                    </div>
+                </section>
 
-                    <!-- ticket 2 -->
-                    <li class="ticket_card">
-                        <div class="ticket_info">
-                            <div class="ticket_title_row">
-                                <h4 class="ticket_title">#TCK-3882: Shipping delay regarding order #TBR1040</h4>
-                                <span class="ticket_status_resolved">Resolved</span>
-                            </div>
-                            <p class="ticket_meta">Created on 2026-04-29 • 5 messages in thread</p>
+                <!-- location & address section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Location & Address Details</h3>
+                    <div class="form_group">
+                        <label class="form_label" for="shipping_address_input">Shipping Location / Address</label>
+                        <input class="form_input" type="text" id="shipping_address_input" value="1991 Roat State, Sector 4, Metro Manila, 19491" required>
+                    </div>
+                    <div class="form_group" style="margin-bottom: 0;">
+                        <label class="form_label" for="billing_address_input">Billing Location / Address</label>
+                        <input class="form_input" type="text" id="billing_address_input" value="2050 Roat State, Sector 4, Metro Manila, 19491">
+                    </div>
+                </section>
+
+                <!-- change password section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Change Password</h3>
+                    <div class="form_row_two" style="margin-bottom: 0;">
+                        <div class="form_group" style="margin-bottom: 0;">
+                            <label class="form_label" for="new_password_input">New Password</label>
+                            <input class="form_input" type="password" id="new_password_input" value="password123">
                         </div>
-                        <a href="#" class="btn_open_chat">Open Chat</a>
-                    </li>
-                </ul>
-            </section>
+                        <div class="form_group" style="margin-bottom: 0;">
+                            <label class="form_label" for="confirm_password_input">Confirm New Password</label>
+                            <input class="form_input" type="password" id="confirm_password_input" value="password123">
+                        </div>
+                    </div>
+                </section>
+
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <button type="submit" class="btn_save_changes">Save Changes</button>
+                    <span id="profile_save_toast" style="display: none; color: #137333; font-weight: 600; font-size: 14px; background: #e6f9ed; padding: 8px 14px; border-radius: 6px;">
+                        <i class="fas fa-check-circle"></i> Profile & Location updated successfully!
+                    </span>
+                </div>
+            </form>
         </main>
     </div>
 
@@ -194,50 +217,6 @@
             <span>Manage Contact</span>
         </div>
     </footer>
-
-    <!-- Create Support Ticket Modal -->
-    <div id="ticket_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="ticket_modal_title">
-        <div class="modal_container ticket_modal_container">
-            <!-- Modal Top Header -->
-            <div class="modal_header_row space_between">
-                <h3 id="ticket_modal_title" class="modal_title">Create Support Ticket</h3>
-                <button type="button" class="modal_close_btn" id="close_ticket_modal_x" aria-label="Close modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <!-- Ticket Form -->
-            <form id="create_ticket_form" class="modal_form_body">
-                <div class="form_group">
-                    <label class="form_label" for="ticket_category">ISSUE CATEGORY</label>
-                    <select id="ticket_category" class="form_select" required>
-                        <option value="Warranty / Repairs" selected>Warranty / Repairs</option>
-                        <option value="Shipping / Delivery">Shipping / Delivery</option>
-                        <option value="Product Information">Product Information</option>
-                        <option value="Billing & Payment">Billing & Payment</option>
-                        <option value="Technical Support">Technical Support</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <div class="form_group">
-                    <label class="form_label" for="ticket_subject">SUBJECT / TITLE</label>
-                    <input type="text" id="ticket_subject" class="form_input" placeholder="Briefly describe your issue..." required>
-                </div>
-
-                <div class="form_group">
-                    <label class="form_label" for="ticket_description">DESCRIPTION & DETAILS</label>
-                    <textarea id="ticket_description" class="form_textarea" placeholder="Provide as much detail as possible (bike model, serial #, pictures if any)..." rows="4" required></textarea>
-                </div>
-
-                <!-- Modal Actions -->
-                <div class="modal_actions">
-                    <button type="button" class="btn_modal_cancel" id="close_ticket_modal_cancel">Cancel</button>
-                    <button type="submit" class="btn_modal_submit">Submit Ticket</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- main dashboard script -->
     <script src="/frontend/js/dashboard.js"></script>

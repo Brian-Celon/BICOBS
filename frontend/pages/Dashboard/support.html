@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taurus Bike Store - My Order History</title>
+    <title>Taurus Bike Store - Support Tickets</title>
     <!-- link to designated dashboard styles -->
     <link rel="stylesheet" href="/frontend/css/dashboard.css">
     <!-- external fontawesome for icons -->
@@ -36,7 +36,7 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart_badge_top">4</span>
             </a>
-            <div class="user_avatar">JD</div>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
         </div>
 
         <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
@@ -87,7 +87,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="myorders.html" class="nav_item active">
+                        <a href="myorders.html" class="nav_item">
                             <div class="nav_item_left">
                                 <i class="fas fa-box"></i>
                                 <span>My Orders</span>
@@ -111,7 +111,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="support.html" class="nav_item">
+                        <a href="support.html" class="nav_item active">
                             <div class="nav_item_left">
                                 <i class="fas fa-comment-dots"></i>
                                 <span>Support Tickets</span>
@@ -134,73 +134,43 @@
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
                 <div>
-                    <h1 class="header_title">My Order History</h1>
-                    <p class="header_subtitle">Track and view detailed statuses of all your bike purchases.</p>
+                    <h1 class="header_title">Customer Support Tickets</h1>
+                    <p class="header_subtitle">Need help with parts assembly or shipping? Open a ticket with our support team.</p>
                 </div>
                 <div>
-                    <select class="filter_select">
-                        <option>All Statuses</option>
-                        <option>Processing</option>
-                        <option>Shipped</option>
-                        <option>Delivered</option>
-                    </select>
+                    <a href="#" class="action_button" id="btn_open_ticket_modal">
+                        <i class="fas fa-plus"></i> Create New Ticket
+                    </a>
                 </div>
             </header>
 
-            <!-- order history table section -->
-            <section class="orders_section" style="padding: 0;">
-                <div class="table_container">
-                    <table class="orders_table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Date</th>
-                                <th>Items</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>#TBR1045</strong></td>
-                                <td>2026-05-15</td>
-                                <td>Shimano Upgrade Kit, Tire</td>
-                                <td>
-                                    <span class="status_pill status_processing">
-                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Processing
-                                    </span>
-                                </td>
-                                <td><strong>₱11,000</strong></td>
-                                <td><a href="#" class="action_link">View Details</a></td>
-                            </tr>
-                            <tr>
-                                <td><strong>#TBR1040</strong></td>
-                                <td>2026-04-28</td>
-                                <td>Sagmit Carbon Frame</td>
-                                <td>
-                                    <span class="status_pill status_shipped">
-                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Shipped
-                                    </span>
-                                </td>
-                                <td><strong>₱19,900</strong></td>
-                                <td><a href="#" class="action_link">View Details</a></td>
-                            </tr>
-                            <tr>
-                                <td><strong>#TBR1012</strong></td>
-                                <td>2026-03-10</td>
-                                <td>Cleats Shoe, Pedals</td>
-                                <td>
-                                    <span class="status_pill status_delivered">
-                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Delivered
-                                    </span>
-                                </td>
-                                <td><strong>₱17,500</strong></td>
-                                <td><a href="#" class="action_link">View Details</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- support tickets list section -->
+            <section>
+                <ul class="ticket_list">
+                    <!-- ticket 1 -->
+                    <li class="ticket_card">
+                        <div class="ticket_info">
+                            <div class="ticket_title_row">
+                                <h4 class="ticket_title">#TCK-4091: Inquiry on Frame Torque Specifications</h4>
+                                <span class="ticket_status_open">Open</span>
+                            </div>
+                            <p class="ticket_meta">Created on 2026-05-20 • 3 messages in thread</p>
+                        </div>
+                        <a href="#" class="btn_open_chat">Open Chat</a>
+                    </li>
+
+                    <!-- ticket 2 -->
+                    <li class="ticket_card">
+                        <div class="ticket_info">
+                            <div class="ticket_title_row">
+                                <h4 class="ticket_title">#TCK-3882: Shipping delay regarding order #TBR1040</h4>
+                                <span class="ticket_status_resolved">Resolved</span>
+                            </div>
+                            <p class="ticket_meta">Created on 2026-04-29 • 5 messages in thread</p>
+                        </div>
+                        <a href="#" class="btn_open_chat">Open Chat</a>
+                    </li>
+                </ul>
             </section>
         </main>
     </div>
@@ -224,6 +194,50 @@
             <span>Manage Contact</span>
         </div>
     </footer>
+
+    <!-- Create Support Ticket Modal -->
+    <div id="ticket_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="ticket_modal_title">
+        <div class="modal_container ticket_modal_container">
+            <!-- Modal Top Header -->
+            <div class="modal_header_row space_between">
+                <h3 id="ticket_modal_title" class="modal_title">Create Support Ticket</h3>
+                <button type="button" class="modal_close_btn" id="close_ticket_modal_x" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Ticket Form -->
+            <form id="create_ticket_form" class="modal_form_body">
+                <div class="form_group">
+                    <label class="form_label" for="ticket_category">ISSUE CATEGORY</label>
+                    <select id="ticket_category" class="form_select" required>
+                        <option value="Warranty / Repairs" selected>Warranty / Repairs</option>
+                        <option value="Shipping / Delivery">Shipping / Delivery</option>
+                        <option value="Product Information">Product Information</option>
+                        <option value="Billing & Payment">Billing & Payment</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_subject">SUBJECT / TITLE</label>
+                    <input type="text" id="ticket_subject" class="form_input" placeholder="Briefly describe your issue..." required>
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_description">DESCRIPTION & DETAILS</label>
+                    <textarea id="ticket_description" class="form_textarea" placeholder="Provide as much detail as possible (bike model, serial #, pictures if any)..." rows="4" required></textarea>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="modal_actions">
+                    <button type="button" class="btn_modal_cancel" id="close_ticket_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_modal_submit">Submit Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- main dashboard script -->
     <script src="/frontend/js/dashboard.js"></script>

@@ -36,7 +36,7 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart_badge_top">4</span>
             </a>
-            <div class="user_avatar">JD</div>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
         </div>
 
         <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
@@ -141,65 +141,65 @@
 
             <!-- cart items section -->
             <section class="cart_items_section">
-                <ul class="cart_item_list">
-                    <li class="cart_item_card">
+                <ul class="cart_item_list" id="cart_item_list">
+                    <li class="cart_item_card" data-unit-price="9500">
                         <div class="item_image_box">Shimano</div>
                         <div class="item_details">
                             <h4 class="item_name">Shimano SLX M7100 12spd Upgrade Kit</h4>
-                            <p class="item_price">₱9,500</p>
+                            <p class="item_price" data-unit-price="9500">₱9,500</p>
                         </div>
                         <div class="item_actions">
                             <div class="qty_control">
-                                <button class="qty_btn">-</button>
+                                <button type="button" class="qty_btn qty_minus" aria-label="Decrease quantity">-</button>
                                 <span class="qty_value">1</span>
-                                <button class="qty_btn">+</button>
+                                <button type="button" class="qty_btn qty_plus" aria-label="Increase quantity">+</button>
                             </div>
-                            <button class="delete_btn"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="delete_btn" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                         </div>
                     </li>
-                    <li class="cart_item_card">
+                    <li class="cart_item_card" data-unit-price="16000">
                         <div class="item_image_box">Shoes</div>
                         <div class="item_details">
                             <h4 class="item_name">Shimano RC903 Sphyre Cleats Shoe</h4>
-                            <p class="item_price">₱16,000</p>
+                            <p class="item_price" data-unit-price="16000">₱16,000</p>
                         </div>
                         <div class="item_actions">
                             <div class="qty_control">
-                                <button class="qty_btn">-</button>
+                                <button type="button" class="qty_btn qty_minus" aria-label="Decrease quantity">-</button>
                                 <span class="qty_value">1</span>
-                                <button class="qty_btn">+</button>
+                                <button type="button" class="qty_btn qty_plus" aria-label="Increase quantity">+</button>
                             </div>
-                            <button class="delete_btn"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="delete_btn" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                         </div>
                     </li>
-                    <li class="cart_item_card">
+                    <li class="cart_item_card" data-unit-price="19900">
                         <div class="item_image_box">Frame</div>
                         <div class="item_details">
                             <h4 class="item_name">2026 The New Sagmit Evolution Carbon MTB Frame</h4>
-                            <p class="item_price">₱19,900</p>
+                            <p class="item_price" data-unit-price="19900">₱19,900</p>
                         </div>
                         <div class="item_actions">
                             <div class="qty_control">
-                                <button class="qty_btn">-</button>
+                                <button type="button" class="qty_btn qty_minus" aria-label="Decrease quantity">-</button>
                                 <span class="qty_value">1</span>
-                                <button class="qty_btn">+</button>
+                                <button type="button" class="qty_btn qty_plus" aria-label="Increase quantity">+</button>
                             </div>
-                            <button class="delete_btn"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="delete_btn" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                         </div>
                     </li>
-                    <li class="cart_item_card">
+                    <li class="cart_item_card" data-unit-price="1500">
                         <div class="item_image_box">Tire</div>
                         <div class="item_details">
                             <h4 class="item_name">Ardent 29 x 2.25 Tonwall EXO Tubeless Ready</h4>
-                            <p class="item_price">₱1,500</p>
+                            <p class="item_price" data-unit-price="1500">₱1,500</p>
                         </div>
                         <div class="item_actions">
                             <div class="qty_control">
-                                <button class="qty_btn">-</button>
+                                <button type="button" class="qty_btn qty_minus" aria-label="Decrease quantity">-</button>
                                 <span class="qty_value">1</span>
-                                <button class="qty_btn">+</button>
+                                <button type="button" class="qty_btn qty_plus" aria-label="Increase quantity">+</button>
                             </div>
-                            <button class="delete_btn"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="delete_btn" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                         </div>
                     </li>
                 </ul>
@@ -209,20 +209,116 @@
             <section class="order_summary_section">
                 <h3 class="summary_title">Order Summary</h3>
                 <div class="summary_row">
+                    <span>Total Items Ordered</span>
+                    <span class="summary_value" id="cart_total_items">4 items</span>
+                </div>
+                <div class="summary_row">
                     <span>Subtotal</span>
-                    <span class="summary_value">₱46,900</span>
+                    <span class="summary_value" id="cart_subtotal">₱46,900</span>
+                </div>
+                <div class="summary_row" id="cart_discount_row" style="display: none;">
+                    <span>Discount</span>
+                    <span class="summary_value discount_text" id="cart_discount_amount">-₱0</span>
                 </div>
                 <div class="summary_row">
                     <span>Shipping Fee</span>
-                    <span class="summary_value">₱150.00</span>
+                    <span class="summary_value" id="cart_shipping">₱150.00</span>
                 </div>
                 <div class="summary_row total_row">
-                    <span>Total</span>
-                    <span class="summary_value total_price">₱47,050</span>
+                    <span>Total Amount Ordered</span>
+                    <span class="summary_value total_price" id="cart_total_price">₱47,050</span>
                 </div>
-                <button class="checkout_button">Proceed to Checkout</button>
+                <button type="button" class="checkout_button" id="btn_checkout">Proceed to Checkout</button>
             </section>
         </main>
+    </div>
+
+    <!-- Checkout Confirmation Modal -->
+    <div id="checkout_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="checkout_modal_title">
+        <div class="modal_container checkout_modal_container">
+            <div class="modal_header_row space_between">
+                <div class="modal_header_text">
+                    <h3 id="checkout_modal_title" class="modal_title">Confirm Transaction</h3>
+                    <p class="modal_subtitle">Please confirm your transaction details before completing the purchase.</p>
+                </div>
+                <button type="button" class="modal_close_btn" id="close_checkout_modal" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal_card_box">
+                <!-- Order Items Breakdown -->
+                <div class="checkout_items_box">
+                    <h4 class="checkout_box_title"><i class="fas fa-shopping-bag"></i> Selected Items</h4>
+                    <ul class="checkout_items_list" id="checkout_items_preview">
+                        <!-- Dynamically populated -->
+                    </ul>
+                </div>
+
+                <!-- Discount Code Input Option -->
+                <div class="discount_section">
+                    <label class="form_label" for="checkout_discount_input"><i class="fas fa-ticket-alt"></i> DISCOUNT CODE</label>
+                    <div class="discount_input_group">
+                        <input type="text" id="checkout_discount_input" class="form_input discount_input" placeholder="Enter code (e.g. TAURUS10, SAVE500)" autocomplete="off">
+                        <button type="button" class="btn_apply_discount" id="btn_apply_discount">Apply</button>
+                    </div>
+                    <div id="discount_msg" class="discount_msg"></div>
+                </div>
+
+                <!-- Checkout Totals Summary -->
+                <div class="checkout_totals_box">
+                    <div class="summary_row">
+                        <span>Total Items:</span>
+                        <strong id="modal_total_items">4 items</strong>
+                    </div>
+                    <div class="summary_row">
+                        <span>Subtotal:</span>
+                        <strong id="modal_subtotal">₱46,900</strong>
+                    </div>
+                    <div class="summary_row" id="modal_discount_row" style="display: none;">
+                        <span>Discount:</span>
+                        <strong id="modal_discount_amount" class="discount_text">-₱0</strong>
+                    </div>
+                    <div class="summary_row">
+                        <span>Shipping Fee:</span>
+                        <strong id="modal_shipping">₱150.00</strong>
+                    </div>
+                    <div class="summary_row total_row">
+                        <span>Total Amount Ordered:</span>
+                        <strong id="modal_total_price" class="total_price">₱47,050</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal_actions">
+                <button type="button" class="btn_modal_cancel" id="cancel_checkout_btn">Cancel</button>
+                <button type="button" class="btn_modal_submit" id="confirm_checkout_btn">
+                    <i class="fas fa-check-circle"></i> Confirm Transaction
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Success Confirmation Modal -->
+    <div id="order_success_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="success_modal_title">
+        <div class="modal_container checkout_modal_container text_center">
+            <div class="success_icon_box">
+                <i class="fas fa-check-circle success_icon"></i>
+            </div>
+            <h3 id="success_modal_title" class="modal_title">Transaction Completed!</h3>
+            <p class="modal_subtitle">Thank you for your order. Your purchase has been confirmed.</p>
+            
+            <div class="modal_card_box success_summary_box">
+                <p>Transaction Reference: <strong id="success_txn_id">#TXN-884920</strong></p>
+                <p>Total Paid: <strong id="success_total_paid">₱47,050</strong></p>
+                <p>Status: <span class="status_pill status_successful">Paid & Processing</span></p>
+            </div>
+
+            <div class="modal_actions flex_center">
+                <a href="myorders.html" class="btn_modal_submit"><i class="fas fa-box"></i> View My Orders</a>
+                <button type="button" class="btn_modal_cancel" id="close_success_modal">Close</button>
+            </div>
+        </div>
     </div>
 
     <!-- sticky bottom footer -->

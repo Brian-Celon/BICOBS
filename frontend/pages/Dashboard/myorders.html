@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taurus Bike Store - My Profile</title>
+    <title>Taurus Bike Store - My Order History</title>
     <!-- link to designated dashboard styles -->
     <link rel="stylesheet" href="/frontend/css/dashboard.css">
     <!-- external fontawesome for icons -->
@@ -36,7 +36,7 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart_badge_top">4</span>
             </a>
-            <div class="user_avatar">JD</div>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
         </div>
 
         <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
@@ -87,7 +87,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="myorders.html" class="nav_item">
+                        <a href="myorders.html" class="nav_item active">
                             <div class="nav_item_left">
                                 <i class="fas fa-box"></i>
                                 <span>My Orders</span>
@@ -103,7 +103,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="profile.html" class="nav_item active">
+                        <a href="profile.html" class="nav_item">
                             <div class="nav_item_left">
                                 <i class="fas fa-user"></i>
                                 <span>My Profile</span>
@@ -134,67 +134,74 @@
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
                 <div>
-                    <h1 class="header_title">My Profile Settings</h1>
-                    <p class="header_subtitle">Update your personal account credentials and notification preferences.</p>
+                    <h1 class="header_title">My Order History</h1>
+                    <p class="header_subtitle">Track and view detailed statuses of all your bike purchases.</p>
+                </div>
+                <div>
+                    <select class="filter_select">
+                        <option>All Statuses</option>
+                        <option>Processing</option>
+                        <option>Shipped</option>
+                        <option>Delivered</option>
+                    </select>
                 </div>
             </header>
 
-            <!-- profile form -->
-            <form id="profile_form" class="profile_form">
-                <!-- personal information section -->
-                <section class="profile_card">
-                    <h3 class="profile_card_title">Personal Information</h3>
-                    <div class="form_row_two">
-                        <div class="form_group">
-                            <label class="form_label" for="full_name_input">Full Name</label>
-                            <input class="form_input" type="text" id="full_name_input" value="Juan Dela Cruz" required>
-                        </div>
-                        <div class="form_group">
-                            <label class="form_label" for="email_address_input">Email Address</label>
-                            <input class="form_input" type="email" id="email_address_input" value="juan@taurusbike.ph" required>
-                        </div>
-                    </div>
-                    <div class="form_group" style="margin-bottom: 0;">
-                        <label class="form_label" for="phone_number_input">Phone Number</label>
-                        <input class="form_input" type="tel" id="phone_number_input" value="+63 917 555 1234">
-                    </div>
-                </section>
-
-                <!-- location & address section -->
-                <section class="profile_card">
-                    <h3 class="profile_card_title">Location & Address Details</h3>
-                    <div class="form_group">
-                        <label class="form_label" for="shipping_address_input">Shipping Location / Address</label>
-                        <input class="form_input" type="text" id="shipping_address_input" value="1991 Roat State, Sector 4, Metro Manila, 19491" required>
-                    </div>
-                    <div class="form_group" style="margin-bottom: 0;">
-                        <label class="form_label" for="billing_address_input">Billing Location / Address</label>
-                        <input class="form_input" type="text" id="billing_address_input" value="2050 Roat State, Sector 4, Metro Manila, 19491">
-                    </div>
-                </section>
-
-                <!-- change password section -->
-                <section class="profile_card">
-                    <h3 class="profile_card_title">Change Password</h3>
-                    <div class="form_row_two" style="margin-bottom: 0;">
-                        <div class="form_group" style="margin-bottom: 0;">
-                            <label class="form_label" for="new_password_input">New Password</label>
-                            <input class="form_input" type="password" id="new_password_input" value="password123">
-                        </div>
-                        <div class="form_group" style="margin-bottom: 0;">
-                            <label class="form_label" for="confirm_password_input">Confirm New Password</label>
-                            <input class="form_input" type="password" id="confirm_password_input" value="password123">
-                        </div>
-                    </div>
-                </section>
-
-                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                    <button type="submit" class="btn_save_changes">Save Changes</button>
-                    <span id="profile_save_toast" style="display: none; color: #137333; font-weight: 600; font-size: 14px; background: #e6f9ed; padding: 8px 14px; border-radius: 6px;">
-                        <i class="fas fa-check-circle"></i> Profile & Location updated successfully!
-                    </span>
+            <!-- order history table section -->
+            <section class="orders_section" style="padding: 0;">
+                <div class="table_container">
+                    <table class="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#TBR1045</strong></td>
+                                <td>2026-05-15</td>
+                                <td>Shimano Upgrade Kit, Tire</td>
+                                <td>
+                                    <span class="status_pill status_processing">
+                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Processing
+                                    </span>
+                                </td>
+                                <td><strong>₱11,000</strong></td>
+                                <td><a href="#" class="action_link">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TBR1040</strong></td>
+                                <td>2026-04-28</td>
+                                <td>Sagmit Carbon Frame</td>
+                                <td>
+                                    <span class="status_pill status_shipped">
+                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Shipped
+                                    </span>
+                                </td>
+                                <td><strong>₱19,900</strong></td>
+                                <td><a href="#" class="action_link">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TBR1012</strong></td>
+                                <td>2026-03-10</td>
+                                <td>Cleats Shoe, Pedals</td>
+                                <td>
+                                    <span class="status_pill status_delivered">
+                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Delivered
+                                    </span>
+                                </td>
+                                <td><strong>₱17,500</strong></td>
+                                <td><a href="#" class="action_link">View Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </form>
+            </section>
         </main>
     </div>
 

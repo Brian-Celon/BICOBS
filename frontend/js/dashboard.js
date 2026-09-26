@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_ticket_modal();
     setup_global_keyboard();
     setup_profile_sync();
+    setup_profile_navigation();
+    setup_shopping_cart();
 });
 
 /* setup responsive mobile search bar dropdown */
@@ -449,3 +451,343 @@ function setup_global_keyboard() {
         }
     });
 }
+
+/* setup profile navigation to redirect directly to profile.html */
+function setup_profile_navigation() {
+    const avatars = document.querySelectorAll('.user_avatar');
+    avatars.forEach(avatar => {
+        avatar.style.cursor = 'pointer';
+        avatar.addEventListener('click', (e) => {
+            if (!avatar.closest('a')) {
+                window.location.href = 'profile.html';
+            }
+        });
+    });
+}
+
+/* Shopping Cart Interactivity, Quantity Updates, Delete Handling, Totals & Checkout Modal */
+function setup_shopping_cart() {
+    const cartList = document.getElementById('cart_item_list') || document.querySelector('.cart_item_list');
+    const orderSummary = document.querySelector('.order_summary_section');
+
+    if (!cartList && !orderSummary) return;
+
+    // Table of valid discount codes
+    const validDiscounts = {
+        'TAURUS10': { type: 'percent', val: 10, label: '10% OFF' },
+        'TAURUS20': { type: 'percent', val: 20, label: '20% OFF' },
+        'BICOBS15': { type: 'percent', val: 15, label: '15% OFF' },
+        'SAVE500': { type: 'fixed', val: 500, label: '₱500 OFF' },
+        'FREE1000': { type: 'fixed', val: 1000, label: '₱1,000 OFF' }
+    };
+
+    let activeDiscount = null;
+
+    // Helper to compute subtotal and totals from DOM item cards
+    function calculateTotals() {
+        const itemCards = document.querySelectorAll('.cart_item_card');
+        let totalQty = 0;
+        let subtotal = 0;
+        const items = [];
+
+        itemCards.forEach(card => {
+            const nameEl = card.querySelector('.item_name');
+            const priceEl = card.querySelector('.item_price');
+            const qtyEl = card.querySelector('.qty_value');
+
+            if (priceEl && qtyEl) {
+                let unitPrice = parseFloat(card.getAttribute('data-unit-price') || priceEl.getAttribute('data-unit-price'));
+                if (isNaN(unitPrice)) {
+                    unitPrice = parseFloat(priceEl.textContent.replace(/[^0-9.]/g, '')) || 0;
+                    priceEl.setAttribute('data-unit-price', unitPrice);
+                    card.setAttribute('data-unit-price', unitPrice);
+                }
+
+                const qty = parseInt(qtyEl.textContent, 10) || 1;
+                const name = nameEl ? nameEl.textContent.trim() : 'Item';
+
+                totalQty += qty;
+                subtotal += unitPrice * qty;
+                items.push({ name, qty, unitPrice, itemTotal: unitPrice * qty });
+            }
+        });
+
+        const shippingFee = (itemCards.length > 0) ? 150 : 0;
+
+        let discountAmount = 0;
+        if (activeDiscount) {
+            if (activeDiscount.type === 'percent') {
+                discountAmount = (subtotal * activeDiscount.val) / 100;
+            } else if (activeDiscount.type === 'fixed') {
+                discountAmount = Math.min(subtotal, activeDiscount.val);
+            }
+        }
+
+        const total = Math.max(0, subtotal - discountAmount + shippingFee);
+
+        return { itemCardsCount: itemCards.length, totalQty, subtotal, discountAmount, shippingFee, total, items };
+    }
+
+    // Main update UI function for Cart page & badges
+    function updateCartUI() {
+        const data = calculateTotals();
+
+        // Update Order Summary on Cart Page
+        const totalItemsEl = document.getElementById('cart_total_items');
+        const subtotalEl = document.getElementById('cart_subtotal');
+        const discountRowEl = document.getElementById('cart_discount_row');
+        const discountAmtEl = document.getElementById('cart_discount_amount');
+        const shippingEl = document.getElementById('cart_shipping');
+        const totalPriceEl = document.getElementById('cart_total_price');
+
+        if (totalItemsEl) totalItemsEl.textContent = `${data.totalQty} ${data.totalQty === 1 ? 'item' : 'items'}`;
+        if (subtotalEl) subtotalEl.textContent = `₱${data.subtotal.toLocaleString('en-US')}`;
+
+        if (discountRowEl && discountAmtEl) {
+            if (data.discountAmount > 0) {
+                discountRowEl.style.display = 'flex';
+                discountAmtEl.textContent = `-₱${data.discountAmount.toLocaleString('en-US')}`;
+            } else {
+                discountRowEl.style.display = 'none';
+            }
+        }
+
+        if (shippingEl) shippingEl.textContent = `₱${data.shippingFee.toFixed(2)}`;
+        if (totalPriceEl) totalPriceEl.textContent = `₱${data.total.toLocaleString('en-US')}`;
+
+        // Update Top Nav and Sidebar badges
+        const badges = document.querySelectorAll('.cart_badge_top, .badge_green');
+        badges.forEach(badge => {
+            badge.textContent = data.totalQty;
+        });
+
+        // Handle Empty Cart View
+        const cartSection = document.querySelector('.cart_items_section');
+        if (data.itemCardsCount === 0 && cartSection) {
+            let emptyState = document.getElementById('cart_empty_msg');
+            if (!emptyState) {
+                emptyState = document.createElement('div');
+                emptyState.id = 'cart_empty_msg';
+                emptyState.className = 'cart_empty_state';
+                emptyState.innerHTML = `
+                    <i class="fas fa-shopping-cart cart_empty_icon"></i>
+                    <h3>Your Shopping Cart is Empty</h3>
+                    <p>Looks like you haven't added any bike items to your cart yet.</p>
+                `;
+                if (cartList) cartList.style.display = 'none';
+                cartSection.appendChild(emptyState);
+            }
+        } else if (cartList && data.itemCardsCount > 0) {
+            cartList.style.display = 'flex';
+            const emptyState = document.getElementById('cart_empty_msg');
+            if (emptyState) emptyState.remove();
+        }
+
+        return data;
+    }
+
+    // Event Listener for Quantity buttons and Delete buttons
+    if (cartList) {
+        cartList.addEventListener('click', (e) => {
+            const deleteBtn = e.target.closest('.delete_btn');
+            const qtyPlusBtn = e.target.closest('.qty_plus') || (e.target.classList.contains('qty_btn') && e.target.textContent.trim() === '+');
+            const qtyMinusBtn = e.target.closest('.qty_minus') || (e.target.classList.contains('qty_btn') && e.target.textContent.trim() === '-');
+
+            if (deleteBtn) {
+                const card = deleteBtn.closest('.cart_item_card');
+                if (card) {
+                    card.classList.add('removing');
+                    setTimeout(() => {
+                        card.remove();
+                        updateCartUI();
+                    }, 150);
+                }
+            } else if (qtyPlusBtn) {
+                const card = qtyPlusBtn.closest('.cart_item_card');
+                const qtyValEl = card.querySelector('.qty_value');
+                if (qtyValEl) {
+                    let qty = parseInt(qtyValEl.textContent, 10) || 1;
+                    qty++;
+                    qtyValEl.textContent = qty;
+                    updateCartUI();
+                }
+            } else if (qtyMinusBtn) {
+                const card = qtyMinusBtn.closest('.cart_item_card');
+                const qtyValEl = card.querySelector('.qty_value');
+                if (qtyValEl) {
+                    let qty = parseInt(qtyValEl.textContent, 10) || 1;
+                    if (qty > 1) {
+                        qty--;
+                        qtyValEl.textContent = qty;
+                        updateCartUI();
+                    }
+                }
+            }
+        });
+    }
+
+    // Perform initial calculation on load
+    updateCartUI();
+
+    // Checkout Confirmation Modal Logic
+    const checkoutBtn = document.getElementById('btn_checkout') || document.querySelector('.checkout_button');
+    const checkoutModal = document.getElementById('checkout_modal');
+    const closeCheckoutBtn = document.getElementById('close_checkout_modal');
+    const cancelCheckoutBtn = document.getElementById('cancel_checkout_btn');
+    const confirmCheckoutBtn = document.getElementById('confirm_checkout_btn');
+    const applyDiscountBtn = document.getElementById('btn_apply_discount');
+    const discountInput = document.getElementById('checkout_discount_input');
+    const discountMsg = document.getElementById('discount_msg');
+
+    const successModal = document.getElementById('order_success_modal');
+    const closeSuccessBtn = document.getElementById('close_success_modal');
+
+    // Populate and open Checkout Modal
+    function openCheckoutModal() {
+        const data = calculateTotals();
+        if (data.itemCardsCount === 0) {
+            alert('Your shopping cart is empty! Please add items before checking out.');
+            return;
+        }
+
+        // Render preview list of items
+        const previewContainer = document.getElementById('checkout_items_preview');
+        if (previewContainer) {
+            previewContainer.innerHTML = data.items.map(item => `
+                <li class="checkout_item_row">
+                    <span class="checkout_item_name">${item.name}</span>
+                    <span class="checkout_item_qty">x${item.qty}</span>
+                    <span class="checkout_item_price">₱${item.itemTotal.toLocaleString('en-US')}</span>
+                </li>
+            `).join('');
+        }
+
+        updateModalSummary(data);
+
+        if (checkoutModal) checkoutModal.classList.add('active');
+    }
+
+    function updateModalSummary(data) {
+        if (!data) data = calculateTotals();
+
+        const modalQty = document.getElementById('modal_total_items');
+        const modalSubtotal = document.getElementById('modal_subtotal');
+        const modalDiscountRow = document.getElementById('modal_discount_row');
+        const modalDiscountAmt = document.getElementById('modal_discount_amount');
+        const modalShipping = document.getElementById('modal_shipping');
+        const modalTotal = document.getElementById('modal_total_price');
+
+        if (modalQty) modalQty.textContent = `${data.totalQty} ${data.totalQty === 1 ? 'item' : 'items'}`;
+        if (modalSubtotal) modalSubtotal.textContent = `₱${data.subtotal.toLocaleString('en-US')}`;
+
+        if (modalDiscountRow && modalDiscountAmt) {
+            if (data.discountAmount > 0) {
+                modalDiscountRow.style.display = 'flex';
+                modalDiscountAmt.textContent = `-₱${data.discountAmount.toLocaleString('en-US')}`;
+            } else {
+                modalDiscountRow.style.display = 'none';
+            }
+        }
+
+        if (modalShipping) modalShipping.textContent = `₱${data.shippingFee.toFixed(2)}`;
+        if (modalTotal) modalTotal.textContent = `₱${data.total.toLocaleString('en-US')}`;
+    }
+
+    const closeCheckout = () => {
+        if (checkoutModal) checkoutModal.classList.remove('active');
+    };
+
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCheckoutModal();
+        });
+    }
+
+    if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', closeCheckout);
+    if (cancelCheckoutBtn) cancelCheckoutBtn.addEventListener('click', closeCheckout);
+
+    // Close on backdrop overlay click
+    if (checkoutModal) {
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal) closeCheckout();
+        });
+    }
+
+    // Apply Discount Code handler
+    const handleApplyDiscount = () => {
+        if (!discountInput || !discountMsg) return;
+        const code = discountInput.value.trim().toUpperCase();
+
+        if (!code) {
+            discountMsg.className = 'discount_msg error';
+            discountMsg.textContent = 'Please enter a discount code.';
+            return;
+        }
+
+        if (validDiscounts[code]) {
+            activeDiscount = validDiscounts[code];
+            discountMsg.className = 'discount_msg success';
+            discountMsg.textContent = `✓ Discount code "${code}" applied! (${activeDiscount.label})`;
+
+            const data = updateCartUI();
+            updateModalSummary(data);
+        } else {
+            discountMsg.className = 'discount_msg error';
+            discountMsg.textContent = 'Invalid code. Try TAURUS10, TAURUS20, or SAVE500.';
+        }
+    };
+
+    if (applyDiscountBtn) applyDiscountBtn.addEventListener('click', handleApplyDiscount);
+    if (discountInput) {
+        discountInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleApplyDiscount();
+            }
+        });
+    }
+
+    // Confirm Order Handler
+    if (confirmCheckoutBtn) {
+        confirmCheckoutBtn.addEventListener('click', () => {
+            const data = calculateTotals();
+            closeCheckout();
+
+            // Populate Success Modal
+            const randomTxnNum = Math.floor(100000 + Math.random() * 900000);
+            const txnId = '#TXN-' + randomTxnNum;
+            const successTxnEl = document.getElementById('success_txn_id');
+            const successTotalEl = document.getElementById('success_total_paid');
+
+            if (successTxnEl) successTxnEl.textContent = txnId;
+            if (successTotalEl) successTotalEl.textContent = `₱${data.total.toLocaleString('en-US')}`;
+
+            if (successModal) successModal.classList.add('active');
+
+            // Clear cart items upon confirmed order completion
+            if (cartList) {
+                cartList.innerHTML = '';
+                activeDiscount = null;
+                if (discountInput) discountInput.value = '';
+                if (discountMsg) discountMsg.textContent = '';
+                updateCartUI();
+            }
+        });
+    }
+
+    if (closeSuccessBtn) {
+        closeSuccessBtn.addEventListener('click', () => {
+            if (successModal) successModal.classList.remove('active');
+        });
+    }
+
+    if (successModal) {
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                successModal.classList.remove('active');
+            }
+        });
+    }
+}
+
