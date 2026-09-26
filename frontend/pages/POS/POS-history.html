@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus POS - Transaction History</title>
+    <!-- pos unified stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/POS.css">
+</head>
+<body>
+
+    <!-- pos container wrapper -->
+    <div class="pos_container" id="pos_container">
+
+        <!-- top navigation bar -->
+        <header class="pos_top_nav" id="pos_top_nav">
+            <!-- brand section -->
+            <a href="POS-home.html" class="pos_brand_section">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="pos_brand_logo">
+                <div class="pos_brand_text_box">
+                    <span class="pos_brand_title">TAURUS</span>
+                    <span class="pos_brand_subtitle">Bike Shop &bull; POS Terminal</span>
+                </div>
+            </a>
+
+            <!-- navigation tabs -->
+            <nav class="pos_nav_tabs">
+                <a href="POS-home.html" class="pos_tab_link">Home</a>
+                <a href="POS-main.html" class="pos_tab_link">New Sale</a>
+                <a href="POS-history.html" class="pos_tab_link active">History</a>
+            </nav>
+
+            <!-- cashier status and home button right -->
+            <div class="pos_header_right">
+                <div class="cashier_status_wrap">
+                    <span>Cashier: <strong class="cashier_name">Russel Lu Caisido</strong></span>
+                    <span class="clock_display" id="clock_display">06:06:56 PM</span>
+                </div>
+                <a href="POS-home.html" class="btn_back_home">&larr; Home</a>
+            </div>
+        </header>
+
+        <!-- main content area -->
+        <main class="pos_main_content">
+
+            <!-- subheader section -->
+            <section class="history_sub_header">
+                <div class="sub_header_left">
+                    <span class="sub_label_red">TAURUS</span>
+                    <h1 class="page_title_bold">Transaction History</h1>
+                </div>
+                <div class="filtered_total_box">
+                    <span class="filtered_total_label">Filtered Total</span>
+                    <span class="filtered_total_value" id="filtered_total_value">&#8369;52,060.00</span>
+                </div>
+            </section>
+
+            <!-- search bar -->
+            <section class="pos_search_wrapper">
+                <span class="search_icon_left">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" class="pos_search_input" id="history_search_input" placeholder="Search by transaction ID or product name...">
+            </section>
+
+            <!-- transaction history table -->
+            <div class="pos_table_card">
+                <table class="pos_data_table" id="history_data_table">
+                    <thead>
+                        <tr>
+                            <th>TRANSACTION ID</th>
+                            <th>DATE &amp; TIME</th>
+                            <th>ITEMS</th>
+                            <th>SUBTOTAL</th>
+                            <th>DISCOUNT</th>
+                            <th>TOTAL</th>
+                            <th>METHOD</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history_tbody">
+                        <tr data-amount="2210.00">
+                            <td class="txn_id_cell">TXN-20240801-001</td>
+                            <td>Sep 26, 2026, 2:37 PM</td>
+                            <td>2</td>
+                            <td>&#8369;2,210.00</td>
+                            <td>&mdash;</td>
+                            <td class="txn_total_cell">&#8369;2,210.00</td>
+                            <td><span class="badge_method_cash">Cash</span></td>
+                            <td><span class="badge_status_paid">PAID</span></td>
+                        </tr>
+                        <tr data-amount="17200.00">
+                            <td class="txn_id_cell">TXN-20240801-002</td>
+                            <td>Sep 26, 2026, 4:41 PM</td>
+                            <td>2</td>
+                            <td>&#8369;17,700.00</td>
+                            <td class="discount_red">-&#8369;500.00</td>
+                            <td class="txn_total_cell">&#8369;17,200.00</td>
+                            <td><span class="badge_method_gcash">GCash</span></td>
+                            <td><span class="badge_status_paid">PAID</span></td>
+                        </tr>
+                        <tr data-amount="6150.00">
+                            <td class="txn_id_cell">TXN-20240731-001</td>
+                            <td>Sep 25, 2026, 11:58 AM</td>
+                            <td>2</td>
+                            <td>&#8369;6,150.00</td>
+                            <td>&mdash;</td>
+                            <td class="txn_total_cell">&#8369;6,150.00</td>
+                            <td><span class="badge_method_cash">Cash</span></td>
+                            <td><span class="badge_status_paid">PAID</span></td>
+                        </tr>
+                        <tr data-amount="5500.00">
+                            <td class="txn_id_cell">TXN-20240730-001</td>
+                            <td>Sep 24, 2026, 4:03 PM</td>
+                            <td>3</td>
+                            <td>&#8369;5,830.00</td>
+                            <td class="discount_red">-&#8369;330.00</td>
+                            <td class="txn_total_cell">&#8369;5,500.00</td>
+                            <td><span class="badge_method_cash">Cash</span></td>
+                            <td><span class="badge_status_paid">PAID</span></td>
+                        </tr>
+                        <tr data-amount="21000.00">
+                            <td class="txn_id_cell">TXN-20240729-001</td>
+                            <td>Sep 23, 2026, 10:28 AM</td>
+                            <td>1</td>
+                            <td>&#8369;22,000.00</td>
+                            <td class="discount_red">-&#8369;1,000.00</td>
+                            <td class="txn_total_cell">&#8369;21,000.00</td>
+                            <td><span class="badge_method_gcash">GCash</span></td>
+                            <td><span class="badge_status_paid">PAID</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- interactive history script -->
+    <script>
+        function updateClock() {
+            const clockEl = document.getElementById('clock_display');
+            if (!clockEl) return;
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? String(hours).padStart(2, '0') : '12';
+            clockEl.textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const searchInput = document.getElementById('history_search_input');
+        const rows = document.querySelectorAll('#history_tbody tr');
+        const totalEl = document.getElementById('filtered_total_value');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            let sum = 0;
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const match = text.includes(query);
+                if (match) {
+                    row.style.display = '';
+                    sum += parseFloat(row.getAttribute('data-amount') || '0');
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            totalEl.textContent = '₱' + sum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        });
+    </script>
+</body>
+</html>

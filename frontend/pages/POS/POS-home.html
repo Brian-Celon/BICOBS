@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus POS - Home</title>
+    <!-- pos unified stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/POS.css">
+</head>
+<body>
+
+    <!-- pos container wrapper -->
+    <div class="pos_container" id="pos_container">
+
+        <!-- top navigation bar -->
+        <header class="pos_top_nav" id="pos_top_nav">
+            <!-- brand section -->
+            <a href="POS-home.html" class="pos_brand_section">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="pos_brand_logo">
+                <div class="pos_brand_text_box">
+                    <span class="pos_brand_title">TAURUS</span>
+                    <span class="pos_brand_subtitle">Bike Shop &bull; POS Terminal</span>
+                </div>
+            </a>
+
+            <!-- navigation tabs -->
+            <nav class="pos_nav_tabs">
+                <a href="POS-home.html" class="pos_tab_link active">Home</a>
+                <a href="POS-main.html" class="pos_tab_link">New Sale</a>
+                <a href="POS-history.html" class="pos_tab_link">History</a>
+            </nav>
+
+            <!-- cashier status right -->
+            <div class="pos_header_right">
+                <div class="cashier_status_wrap">
+                    <span>Cashier: <strong class="cashier_name">Russel Lu Caisido</strong></span>
+                    <span class="clock_display" id="clock_display">06:06:35 PM</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- main content area -->
+        <main class="pos_main_content">
+
+            <!-- hero welcome banner -->
+            <section class="pos_hero_banner">
+                <div class="hero_left_box">
+                    <span class="hero_tagline">TAURUS POINT OF SALE</span>
+                    <h1 class="hero_title">Welcome back,<br>Russel Lu Caisido</h1>
+                    <div class="hero_actions_group">
+                        <a href="POS-main.html" class="btn_hero_primary">New Transaction</a>
+                        <a href="POS-history.html" class="btn_hero_secondary">View History</a>
+                    </div>
+                </div>
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Bull Watermark" class="hero_bull_graphic">
+            </section>
+
+            <!-- 3 action cards grid -->
+            <section class="action_cards_row">
+                <!-- card 1: new transaction -->
+                <a href="POS-main.html" class="action_card card_new_transaction">
+                    <div class="action_card_icon">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                    </div>
+                    <h2 class="action_card_title">New Transaction</h2>
+                    <p class="action_card_subtitle">Search products and process a sale</p>
+                </a>
+
+                <!-- card 2: transaction history -->
+                <a href="POS-history.html" class="action_card card_history">
+                    <div class="action_card_icon">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <line x1="9" y1="12" x2="15" y2="12"></line>
+                            <line x1="9" y1="16" x2="13" y2="16"></line>
+                        </svg>
+                    </div>
+                    <h2 class="action_card_title">Transaction History</h2>
+                    <p class="action_card_subtitle">Browse and review past receipts</p>
+                </a>
+
+                <!-- card 3: daily summary -->
+                <a href="POS-history.html" class="action_card card_summary">
+                    <div class="action_card_icon">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <h2 class="action_card_title">Daily Summary</h2>
+                    <p class="action_card_subtitle">&#8369;52,060 in recent sales</p>
+                </a>
+            </section>
+
+            <!-- recent transactions table section -->
+            <section class="recent_txn_section">
+                <div class="section_header_row">
+                    <h2 class="section_title_bold">Recent Transactions</h2>
+                    <a href="POS-history.html" class="link_view_all">View all &rarr;</a>
+                </div>
+
+                <div class="pos_table_card">
+                    <table class="pos_data_table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>DATE</th>
+                                <th>ITEMS</th>
+                                <th>TOTAL</th>
+                                <th>METHOD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="txn_id_cell">TXN-20240801-001</td>
+                                <td>Sep 26, 2026, 2:37 PM</td>
+                                <td>2 items</td>
+                                <td class="txn_total_cell">&#8369;2,210.00</td>
+                                <td><span class="badge_method_cash">Cash</span></td>
+                            </tr>
+                            <tr>
+                                <td class="txn_id_cell">TXN-20240801-002</td>
+                                <td>Sep 26, 2026, 4:41 PM</td>
+                                <td>2 items</td>
+                                <td class="txn_total_cell">&#8369;17,200.00</td>
+                                <td><span class="badge_method_gcash">GCash</span></td>
+                            </tr>
+                            <tr>
+                                <td class="txn_id_cell">TXN-20240731-001</td>
+                                <td>Sep 25, 2026, 11:58 AM</td>
+                                <td>2 items</td>
+                                <td class="txn_total_cell">&#8369;6,150.00</td>
+                                <td><span class="badge_method_cash">Cash</span></td>
+                            </tr>
+                            <tr>
+                                <td class="txn_id_cell">TXN-20240730-001</td>
+                                <td>Sep 24, 2026, 4:03 PM</td>
+                                <td>3 items</td>
+                                <td class="txn_total_cell">&#8369;5,500.00</td>
+                                <td><span class="badge_method_cash">Cash</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- live clock script -->
+    <script>
+        function updateClock() {
+            const clockEl = document.getElementById('clock_display');
+            if (!clockEl) return;
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? String(hours).padStart(2, '0') : '12';
+            clockEl.textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
