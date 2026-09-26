@@ -124,3 +124,26 @@ All HTML IDs, classes, and other attributes must use **snake_case**.
 * If a new design or layout is explicitly required, it must be discussed and approved before implementation.
 
 **Implementation Requirement:** Every AI developer must inspect and follow the existing TaurOS design before creating or modifying a feature. The AI must preserve shared layout structures and visual patterns, reuse existing components where possible, and verify that navigation between pages maintains a consistent appearance. A feature is not considered complete if it introduces unauthorized design changes, inconsistent navigation states, or unnecessary variations in the system's established interface.
+
+
+Image & Asset Pathing
+
+Asset Pathing: All images and other static assets must use a reliable, project-consistent path that allows the browser to locate the asset correctly regardless of which page, feature, or route is currently being accessed.
+
+Do not use ../ relative paths for images or other static assets unless explicitly required by the project's established architecture.
+Prefer the project's established root-relative or asset-directory path structure so assets can be accessed consistently from different pages and routes.
+Image paths must reference the actual location of the asset within the project structure and must not rely on the current HTML file's directory level.
+Do not duplicate images into different feature folders simply to make relative paths work.
+Reuse existing assets from the centralized project asset directories whenever the required image already exists.
+Before adding a new image, verify where the project's existing images/assets are stored and follow the same path convention.
+Do not rename, move, or duplicate existing assets solely to fix a path without authorization.
+Ensure image paths work when navigating between different system pages and routes, not only when opening the current page directly.
+Verify that every newly added image loads correctly after navigation, page refresh, and when accessed through its intended route.
+If an image fails to load, fix the path based on the project's actual directory structure rather than adding additional ../ segments as a workaround.
+Follow the same pathing convention for other static assets such as icons, logos, fonts, videos, and other files.
+
+Implementation Requirement: Every AI developer must inspect the existing project structure and follow the established asset-path convention before adding or modifying image references. The AI must ensure that assets resolve correctly from every intended route and must not introduce ../ paths as a shortcut for locating project assets.
+
+Preferred Principle: Use a consistent project-level asset path instead of calculating how many directories must be traversed from the current file.
+
+Do not solve asset-path problems by adding more ../. Find the correct project asset path and use the established convention.
