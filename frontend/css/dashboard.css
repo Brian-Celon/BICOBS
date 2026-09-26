@@ -7,11 +7,12 @@
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
     min-height: 100vh;
     box-sizing: border-box;
+    top: 0 !important;
 }
 
 /* main body layout with flex column for sticky footer */
@@ -22,11 +23,14 @@ body {
     flex-direction: column !important;
     width: 100% !important;
     color: #333333;
+    overflow-x: hidden;
 }
 
 /* global top navigation bar */
 .top_navbar {
     width: 100% !important;
+    margin: 0 !important;
+    top: 0 !important;
     background-color: #8b1e28;
     color: #ffffff;
     padding: 12px 30px;
@@ -37,6 +41,8 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
     box-sizing: border-box;
+    position: relative;
+    z-index: 100;
 }
 
 /* top nav left section holding logo and portal label */
