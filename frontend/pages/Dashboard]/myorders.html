@@ -13,6 +13,9 @@
     <!-- global top navbar -->
     <header class="top_navbar">
         <div class="top_nav_left">
+            <button type="button" class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="top_nav_logo_box">
                 <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img">
             </div>
@@ -26,11 +29,25 @@
             </div>
         </div>
         <div class="top_nav_right">
+            <button type="button" class="mobile_search_btn" id="mobile_search_btn" aria-label="Toggle Search">
+                <i class="fas fa-search"></i>
+            </button>
             <a href="mycart.html" class="cart_icon_container">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart_badge_top">4</span>
             </a>
             <div class="user_avatar">JD</div>
+        </div>
+
+        <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
+        <div class="mobile_search_bar_expand" id="mobile_search_bar_expand">
+            <div class="mobile_search_wrapper">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" id="mobile_search_input" placeholder="Search bikes, parts, accessories...">
+                <button type="button" class="mobile_search_close" id="close_mobile_search" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -40,8 +57,13 @@
         <aside id="dashboard_sidebar" class="sidebar_container">
             <!-- customer dashboard title -->
             <div class="sidebar_title">
-                <i class="fas fa-th-large sidebar_title_icon"></i>
-                <span>Customer Dashboard</span>
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
             <!-- navigation links -->

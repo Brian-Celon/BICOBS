@@ -1074,6 +1074,133 @@ body {
     color: #8b1e28;
 }
 
+/* Hamburger Toggle Button (Hidden on Desktop) */
+.mobile_nav_toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile_nav_toggle:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Sidebar Header Title Left Wrapper */
+.sidebar_title_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Sidebar Close Button (Hidden on Desktop) */
+.sidebar_close_btn {
+    display: none;
+    background: #f1f5f9;
+    border: none;
+    color: #64748b;
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar_close_btn:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+/* Mobile Search Toggle Icon Button (Hidden on Desktop) */
+.mobile_search_btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.mobile_search_btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Expandable Mobile Search Bar Dropdown (< 600px) */
+.mobile_search_bar_expand {
+    display: none;
+    width: 100%;
+    background-color: #6e151e;
+    padding: 10px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mobile_search_bar_expand.active {
+    display: block;
+}
+
+.mobile_search_wrapper {
+    background-color: #ffffff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    gap: 10px;
+    width: 100%;
+}
+
+.mobile_search_close {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+}
+
+.mobile_search_close:hover {
+    color: #8b1e28;
+}
+
+/* Sidebar Backdrop Overlay */
+.sidebar_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar_overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* responsive media queries for tablet and mobile */
 @media (max-width: 900px) {
     body {
@@ -1082,48 +1209,110 @@ body {
         width: 100% !important;
     }
 
-    /* top nav full width horizontal bar across top */
+    /* Show hamburger menu toggle button on mobile/tablet */
+    .mobile_nav_toggle {
+        display: inline-flex;
+    }
+
+    /* Top navbar bar stays clean horizontal row on mobile */
     .top_navbar {
         width: 100% !important;
-        flex-direction: column !important;
-        align-items: stretch;
-        gap: 12px;
-        padding: 15px 20px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between;
+        padding: 12px 18px;
         box-sizing: border-box;
+        flex-wrap: wrap;
     }
     
     .top_nav_left {
-        justify-content: space-between;
-        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: auto;
     }
 
-    /* search bar full width */
+    .top_nav_portal_text {
+        display: none; /* Hide subtitle tag on small screens */
+    }
+
+    /* Compact center search bar on tablet */
     .top_nav_center {
-        width: 100%;
-        padding: 0;
+        display: flex;
+        flex: 1;
+        max-width: 260px;
+        padding: 0 10px;
+    }
+
+    .search_bar_container {
+        padding: 4px 10px;
     }
 
     .top_nav_right {
-        justify-content: flex-end;
-        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: auto;
     }
 
-    /* stack sidebar and main content vertically */
+    .sidebar_close_btn {
+        display: flex;
+    }
+
+    .sidebar_title {
+        justify-content: space-between;
+        width: 100%;
+        padding-bottom: 12px;
+    }
+
+    /* Convert Sidebar into Off-Canvas Sliding Side Navigation Bar */
+    .sidebar_container {
+        position: fixed !important;
+        top: 0 !important;
+        left: -300px !important;
+        width: 270px !important;
+        height: 100vh !important;
+        z-index: 1000 !important;
+        border-radius: 0 16px 16px 0 !important;
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15) !important;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background-color: #ffffff !important;
+        overflow-y: auto;
+        padding: 20px 16px;
+    }
+
+    /* Active Side Nav Drawer */
+    .sidebar_container.active {
+        left: 0 !important;
+    }
+
+    /* Stack sidebar and main content vertically */
     .dashboard_layout {
         width: 100% !important;
         flex-direction: column !important;
         padding: 15px;
         box-sizing: border-box;
     }
-    
-    /* full width sidebar on mobile */
-    .sidebar_container {
-        width: 100% !important;
-        min-height: auto;
-    }
 
     .main_content {
         width: 100% !important;
+    }
+}
+
+/* Mobile search breakpoint (< 600px) */
+@media (max-width: 600px) {
+    /* Hide center search bar in top navbar to prevent crowding */
+    .top_nav_center {
+        display: none;
+    }
+
+    /* Display mobile search icon button in top nav right */
+    .mobile_search_btn {
+        display: inline-flex;
+    }
+
+    .top_nav_logo_text {
+        font-size: 16px;
     }
 }
 

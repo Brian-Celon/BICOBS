@@ -4,11 +4,77 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* initialize dashboard functionalities */
     setup_sidebar_links();
+    setup_mobile_sidebar();
+    setup_responsive_search();
     setup_payment_modal();
     setup_ticket_modal();
     setup_global_keyboard();
     setup_profile_sync();
 });
+
+/* setup responsive mobile search bar dropdown */
+function setup_responsive_search() {
+    const searchBtn = document.getElementById('mobile_search_btn');
+    const closeBtn = document.getElementById('close_mobile_search');
+    const searchExpand = document.getElementById('mobile_search_bar_expand');
+    const searchInput = document.getElementById('mobile_search_input');
+
+    if (!searchExpand) return;
+
+    const toggleSearch = () => {
+        searchExpand.classList.toggle('active');
+        if (searchExpand.classList.contains('active') && searchInput) {
+            searchInput.focus();
+        }
+    };
+
+    const closeSearch = () => {
+        searchExpand.classList.remove('active');
+    };
+
+    if (searchBtn) searchBtn.addEventListener('click', toggleSearch);
+    if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+}
+
+/* setup responsive side navigation bar toggle for small screens */
+function setup_mobile_sidebar() {
+    const toggleBtn = document.getElementById('mobile_nav_toggle');
+    const closeBtn = document.getElementById('sidebar_close_btn');
+    const sidebar = document.getElementById('dashboard_sidebar');
+    let overlay = document.getElementById('sidebar_overlay');
+
+    // Create backdrop overlay dynamically if not present in DOM
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'sidebar_overlay';
+        overlay.className = 'sidebar_overlay';
+        document.body.appendChild(overlay);
+    }
+
+    const openSidebar = () => {
+        if (sidebar) sidebar.classList.add('active');
+        if (overlay) overlay.classList.add('active');
+    };
+
+    const closeSidebar = () => {
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+    };
+
+    if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+
+    // Close side nav when clicking any nav item link on mobile screens
+    const navItems = document.querySelectorAll('.sidebar_container .nav_item');
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 900) {
+                closeSidebar();
+            }
+        });
+    });
+}
 
 /* setup sidebar link clicks */
 function setup_sidebar_links() {
