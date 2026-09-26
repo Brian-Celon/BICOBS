@@ -1089,3 +1089,387 @@ body {
         padding: 0;
     }
 }
+
+/* ==========================================
+   MODAL DIALOG STYLES (PAYMENT & SUPPORT)
+   ========================================== */
+
+/* Modal Overlay Backdrop */
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+/* Active State for Overlay */
+.modal_overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content Card */
+.modal_container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    width: 90%;
+    max-width: 520px;
+    padding: 26px 28px;
+    transform: translateY(15px) scale(0.96);
+    transition: transform 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal_overlay.active .modal_container {
+    transform: translateY(0) scale(1);
+}
+
+/* Modal Header Row */
+.modal_header_row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal_header_row.space_between {
+    justify-content: space-between;
+}
+
+/* Modal Title */
+.modal_title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+/* Modal Subtitle */
+.modal_subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 3px;
+}
+
+/* Modal Circular Back Button */
+.modal_back_btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #475569;
+    font-size: 14px;
+    margin-right: 14px;
+    flex-shrink: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.modal_back_btn:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+/* Modal Close X Button */
+.modal_close_btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: #f1f5f9;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 14px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.modal_close_btn:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+/* Inner Light Card Box */
+.modal_card_box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px 22px;
+}
+
+/* Provider Selection Grid */
+.provider_selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 6px;
+    margin-bottom: 20px;
+}
+
+/* Provider Option Tab */
+.provider_option {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.provider_option:hover {
+    border-color: #cbd5e1;
+    background: #fafafa;
+}
+
+.provider_option.active {
+    border: 1.5px solid #8b1e28;
+    background: #fdf2f2;
+    color: #8b1e28;
+    font-weight: 700;
+}
+
+/* Provider Icon Colors */
+.provider_icon {
+    font-size: 18px;
+}
+
+.card_icon {
+    color: #8b1e28;
+}
+
+.gcash_icon {
+    color: #1a73e8;
+}
+
+.paymaya_icon {
+    color: #00a859;
+}
+
+/* Input Wrapper with Icons */
+.input_icon_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input_prefix_icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.input_with_prefix {
+    padding-left: 36px !important;
+}
+
+.input_suffix_icon {
+    position: absolute;
+    right: 14px;
+    color: #94a3b8;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.input_with_suffix {
+    padding-right: 36px !important;
+}
+
+/* Custom Dropdown Select */
+.form_select {
+    width: 100%;
+    border: 1px solid #dce2e8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #333333;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23444444%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px auto;
+    padding-right: 30px;
+}
+
+.form_select:focus {
+    border-color: #8b1e28;
+}
+
+/* Custom Textarea */
+.form_textarea {
+    width: 100%;
+    border: 1px solid #dce2e8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #333333;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.2s ease;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form_textarea:focus {
+    border-color: #8b1e28;
+}
+
+/* Custom Checkbox */
+.form_checkbox_group {
+    margin-top: 14px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.custom_checkbox_label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #475569;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom_checkbox {
+    accent-color: #8b1e28;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Modal Actions Footer */
+.modal_actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.btn_modal_cancel {
+    background: transparent;
+    border: none;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 6px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn_modal_cancel:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+
+.btn_modal_submit {
+    background-color: #8b1e28;
+    color: #ffffff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn_modal_submit:hover {
+    background-color: #6e151e;
+}
+
+/* User Welcome Banner Card in Overview */
+.user_welcome_card {
+    background: linear-gradient(135deg, #fdf2f2 0%, #ffffff 100%);
+    border: 1px solid #f5d0d0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 10px rgba(139, 30, 40, 0.05);
+}
+
+.welcome_card_left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.welcome_avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #8b1e28;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(139, 30, 40, 0.2);
+}
+
+.welcome_text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.welcome_name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.welcome_location {
+    font-size: 13px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.welcome_location_icon {
+    color: #8b1e28;
+    font-size: 14px;
+}
+

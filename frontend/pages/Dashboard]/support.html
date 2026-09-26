@@ -116,7 +116,7 @@
                     <p class="header_subtitle">Need help with parts assembly or shipping? Open a ticket with our support team.</p>
                 </div>
                 <div>
-                    <a href="#" class="action_button">
+                    <a href="#" class="action_button" id="btn_open_ticket_modal">
                         <i class="fas fa-plus"></i> Create New Ticket
                     </a>
                 </div>
@@ -172,6 +172,50 @@
             <span>Manage Contact</span>
         </div>
     </footer>
+
+    <!-- Create Support Ticket Modal -->
+    <div id="ticket_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="ticket_modal_title">
+        <div class="modal_container ticket_modal_container">
+            <!-- Modal Top Header -->
+            <div class="modal_header_row space_between">
+                <h3 id="ticket_modal_title" class="modal_title">Create Support Ticket</h3>
+                <button type="button" class="modal_close_btn" id="close_ticket_modal_x" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Ticket Form -->
+            <form id="create_ticket_form" class="modal_form_body">
+                <div class="form_group">
+                    <label class="form_label" for="ticket_category">ISSUE CATEGORY</label>
+                    <select id="ticket_category" class="form_select" required>
+                        <option value="Warranty / Repairs" selected>Warranty / Repairs</option>
+                        <option value="Shipping / Delivery">Shipping / Delivery</option>
+                        <option value="Product Information">Product Information</option>
+                        <option value="Billing & Payment">Billing & Payment</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_subject">SUBJECT / TITLE</label>
+                    <input type="text" id="ticket_subject" class="form_input" placeholder="Briefly describe your issue..." required>
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_description">DESCRIPTION & DETAILS</label>
+                    <textarea id="ticket_description" class="form_textarea" placeholder="Provide as much detail as possible (bike model, serial #, pictures if any)..." rows="4" required></textarea>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="modal_actions">
+                    <button type="button" class="btn_modal_cancel" id="close_ticket_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_modal_submit">Submit Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- main dashboard script -->
     <script src="/frontend/js/dashboard.js"></script>

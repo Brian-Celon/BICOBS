@@ -116,7 +116,7 @@
                     <p class="header_subtitle">Manage saved cards and view past payment transactions.</p>
                 </div>
                 <div>
-                    <a href="#" class="action_button">
+                    <a href="#" class="action_button" id="btn_open_payment_modal">
                         <i class="fas fa-plus"></i> Add Payment Method
                     </a>
                 </div>
@@ -227,6 +227,121 @@
             <span>Manage Contact</span>
         </div>
     </footer>
+
+    <!-- Add Payment Method Modal -->
+    <div id="payment_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="payment_modal_title">
+        <div class="modal_container payment_modal_container">
+            <!-- Modal Top Header -->
+            <div class="modal_header_row">
+                <button type="button" class="modal_back_btn" id="close_payment_modal_back" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="modal_header_text">
+                    <h3 id="payment_modal_title" class="modal_title">Add Payment Method</h3>
+                    <p class="modal_subtitle">Securely link a credit card, debit card, or digital wallet.</p>
+                </div>
+            </div>
+
+            <!-- Outer Card Box inside Modal -->
+            <div class="modal_card_box">
+                <!-- Payment Provider Selection -->
+                <div class="form_group">
+                    <label class="form_label">SELECT PAYMENT PROVIDER</label>
+                    <div class="provider_selector">
+                        <button type="button" class="provider_option active" data-provider="card">
+                            <i class="fas fa-credit-card provider_icon card_icon"></i>
+                            <span>Credit / Debit</span>
+                        </button>
+                        <button type="button" class="provider_option" data-provider="gcash">
+                            <i class="fas fa-wallet provider_icon gcash_icon"></i>
+                            <span>GCash Wallet</span>
+                        </button>
+                        <button type="button" class="provider_option" data-provider="paymaya">
+                            <i class="fas fa-mobile-alt provider_icon paymaya_icon"></i>
+                            <span>PayMaya</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Provider Forms -->
+                <form id="add_payment_form">
+                    <!-- Card Provider Form Fields -->
+                    <div id="provider_card_fields" class="provider_form_section">
+                        <div class="form_group">
+                            <label class="form_label" for="card_number">CARD NUMBER</label>
+                            <div class="input_icon_wrapper">
+                                <i class="far fa-credit-card input_prefix_icon"></i>
+                                <input type="text" id="card_number" class="form_input input_with_prefix" placeholder="4532 •••• •••• ••••">
+                            </div>
+                        </div>
+
+                        <div class="form_row_two">
+                            <div class="form_group">
+                                <label class="form_label" for="exp_date">EXPIRATION DATE</label>
+                                <input type="text" id="exp_date" class="form_input" placeholder="MM/YY">
+                            </div>
+                            <div class="form_group">
+                                <label class="form_label" for="cvv_code">CVV / SECURITY CODE</label>
+                                <div class="input_icon_wrapper">
+                                    <input type="text" id="cvv_code" class="form_input input_with_suffix" placeholder="123" maxlength="4">
+                                    <i class="fas fa-lock input_suffix_icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form_group">
+                            <label class="form_label" for="cardholder_name">CARDHOLDER / ACCOUNT NAME</label>
+                            <input type="text" id="cardholder_name" class="form_input" placeholder="Juan Dela Cruz">
+                        </div>
+                    </div>
+
+                    <!-- GCash Provider Form Fields (Hidden by default) -->
+                    <div id="provider_gcash_fields" class="provider_form_section" style="display: none;">
+                        <div class="form_group">
+                            <label class="form_label" for="gcash_number">GCASH MOBILE NUMBER</label>
+                            <div class="input_icon_wrapper">
+                                <i class="fas fa-mobile-alt input_prefix_icon"></i>
+                                <input type="text" id="gcash_number" class="form_input input_with_prefix" placeholder="+63 917 ••• 5012">
+                            </div>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="gcash_name">ACCOUNT NAME</label>
+                            <input type="text" id="gcash_name" class="form_input" placeholder="Juan Dela Cruz">
+                        </div>
+                    </div>
+
+                    <!-- PayMaya Provider Form Fields (Hidden by default) -->
+                    <div id="provider_paymaya_fields" class="provider_form_section" style="display: none;">
+                        <div class="form_group">
+                            <label class="form_label" for="paymaya_number">PAYMAYA MOBILE NUMBER</label>
+                            <div class="input_icon_wrapper">
+                                <i class="fas fa-mobile-alt input_prefix_icon"></i>
+                                <input type="text" id="paymaya_number" class="form_input input_with_prefix" placeholder="+63 918 ••• 9988">
+                            </div>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="paymaya_name">ACCOUNT NAME</label>
+                            <input type="text" id="paymaya_name" class="form_input" placeholder="Juan Dela Cruz">
+                        </div>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div class="form_checkbox_group">
+                        <label class="custom_checkbox_label">
+                            <input type="checkbox" id="is_primary_payment" class="custom_checkbox">
+                            <span>Set as primary payment method</span>
+                        </label>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal_actions">
+                        <button type="button" class="btn_modal_cancel" id="close_payment_modal_cancel">Cancel</button>
+                        <button type="submit" class="btn_modal_submit">Save Payment Method</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- main dashboard script -->
     <script src="/frontend/js/dashboard.js"></script>

@@ -118,23 +118,36 @@
             </header>
 
             <!-- profile form -->
-            <form class="profile_form" onsubmit="event.preventDefault();">
+            <form id="profile_form" class="profile_form">
                 <!-- personal information section -->
                 <section class="profile_card">
                     <h3 class="profile_card_title">Personal Information</h3>
                     <div class="form_row_two">
                         <div class="form_group">
                             <label class="form_label" for="full_name_input">Full Name</label>
-                            <input class="form_input" type="text" id="full_name_input" value="Juan Dela Cruz">
+                            <input class="form_input" type="text" id="full_name_input" value="Juan Dela Cruz" required>
                         </div>
                         <div class="form_group">
                             <label class="form_label" for="email_address_input">Email Address</label>
-                            <input class="form_input" type="email" id="email_address_input" value="juan@taurusbike.ph">
+                            <input class="form_input" type="email" id="email_address_input" value="juan@taurusbike.ph" required>
                         </div>
                     </div>
                     <div class="form_group" style="margin-bottom: 0;">
                         <label class="form_label" for="phone_number_input">Phone Number</label>
                         <input class="form_input" type="tel" id="phone_number_input" value="+63 917 555 1234">
+                    </div>
+                </section>
+
+                <!-- location & address section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Location & Address Details</h3>
+                    <div class="form_group">
+                        <label class="form_label" for="shipping_address_input">Shipping Location / Address</label>
+                        <input class="form_input" type="text" id="shipping_address_input" value="1991 Roat State, Sector 4, Metro Manila, 19491" required>
+                    </div>
+                    <div class="form_group" style="margin-bottom: 0;">
+                        <label class="form_label" for="billing_address_input">Billing Location / Address</label>
+                        <input class="form_input" type="text" id="billing_address_input" value="2050 Roat State, Sector 4, Metro Manila, 19491">
                     </div>
                 </section>
 
@@ -153,7 +166,12 @@
                     </div>
                 </section>
 
-                <button type="submit" class="btn_save_changes">Save Changes</button>
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <button type="submit" class="btn_save_changes">Save Changes</button>
+                    <span id="profile_save_toast" style="display: none; color: #137333; font-weight: 600; font-size: 14px; background: #e6f9ed; padding: 8px 14px; border-radius: 6px;">
+                        <i class="fas fa-check-circle"></i> Profile & Location updated successfully!
+                    </span>
+                </div>
             </form>
         </main>
     </div>

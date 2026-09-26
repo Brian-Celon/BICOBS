@@ -113,9 +113,24 @@
             <header class="main_header">
                 <div>
                     <h1 class="header_title">My Account Overview</h1>
-                    <p class="header_subtitle">Welcome back to your Taurus Bike customer dashboard.</p>
+                    <p class="header_subtitle">Welcome back, <strong id="overview_user_name">Juan Dela Cruz</strong>! Manage your profile, orders, and saved addresses.</p>
                 </div>
             </header>
+
+            <!-- User Welcome & Location Summary Card -->
+            <section class="user_welcome_card">
+                <div class="welcome_card_left">
+                    <div class="welcome_avatar" id="overview_welcome_avatar">JD</div>
+                    <div class="welcome_text">
+                        <h2 class="welcome_name" id="overview_welcome_name">Juan Dela Cruz</h2>
+                        <p class="welcome_location">
+                            <i class="fas fa-map-marker-alt welcome_location_icon"></i>
+                            <span id="overview_welcome_location">1991 Roat State, Sector 4, Metro Manila, 19491</span>
+                        </p>
+                    </div>
+                </div>
+                <a href="profile.html" class="action_button"><i class="fas fa-user-edit"></i> Edit Profile & Location</a>
+            </section>
 
             <!-- quick stats section -->
             <section class="stats_section">
@@ -214,16 +229,16 @@
 
                 <!-- saved addresses -->
                 <section class="addresses_container">
-                    <h3 class="section_title">My Saved Addresses</h3>
+                    <h3 class="section_title">My Saved Addresses & Location</h3>
                     <address class="address_block">
-                        <span class="address_label">Shipping Address</span>
-                        <p class="address_text">1991 Roat State, Sector 4, Metro Manila, 19491</p>
+                        <span class="address_label">Shipping Location / Address</span>
+                        <p class="address_text" id="overview_shipping_address">1991 Roat State, Sector 4, Metro Manila, 19491</p>
                     </address>
                     <address class="address_block">
-                        <span class="address_label">Billing Address</span>
-                        <p class="address_text">2050 Roat State, Sector 4, Metro Manila, 19491</p>
+                        <span class="address_label">Billing Location / Address</span>
+                        <p class="address_text" id="overview_billing_address">2050 Roat State, Sector 4, Metro Manila, 19491</p>
                     </address>
-                    <a href="profile.html" class="action_link">Manage Addresses</a>
+                    <a href="profile.html" class="action_link">Manage Location & Addresses</a>
                 </section>
             </div>
         </main>
