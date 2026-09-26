@@ -396,3 +396,67 @@ body {
 
 /* remove list styling for semantic uls */
 ul.nav_list, ul.products_scroll { list-style: none; padding: 0; margin: 0; }
+
+
+/* CART PAGE SPECIFIC STYLES */
+
+/* header subtitle text */
+.header_subtitle { color: #777; font-size: 14px; margin: 5px 0 0 0; }
+
+/* cart items section padding */
+.cart_items_section { padding: 20px; }
+
+/* cart items list reset */
+.cart_item_list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px; }
+
+/* individual cart item card */
+.cart_item_card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 15px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+
+/* product category image box */
+.item_image_box { width: 60px; height: 60px; border-radius: 8px; background-color: #a72832; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; flex-shrink: 0; }
+
+/* cart item text details */
+.item_details { flex: 1; min-width: 200px; }
+
+/* cart item product name */
+.item_name { font-size: 14px; color: #222; margin-bottom: 5px; font-weight: 600; }
+
+/* cart item price */
+.item_price { font-size: 14px; color: #a72832; font-weight: bold; margin: 0; }
+
+/* cart item action buttons */
+.item_actions { display: flex; align-items: center; gap: 15px; }
+
+/* quantity control container */
+.qty_control { border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; background: #fff; }
+
+/* quantity increment decrement button */
+.qty_btn { background: #fdfdfd; border: none; padding: 5px 12px; cursor: pointer; color: #555; }
+
+/* quantity display value */
+.qty_value { padding: 0 10px; font-size: 14px; }
+
+/* delete item button */
+.delete_btn { background: #eee; border: none; padding: 8px 12px; border-radius: 4px; color: #888; cursor: pointer; }
+
+/* order summary container */
+.order_summary_section { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin: 0 20px 20px 20px; }
+
+/* order summary heading */
+.summary_title { font-size: 16px; margin-bottom: 15px; color: #333; }
+
+/* summary row layout */
+.summary_row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #555; }
+
+/* total row styling */
+.total_row { border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; font-weight: bold; color: #111; font-size: 16px; }
+
+/* total price color */
+.total_price { color: #a72832; }
+
+/* checkout button */
+.checkout_button { width: 100%; background: #a72832; color: #fff; border: none; padding: 12px; border-radius: 6px; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 14px; }
+
+/* checkout button hover */
+.checkout_button:hover { background-color: #8f2129; }
+

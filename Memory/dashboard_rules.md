@@ -105,3 +105,22 @@ All HTML IDs, classes, and other attributes must use **snake_case**.
 
 **Implementation Requirement:** Every AI developer must prioritize semantic HTML when creating or modifying frontend features. Before considering a feature complete, the AI must verify that HTML elements accurately represent their content and functionality, interactive components are accessible, and the markup does not introduce unnecessary structural or accessibility issues.
 
+###  Design Consistency & Layout Preservation
+
+**System-Wide Design Consistency:** All AI developers must preserve the established design, layout, styling, and user interface patterns of the TaurOS system when developing or modifying features. Every new feature must integrate seamlessly with the existing design system without introducing unnecessary visual changes, inconsistent layouts, or conflicting UI patterns.
+
+**Navigation & Shared Layout Preservation:**
+
+* The shared layout of the system, including the top navigation bar, sidebar, header, footer, and other established UI elements, must remain consistent across all pages and navigation routes.
+* When a user clicks a navigation link, the shared layout and design must remain unchanged. **Only the page content or feature-specific information should change**, unless a documented design requirement explicitly states otherwise.
+* The active navigation link must be highlighted consistently across all pages using the established active-state styling, including the same colors, background, text styling, icons, borders, and other visual indicators.
+* The active navigation state must accurately reflect the current page or route. Only the relevant navigation item should appear active unless the established design intentionally supports multiple active states.
+* Navigation links must maintain consistent spacing, alignment, sizing, hover effects, active effects, and interaction behavior throughout the system.
+* Do not create a separate navigation design, header style, sidebar layout, or active-link appearance for an individual feature without authorization.
+* Reuse existing shared components, styles, and layout structures whenever they are available instead of creating duplicate implementations.
+* New pages and features must follow the existing typography, color palette, spacing, border radius, shadows, icons, button styles, and overall visual hierarchy.
+* Do not change the established design of unrelated pages or shared components while developing a specific feature.
+* If an existing shared component requires a change, evaluate its impact on all pages that use it and ensure that the change does not unintentionally break design consistency.
+* If a new design or layout is explicitly required, it must be discussed and approved before implementation.
+
+**Implementation Requirement:** Every AI developer must inspect and follow the existing TaurOS design before creating or modifying a feature. The AI must preserve shared layout structures and visual patterns, reuse existing components where possible, and verify that navigation between pages maintains a consistent appearance. A feature is not considered complete if it introduces unauthorized design changes, inconsistent navigation states, or unnecessary variations in the system's established interface.
