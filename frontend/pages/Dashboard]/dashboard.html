@@ -3,27 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taurus Bike Store - Dashboard</title>
+    <title>Taurus Bike Store - Customer Dashboard</title>
     <!-- link to designated dashboard styles -->
-    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
     <!-- external fontawesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- main dashboard wrapper -->
-    <div id="dashboard_container" class="dashboard_layout">
-        
-        <!-- sidebar menu -->
-        <aside id="dashboard_sidebar" class="sidebar_container">
-            <!-- logo section -->
-            <div class="sidebar_logo">
-                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="logo_image">
-                <h2 class="logo_text">Taurus Bike</h2>
+    <!-- global top navbar -->
+    <header class="top_navbar">
+        <div class="top_nav_left">
+            <div class="top_nav_logo_box">
+                <img src="../../assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img">
             </div>
-            
+            <h2 class="top_nav_logo_text">Taurus Bike</h2>
+            <span class="top_nav_portal_text">CUSTOMER PORTAL</span>
+        </div>
+        <div class="top_nav_center">
+            <div class="search_bar_container">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" placeholder="Search bikes, parts, accessories...">
+            </div>
+        </div>
+        <div class="top_nav_right">
+            <a href="mycart.html" class="cart_icon_container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart_badge_top">4</span>
+            </a>
+            <div class="user_avatar">JD</div>
+        </div>
+    </header>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
             <!-- customer dashboard title -->
             <div class="sidebar_title">
-                <i class="fas fa-th-large"></i>
+                <i class="fas fa-th-large sidebar_title_icon"></i>
                 <span>Customer Dashboard</span>
             </div>
 
@@ -31,7 +48,7 @@
             <nav class="sidebar_nav">
                 <ul class="nav_list">
                     <li>
-                        <a href="dashboard.html" class="nav_item active" target="_self">
+                        <a href="dashboard.html" class="nav_item active">
                             <div class="nav_item_left">
                                 <i class="fas fa-home"></i>
                                 <span>Overview</span>
@@ -39,14 +56,13 @@
                             <span class="nav_badge">Core</span>
                         </a>
                     </li>
-
                     <li>
                         <a href="mycart.html" class="nav_item">
                             <div class="nav_item_left">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span>My Cart</span>
                             </div>
-                            <span class="nav_badge">Core</span>
+                            <span class="badge_green">4</span>
                         </a>
                     </li>
                     <li>
@@ -90,19 +106,20 @@
 
             <!-- logout section -->
             <div class="sidebar_logout">
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Log Out</span>
-                    </div>
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
                 </a>
             </div>
         </aside>
 
-        <!-- main content area -->
+        <!-- floating main content card -->
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
-                <h1 class="header_title">My Account Overview</h1>
+                <div>
+                    <h1 class="header_title">My Account Overview</h1>
+                    <p class="header_subtitle">Welcome back to your Taurus Bike customer dashboard.</p>
+                </div>
             </header>
 
             <!-- quick stats section -->
@@ -111,32 +128,32 @@
                 <div class="stats_grid">
                     <article class="stat_card">
                         <div class="stat_card_top">
-                            <h4 class="stat_label">Total Orders</h4>
+                            <span class="stat_label">Total Orders</span>
                             <i class="fas fa-box stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <p class="stat_value">12</p>
+                            <span class="stat_value">12</span>
                             <i class="fas fa-chart-line stat_trend"></i>
                         </div>
                     </article>
                     <article class="stat_card">
                         <div class="stat_card_top">
-                            <h4 class="stat_label">Cart Items</h4>
+                            <span class="stat_label">Cart Items</span>
                             <i class="fas fa-shopping-cart stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <p class="stat_value">4</p>
-                            <button class="action_button">View Cart</button>
+                            <span class="stat_value">4</span>
+                            <a href="mycart.html" class="action_button">View Cart</a>
                         </div>
                     </article>
                     <article class="stat_card">
                         <div class="stat_card_top">
-                            <h4 class="stat_label">Unread Messages</h4>
+                            <span class="stat_label">Unread Messages</span>
                             <i class="fas fa-comments stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <p class="stat_value">2</p>
-                            <button class="action_button">View Tickets</button>
+                            <span class="stat_value">2</span>
+                            <a href="support.html" class="action_button">View Tickets</a>
                         </div>
                     </article>
                 </div>
@@ -160,9 +177,13 @@
                             <tr>
                                 <td>#TBR1045</td>
                                 <td>2024-05-15</td>
-                                <td><span class="status_indicator status_processing"></span>Processing</td>
-                                <td>$1299.00</td>
-                                <td><a href="#" class="action_link">View Details</a></td>
+                                <td>
+                                    <span class="status_pill status_processing">
+                                        <i class="fas fa-circle" style="font-size: 8px;"></i> Processing
+                                    </span>
+                                </td>
+                                <td>₱12,990.00</td>
+                                <td><a href="myorders.html" class="action_link">View Details</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -177,20 +198,20 @@
                     <ul class="products_scroll">
                         <li class="product_card">
                             <div class="product_image_placeholder"><i class="fas fa-bicycle"></i></div>
-                            <h4 class="product_name">Recommended for You</h4>
-                            <p class="product_price">Pp99.00</p>
+                            <h4 class="product_name">Sagmit Evo Carbon</h4>
+                            <p class="product_price">₱19,900</p>
                             <button class="action_button">Add to Cart</button>
                         </li>
                         <li class="product_card">
                             <div class="product_image_placeholder"><i class="fas fa-life-ring"></i></div>
-                            <h4 class="product_name">Taure ATTB Dreen Tree</h4>
-                            <p class="product_price">Pp50.00</p>
+                            <h4 class="product_name">Maxxis Ardent 29</h4>
+                            <p class="product_price">₱1,500</p>
                             <button class="action_button">Add to Cart</button>
                         </li>
                         <li class="product_card">
                             <div class="product_image_placeholder"><i class="fas fa-cogs"></i></div>
-                            <h4 class="product_name">Taurus Bikes Blac Cles</h4>
-                            <p class="product_price">Pp90.00</p>
+                            <h4 class="product_name">Shimano SLX Kit</h4>
+                            <p class="product_price">₱9,500</p>
                             <button class="action_button">Add to Cart</button>
                         </li>
                     </ul>
@@ -200,28 +221,40 @@
                 <section class="addresses_container">
                     <h3 class="section_title">My Saved Addresses</h3>
                     <address class="address_block">
-                        <h4 class="address_label">Shipping Address</h4>
-                        <p class="address_text">1991 Roat State<br>$425 Wonseld Sat<br>1444 Sadn, 19491</p>
+                        <span class="address_label">Shipping Address</span>
+                        <p class="address_text">1991 Roat State, Sector 4, Metro Manila, 19491</p>
                     </address>
                     <address class="address_block">
-                        <h4 class="address_label">Billing Address</h4>
-                        <p class="address_text">2050 Roat State<br>1235 Htoriston St<br>Norh Brews 12292</p>
+                        <span class="address_label">Billing Address</span>
+                        <p class="address_text">2050 Roat State, Sector 4, Metro Manila, 19491</p>
                     </address>
-                    <a href="#" class="action_link">Manage Addresses</a>
+                    <a href="profile.html" class="action_link">Manage Addresses</a>
                 </section>
             </div>
-
-            <!-- footer -->
-            <footer class="dashboard_footer">
-                <div class="footer_item"><i class="fas fa-home"></i> Taurus Bike/cale.tn</div>
-                <div class="footer_item"><i class="fas fa-phone"></i> 2024-0541</div>
-                <div class="footer_item"><i class="fas fa-info-circle"></i> Contact fifo Information</div>
-                <div class="footer_item"><i class="fas fa-map-marker-alt"></i> Manage Contact</div>
-            </footer>
         </main>
     </div>
 
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
+
     <!-- main dashboard script -->
-    <script src="../js/dashboard.js"></script>
+    <script src="../../js/dashboard.js"></script>
 </body>
 </html>

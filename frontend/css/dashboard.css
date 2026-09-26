@@ -1,4 +1,4 @@
-/* basic reset and global styles for dashboard */
+/* basic reset and typography for whole dashboard */
 * {
     margin: 0;
     padding: 0;
@@ -6,171 +6,358 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* body background color and reset */
+/* main body layout with flex column for sticky footer */
 body {
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    width: 100%;
+    background-color: #e9edf2;
     min-height: 100vh;
-}
-
-/* dashboard layout container */
-.dashboard_layout {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
-    background: #ffffff;
-    overflow-x: hidden;
-}
-
-/* sidebar container styles */
-.sidebar_container {
-    width: 250px;
-    background-color: #eaeaea;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #ddd;
+    color: #333333;
+}
+
+/* global top navigation bar */
+.top_navbar {
+    background-color: #8b1e28;
+    color: #ffffff;
+    padding: 12px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
 
-/* logo section styling */
-.sidebar_logo {
-    background-color: #a72832;
-    padding: 20px;
+/* top nav left section holding logo and portal label */
+.top_nav_left {
     display: flex;
     align-items: center;
-    color: white;
+    gap: 12px;
 }
 
-/* logo image size */
-.logo_image {
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    margin-right: 10px;
+/* circular logo container in top nav */
+.top_nav_logo_box {
+    width: 32px;
+    height: 32px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* logo image inside circular box */
+.top_nav_logo_img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-/* customer dashboard title */
-.sidebar_title {
-    padding: 15px 20px;
-    font-size: 16px;
+/* logo title text */
+.top_nav_logo_text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+/* customer portal badge */
+.top_nav_portal_text {
+    font-size: 11px;
+    background-color: #6e151e;
+    color: #ffcccc;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* top nav center section holding search bar */
+.top_nav_center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+/* search bar container */
+.search_bar_container {
+    background-color: #ffffff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    width: 100%;
+    max-width: 480px;
+    gap: 10px;
+}
+
+/* search bar icon */
+.search_icon {
+    color: #888888;
+    font-size: 14px;
+}
+
+/* search input field */
+.search_input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 13px;
+    color: #333333;
+}
+
+/* top nav right section holding cart and avatar */
+.top_nav_right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* cart icon link and wrapper */
+.cart_icon_container {
+    position: relative;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+/* cart count badge */
+.cart_badge_top {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #ffffff;
+    color: #8b1e28;
+    font-size: 11px;
     font-weight: bold;
-    color: #333;
-    border-bottom: 1px solid #ccc;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* user avatar circle */
+.user_avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* main page layout container that creates the gap */
+.dashboard_layout {
+    flex: 1;
+    display: flex;
+    gap: 25px;
+    padding: 25px 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* floating sidebar card */
+.sidebar_container {
+    width: 260px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 16px;
+    flex-shrink: 0;
+    min-height: 520px;
+}
+
+/* customer dashboard sidebar header title */
+.sidebar_title {
+    padding: 4px 12px 18px 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #222222;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* sidebar nav list */
-.sidebar_nav {
-    flex-grow: 1;
-    padding: 15px 0;
+/* icon in sidebar header */
+.sidebar_title_icon {
+    color: #8b1e28;
+    font-size: 15px;
 }
 
-/* nav item link */
+/* sidebar navigation list wrapper */
+.sidebar_nav {
+    flex-grow: 1;
+}
+
+/* remove default list styling for semantic list */
+.nav_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* navigation link item */
 .nav_item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
+    padding: 10px 14px;
     text-decoration: none;
-    color: #555;
+    color: #555555;
     font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-/* hover for nav item */
+/* hover state for navigation item */
 .nav_item:hover {
-    background-color: #dfdfdf;
+    background-color: #f6f8fa;
+    color: #222222;
 }
 
-/* active nav item */
+/* active navigation item with red left indicator */
 .nav_item.active {
-    background-color: #e0e0e0;
-    font-weight: bold;
-    border-left: 4px solid #a72832;
+    background-color: #fdf2f2;
+    color: #8b1e28;
+    font-weight: 600;
+    border-left: 4px solid #8b1e28;
 }
 
-/* left part of nav item */
+/* left group of nav item icon and label */
 .nav_item_left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-/* badge styling */
+/* general badge for navigation items */
 .nav_badge {
-    background-color: #dcdcdc;
+    background-color: #e6f9ed;
+    color: #1a9e52;
     padding: 2px 8px;
     border-radius: 12px;
-    font-size: 12px;
-    color: #555;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 /* recommended badge styling */
 .badge_recommended {
-    background-color: #f8d7da;
-    color: #a72832;
+    background-color: #e6f0ff;
+    color: #2b70e4;
 }
 
-/* logout section */
+/* badge number style for cart */
+.badge_green {
+    background-color: #e6f9ed;
+    color: #1a9e52;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+}
+
+/* sidebar logout button section */
 .sidebar_logout {
-    padding: 15px 0;
-    border-top: 1px solid #ccc;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
 }
 
-/* main content area */
+/* logout link styling */
+.logout_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #8b1e28;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+/* hover state for logout item */
+.logout_item:hover {
+    background-color: #fdf2f2;
+}
+
+/* floating main content card */
 .main_content {
-    flex-grow: 1;
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    gap: 25px;
+    min-width: 0;
 }
 
-/* main header */
+/* main section header */
 .main_header {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 16px;
 }
 
-/* header title */
+/* main header title */
 .header_title {
-    font-size: 20px;
-    color: #333;
+    font-size: 22px;
+    font-weight: 700;
+    color: #111111;
 }
 
-/* generic section styling */
-.stats_section, .orders_section, .bottom_section {
-    padding: 20px;
+/* header subtitle description */
+.header_subtitle {
+    color: #777777;
+    font-size: 14px;
+    margin-top: 4px;
 }
 
-/* section title styling */
+/* generic section title */
 .section_title {
     font-size: 16px;
+    font-weight: 700;
+    color: #222222;
     margin-bottom: 15px;
-    color: #444;
 }
 
-/* quick stats grid layout */
+/* quick stats grid */
 .stats_grid {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
 }
 
-/* stat card styling */
+/* individual stat card */
 .stat_card {
-    flex: 1;
-    min-width: 250px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 15px;
-    background: #fff;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 20px;
+    background: #fafbfc;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-height: 110px;
 }
 
 /* stat card top row */
@@ -178,9 +365,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    color: #666;
+    color: #555555;
     font-size: 14px;
+    font-weight: 600;
 }
 
 /* stat card bottom row */
@@ -193,37 +380,61 @@ body {
 /* stat value number */
 .stat_value {
     font-size: 28px;
-    font-weight: bold;
-    color: #333;
+    font-weight: 700;
+    color: #111111;
 }
 
-/* generic action button */
+/* stat icon style */
+.stat_icon {
+    font-size: 18px;
+    color: #8b1e28;
+}
+
+/* stat trend icon */
+.stat_trend {
+    font-size: 20px;
+    color: #8b1e28;
+}
+
+/* action button */
 .action_button {
-    background-color: #a72832;
-    color: white;
+    background-color: #8b1e28;
+    color: #ffffff;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 6px 14px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
 }
 
-/* hover for action button */
+/* action button hover */
 .action_button:hover {
-    background-color: #8f2129;
+    background-color: #6e151e;
 }
 
-/* orders table container */
-.table_container {
-    border: 1px solid #ddd;
+/* filter dropdown in header */
+.filter_select {
+    padding: 8px 14px;
+    border: 1px solid #dce2e8;
     border-radius: 6px;
+    font-size: 13px;
+    color: #444444;
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* data table container */
+.table_container {
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
     overflow-x: auto;
 }
 
-/* table styling */
+/* styled data table */
 .orders_table {
     width: 100%;
-    min-width: 600px;
     border-collapse: collapse;
     text-align: left;
     font-size: 14px;
@@ -231,232 +442,417 @@ body {
 
 /* table header styling */
 .orders_table th {
-    background-color: #f2f2f2;
-    padding: 10px 15px;
-    font-weight: normal;
-    color: #555;
-    border-bottom: 1px solid #ddd;
+    background-color: #f7f9fa;
+    padding: 12px 18px;
+    font-weight: 600;
+    color: #444444;
+    border-bottom: 1px solid #eef1f5;
 }
 
 /* table cell styling */
 .orders_table td {
-    padding: 12px 15px;
-    color: #333;
+    padding: 16px 18px;
+    color: #333333;
+    border-bottom: 1px solid #f0f2f5;
+    vertical-align: middle;
 }
 
-/* status indicator circle */
-.status_indicator {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 8px;
+/* table row hover */
+.orders_table tbody tr:hover {
+    background-color: #fafbfc;
 }
 
-/* processing status color */
+/* status pill badge */
+.status_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* processing status pill */
 .status_processing {
-    background-color: #a72832;
+    background-color: #fef7e6;
+    color: #b87b00;
 }
 
-/* action link text */
+/* shipped status pill */
+.status_shipped {
+    background-color: #ebf3ff;
+    color: #1a73e8;
+}
+
+/* delivered status pill */
+.status_delivered {
+    background-color: #e6f9ed;
+    color: #137333;
+}
+
+/* action text link */
 .action_link {
-    color: #a72832;
+    color: #8b1e28;
     text-decoration: none;
-    font-size: 14px;
+    font-weight: 600;
+    font-size: 13px;
 }
 
-/* bottom section split layout */
+/* action text link hover */
+.action_link:hover {
+    text-decoration: underline;
+}
+
+/* bottom section split layout in overview */
 .bottom_section {
     display: flex;
-    flex-wrap: wrap;
     gap: 20px;
-    padding-top: 0;
+    flex-wrap: wrap;
 }
 
 /* recommended products container */
 .recommended_container {
     flex: 2;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 20px;
     min-width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 15px;
 }
 
-/* products scroll area */
+/* products scroll list */
 .products_scroll {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    flex-wrap: wrap;
     gap: 15px;
+    flex-wrap: wrap;
 }
 
-/* product card styling */
+/* product item card */
 .product_card {
     flex: 1;
     min-width: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 10px;
+    border: 1px solid #f0f2f5;
+    border-radius: 8px;
+    padding: 15px;
     text-align: center;
+    background: #fafbfc;
 }
 
 /* product image placeholder */
 .product_image_placeholder {
     width: 100%;
     height: 80px;
-    background: #f9f9f9;
+    background: #ffffff;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    color: #ccc;
+    color: #aaaaaa;
     margin-bottom: 10px;
 }
 
-/* product name styling */
+/* product title */
 .product_name {
-    font-size: 12px;
-    color: #333;
-    margin-bottom: 5px;
+    font-size: 13px;
+    color: #222222;
+    margin-bottom: 6px;
+    font-weight: 600;
 }
 
-/* product price styling */
+/* product price */
 .product_price {
     font-size: 14px;
-    font-weight: bold;
-    color: #555;
+    font-weight: 700;
+    color: #8b1e28;
     margin-bottom: 10px;
 }
 
 /* addresses container */
 .addresses_container {
     flex: 1;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 20px;
     min-width: 250px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 15px;
     font-size: 14px;
 }
 
-/* address block spacing */
+/* address block */
 .address_block {
     margin-bottom: 15px;
+    font-style: normal;
 }
 
-/* address label styling */
+/* address label */
 .address_label {
-    font-weight: bold;
-    color: #333;
+    font-weight: 700;
+    color: #222222;
     display: block;
     margin-bottom: 5px;
+    font-size: 13px;
 }
 
-/* address text styling */
+/* address text */
 .address_text {
-    color: #666;
-    line-height: 1.4;
+    color: #666666;
+    line-height: 1.5;
+    font-size: 13px;
 }
 
-/* footer styling */
-.dashboard_footer {
+/* cart item list */
+.cart_item_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 20px;
-    padding: 15px 20px;
-    background-color: #eaeaea;
-    border-top: 1px solid #ddd;
-    font-size: 12px;
-    color: #666;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* footer item styling */
+/* cart item card */
+.cart_item_card {
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* item image category badge box */
+.item_image_box {
+    width: 65px;
+    height: 65px;
+    border-radius: 10px;
+    background-color: #8b1e28;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* item details section */
+.item_details {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* item name title */
+.item_name {
+    font-size: 15px;
+    color: #222222;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+/* item price text */
+.item_price {
+    font-size: 15px;
+    color: #8b1e28;
+    font-weight: 700;
+}
+
+/* item action controls */
+.item_actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* quantity control group */
+.qty_control {
+    border: 1px solid #dce2e8;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+}
+
+/* quantity button */
+.qty_btn {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: #555555;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* quantity value display */
+.qty_value {
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* delete item button */
+.delete_btn {
+    background: #f0f2f5;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #888888;
+    cursor: pointer;
+}
+
+/* delete button hover */
+.delete_btn:hover {
+    color: #8b1e28;
+    background: #fdf2f2;
+}
+
+/* order summary card */
+.order_summary_section {
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 24px;
+    max-width: 450px;
+}
+
+/* order summary title */
+.summary_title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #222222;
+}
+
+/* summary row layout */
+.summary_row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555555;
+}
+
+/* total row styling */
+.total_row {
+    border-top: 1px solid #eef1f5;
+    padding-top: 12px;
+    margin-top: 12px;
+    font-weight: 700;
+    color: #111111;
+    font-size: 16px;
+}
+
+/* total price accent color */
+.total_price {
+    color: #8b1e28;
+}
+
+/* checkout button */
+.checkout_button {
+    width: 100%;
+    background: #8b1e28;
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 18px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* checkout button hover */
+.checkout_button:hover {
+    background: #6e151e;
+}
+
+/* empty placeholder container for remaining pages */
+.empty_placeholder_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: #888888;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+/* placeholder icon */
+.empty_placeholder_icon {
+    font-size: 48px;
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+/* placeholder message */
+.empty_placeholder_text {
+    font-size: 15px;
+    color: #64748b;
+}
+
+/* sticky fixed footer at the bottom */
+.dashboard_footer {
+    margin-top: auto;
+    background-color: #e9edf2;
+    border-top: 1px solid #dce2e8;
+    padding: 14px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+    font-size: 13px;
+    color: #666666;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+/* footer item with icon */
 .footer_item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
-/* media query for responsiveness */
+/* footer icon accent */
+.footer_icon {
+    color: #8b1e28;
+}
+
+/* responsive media queries for tablet and mobile */
 @media (max-width: 900px) {
-    /* stack sidebar and main */
+    /* stack sidebar and main content vertically */
     .dashboard_layout {
         flex-direction: column;
+        padding: 15px;
     }
     
-    /* sidebar adjustments */
+    /* full width sidebar on mobile */
     .sidebar_container {
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #ddd;
+        min-height: auto;
+    }
+    
+    /* top nav stack on mobile */
+    .top_navbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+    }
+    
+    /* search bar full width */
+    .top_nav_center {
+        width: 100%;
+        padding: 0;
     }
 }
-
-/* remove list styling for semantic uls */
-ul.nav_list, ul.products_scroll { list-style: none; padding: 0; margin: 0; }
-
-
-/* CART PAGE SPECIFIC STYLES */
-
-/* header subtitle text */
-.header_subtitle { color: #777; font-size: 14px; margin: 5px 0 0 0; }
-
-/* cart items section padding */
-.cart_items_section { padding: 20px; }
-
-/* cart items list reset */
-.cart_item_list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px; }
-
-/* individual cart item card */
-.cart_item_card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 15px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-
-/* product category image box */
-.item_image_box { width: 60px; height: 60px; border-radius: 8px; background-color: #a72832; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; flex-shrink: 0; }
-
-/* cart item text details */
-.item_details { flex: 1; min-width: 200px; }
-
-/* cart item product name */
-.item_name { font-size: 14px; color: #222; margin-bottom: 5px; font-weight: 600; }
-
-/* cart item price */
-.item_price { font-size: 14px; color: #a72832; font-weight: bold; margin: 0; }
-
-/* cart item action buttons */
-.item_actions { display: flex; align-items: center; gap: 15px; }
-
-/* quantity control container */
-.qty_control { border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; background: #fff; }
-
-/* quantity increment decrement button */
-.qty_btn { background: #fdfdfd; border: none; padding: 5px 12px; cursor: pointer; color: #555; }
-
-/* quantity display value */
-.qty_value { padding: 0 10px; font-size: 14px; }
-
-/* delete item button */
-.delete_btn { background: #eee; border: none; padding: 8px 12px; border-radius: 4px; color: #888; cursor: pointer; }
-
-/* order summary container */
-.order_summary_section { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin: 0 20px 20px 20px; }
-
-/* order summary heading */
-.summary_title { font-size: 16px; margin-bottom: 15px; color: #333; }
-
-/* summary row layout */
-.summary_row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #555; }
-
-/* total row styling */
-.total_row { border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; font-weight: bold; color: #111; font-size: 16px; }
-
-/* total price color */
-.total_price { color: #a72832; }
-
-/* checkout button */
-.checkout_button { width: 100%; background: #a72832; color: #fff; border: none; padding: 12px; border-radius: 6px; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 14px; }
-
-/* checkout button hover */
-.checkout_button:hover { background-color: #8f2129; }
-

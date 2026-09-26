@@ -5,25 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taurus Bike Store - My Cart</title>
     <!-- link to designated dashboard styles -->
-    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
     <!-- external fontawesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- main dashboard wrapper -->
-    <div id="dashboard_container" class="dashboard_layout">
-        
-        <!-- sidebar menu -->
-        <aside id="dashboard_sidebar" class="sidebar_container">
-            <!-- logo section -->
-            <div class="sidebar_logo">
-                <img src="../../assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="logo_image">
-                <h2 class="logo_text">Taurus Bike</h2>
+    <!-- global top navbar -->
+    <header class="top_navbar">
+        <div class="top_nav_left">
+            <div class="top_nav_logo_box">
+                <img src="../../assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img">
             </div>
-            
+            <h2 class="top_nav_logo_text">Taurus Bike</h2>
+            <span class="top_nav_portal_text">CUSTOMER PORTAL</span>
+        </div>
+        <div class="top_nav_center">
+            <div class="search_bar_container">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" placeholder="Search bikes, parts, accessories...">
+            </div>
+        </div>
+        <div class="top_nav_right">
+            <a href="mycart.html" class="cart_icon_container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart_badge_top">4</span>
+            </a>
+            <div class="user_avatar">JD</div>
+        </div>
+    </header>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
             <!-- customer dashboard title -->
             <div class="sidebar_title">
-                <i class="fas fa-th-large"></i>
+                <i class="fas fa-th-large sidebar_title_icon"></i>
                 <span>Customer Dashboard</span>
             </div>
 
@@ -45,7 +62,7 @@
                                 <i class="fas fa-shopping-cart"></i>
                                 <span>My Cart</span>
                             </div>
-                            <span class="nav_badge">Core</span>
+                            <span class="badge_green">4</span>
                         </a>
                     </li>
                     <li>
@@ -89,27 +106,27 @@
 
             <!-- logout section -->
             <div class="sidebar_logout">
-                <a href="#" class="nav_item">
-                    <div class="nav_item_left">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Log Out</span>
-                    </div>
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
                 </a>
             </div>
         </aside>
 
-        <!-- main content area -->
+        <!-- floating main content card -->
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
-                <h1 class="header_title">My Shopping Cart</h1>
-                <p class="header_subtitle">Review your selected items before checkout.</p>
+                <div>
+                    <h1 class="header_title">My Shopping Cart</h1>
+                    <p class="header_subtitle">Review your selected items before checkout.</p>
+                </div>
             </header>
 
             <!-- cart items section -->
             <section class="cart_items_section">
                 <ul class="cart_item_list">
                     <li class="cart_item_card">
-                        <div class="item_image_box bg_shimano">Shimano</div>
+                        <div class="item_image_box">Shimano</div>
                         <div class="item_details">
                             <h4 class="item_name">Shimano SLX M7100 12spd Upgrade Kit</h4>
                             <p class="item_price">₱9,500</p>
@@ -124,7 +141,7 @@
                         </div>
                     </li>
                     <li class="cart_item_card">
-                        <div class="item_image_box bg_shoes">Shoes</div>
+                        <div class="item_image_box">Shoes</div>
                         <div class="item_details">
                             <h4 class="item_name">Shimano RC903 Sphyre Cleats Shoe</h4>
                             <p class="item_price">₱16,000</p>
@@ -139,7 +156,7 @@
                         </div>
                     </li>
                     <li class="cart_item_card">
-                        <div class="item_image_box bg_frame">Frame</div>
+                        <div class="item_image_box">Frame</div>
                         <div class="item_details">
                             <h4 class="item_name">2026 The New Sagmit Evolution Carbon MTB Frame</h4>
                             <p class="item_price">₱19,900</p>
@@ -154,7 +171,7 @@
                         </div>
                     </li>
                     <li class="cart_item_card">
-                        <div class="item_image_box bg_tire">Tire</div>
+                        <div class="item_image_box">Tire</div>
                         <div class="item_details">
                             <h4 class="item_name">Ardent 29 x 2.25 Tonwall EXO Tubeless Ready</h4>
                             <p class="item_price">₱1,500</p>
@@ -188,16 +205,28 @@
                 </div>
                 <button class="checkout_button">Proceed to Checkout</button>
             </section>
-
-            <!-- footer -->
-            <footer class="dashboard_footer">
-                <div class="footer_item"><i class="fas fa-home"></i> Taurus Bike/cale.tn</div>
-                <div class="footer_item"><i class="fas fa-phone"></i> 2024-0541</div>
-                <div class="footer_item"><i class="fas fa-info-circle"></i> Contact fifo Information</div>
-                <div class="footer_item"><i class="fas fa-map-marker-alt"></i> Manage Contact</div>
-            </footer>
         </main>
     </div>
+
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
 
     <!-- main dashboard script -->
     <script src="../../js/dashboard.js"></script>
