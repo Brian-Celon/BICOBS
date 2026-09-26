@@ -43,348 +43,317 @@
         <!-- main content area -->
         <main class="pos_main_content">
 
-            <!-- subheader section -->
-            <section class="sub_header_row">
-                <div class="sub_header_left">
-                    <span class="sub_label_red">NEW TRANSACTION</span>
-                    <h1 class="page_title_bold">Select Products</h1>
+            <!-- split layout: catalog area on left, order side window on right -->
+            <div class="pos_split_layout">
+
+                <!-- left column: product catalog -->
+                <div class="catalog_column">
+
+                    <!-- subheader section without view cart button -->
+                    <section class="sub_header_row">
+                        <div class="sub_header_left">
+                            <span class="sub_label_red">NEW TRANSACTION</span>
+                            <h1 class="page_title_bold">Select Products</h1>
+                        </div>
+                    </section>
+
+                    <!-- search bar -->
+                    <section class="pos_search_wrapper">
+                        <span class="search_icon_left">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </span>
+                        <input type="text" class="pos_search_input" id="product_search_input" placeholder="Search products by name, SKU, or category...">
+                    </section>
+
+                    <!-- category filter pills -->
+                    <section class="category_filter_bar" id="category_filter_bar">
+                        <button class="pill_filter_btn active" data-category="all">All</button>
+                        <button class="pill_filter_btn" data-category="accessories">Accessories</button>
+                        <button class="pill_filter_btn" data-category="bicycle">Bicycle</button>
+                        <button class="pill_filter_btn" data-category="brakes">Brakes</button>
+                        <button class="pill_filter_btn" data-category="cockpit">Cockpit</button>
+                        <button class="pill_filter_btn" data-category="drivetrain">Drivetrain</button>
+                        <button class="pill_filter_btn" data-category="headset">Headset</button>
+                        <button class="pill_filter_btn" data-category="pedals">Pedals</button>
+                        <button class="pill_filter_btn" data-category="saddle">Saddle</button>
+                        <button class="pill_filter_btn" data-category="safety">Safety</button>
+                        <button class="pill_filter_btn" data-category="suspension">Suspension</button>
+                        <button class="pill_filter_btn" data-category="tires">Tires</button>
+                        <button class="pill_filter_btn" data-category="tools">Tools</button>
+                    </section>
+
+                    <!-- products info row -->
+                    <div class="products_info_row">
+                        <span class="products_count_text" id="products_count_label">ALL PRODUCTS &mdash; 12 ITEMS</span>
+                        <span class="helper_hint_text">Click a card to select quantity</span>
+                    </div>
+
+                    <!-- product grid -->
+                    <section class="pos_product_grid" id="pos_product_grid">
+
+                        <!-- product 1 -->
+                        <div class="pos_product_card" data-sku="SH-XT-001" data-name="Shimano Deore XT Derailleur" data-price="3850" data-category="drivetrain">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                </div>
+                                <span class="product_category_badge">DRIVETRAIN</span>
+                            </div>
+                            <span class="product_sku_text">SH-XT-001</span>
+                            <h3 class="product_title_text">Shimano Deore XT Derailleur</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;3,850.00</span>
+                                <span class="product_stock_green">4 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 2 -->
+                        <div class="pos_product_card" data-sku="MX-MIN-002" data-name="Maxxis Minion DHF 29x2.5" data-price="2200" data-category="tires">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7" stroke="#0284c7"><circle cx="12" cy="12" r="9"></circle></svg>
+                                </div>
+                                <span class="product_category_badge">TIRES</span>
+                            </div>
+                            <span class="product_sku_text">MX-MIN-002</span>
+                            <h3 class="product_title_text">Maxxis Minion DHF 29&times;2.5</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;2,200.00</span>
+                                <span class="product_stock_green">8 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 3 -->
+                        <div class="pos_product_card" data-sku="RS-PK-003" data-name="RockShox Pike Ultimate Fork" data-price="28500" data-category="suspension">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                                </div>
+                                <span class="product_category_badge">SUSPENSION</span>
+                            </div>
+                            <span class="product_sku_text">RS-PK-003</span>
+                            <h3 class="product_title_text">RockShox Pike Ultimate Fork</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;28,500.00</span>
+                                <span class="product_stock_green">2 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 4 -->
+                        <div class="pos_product_card" data-sku="SR-GX-004" data-name="SRAM Eagle GX Cassette" data-price="4100" data-category="drivetrain">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                </div>
+                                <span class="product_category_badge">DRIVETRAIN</span>
+                            </div>
+                            <span class="product_sku_text">SR-GX-004</span>
+                            <h3 class="product_title_text">SRAM Eagle GX Cassette</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;4,100.00</span>
+                                <span class="product_stock_green">6 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 5 -->
+                        <div class="pos_product_card" data-sku="ER-GP5-005" data-name="Ergon GP5 Grips" data-price="950" data-category="cockpit">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="8.5" r="1.5"></circle><circle cx="8.5" cy="15.5" r="1.5"></circle><circle cx="15.5" cy="15.5" r="1.5"></circle></svg>
+                                </div>
+                                <span class="product_category_badge">COCKPIT</span>
+                            </div>
+                            <span class="product_sku_text">ER-GP5-005</span>
+                            <h3 class="product_title_text">Ergon GP5 Grips</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;950.00</span>
+                                <span class="product_stock_green">12 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 6 -->
+                        <div class="pos_product_card" data-sku="GI-ATX-006" data-name="Giant ATX 26 Mountain Bike" data-price="14500" data-category="bicycle">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l4-3 3 5h4"></path></svg>
+                                </div>
+                                <span class="product_category_badge">BICYCLE</span>
+                            </div>
+                            <span class="product_sku_text">GI-ATX-006</span>
+                            <h3 class="product_title_text">Giant ATX 26" Mountain Bike</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;14,500.00</span>
+                                <span class="product_stock_green">3 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 7 -->
+                        <div class="pos_product_card" data-sku="TR-M5-007" data-name="Trek Marlin 5 27.5" data-price="22000" data-category="bicycle">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l4-3 3 5h4"></path></svg>
+                                </div>
+                                <span class="product_category_badge">BICYCLE</span>
+                            </div>
+                            <span class="product_sku_text">TR-M5-007</span>
+                            <h3 class="product_title_text">Trek Marlin 5 27.5"</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;22,000.00</span>
+                                <span class="product_stock_green">2 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 8 -->
+                        <div class="pos_product_card" data-sku="SH-BL-008" data-name="Shimano BL-M315 Brake Lever Set" data-price="1200" data-category="brakes">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ea580c" stroke="#ea580c"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon></svg>
+                                </div>
+                                <span class="product_category_badge">BRAKES</span>
+                            </div>
+                            <span class="product_sku_text">SH-BL-008</span>
+                            <h3 class="product_title_text">Shimano BL-M315 Brake Lever Set</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;1,200.00</span>
+                                <span class="product_stock_green">9 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 9 -->
+                        <div class="pos_product_card" data-sku="CO-RK-009" data-name="Continental Race King 29x2.2" data-price="1750" data-category="tires">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7" stroke="#0284c7"><circle cx="12" cy="12" r="9"></circle></svg>
+                                </div>
+                                <span class="product_category_badge">TIRES</span>
+                            </div>
+                            <span class="product_sku_text">CO-RK-009</span>
+                            <h3 class="product_title_text">Continental Race King 29&times;2.2</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;1,750.00</span>
+                                <span class="product_stock_green">5 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 10 -->
+                        <div class="pos_product_card" data-sku="WB-VT-010" data-name="WTB Volt Saddle" data-price="1600" data-category="saddle">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path><path d="M5 5h14v4H5z"></path></svg>
+                                </div>
+                                <span class="product_category_badge">SADDLE</span>
+                            </div>
+                            <span class="product_sku_text">WB-VT-010</span>
+                            <h3 class="product_title_text">WTB Volt Saddle</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;1,600.00</span>
+                                <span class="product_stock_green">7 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 11 -->
+                        <div class="pos_product_card" data-sku="CC-40-011" data-name="Cane Creek 40 Headset" data-price="2800" data-category="headset">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="4" rx="1"></rect><rect x="8" y="8" width="8" height="8"></rect><rect x="6" y="16" width="12" height="4" rx="1"></rect></svg>
+                                </div>
+                                <span class="product_category_badge">HEADSET</span>
+                            </div>
+                            <span class="product_sku_text">CC-40-011</span>
+                            <h3 class="product_title_text">Cane Creek 40 Headset</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;2,800.00</span>
+                                <span class="product_stock_green">3 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                        <!-- product 12 -->
+                        <div class="pos_product_card" data-sku="KM-X11-012" data-name="KMC X11 Chain" data-price="680" data-category="drivetrain">
+                            <div class="product_visual_box">
+                                <div class="product_category_icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                </div>
+                                <span class="product_category_badge">DRIVETRAIN</span>
+                            </div>
+                            <span class="product_sku_text">KM-X11-012</span>
+                            <h3 class="product_title_text">KMC X11 Chain</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;680.00</span>
+                                <span class="product_stock_green">15 in stock</span>
+                            </div>
+                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        </div>
+
+                    </section>
+
                 </div>
-                <button class="btn_view_cart" id="btn_view_cart">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span>View Cart (<span id="cart_count">0</span>)</span>
-                </button>
-            </section>
 
-            <!-- search bar -->
-            <section class="pos_search_wrapper">
-                <span class="search_icon_left">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </span>
-                <input type="text" class="pos_search_input" id="product_search_input" placeholder="Search products by name, SKU, or category...">
-            </section>
+                <!-- right column: orders side window panel -->
+                <aside class="order_side_panel" id="order_side_panel">
+                    <!-- panel header -->
+                    <div class="order_panel_header">
+                        <div class="order_panel_title_wrap">
+                            <h2 class="order_panel_title">Orders</h2>
+                            <span class="order_badge_count" id="order_badge_count">0</span>
+                        </div>
+                        <button class="btn_clear_order" id="btn_clear_order">Clear All</button>
+                    </div>
 
-            <!-- category filter pills -->
-            <section class="category_filter_bar" id="category_filter_bar">
-                <button class="pill_filter_btn active" data-category="all">All</button>
-                <button class="pill_filter_btn" data-category="accessories">Accessories</button>
-                <button class="pill_filter_btn" data-category="bicycle">Bicycle</button>
-                <button class="pill_filter_btn" data-category="brakes">Brakes</button>
-                <button class="pill_filter_btn" data-category="cockpit">Cockpit</button>
-                <button class="pill_filter_btn" data-category="drivetrain">Drivetrain</button>
-                <button class="pill_filter_btn" data-category="headset">Headset</button>
-                <button class="pill_filter_btn" data-category="pedals">Pedals</button>
-                <button class="pill_filter_btn" data-category="saddle">Saddle</button>
-                <button class="pill_filter_btn" data-category="safety">Safety</button>
-                <button class="pill_filter_btn" data-category="suspension">Suspension</button>
-                <button class="pill_filter_btn" data-category="tires">Tires</button>
-                <button class="pill_filter_btn" data-category="tools">Tools</button>
-            </section>
+                    <!-- scrollable order items list -->
+                    <div class="order_items_list" id="order_items_list">
+                        <!-- empty state -->
+                        <div class="empty_order_state" id="empty_order_state">
+                            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            <span class="empty_state_text">No items in current order</span>
+                            <span class="empty_state_subtext">Click on products to add them</span>
+                        </div>
+                    </div>
 
-            <!-- products count and helper text row -->
-            <div class="products_info_row">
-                <span class="products_count_text" id="products_count_label">ALL PRODUCTS &mdash; 12 ITEMS</span>
-                <span class="helper_hint_text">Click a card to select quantity</span>
+                    <!-- order summary & charge footer -->
+                    <div class="order_summary_footer">
+                        <div class="order_summary_row">
+                            <span class="summary_row_label">Sub Total</span>
+                            <span class="summary_row_value" id="summary_subtotal">&#8369;0.00</span>
+                        </div>
+                        <div class="order_summary_row">
+                            <span class="summary_row_label">Discount</span>
+                            <span class="summary_row_action" id="summary_discount_btn">Add Code</span>
+                        </div>
+                        <div class="order_summary_total_row">
+                            <span class="summary_total_label">Total (<span id="summary_item_count">0 Items</span>)</span>
+                            <span class="summary_total_value" id="summary_total">&#8369;0.00</span>
+                        </div>
+                        <button class="btn_charge_action" id="btn_charge_action" disabled>
+                            <span>Charge &#8369;0.00</span>
+                        </button>
+                    </div>
+                </aside>
+
             </div>
-
-            <!-- product grid -->
-            <section class="pos_product_grid" id="pos_product_grid">
-
-                <!-- product 1 -->
-                <div class="pos_product_card" data-sku="SH-XT-001" data-name="Shimano Deore XT Derailleur" data-category="drivetrain">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        </div>
-                        <span class="product_category_badge">DRIVETRAIN</span>
-                    </div>
-                    <span class="product_sku_text">SH-XT-001</span>
-                    <h3 class="product_title_text">Shimano Deore XT Derailleur</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;3,850.00</span>
-                        <span class="product_stock_green">4 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 2 -->
-                <div class="pos_product_card" data-sku="MX-MIN-002" data-name="Maxxis Minion DHF 29x2.5" data-category="tires">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7" stroke="#0284c7"><circle cx="12" cy="12" r="9"></circle></svg>
-                        </div>
-                        <span class="product_category_badge">TIRES</span>
-                    </div>
-                    <span class="product_sku_text">MX-MIN-002</span>
-                    <h3 class="product_title_text">Maxxis Minion DHF 29&times;2.5</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;2,200.00</span>
-                        <span class="product_stock_green">8 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 3 -->
-                <div class="pos_product_card" data-sku="RS-PK-003" data-name="RockShox Pike Ultimate Fork" data-category="suspension">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                        </div>
-                        <span class="product_category_badge">SUSPENSION</span>
-                    </div>
-                    <span class="product_sku_text">RS-PK-003</span>
-                    <h3 class="product_title_text">RockShox Pike Ultimate Fork</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;28,500.00</span>
-                        <span class="product_stock_green">2 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 4 -->
-                <div class="pos_product_card" data-sku="SR-GX-004" data-name="SRAM Eagle GX Cassette" data-category="drivetrain">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        </div>
-                        <span class="product_category_badge">DRIVETRAIN</span>
-                    </div>
-                    <span class="product_sku_text">SR-GX-004</span>
-                    <h3 class="product_title_text">SRAM Eagle GX Cassette</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;4,100.00</span>
-                        <span class="product_stock_green">6 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 5 -->
-                <div class="pos_product_card" data-sku="ER-GP5-005" data-name="Ergon GP5 Grips" data-category="cockpit">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="8.5" r="1.5"></circle><circle cx="8.5" cy="15.5" r="1.5"></circle><circle cx="15.5" cy="15.5" r="1.5"></circle></svg>
-                        </div>
-                        <span class="product_category_badge">COCKPIT</span>
-                    </div>
-                    <span class="product_sku_text">ER-GP5-005</span>
-                    <h3 class="product_title_text">Ergon GP5 Grips</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;950.00</span>
-                        <span class="product_stock_green">12 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 6 -->
-                <div class="pos_product_card" data-sku="GI-ATX-006" data-name="Giant ATX 26 Mountain Bike" data-category="bicycle">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l4-3 3 5h4"></path></svg>
-                        </div>
-                        <span class="product_category_badge">BICYCLE</span>
-                    </div>
-                    <span class="product_sku_text">GI-ATX-006</span>
-                    <h3 class="product_title_text">Giant ATX 26" Mountain Bike</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;14,500.00</span>
-                        <span class="product_stock_green">3 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 7 -->
-                <div class="pos_product_card" data-sku="TR-M5-007" data-name="Trek Marlin 5 27.5" data-category="bicycle">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l4-3 3 5h4"></path></svg>
-                        </div>
-                        <span class="product_category_badge">BICYCLE</span>
-                    </div>
-                    <span class="product_sku_text">TR-M5-007</span>
-                    <h3 class="product_title_text">Trek Marlin 5 27.5"</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;22,000.00</span>
-                        <span class="product_stock_green">2 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 8 -->
-                <div class="pos_product_card" data-sku="SH-BL-008" data-name="Shimano BL-M315 Brake Lever Set" data-category="brakes">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ea580c" stroke="#ea580c"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon></svg>
-                        </div>
-                        <span class="product_category_badge">BRAKES</span>
-                    </div>
-                    <span class="product_sku_text">SH-BL-008</span>
-                    <h3 class="product_title_text">Shimano BL-M315 Brake Lever Set</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;1,200.00</span>
-                        <span class="product_stock_green">9 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 9 -->
-                <div class="pos_product_card" data-sku="CO-RK-009" data-name="Continental Race King 29x2.2" data-category="tires">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7" stroke="#0284c7"><circle cx="12" cy="12" r="9"></circle></svg>
-                        </div>
-                        <span class="product_category_badge">TIRES</span>
-                    </div>
-                    <span class="product_sku_text">CO-RK-009</span>
-                    <h3 class="product_title_text">Continental Race King 29&times;2.2</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;1,750.00</span>
-                        <span class="product_stock_green">5 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 10 -->
-                <div class="pos_product_card" data-sku="WB-VT-010" data-name="WTB Volt Saddle" data-category="saddle">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path><path d="M5 5h14v4H5z"></path></svg>
-                        </div>
-                        <span class="product_category_badge">SADDLE</span>
-                    </div>
-                    <span class="product_sku_text">WB-VT-010</span>
-                    <h3 class="product_title_text">WTB Volt Saddle</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;1,600.00</span>
-                        <span class="product_stock_green">7 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 11 -->
-                <div class="pos_product_card" data-sku="CC-40-011" data-name="Cane Creek 40 Headset" data-category="headset">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="4" rx="1"></rect><rect x="8" y="8" width="8" height="8"></rect><rect x="6" y="16" width="12" height="4" rx="1"></rect></svg>
-                        </div>
-                        <span class="product_category_badge">HEADSET</span>
-                    </div>
-                    <span class="product_sku_text">CC-40-011</span>
-                    <h3 class="product_title_text">Cane Creek 40 Headset</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;2,800.00</span>
-                        <span class="product_stock_green">3 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-                <!-- product 12 -->
-                <div class="pos_product_card" data-sku="KM-X11-012" data-name="KMC X11 Chain" data-category="drivetrain">
-                    <div class="product_visual_box">
-                        <div class="product_category_icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        </div>
-                        <span class="product_category_badge">DRIVETRAIN</span>
-                    </div>
-                    <span class="product_sku_text">KM-X11-012</span>
-                    <h3 class="product_title_text">KMC X11 Chain</h3>
-                    <div class="product_price_stock_row">
-                        <span class="product_price_red">&#8369;680.00</span>
-                        <span class="product_stock_green">15 in stock</span>
-                    </div>
-                    <button class="btn_add_to_cart">+ Add to Cart</button>
-                </div>
-
-            </section>
 
         </main>
 
     </div>
 
-    <!-- interactive terminal script -->
-    <script>
-        function updateClock() {
-            const clockEl = document.getElementById('clock_display');
-            if (!clockEl) return;
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, '0') : '12';
-            clockEl.textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        let cartCount = 0;
-        const cartCountEl = document.getElementById('cart_count');
-        const searchInput = document.getElementById('product_search_input');
-        const filterBtns = document.querySelectorAll('.pill_filter_btn');
-        const productCards = document.querySelectorAll('.pos_product_card');
-        const countLabel = document.getElementById('products_count_label');
-
-        let activeCategory = 'all';
-
-        function filterProducts() {
-            const query = searchInput.value.toLowerCase().trim();
-            let visibleCount = 0;
-
-            productCards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                const sku = card.getAttribute('data-sku').toLowerCase();
-                const category = card.getAttribute('data-category').toLowerCase();
-
-                const matchesCategory = (activeCategory === 'all' || category === activeCategory);
-                const matchesQuery = (name.includes(query) || sku.includes(query) || category.includes(query));
-
-                if (matchesCategory && matchesQuery) {
-                    card.style.display = '';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            if (activeCategory === 'all' && query === '') {
-                countLabel.textContent = `ALL PRODUCTS — ${visibleCount} ITEMS`;
-            } else {
-                countLabel.textContent = `FILTERED PRODUCTS — ${visibleCount} ITEMS`;
-            }
-        }
-
-        searchInput.addEventListener('input', filterProducts);
-
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                activeCategory = btn.getAttribute('data-category');
-                filterProducts();
-            });
-        });
-
-        document.querySelectorAll('.btn_add_to_cart').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                cartCount++;
-                cartCountEl.textContent = cartCount;
-                const originalText = btn.textContent;
-                btn.textContent = '✓ Added!';
-                btn.style.backgroundColor = '#dcfce7';
-                btn.style.color = '#16a34a';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.backgroundColor = '';
-                    btn.style.color = '';
-                }, 900);
-            });
-        });
-    </script>
+    <!-- pos interactive scripts -->
+    <script src="/frontend/js/POS.js"></script>
 </body>
 </html>

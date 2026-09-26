@@ -140,44 +140,7 @@
 
     </div>
 
-    <!-- interactive history script -->
-    <script>
-        function updateClock() {
-            const clockEl = document.getElementById('clock_display');
-            if (!clockEl) return;
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, '0') : '12';
-            clockEl.textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        const searchInput = document.getElementById('history_search_input');
-        const rows = document.querySelectorAll('#history_tbody tr');
-        const totalEl = document.getElementById('filtered_total_value');
-
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.toLowerCase().trim();
-            let sum = 0;
-
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const match = text.includes(query);
-                if (match) {
-                    row.style.display = '';
-                    sum += parseFloat(row.getAttribute('data-amount') || '0');
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            totalEl.textContent = '₱' + sum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        });
-    </script>
+    <!-- pos interactive scripts -->
+    <script src="/frontend/js/POS.js"></script>
 </body>
 </html>

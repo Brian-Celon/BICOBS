@@ -154,22 +154,7 @@
 
     </div>
 
-    <!-- live clock script -->
-    <script>
-        function updateClock() {
-            const clockEl = document.getElementById('clock_display');
-            if (!clockEl) return;
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, '0') : '12';
-            clockEl.textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+    <!-- pos interactive scripts -->
+    <script src="/frontend/js/POS.js"></script>
 </body>
 </html>

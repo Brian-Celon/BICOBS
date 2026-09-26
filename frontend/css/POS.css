@@ -460,10 +460,26 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   Page 2: POS-main.html Styles
+   Page 2: POS-main.html Styles & Order Side Window Panel
    ========================================================================== */
 
-/* subheader title and cart button row */
+/* split layout */
+.pos_split_layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.catalog_column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* subheader title */
 .sub_header_row {
     display: flex;
     align-items: center;
@@ -490,26 +506,6 @@ button, input, select, textarea {
     font-weight: 800;
     color: var(--pos_text_dark);
     letter-spacing: -0.4px;
-}
-
-.btn_view_cart {
-    background-color: var(--pos_red);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 9px 22px;
-    font-size: 13.5px;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.15s ease;
-}
-
-.btn_view_cart:hover {
-    background-color: var(--pos_red_dark);
 }
 
 /* full width search bar */
@@ -598,11 +594,11 @@ button, input, select, textarea {
     color: var(--pos_text_muted);
 }
 
-/* product grid - 6 columns */
+/* product grid - 4 columns in split view */
 .pos_product_grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
 }
 
 .pos_product_card {
@@ -613,6 +609,7 @@ button, input, select, textarea {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
@@ -624,7 +621,7 @@ button, input, select, textarea {
 
 .product_visual_box {
     width: 100%;
-    height: 100px;
+    height: 90px;
     background-color: #f8fafc;
     border-radius: 6px;
     display: flex;
@@ -638,8 +635,8 @@ button, input, select, textarea {
 }
 
 .product_category_icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -649,11 +646,11 @@ button, input, select, textarea {
 .product_category_badge {
     background-color: #e2e8f0;
     color: #475569;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 3px;
 }
 
@@ -710,6 +707,292 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
+   Order Side Window Panel (Right Side of POS-main)
+   ========================================================================== */
+
+.order_side_panel {
+    width: 380px;
+    min-width: 340px;
+    background-color: var(--pos_card_bg);
+    border: 1px solid var(--pos_border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    position: sticky;
+    top: 76px;
+    max-height: calc(100vh - 96px);
+}
+
+.order_panel_header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--pos_border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.order_panel_title_wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order_panel_title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    letter-spacing: -0.3px;
+}
+
+.order_badge_count {
+    background-color: var(--pos_red_light);
+    color: var(--pos_red);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.btn_clear_order {
+    background: none;
+    border: none;
+    color: var(--pos_text_muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.btn_clear_order:hover {
+    color: var(--pos_red);
+    text-decoration: underline;
+}
+
+/* order items scrollable list */
+.order_items_list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 240px;
+    max-height: 380px;
+}
+
+/* empty state */
+.empty_order_state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+    gap: 8px;
+    color: var(--pos_text_muted);
+    text-align: center;
+}
+
+.empty_state_text {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--pos_text_body);
+}
+
+.empty_state_subtext {
+    font-size: 12px;
+    color: var(--pos_text_light);
+}
+
+/* individual order item card in side window */
+.order_item_card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pos_border_light);
+}
+
+.order_item_card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.order_item_top_row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.order_item_name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pos_text_dark);
+    line-height: 1.3;
+}
+
+.order_item_price {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    white-space: nowrap;
+}
+
+.order_item_bottom_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.qty_controls_group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.qty_label_text {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--pos_text_muted);
+    text-transform: uppercase;
+}
+
+.btn_qty_adjust {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--pos_border);
+    background-color: #ffffff;
+    color: var(--pos_text_dark);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn_qty_adjust:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.item_qty_number {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pos_text_dark);
+    min-width: 18px;
+    text-align: center;
+}
+
+.btn_remove_item {
+    background: none;
+    border: none;
+    color: var(--pos_text_light);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.btn_remove_item:hover {
+    color: var(--pos_red);
+}
+
+/* order summary & charge footer */
+.order_summary_footer {
+    padding: 16px 20px;
+    background-color: #f8fafc;
+    border-top: 1px solid var(--pos_border);
+    border-radius: 0 0 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.order_summary_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--pos_text_body);
+}
+
+.summary_row_label {
+    color: var(--pos_text_muted);
+    font-weight: 500;
+}
+
+.summary_row_value {
+    font-weight: 600;
+    color: var(--pos_text_dark);
+}
+
+.summary_row_action {
+    color: var(--pos_red);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 12.5px;
+}
+
+.summary_row_action:hover {
+    text-decoration: underline;
+}
+
+.order_summary_total_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    padding-top: 6px;
+    border-top: 1px dashed var(--pos_border);
+}
+
+.summary_total_label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.summary_total_value {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--pos_red);
+}
+
+.btn_charge_action {
+    background-color: var(--pos_red);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14.5px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+    margin-top: 4px;
+}
+
+.btn_charge_action:hover:not(:disabled) {
+    background-color: var(--pos_red_dark);
+    transform: translateY(-1px);
+}
+
+.btn_charge_action:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ==========================================================================
    Page 3: POS-history.html Styles
    ========================================================================== */
 
@@ -745,13 +1028,34 @@ button, input, select, textarea {
    Responsive Breakpoints
    ========================================================================== */
 
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
     .pos_product_grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
+    .pos_split_layout {
+        flex-direction: column;
+    }
+
+    .order_side_panel {
+        width: 100%;
+        position: static;
+        max-height: none;
+    }
+
+    .action_cards_row {
+        grid-template-columns: 1fr;
+    }
+
+    .hero_bull_graphic {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 768px) {
     .pos_top_nav {
         padding: 10px 18px;
     }
@@ -760,17 +1064,8 @@ button, input, select, textarea {
         padding: 18px 18px 36px;
     }
 
-    .action_cards_row {
-        grid-template-columns: 1fr;
-    }
-
     .pos_product_grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .hero_bull_graphic {
-        width: 150px;
-        height: 150px;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -810,10 +1105,6 @@ button, input, select, textarea {
 
     .hero_bull_graphic {
         display: none;
-    }
-
-    .pos_product_grid {
-        grid-template-columns: repeat(2, 1fr);
     }
 
     .history_sub_header {
