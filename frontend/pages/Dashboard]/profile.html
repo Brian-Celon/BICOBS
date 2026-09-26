@@ -113,20 +113,53 @@
             </div>
         </aside>
 
-        <!-- floating main content card left blank/placeholder as instructed -->
+        <!-- floating main content card -->
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
                 <div>
-                    <h1 class="header_title">My Profile</h1>
-                    <p class="header_subtitle">View and update your personal account information.</p>
+                    <h1 class="header_title">My Profile Settings</h1>
+                    <p class="header_subtitle">Update your personal account credentials and notification preferences.</p>
                 </div>
             </header>
 
-            <!-- blank content placeholder -->
-            <section class="empty_placeholder_container">
-                <i class="fas fa-user empty_placeholder_icon"></i>
-                <p class="empty_placeholder_text">Profile details are currently blank.</p>
-            </section>
+            <!-- profile form -->
+            <form class="profile_form" onsubmit="event.preventDefault();">
+                <!-- personal information section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Personal Information</h3>
+                    <div class="form_row_two">
+                        <div class="form_group">
+                            <label class="form_label" for="full_name_input">Full Name</label>
+                            <input class="form_input" type="text" id="full_name_input" value="Juan Dela Cruz">
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="email_address_input">Email Address</label>
+                            <input class="form_input" type="email" id="email_address_input" value="juan@taurusbike.ph">
+                        </div>
+                    </div>
+                    <div class="form_group" style="margin-bottom: 0;">
+                        <label class="form_label" for="phone_number_input">Phone Number</label>
+                        <input class="form_input" type="tel" id="phone_number_input" value="+63 917 555 1234">
+                    </div>
+                </section>
+
+                <!-- change password section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Change Password</h3>
+                    <div class="form_row_two" style="margin-bottom: 0;">
+                        <div class="form_group" style="margin-bottom: 0;">
+                            <label class="form_label" for="new_password_input">New Password</label>
+                            <input class="form_input" type="password" id="new_password_input" value="password123">
+                        </div>
+                        <div class="form_group" style="margin-bottom: 0;">
+                            <label class="form_label" for="confirm_password_input">Confirm New Password</label>
+                            <input class="form_input" type="password" id="confirm_password_input" value="password123">
+                        </div>
+                    </div>
+                </section>
+
+                <button type="submit" class="btn_save_changes">Save Changes</button>
+            </form>
         </main>
     </div>
 

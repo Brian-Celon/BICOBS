@@ -333,6 +333,38 @@ body {
     margin-top: 4px;
 }
 
+/* generic action button */
+.action_button {
+    background-color: #8b1e28;
+    color: #ffffff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* action button hover */
+.action_button:hover {
+    background-color: #6e151e;
+}
+
+/* filter dropdown in header */
+.filter_select {
+    padding: 8px 14px;
+    border: 1px solid #dce2e8;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #444444;
+    background-color: #ffffff;
+    outline: none;
+}
+
 /* generic section title */
 .section_title {
     font-size: 16px;
@@ -394,35 +426,6 @@ body {
 .stat_trend {
     font-size: 20px;
     color: #8b1e28;
-}
-
-/* action button */
-.action_button {
-    background-color: #8b1e28;
-    color: #ffffff;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-/* action button hover */
-.action_button:hover {
-    background-color: #6e151e;
-}
-
-/* filter dropdown in header */
-.filter_select {
-    padding: 8px 14px;
-    border: 1px solid #dce2e8;
-    border-radius: 6px;
-    font-size: 13px;
-    color: #444444;
-    background-color: #ffffff;
-    outline: none;
 }
 
 /* data table container */
@@ -487,6 +490,12 @@ body {
 
 /* delivered status pill */
 .status_delivered {
+    background-color: #e6f9ed;
+    color: #137333;
+}
+
+/* successful transaction pill */
+.status_successful {
     background-color: #e6f9ed;
     color: #137333;
 }
@@ -714,13 +723,14 @@ body {
     background: #fdf2f2;
 }
 
-/* order summary card */
+/* full width order summary card in shopping cart */
 .order_summary_section {
     background: #fafbfc;
     border: 1px solid #eef1f5;
     border-radius: 10px;
     padding: 24px;
-    max-width: 450px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* order summary title */
@@ -774,31 +784,268 @@ body {
     background: #6e151e;
 }
 
-/* empty placeholder container for remaining pages */
-.empty_placeholder_container {
+/* customer support tickets list */
+.ticket_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    text-align: center;
-    color: #888888;
-    border: 2px dashed #e2e8f0;
-    border-radius: 12px;
-    margin-top: 20px;
+    gap: 16px;
 }
 
-/* placeholder icon */
-.empty_placeholder_icon {
-    font-size: 48px;
-    color: #cbd5e1;
+/* individual support ticket card */
+.ticket_card {
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* support ticket information left side */
+.ticket_info {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* support ticket title row holding name and status */
+.ticket_title_row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+/* support ticket title */
+.ticket_title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222222;
+}
+
+/* open ticket status badge */
+.ticket_status_open {
+    background-color: #fef7e6;
+    color: #b87b00;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* resolved ticket status badge */
+.ticket_status_resolved {
+    background-color: #e6f9ed;
+    color: #137333;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ticket metadata subtitle text */
+.ticket_meta {
+    font-size: 13px;
+    color: #888888;
+}
+
+/* open chat button */
+.btn_open_chat {
+    background-color: #8b1e28;
+    color: #ffffff;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* open chat button hover */
+.btn_open_chat:hover {
+    background-color: #6e151e;
+}
+
+/* profile settings form container */
+.profile_form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* profile settings section card */
+.profile_card {
+    background: #fafbfc;
+    border: 1px solid #eef1f5;
+    border-radius: 10px;
+    padding: 24px;
+}
+
+/* profile card section title */
+.profile_card_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #222222;
+    margin-bottom: 20px;
+}
+
+/* two column form row */
+.form_row_two {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
     margin-bottom: 16px;
 }
 
-/* placeholder message */
-.empty_placeholder_text {
-    font-size: 15px;
-    color: #64748b;
+/* individual form field group */
+.form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+/* form input field label */
+.form_label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #444444;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* text and password input elements */
+.form_input {
+    border: 1px solid #dce2e8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #333333;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+/* form input focus state */
+.form_input:focus {
+    border-color: #8b1e28;
+}
+
+/* save changes button */
+.btn_save_changes {
+    background-color: #8b1e28;
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+/* save changes button hover */
+.btn_save_changes:hover {
+    background-color: #6e151e;
+}
+
+/* payment cards grid layout */
+.payment_cards_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* digital payment card box */
+.payment_card_item {
+    border-radius: 12px;
+    padding: 24px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 175px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* taurus pay dark card styling */
+.card_taurus {
+    background-color: #1e2530;
+}
+
+/* gcash red wallet card styling */
+.card_gcash {
+    background-color: #8b1e28;
+}
+
+/* digital card top row */
+.card_top_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* visa logo badge on card */
+.card_visa_badge {
+    background: #ffffff;
+    color: #1a202c;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 11px;
+}
+
+/* card number monospace text */
+.card_number_text {
+    font-size: 18px;
+    letter-spacing: 2px;
+    font-family: monospace;
+    margin: 15px 0 10px 0;
+}
+
+/* card bottom row with holder and expiration */
+.card_bottom_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* card field label */
+.card_field_label {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+/* primary payment method badge */
+.card_primary_badge {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* uppercase transaction history section header */
+.transaction_history_title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #555555;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
 }
 
 /* sticky fixed footer at the bottom */

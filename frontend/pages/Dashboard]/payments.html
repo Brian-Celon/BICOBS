@@ -113,19 +113,102 @@
             </div>
         </aside>
 
-        <!-- floating main content card left blank/placeholder as instructed -->
+        <!-- floating main content card -->
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
                 <div>
-                    <h1 class="header_title">Payments</h1>
-                    <p class="header_subtitle">Manage your payment methods and transaction history.</p>
+                    <h1 class="header_title">Payment Methods & History</h1>
+                    <p class="header_subtitle">Manage saved cards and view past payment transactions.</p>
+                </div>
+                <div>
+                    <a href="#" class="action_button">
+                        <i class="fas fa-plus"></i> Add Payment Method
+                    </a>
                 </div>
             </header>
 
-            <!-- blank content placeholder -->
-            <section class="empty_placeholder_container">
-                <i class="fas fa-credit-card empty_placeholder_icon"></i>
-                <p class="empty_placeholder_text">No payment methods or transactions to display at this time.</p>
+            <!-- saved payment methods grid -->
+            <section class="payment_cards_grid">
+                <!-- taurus pay card -->
+                <article class="payment_card_item card_taurus">
+                    <div class="card_top_row">
+                        <span>Taurus Pay Card</span>
+                        <span class="card_visa_badge">VISA</span>
+                    </div>
+                    <div>
+                        <div class="card_field_label">Card Number</div>
+                        <div class="card_number_text">•••• •••• •••• 4892</div>
+                    </div>
+                    <div class="card_bottom_row">
+                        <div>
+                            <div class="card_field_label">Cardholder</div>
+                            <strong>Juan Dela Cruz</strong>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="card_field_label">Expires</div>
+                            <strong>12/28</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- gcash wallet card -->
+                <article class="payment_card_item card_gcash">
+                    <div class="card_top_row">
+                        <span>GCash / Wallet</span>
+                        <i class="fas fa-wallet" style="font-size: 20px;"></i>
+                    </div>
+                    <div>
+                        <div class="card_field_label">Mobile Account</div>
+                        <div class="card_number_text">+63 917 ••• 5012</div>
+                    </div>
+                    <div class="card_bottom_row">
+                        <div>
+                            <div class="card_field_label">Account Name</div>
+                            <strong>Juan Dela Cruz</strong>
+                        </div>
+                        <div>
+                            <span class="card_primary_badge">Primary</span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- transaction history table section -->
+            <section>
+                <h3 class="transaction_history_title">Transaction History</h3>
+                <div class="table_container">
+                    <table class="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Date</th>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#TXN-99821</strong></td>
+                                <td>2026-05-15 14:20</td>
+                                <td>Visa ending in 4892</td>
+                                <td><strong>₱1,299.00</strong></td>
+                                <td>
+                                    <span class="status_pill status_successful">Successful</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TXN-98210</strong></td>
+                                <td>2026-04-28 09:11</td>
+                                <td>GCash Wallet</td>
+                                <td><strong>₱19,900.00</strong></td>
+                                <td>
+                                    <span class="status_pill status_successful">Successful</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </main>
     </div>

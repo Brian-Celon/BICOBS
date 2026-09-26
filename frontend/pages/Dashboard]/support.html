@@ -113,19 +113,47 @@
             </div>
         </aside>
 
-        <!-- floating main content card left blank/placeholder as instructed -->
+        <!-- floating main content card -->
         <main id="dashboard_main_content" class="main_content">
             <header class="main_header">
                 <div>
-                    <h1 class="header_title">Support Tickets</h1>
-                    <p class="header_subtitle">Submit and track help requests for your orders and bikes.</p>
+                    <h1 class="header_title">Customer Support Tickets</h1>
+                    <p class="header_subtitle">Need help with parts assembly or shipping? Open a ticket with our support team.</p>
+                </div>
+                <div>
+                    <a href="#" class="action_button">
+                        <i class="fas fa-plus"></i> Create New Ticket
+                    </a>
                 </div>
             </header>
 
-            <!-- blank content placeholder -->
-            <section class="empty_placeholder_container">
-                <i class="fas fa-headset empty_placeholder_icon"></i>
-                <p class="empty_placeholder_text">No active support tickets found.</p>
+            <!-- support tickets list section -->
+            <section>
+                <ul class="ticket_list">
+                    <!-- ticket 1 -->
+                    <li class="ticket_card">
+                        <div class="ticket_info">
+                            <div class="ticket_title_row">
+                                <h4 class="ticket_title">#TCK-4091: Inquiry on Frame Torque Specifications</h4>
+                                <span class="ticket_status_open">Open</span>
+                            </div>
+                            <p class="ticket_meta">Created on 2026-05-20 • 3 messages in thread</p>
+                        </div>
+                        <a href="#" class="btn_open_chat">Open Chat</a>
+                    </li>
+
+                    <!-- ticket 2 -->
+                    <li class="ticket_card">
+                        <div class="ticket_info">
+                            <div class="ticket_title_row">
+                                <h4 class="ticket_title">#TCK-3882: Shipping delay regarding order #TBR1040</h4>
+                                <span class="ticket_status_resolved">Resolved</span>
+                            </div>
+                            <p class="ticket_meta">Created on 2026-04-29 • 5 messages in thread</p>
+                        </div>
+                        <a href="#" class="btn_open_chat">Open Chat</a>
+                    </li>
+                </ul>
             </section>
         </main>
     </div>
