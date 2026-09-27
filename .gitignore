@@ -1,2 +1,5 @@
 node_modules/
-.env.idea/
+.env
+.idea/
+*.iml
+.DS_Store
