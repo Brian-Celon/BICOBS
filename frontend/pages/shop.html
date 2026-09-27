@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike - Online Shop & Components</title>
+    <!-- global landing stylesheet for header and footer -->
+    <link rel="stylesheet" href="/frontend/css/landing_page.css">
+    <!-- scoped shop catalog stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/shop.css">
+</head>
+<body>
+
+    <!-- shop page container wrapper -->
+    <div class="shop_page_container" id="shop_page_container">
+
+        <!-- top header section -->
+        <header class="top_header" id="top_header">
+            <!-- brand logo and mobile toggle container -->
+            <div class="header_top_row">
+                <a href="/frontend/pages/index.html" class="brand_box">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
+                    <span class="brand_title">Taurus Bike</span>
+                </a>
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- search and action controls -->
+            <div class="header_controls">
+                <div class="search_wrapper">
+                    <input type="text" class="search_input" placeholder="Search bikes, pedals, gears...">
+                    <button class="search_btn" aria-label="Search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header_actions_group">
+                    <a href="#" class="btn_header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Cart</span>
+                        <span class="cart_badge_counter" id="cart_badge_counter">0</span>
+                    </a>
+                    <a href="#" class="btn_header">
+                        <span>Sign In / Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- mobile navigation overlay backdrop -->
+        <div class="nav_overlay" id="nav_overlay"></div>
+
+        <!-- main navigation bar / mobile slide-in sidebar -->
+        <nav class="nav_bar" id="main_navigation">
+            <!-- mobile sidebar header -->
+            <div class="sidebar_header_mobile">
+                <div class="brand_box_mobile">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                    <span class="mobile_brand_title">Taurus Bike</span>
+                </div>
+                <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
+            <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
+            <a href="/frontend/pages/shop.html" class="nav_link active">SHOP</a>
+            <a href="/frontend/pages/index.html#categories_section" class="nav_link">SERVICES</a>
+            <a href="/frontend/pages/index.html" class="nav_link">DASHBOARD</a>
+            <a href="#main_footer" class="nav_link">CONTACT</a>
+        </nav>
+
+        <!-- shop hero banner -->
+        <section class="shop_hero" id="shop_hero">
+            <div class="shop_hero_content">
+                <div class="shop_breadcrumb">
+                    <a href="/frontend/pages/index.html">Home</a>
+                    <span class="divider">/</span>
+                    <a href="/frontend/pages/shop.html">Shop</a>
+                    <span class="divider">/</span>
+                    <span>All Products</span>
+                </div>
+                <h1 class="shop_hero_title">Online Bike & Parts Shop</h1>
+                <p class="shop_hero_subtitle">Explore authentic prebuilt bikes, mountain bikes, road bikes, gravel bikes, plus genuine pedals, gears, brakes, and precision components.</p>
+            </div>
+        </section>
+
+        <!-- mobile filter backdrop overlay -->
+        <div class="sidebar_mobile_overlay" id="sidebar_mobile_overlay"></div>
+
+        <!-- main shop layout split wrapper -->
+        <main class="shop_main_wrapper">
+
+            <!-- left filter sidebar -->
+            <aside class="shop_sidebar" id="shop_sidebar">
+                <div class="sidebar_header">
+                    <div class="sidebar_title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <span>Filter Catalog</span>
+                    </div>
+                    <button class="sidebar_close_mobile" id="sidebar_close_mobile" aria-label="Close filters">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <button class="btn_reset_filters" id="btn_reset_filters">Reset All</button>
+                </div>
+
+                <!-- filter group: all products quick toggle -->
+                <div class="filter_group">
+                    <ul class="category_list">
+                        <li>
+                            <button class="category_item_btn active" data-category="all">
+                                <span class="category_name">All Products</span>
+                                <span class="category_item_count">18</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- filter group 1: prebuilt bikes -->
+                <div class="filter_group">
+                    <h3 class="filter_group_title">
+                        <span>Prebuilt Bikes</span>
+                        <span class="filter_badge_count">7</span>
+                    </h3>
+                    <ul class="category_list">
+                        <li>
+                            <button class="category_item_btn" data-category="all_bikes">
+                                <span class="category_name">All Prebuilt Bikes</span>
+                                <span class="category_item_count">7</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="mountain_bikes">
+                                <span class="category_name">Mountain Bikes (MTB)</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="road_bikes">
+                                <span class="category_name">Road Bikes</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="gravel_bikes">
+                                <span class="category_name">Gravel Bikes</span>
+                                <span class="category_item_count">1</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="bmx_urban">
+                                <span class="category_name">BMX & Urban</span>
+                                <span class="category_item_count">1</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="folding_commuter">
+                                <span class="category_name">Folding & Commuter</span>
+                                <span class="category_item_count">1</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- filter group 2: bike parts and components -->
+                <div class="filter_group">
+                    <h3 class="filter_group_title">
+                        <span>Bike Parts</span>
+                        <span class="filter_badge_count">11</span>
+                    </h3>
+                    <ul class="category_list">
+                        <li>
+                            <button class="category_item_btn" data-category="all_parts">
+                                <span class="category_name">All Bike Parts</span>
+                                <span class="category_item_count">11</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="pedals">
+                                <span class="category_name">Pedals & Cleats</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="gears">
+                                <span class="category_name">Gears & Drivetrain</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="brakes">
+                                <span class="category_name">Brakes & Rotors</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="frames">
+                                <span class="category_name">Frames & Forks</span>
+                                <span class="category_item_count">1</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="rims_tires">
+                                <span class="category_name">Rims & Tires</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category_item_btn" data-category="handlebars_saddles">
+                                <span class="category_name">Handlebars & Saddles</span>
+                                <span class="category_item_count">2</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- filter group 3: price range -->
+                <div class="filter_group">
+                    <h3 class="filter_group_title">Price Range</h3>
+                    <input type="range" class="price_slider" id="price_slider" min="500" max="50000" step="500" value="50000">
+                    <div class="price_slider_display">
+                        <span>₱500</span>
+                        <span id="max_price_display">₱50,000</span>
+                    </div>
+                </div>
+
+                <!-- filter group 4: special offers -->
+                <div class="filter_group">
+                    <h3 class="filter_group_title">Special Offers</h3>
+                    <div class="checkbox_filter_list">
+                        <label class="checkbox_label">
+                            <input type="checkbox" id="filter_sale">
+                            <span>On Sale / Discounted</span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- right catalog content area -->
+            <section class="shop_catalog_area">
+
+                <!-- toolbar: results info, search, sort, and mobile filter trigger -->
+                <div class="shop_toolbar">
+                    <div class="toolbar_left">
+                        <h2 class="active_filter_heading" id="active_filter_heading">All Products</h2>
+                        <span class="results_count" id="results_count">Showing 18 of 18 items</span>
+                    </div>
+
+                    <div class="toolbar_right">
+                        <!-- live search -->
+                        <div class="catalog_search_box">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" class="catalog_search_input" id="catalog_search_input" placeholder="Search catalog...">
+                        </div>
+
+                        <!-- sort select -->
+                        <select class="catalog_sort_select" id="catalog_sort_select">
+                            <option value="featured">Sort by: Featured</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                            <option value="name_asc">Name: A to Z</option>
+                        </select>
+
+                        <!-- mobile filter drawer button -->
+                        <button class="btn_mobile_filter" id="btn_mobile_filter">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                            <span>Filters</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- quick category horizontal pills -->
+                <div class="category_pills_bar">
+                    <button class="pill_btn active" data-category="all">All</button>
+                    <button class="pill_btn" data-category="mountain_bikes">Mountain Bikes</button>
+                    <button class="pill_btn" data-category="road_bikes">Road Bikes</button>
+                    <button class="pill_btn" data-category="gravel_bikes">Gravel Bikes</button>
+                    <button class="pill_btn" data-category="bmx_urban">BMX & Urban</button>
+                    <button class="pill_btn" data-category="pedals">Pedals</button>
+                    <button class="pill_btn" data-category="gears">Gears & Drivetrain</button>
+                    <button class="pill_btn" data-category="brakes">Brakes</button>
+                    <button class="pill_btn" data-category="frames">Frames</button>
+                    <button class="pill_btn" data-category="rims_tires">Rims & Tires</button>
+                </div>
+
+                <!-- products grid -->
+                <div class="products_grid" id="products_grid">
+
+                    <!-- product 1: mountain bike -->
+                    <article class="product_card_item" data-category="mountain_bikes" data-type="bike" data-price="34500" data-sale="true" data-name="Taurus Stealth Carbon MTB 29" data-index="1">
+                        <span class="card_tag_badge badge_sale">SALE</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Taurus Stealth Carbon MTB 29" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Mountain Bike</span>
+                            <h4 class="card_title">Taurus Stealth Carbon MTB 29"</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Toray T800 Carbon Frame 29er</li>
+                                <li class="card_specs_item">Shimano Deore 1x12 Speed</li>
+                                <li class="card_specs_item">Air Suspension Lockout Fork</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱34,500</span>
+                                    <span class="card_old_price">₱38,000</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 2: road bike -->
+                    <article class="product_card_item" data-category="road_bikes" data-type="bike" data-price="28900" data-sale="false" data-name="Sagmit Veneno Aero Road Bike 700c" data-index="2">
+                        <span class="card_tag_badge badge_bestseller">BEST SELLER</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Sagmit Veneno Aero Road Bike 700c" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Road Bike</span>
+                            <h4 class="card_title">Sagmit Veneno Aero Road Bike 700c</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Aerodynamic Alloy Frame 700c</li>
+                                <li class="card_specs_item">Sensah Empire 2x11 Groupset</li>
+                                <li class="card_specs_item">40mm High Profile Wheelset</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱28,900</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 3: gravel bike -->
+                    <article class="product_card_item" data-category="gravel_bikes" data-type="bike" data-price="24800" data-sale="true" data-name="Sunpeed Charisma All-Road Gravel Bike" data-index="3">
+                        <span class="card_tag_badge badge_new">NEW</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Sunpeed Charisma All-Road Gravel Bike" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Gravel Bike</span>
+                            <h4 class="card_title">Sunpeed Charisma All-Road Gravel Bike</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">All-Terrain 700x40c Gravel Tires</li>
+                                <li class="card_specs_item">Shimano Sora 2x9 Speed</li>
+                                <li class="card_specs_item">Dual Piston Mechanical Disc</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱24,800</span>
+                                    <span class="card_old_price">₱27,000</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 4: mountain bike full suspension -->
+                    <article class="product_card_item" data-category="mountain_bikes" data-type="bike" data-price="42500" data-sale="false" data-name="Taurus Trailblazer Full-Suspension MTB" data-index="4">
+                        <span class="card_tag_badge badge_popular">POPULAR</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Taurus Trailblazer Full-Suspension MTB" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Mountain Bike</span>
+                            <h4 class="card_title">Taurus Trailblazer Full-Suspension MTB</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">27.5" Enduro Boost Frame</li>
+                                <li class="card_specs_item">140mm Travel RockShox Shock</li>
+                                <li class="card_specs_item">Shimano Deore 1x12 Speed</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱42,500</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 5: road bike disc -->
+                    <article class="product_card_item" data-category="road_bikes" data-type="bike" data-price="38900" data-sale="false" data-name="Taurus Apex Carbon Disc Road Racer" data-index="5">
+                        <span class="card_tag_badge badge_featured">FEATURED</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Taurus Apex Carbon Disc Road Racer" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Road Bike</span>
+                            <h4 class="card_title">Taurus Apex Carbon Disc Road Racer</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Ultralight Carbon Monocoque Frame</li>
+                                <li class="card_specs_item">Shimano 105 R7000 2x11 Speed</li>
+                                <li class="card_specs_item">Hydraulic Flat Mount Disc Brakes</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱38,900</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 6: bmx urban bike -->
+                    <article class="product_card_item" data-category="bmx_urban" data-type="bike" data-price="12500" data-sale="false" data-name="Legion Freestyle Pro BMX 20" data-index="6">
+                        <span class="card_tag_badge badge_new">NEW</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Legion Freestyle Pro BMX 20" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">BMX & Urban</span>
+                            <h4 class="card_title">Legion Freestyle Pro BMX 20"</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Hi-Ten Steel Frame & Fork</li>
+                                <li class="card_specs_item">25x9T Micro-Drive Gearing</li>
+                                <li class="card_specs_item">Tubular Chromoly 3-Piece Crank</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱12,500</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 7: folding commuter -->
+                    <article class="product_card_item" data-category="folding_commuter" data-type="bike" data-price="14200" data-sale="true" data-name="Trinx Swift Urban Folding Bike 20" data-index="7">
+                        <span class="card_tag_badge badge_sale">SALE</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Trinx Swift Urban Folding Bike 20" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Folding & Commuter</span>
+                            <h4 class="card_title">Trinx Swift Urban Folding Bike 20"</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Quick-Latch Folding Aluminum Alloy</li>
+                                <li class="card_specs_item">Shimano Tourney 7-Speed</li>
+                                <li class="card_specs_item">Mechanical Disc Brakes & Fenders</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱14,200</span>
+                                    <span class="card_old_price">₱16,000</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 8: pedals (parts) -->
+                    <article class="product_card_item" data-category="pedals" data-type="parts" data-price="2650" data-sale="false" data-name="Shimano PD-M520 SPD Mountain Pedals" data-index="8">
+                        <span class="card_tag_badge badge_bestseller">BEST SELLER</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Shimano PD-M520 SPD Mountain Pedals" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Pedals & Cleats</span>
+                            <h4 class="card_title">Shimano PD-M520 SPD Mountain Pedals</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Dual-Sided SPD Clipless Entry</li>
+                                <li class="card_specs_item">Sealed Cartridge Bearing Axle</li>
+                                <li class="card_specs_item">Includes SM-SH51 Cleats</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱2,650</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 9: pedals (flat parts) -->
+                    <article class="product_card_item" data-category="pedals" data-type="parts" data-price="1150" data-sale="false" data-name="Sagmit CNC Flat Sealed Bearing Pedals" data-index="9">
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Sagmit CNC Flat Sealed Bearing Pedals" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Pedals & Cleats</span>
+                            <h4 class="card_title">Sagmit CNC Flat Sealed Bearing Pedals</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">CNC Machined 6061 Aluminum</li>
+                                <li class="card_specs_item">3 High-Speed Sealed Bearings</li>
+                                <li class="card_specs_item">Replaceable Anti-Skid Pins</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱1,150</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 10: gears (groupset parts) -->
+                    <article class="product_card_item" data-category="gears" data-type="parts" data-price="11800" data-sale="true" data-name="Shimano Deore M6100 12-Speed Groupset" data-index="10">
+                        <span class="card_tag_badge badge_sale">SALE</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Shimano Deore M6100 12-Speed Groupset" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Gears & Drivetrain</span>
+                            <h4 class="card_title">Shimano Deore M6100 12-Speed Groupset</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">1x12 Speed Shadow RD+ System</li>
+                                <li class="card_specs_item">10-51T Micro Spline Cassette</li>
+                                <li class="card_specs_item">Crankset, Shifter, Chain Included</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱11,800</span>
+                                    <span class="card_old_price">₱13,500</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 11: gears (rear derailleur parts) -->
+                    <article class="product_card_item" data-category="gears" data-type="parts" data-price="3450" data-sale="false" data-name="Shimano 105 R7000 Rear Derailleur 11-Speed" data-index="11">
+                        <span class="card_tag_badge badge_bestseller">BEST SELLER</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Shimano 105 R7000 Rear Derailleur 11-Speed" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Gears & Drivetrain</span>
+                            <h4 class="card_title">Shimano 105 R7000 Rear Derailleur 11-Speed</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">11-Speed Shadow RD Road Low Profile</li>
+                                <li class="card_specs_item">Compatible with 11-30T / 11-34T</li>
+                                <li class="card_specs_item">Direct Mount Compatible</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱3,450</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 12: brakes (hydraulic parts) -->
+                    <article class="product_card_item" data-category="brakes" data-type="parts" data-price="1950" data-sale="false" data-name="Shimano MT200 Hydraulic Disc Brake Set" data-index="12">
+                        <span class="card_tag_badge badge_bestseller">BEST SELLER</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Shimano MT200 Hydraulic Disc Brake Set" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Brakes & Rotors</span>
+                            <h4 class="card_title">Shimano MT200 Hydraulic Disc Brake Set</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Front & Rear Calipers & Levers</li>
+                                <li class="card_specs_item">Pre-Bled with Genuine Mineral Oil</li>
+                                <li class="card_specs_item">Opposed 2-Piston Design</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱1,950</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 13: brakes (rotors parts) -->
+                    <article class="product_card_item" data-category="brakes" data-type="parts" data-price="850" data-sale="false" data-name="Sagmit Floating Disc Brake Rotors 160mm" data-index="13">
+                        <span class="card_tag_badge badge_new">NEW</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Sagmit Floating Disc Brake Rotors 160mm" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Brakes & Rotors</span>
+                            <h4 class="card_title">Sagmit Floating Disc Brake Rotors 160mm</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">160mm Standard 6-Bolt Mount</li>
+                                <li class="card_specs_item">CNC Red Alloy Spider Core</li>
+                                <li class="card_specs_item">High Heat Dissipation Steel Braking Track</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱850</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 14: frames (parts) -->
+                    <article class="product_card_item" data-category="frames" data-type="parts" data-price="19900" data-sale="false" data-name="2026 Sagmit Evolution Carbon MTB Frame Boost" data-index="14">
+                        <span class="card_tag_badge badge_featured">FEATURED</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="2026 Sagmit Evolution Carbon MTB Frame Boost" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Frames & Forks</span>
+                            <h4 class="card_title">2026 Sagmit Evolution Carbon MTB Frame Boost</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Toray T800 Monocoque Carbon</li>
+                                <li class="card_specs_item">Boost 148x12mm Thru-Axle</li>
+                                <li class="card_specs_item">Internal Cable & Dropper Post Routing</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱19,900</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 15: rims & tires (parts) -->
+                    <article class="product_card_item" data-category="rims_tires" data-type="parts" data-price="1650" data-sale="false" data-name="Maxxis Ardent 29x2.25 Tanwall EXO Tubeless Ready" data-index="15">
+                        <span class="card_tag_badge badge_bestseller">BEST SELLER</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Maxxis Ardent 29x2.25 Tanwall EXO Tubeless Ready" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Rims & Tires</span>
+                            <h4 class="card_title">Maxxis Ardent 29 x 2.25 Tanwall EXO TR</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">29 x 2.25 Aggressive Trail Tread</li>
+                                <li class="card_specs_item">EXO Cut-Resistant Sidewall</li>
+                                <li class="card_specs_item">Tubeless Ready Tanwall Skin</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱1,650</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 16: rims & tires (wheelset parts) -->
+                    <article class="product_card_item" data-category="rims_tires" data-type="parts" data-price="7800" data-sale="false" data-name="Sagmit Racing Pro Wheelset 700c Thru-Axle" data-index="16">
+                        <span class="card_tag_badge badge_popular">POPULAR</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Sagmit Racing Pro Wheelset 700c Thru-Axle" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Rims & Tires</span>
+                            <h4 class="card_title">Sagmit Racing Pro Wheelset 700c Thru-Axle</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">30mm Aero Double-Wall Alloy Rims</li>
+                                <li class="card_specs_item">6-Pawl Loud Sealed Bearing Hubs</li>
+                                <li class="card_specs_item">12x100mm Front / 12x142mm Rear</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱7,800</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 17: handlebars & saddles (parts) -->
+                    <article class="product_card_item" data-category="handlebars_saddles" data-type="parts" data-price="2400" data-sale="false" data-name="Taurus Integrated Carbon Drop Handlebar" data-index="17">
+                        <span class="card_tag_badge badge_new">NEW</span>
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Taurus Integrated Carbon Drop Handlebar" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Handlebars & Saddles</span>
+                            <h4 class="card_title">Taurus Integrated Carbon Drop Handlebar</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Full Carbon Fiber Aero Cockpit</li>
+                                <li class="card_specs_item">420mm Width x 90mm Integrated Stem</li>
+                                <li class="card_specs_item">Internal Cable Routing Channels</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱2,400</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- product 18: handlebars & saddles (saddle parts) -->
+                    <article class="product_card_item" data-category="handlebars_saddles" data-type="parts" data-price="1350" data-sale="false" data-name="Selle Royal Ergonomic Memory Foam Saddle" data-index="18">
+                        <div class="card_image_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="Selle Royal Ergonomic Memory Foam Saddle" class="card_image">
+                        </div>
+                        <div class="card_details">
+                            <span class="card_category_type">Handlebars & Saddles</span>
+                            <h4 class="card_title">Selle Royal Ergonomic Memory Foam Saddle</h4>
+                            <ul class="card_specs_list">
+                                <li class="card_specs_item">Royalgel Pressure-Relief Cushion</li>
+                                <li class="card_specs_item">Central Ergonomic Ventilation Cutout</li>
+                                <li class="card_specs_item">Weatherproof Sealed Synthetic Cover</li>
+                            </ul>
+                            <div class="card_footer">
+                                <div class="card_price_block">
+                                    <span class="card_current_price">₱1,350</span>
+                                </div>
+                                <button class="btn_card_add_cart">+ Add to cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- empty state message when no products match filters -->
+                    <div class="empty_catalog_state" id="empty_catalog_state">
+                        <div class="empty_state_icon">🔍</div>
+                        <h3 class="empty_state_title">No Products Found</h3>
+                        <p class="empty_state_desc">We couldn't find any products matching your current filters or search query.</p>
+                        <button class="btn_card_add_cart" style="margin: 0 auto;" onclick="document.getElementById('btn_reset_filters').click()">Clear All Filters</button>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- toast notification -->
+        <div class="cart_toast" id="cart_toast">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <div>
+                <span id="toast_product_name">Item</span> added to cart!
+            </div>
+        </div>
+
+        <!-- proper footer section -->
+        <footer class="main_footer" id="main_footer">
+            <div class="footer_top">
+                <div class="footer_grid">
+                    <!-- footer col 1: brand info -->
+                    <div class="footer_col">
+                        <a href="/frontend/pages/index.html" class="footer_brand">
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
+                            <span class="footer_brand_name">Taurus Bike</span>
+                        </a>
+                        <p class="footer_about_text">
+                            Your trusted bike shop in Marilao, Bulacan. Providing high-performance bicycles, quality components, accessories, and expert maintenance services.
+                        </p>
+
+                    </div>
+
+                    <!-- footer col 2: quick links -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Quick Links</h4>
+                        <ul class="footer_links">
+                            <li><a href="/frontend/pages/index.html" class="footer_link">Home</a></li>
+                            <li><a href="/frontend/pages/index.html#promo_section" class="footer_link">About Us</a></li>
+                            <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
+                            <li><a href="/frontend/pages/index.html#categories_section" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/index.html" class="footer_link">Customer Dashboard</a></li>
+                            <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 3: customer care -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Customer Care</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Track Order</a></li>
+                            <li><a href="#" class="footer_link">Shipping Information</a></li>
+                            <li><a href="#" class="footer_link">Return & Refund Policy</a></li>
+                            <li><a href="#" class="footer_link">Warranty & Repairs</a></li>
+                            <li><a href="#" class="footer_link">Support Tickets</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 4: store info -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Store Information</h4>
+                        <ul class="footer_info_list">
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Taurus Building Sandico Street Abangan Sur, Marilao, Philippines, 3019</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <span>2024-0541 / +63 912 345 6789</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </li>
+                        </ul>
+                        <div class="footer_store_social">
+                            <a href="https://www.facebook.com/taurusbikestore" target="_blank" rel="noopener noreferrer" class="social_link_group">
+                                <span class="social_link" aria-label="Facebook">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                    </svg>
+                                </span>
+                                <span class="social_link_text">Taurus Bike Shop Facebook page</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- copyright bottom bar -->
+            <div class="footer_bottom">
+                <p class="copyright_text">© 2026 Taurus Bike Shop (BICOBS). All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- shop catalog interactive controller script -->
+    <script src="/frontend/js/shop.js"></script>
+</body>
+</html>

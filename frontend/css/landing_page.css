@@ -585,6 +585,10 @@ button, input, select, textarea {
     margin-top: 6px;
 }
 
+.footer_store_social {
+    margin-top: 14px;
+}
+
 .social_link_group {
     display: inline-flex;
     align-items: center;
