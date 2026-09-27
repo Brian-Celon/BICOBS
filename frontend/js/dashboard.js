@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_profile_sync();
     setup_profile_navigation();
     setup_shopping_cart();
+    setup_password_visibility();
+    setup_search_and_filters();
+    setup_add_to_cart_buttons();
+    setup_order_details_modal();
+    setup_ticket_chat_modal();
+    setup_logout_modal();
+    setup_products_catalog();
 });
 
 /* setup responsive mobile search bar dropdown */
@@ -788,6 +795,419 @@ function setup_shopping_cart() {
                 successModal.classList.remove('active');
             }
         });
+    }
+}
+
+/* Helper to safely sanitize text rendering to prevent HTML injection */
+function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+/* Toast Notification Utility */
+function showToast(message, isSuccess = true) {
+    let container = document.getElementById('toast_container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast_container';
+        container.className = 'toast_container';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast_msg';
+    toast.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="color: ${isSuccess ? '#4ade80' : '#f87171'};"></i> <span>${escapeHTML(message)}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.remove();
+    }, 3200);
+}
+
+/* Password Visibility Toggle & Validation */
+function setup_password_visibility() {
+    const toggleBtns = document.querySelectorAll('.btn_toggle_pwd');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const icon = btn.querySelector('i');
+            if (input) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) {
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    }
+                } else {
+                    input.type = 'password';
+                    if (icon) {
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                }
+            }
+        });
+    });
+
+    const newPwd = document.getElementById('new_password_input');
+    const confirmPwd = document.getElementById('confirm_password_input');
+    const matchError = document.getElementById('password_match_error');
+    const profileForm = document.getElementById('profile_form');
+
+    if (profileForm && newPwd && confirmPwd) {
+        profileForm.addEventListener('submit', (e) => {
+            if (newPwd.value.trim() !== '' || confirmPwd.value.trim() !== '') {
+                if (newPwd.value !== confirmPwd.value) {
+                    e.preventDefault();
+                    if (matchError) matchError.style.display = 'block';
+                    confirmPwd.focus();
+                    return false;
+                }
+            }
+            if (matchError) matchError.style.display = 'none';
+        });
+    }
+}
+
+/* Global & Page-Specific Live Search and Filter Controls */
+function setup_search_and_filters() {
+    const searchInputs = document.querySelectorAll('.search_input, #global_search_input');
+
+    const handleSearch = (query) => {
+        const q = query.toLowerCase().trim();
+
+        // Orders Table filter (myorders.html)
+        const orderRows = document.querySelectorAll('#orders_table_body tr');
+        let visibleOrders = 0;
+        orderRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            const matches = text.includes(q);
+            row.style.display = matches ? '' : 'none';
+            if (matches) visibleOrders++;
+        });
+        const noOrdersMsg = document.getElementById('no_orders_found');
+        if (noOrdersMsg && orderRows.length > 0) {
+            noOrdersMsg.style.display = (visibleOrders === 0) ? 'block' : 'none';
+        }
+
+        // Support Tickets filter (support.html)
+        const ticketCards = document.querySelectorAll('.ticket_card');
+        let visibleTickets = 0;
+        ticketCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            const matches = text.includes(q);
+            card.style.display = matches ? '' : 'none';
+            if (matches) visibleTickets++;
+        });
+        const noTicketsMsg = document.getElementById('no_tickets_found');
+        if (noTicketsMsg && ticketCards.length > 0) {
+            noTicketsMsg.style.display = (visibleTickets === 0) ? 'block' : 'none';
+        }
+
+        // Products Catalog filter (products.html)
+        const productItems = document.querySelectorAll('.product_card_item');
+        let visibleProducts = 0;
+        productItems.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            const matches = text.includes(q);
+            card.style.display = matches ? '' : 'none';
+            if (matches) visibleProducts++;
+        });
+        const noProductsMsg = document.getElementById('no_products_found');
+        if (noProductsMsg && productItems.length > 0) {
+            noProductsMsg.style.display = (visibleProducts === 0) ? 'block' : 'none';
+        }
+    };
+
+    searchInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            handleSearch(e.target.value);
+        });
+    });
+
+    // Status filter select for Orders (myorders.html)
+    const orderStatusFilter = document.getElementById('order_status_filter');
+    if (orderStatusFilter) {
+        orderStatusFilter.addEventListener('change', () => {
+            const val = orderStatusFilter.value.toLowerCase();
+            const orderRows = document.querySelectorAll('#orders_table_body tr');
+            let visible = 0;
+            orderRows.forEach(row => {
+                const status = (row.getAttribute('data-status') || '').toLowerCase();
+                const matches = (val === 'all' || status.includes(val));
+                row.style.display = matches ? '' : 'none';
+                if (matches) visible++;
+            });
+            const noOrdersMsg = document.getElementById('no_orders_found');
+            if (noOrdersMsg) noOrdersMsg.style.display = (visible === 0) ? 'block' : 'none';
+        });
+    }
+}
+
+/* "Add to Cart" Handlers across overview and products pages */
+function setup_add_to_cart_buttons() {
+    document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn_add_to_cart_action') || e.target.closest('.action_button');
+        if (!btn || btn.textContent.trim() !== 'Add to Cart' && !btn.classList.contains('btn_add_to_cart_action')) return;
+
+        // Ensure it's not a modal trigger or different action button
+        if (btn.id === 'btn_open_ticket_modal' || btn.classList.contains('user_welcome_card') || btn.closest('.profile_form')) return;
+
+        let name = btn.getAttribute('data-name');
+
+        if (!name) {
+            const card = btn.closest('.product_card') || btn.closest('.product_card_item');
+            if (card) {
+                const nameEl = card.querySelector('.product_name');
+                name = nameEl ? nameEl.textContent.trim() : 'Bike Product';
+            }
+        }
+
+        if (!name) return;
+
+        // Increment cart badges in UI
+        const badges = document.querySelectorAll('.cart_badge_top, .badge_green');
+        badges.forEach(badge => {
+            let current = parseInt(badge.textContent, 10) || 0;
+            badge.textContent = current + 1;
+        });
+
+        showToast(`Added "${name}" to your cart!`, true);
+    });
+}
+
+/* Order Details Modal Popup (myorders.html) */
+function setup_order_details_modal() {
+    const modal = document.getElementById('order_details_modal');
+    const closeX = document.getElementById('close_order_details_modal');
+    const closeBtn = document.getElementById('close_order_details_btn');
+
+    if (!modal) return;
+
+    const closeModal = () => modal.classList.remove('active');
+    if (closeX) closeX.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn_view_order_details');
+        if (btn) {
+            const row = btn.closest('tr');
+            if (row) {
+                const orderId = row.getAttribute('data-order-id') || '#TBR1045';
+                const date = row.getAttribute('data-date') || '2026-05-15';
+                const items = row.getAttribute('data-items') || 'Bike Item';
+                const status = row.getAttribute('data-status') || 'Processing';
+                const total = row.getAttribute('data-total') || '₱11,000';
+
+                const headId = document.getElementById('modal_order_id_head');
+                const dateEl = document.getElementById('modal_order_date');
+                const itemsList = document.getElementById('modal_order_items_list');
+                const totalEl = document.getElementById('modal_order_total');
+                const badgeEl = document.getElementById('modal_order_status_badge');
+
+                if (headId) headId.textContent = orderId;
+                if (dateEl) dateEl.textContent = date;
+                if (totalEl) totalEl.textContent = total;
+
+                if (itemsList) {
+                    const itemArray = items.split(',');
+                    itemsList.innerHTML = itemArray.map(item => `
+                        <li class="checkout_item_row">
+                            <span class="checkout_item_name">${escapeHTML(item.trim())}</span>
+                            <span class="checkout_item_qty">x1</span>
+                        </li>
+                    `).join('');
+                }
+
+                if (badgeEl) {
+                    const statusClass = status.toLowerCase() === 'delivered' ? 'status_delivered' : status.toLowerCase() === 'shipped' ? 'status_shipped' : 'status_processing';
+                    badgeEl.innerHTML = `<span class="status_pill ${statusClass}"><i class="fas fa-circle" style="font-size: 7px;"></i> ${escapeHTML(status)}</span>`;
+                }
+
+                modal.classList.add('active');
+            }
+        }
+    });
+}
+
+/* Ticket Chat Conversation Modal Popup (support.html) */
+function setup_ticket_chat_modal() {
+    const modal = document.getElementById('ticket_chat_modal');
+    const closeBtn = document.getElementById('close_chat_modal');
+    const replyForm = document.getElementById('chat_reply_form');
+    const replyInput = document.getElementById('chat_reply_input');
+    const chatBox = document.getElementById('chat_messages_box');
+
+    if (!modal) return;
+
+    const closeModal = () => modal.classList.remove('active');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn_open_chat');
+        if (btn) {
+            e.preventDefault();
+            const card = btn.closest('.ticket_card');
+            const titleEl = card ? card.querySelector('.ticket_title') : null;
+            const subtitleEl = document.getElementById('chat_modal_subtitle');
+            if (titleEl && subtitleEl) {
+                subtitleEl.textContent = titleEl.textContent.trim();
+            }
+            modal.classList.add('active');
+        }
+    });
+
+    if (replyForm) {
+        replyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = replyInput.value.trim();
+            if (!text) return;
+
+            if (chatBox) {
+                const userMsg = document.createElement('div');
+                userMsg.className = 'chat_message message_user';
+                userMsg.innerHTML = `
+                    <div class="chat_msg_author">Juan Dela Cruz (You)</div>
+                    <div class="chat_msg_text">${escapeHTML(text)}</div>
+                `;
+                chatBox.appendChild(userMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            replyInput.value = '';
+
+            setTimeout(() => {
+                if (chatBox) {
+                    const supportMsg = document.createElement('div');
+                    supportMsg.className = 'chat_message message_support';
+                    supportMsg.innerHTML = `
+                        <div class="chat_msg_author">Taurus Support Rep</div>
+                        <div class="chat_msg_text">Thank you for your update! Our team has received your message and is processing your request.</div>
+                    `;
+                    chatBox.appendChild(supportMsg);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            }, 1000);
+        });
+    }
+}
+
+/* Logout Confirmation Modal */
+function setup_logout_modal() {
+    let modal = document.getElementById('logout_modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'logout_modal';
+        modal.className = 'modal_overlay';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.innerHTML = `
+            <div class="modal_container checkout_modal_container text_center">
+                <h3 class="modal_title">Log Out Confirmation</h3>
+                <p class="modal_subtitle">Are you sure you want to log out of your Taurus Bike customer account?</p>
+                <div class="modal_actions flex_center" style="margin-top: 20px;">
+                    <button type="button" class="btn_modal_cancel" id="cancel_logout_btn">Cancel</button>
+                    <button type="button" class="btn_modal_submit" id="confirm_logout_btn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    const closeModal = () => modal.classList.remove('active');
+
+    document.body.addEventListener('click', (e) => {
+        const logoutLink = e.target.closest('.logout_item') || e.target.closest('.sidebar_logout a');
+        if (logoutLink) {
+            e.preventDefault();
+            modal.classList.add('active');
+        }
+    });
+
+    const cancelBtn = modal.querySelector('#cancel_logout_btn');
+    const confirmBtn = modal.querySelector('#confirm_logout_btn');
+
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            closeModal();
+            showToast('Logged out successfully! Redirecting to Overview...', true);
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1200);
+        });
+    }
+}
+
+/* Products Catalog Filtering & Sorting (products.html) */
+function setup_products_catalog() {
+    const categoryBtns = document.querySelectorAll('.category_btn');
+    const sortSelect = document.getElementById('product_sort_select');
+    const grid = document.getElementById('products_catalog_grid');
+
+    if (!grid) return;
+
+    let activeCategory = 'all';
+
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeCategory = btn.getAttribute('data-category') || 'all';
+            filterAndSortProducts();
+        });
+    });
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', filterAndSortProducts);
+    }
+
+    function filterAndSortProducts() {
+        const cards = Array.from(grid.querySelectorAll('.product_card_item'));
+        const sortVal = sortSelect ? sortSelect.value : 'featured';
+
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const cat = card.getAttribute('data-category') || '';
+            const matches = (activeCategory === 'all' || cat === activeCategory);
+            card.style.display = matches ? 'flex' : 'none';
+            if (matches) visibleCount++;
+        });
+
+        // Sorting visible cards
+        cards.sort((a, b) => {
+            const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+            const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+            const nameA = (a.getAttribute('data-name') || '').toLowerCase();
+            const nameB = (b.getAttribute('data-name') || '').toLowerCase();
+
+            if (sortVal === 'price_low') return priceA - priceB;
+            if (sortVal === 'price_high') return priceB - priceA;
+            if (sortVal === 'name_az') return nameA.localeCompare(nameB);
+            return 0; // featured default
+        });
+
+        cards.forEach(card => grid.appendChild(card));
+
+        const noProductsMsg = document.getElementById('no_products_found');
+        if (noProductsMsg) {
+            noProductsMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
+        }
     }
 }
 

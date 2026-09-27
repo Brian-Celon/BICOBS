@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Shop Products</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+    <header class="top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'">
+            </div>
+            <h2 class="top_nav_logo_text">Taurus Bike</h2>
+            <span class="top_nav_portal_text">CUSTOMER PORTAL</span>
+        </div>
+        <div class="top_nav_center">
+            <div class="search_bar_container">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" id="global_search_input" placeholder="Search bikes, parts, accessories...">
+            </div>
+        </div>
+        <div class="top_nav_right">
+            <button type="button" class="mobile_search_btn" id="mobile_search_btn" aria-label="Toggle Search">
+                <i class="fas fa-search"></i>
+            </button>
+            <a href="mycart.html" class="cart_icon_container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart_badge_top">4</span>
+            </a>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
+        </div>
+
+        <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
+        <div class="mobile_search_bar_expand" id="mobile_search_bar_expand">
+            <div class="mobile_search_wrapper">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" id="mobile_search_input" placeholder="Search bikes, parts, accessories...">
+                <button type="button" class="mobile_search_close" id="close_mobile_search" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="products.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-bicycle"></i>
+                                <span>Shop Products</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">Shop Bikes, Parts & Accessories</h1>
+                    <p class="header_subtitle">Browse premium mountain bikes, upgrade kits, components, and gear.</p>
+                </div>
+                <div>
+                    <select class="filter_select" id="product_sort_select">
+                        <option value="featured">Sort by: Featured</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="name_az">Name: A to Z</option>
+                    </select>
+                </div>
+            </header>
+
+            <!-- Category Filter Tabs -->
+            <div class="category_filter_bar">
+                <button type="button" class="category_btn active" data-category="all">All Items</button>
+                <button type="button" class="category_btn" data-category="bikes">Frames & Bikes</button>
+                <button type="button" class="category_btn" data-category="parts">Groupsets & Parts</button>
+                <button type="button" class="category_btn" data-category="tires">Tires & Wheels</button>
+                <button type="button" class="category_btn" data-category="apparel">Apparel & Shoes</button>
+            </div>
+
+            <!-- Products Grid Section -->
+            <section class="products_catalog_section">
+                <div class="products_grid" id="products_catalog_grid">
+                    <!-- Product 1 -->
+                    <article class="product_card_item" data-category="parts" data-price="9500" data-name="Shimano SLX M7100 12spd Upgrade Kit">
+                        <div class="product_img_box">
+                            <i class="fas fa-cogs product_icon_lg"></i>
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_category_tag">Groupsets & Parts</span>
+                            <h4 class="product_name">Shimano SLX M7100 12spd Upgrade Kit</h4>
+                            <p class="product_description">12-speed drivetrain performance with precision shifting.</p>
+                            <div class="product_card_footer">
+                                <span class="product_price">₱9,500</span>
+                                <button type="button" class="btn_add_to_cart_action" data-name="Shimano SLX M7100 12spd Upgrade Kit" data-price="9500">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product 2 -->
+                    <article class="product_card_item" data-category="apparel" data-price="16000" data-name="Shimano RC903 Sphyre Cleats Shoe">
+                        <div class="product_img_box">
+                            <i class="fas fa-shoe-prints product_icon_lg"></i>
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_category_tag">Apparel & Shoes</span>
+                            <h4 class="product_name">Shimano RC903 Sphyre Cleats Shoe</h4>
+                            <p class="product_description">Pro-level road racing shoe engineered for maximum power transfer.</p>
+                            <div class="product_card_footer">
+                                <span class="product_price">₱16,000</span>
+                                <button type="button" class="btn_add_to_cart_action" data-name="Shimano RC903 Sphyre Cleats Shoe" data-price="16000">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product 3 -->
+                    <article class="product_card_item" data-category="bikes" data-price="19900" data-name="2026 Sagmit Evolution Carbon MTB Frame">
+                        <div class="product_img_box">
+                            <i class="fas fa-bicycle product_icon_lg"></i>
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_category_tag">Frames & Bikes</span>
+                            <h4 class="product_name">2026 Sagmit Evolution Carbon MTB Frame</h4>
+                            <p class="product_description">Lightweight T800 full carbon fiber cross-country mountain frame.</p>
+                            <div class="product_card_footer">
+                                <span class="product_price">₱19,900</span>
+                                <button type="button" class="btn_add_to_cart_action" data-name="2026 Sagmit Evolution Carbon MTB Frame" data-price="19900">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product 4 -->
+                    <article class="product_card_item" data-category="tires" data-price="1500" data-name="Maxxis Ardent 29 x 2.25 EXO Tubeless Tire">
+                        <div class="product_img_box">
+                            <i class="fas fa-circle-notch product_icon_lg"></i>
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_category_tag">Tires & Wheels</span>
+                            <h4 class="product_name">Maxxis Ardent 29 x 2.25 EXO Tubeless Tire</h4>
+                            <p class="product_description">High-traction trail tire with EXO sidewall protection.</p>
+                            <div class="product_card_footer">
+                                <span class="product_price">₱1,500</span>
+                                <button type="button" class="btn_add_to_cart_action" data-name="Maxxis Ardent 29 x 2.25 EXO Tubeless Tire" data-price="1500">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product 5 -->
+                    <article class="product_card_item" data-category="parts" data-price="24500" data-name="RockShox Sid SL Ultimate Air Fork">
+                        <div class="product_img_box">
+                            <i class="fas fa-drafting-compass product_icon_lg"></i>
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_category_tag">Groupsets & Parts</span>
+                            <h4 class="product_name">RockShox Sid SL Ultimate Air Fork</h4>
+                            <p class="product_description">Ultra-lightweight 100mm XC suspension fork with Charger Race Day damper.</p>
+                            <div class="product_card_footer">
+                                <span class="product_price">₱24,500</span>
+                                <button type="button" class="btn_add_to_cart_action" data-name="RockShox Sid SL Ultimate Air Fork" data-price="24500">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product 6 -->
+                    <article class="product_card_item" data-category="apparel" data-price="3200" data-name="Taurus Pro Aerodynamic Cycling Jersey">
+                        <div class="product_img_box">
+                            <i class="fas fa-tshirt product_icon_lg"></i>
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_category_tag">Apparel & Shoes</span>
+                            <h4 class="product_name">Taurus Pro Aerodynamic Cycling Jersey</h4>
+                            <p class="product_description">Moisture-wicking breathable race fit jersey with rear storage pockets.</p>
+                            <div class="product_card_footer">
+                                <span class="product_price">₱3,200</span>
+                                <button type="button" class="btn_add_to_cart_action" data-name="Taurus Pro Aerodynamic Cycling Jersey" data-price="3200">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Empty Search Result Container -->
+                <div id="no_products_found" class="cart_empty_state" style="display: none;">
+                    <i class="fas fa-search cart_empty_icon"></i>
+                    <h3>No products found</h3>
+                    <p>Try searching for another keyword or selecting a different category.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast_container" class="toast_container"></div>
+
+    <!-- Logout Modal -->
+    <div id="logout_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="logout_modal_title">
+        <div class="modal_container checkout_modal_container text_center">
+            <h3 id="logout_modal_title" class="modal_title">Log Out Confirmation</h3>
+            <p class="modal_subtitle">Are you sure you want to log out of your Taurus Bike customer account?</p>
+            <div class="modal_actions flex_center" style="margin-top: 20px;">
+                <button type="button" class="btn_modal_cancel" id="cancel_logout_btn">Cancel</button>
+                <button type="button" class="btn_modal_submit" id="confirm_logout_btn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>

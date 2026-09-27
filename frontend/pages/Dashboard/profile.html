@@ -179,12 +179,25 @@
                     <div class="form_row_two" style="margin-bottom: 0;">
                         <div class="form_group" style="margin-bottom: 0;">
                             <label class="form_label" for="new_password_input">New Password</label>
-                            <input class="form_input" type="password" id="new_password_input" value="password123">
+                            <div class="password_input_wrapper">
+                                <input class="form_input" type="password" id="new_password_input" placeholder="Enter new password (leave blank to keep current)">
+                                <button type="button" class="btn_toggle_pwd" data-target="new_password_input" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="form_group" style="margin-bottom: 0;">
                             <label class="form_label" for="confirm_password_input">Confirm New Password</label>
-                            <input class="form_input" type="password" id="confirm_password_input" value="password123">
+                            <div class="password_input_wrapper">
+                                <input class="form_input" type="password" id="confirm_password_input" placeholder="Confirm new password">
+                                <button type="button" class="btn_toggle_pwd" data-target="confirm_password_input" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
+                    </div>
+                    <div id="password_match_error" class="discount_msg error" style="display: none; margin-top: 10px;">
+                        <i class="fas fa-exclamation-circle"></i> Passwords do not match. Please verify your new password.
                     </div>
                 </section>
 

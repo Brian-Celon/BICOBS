@@ -171,29 +171,49 @@
                         <a href="#" class="btn_open_chat">Open Chat</a>
                     </li>
                 </ul>
+                <div id="no_tickets_found" class="cart_empty_state" style="display: none;">
+                    <i class="fas fa-comment-slash cart_empty_icon"></i>
+                    <h3>No tickets found</h3>
+                    <p>No support tickets match your search filter.</p>
+                </div>
             </section>
         </main>
     </div>
 
-    <!-- sticky bottom footer -->
-    <footer class="dashboard_footer">
-        <div class="footer_item">
-            <i class="fas fa-home footer_icon"></i>
-            <span>Taurus Bike / customer dashboard</span>
+    <!-- Ticket Chat Modal -->
+    <div id="ticket_chat_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="chat_modal_title">
+        <div class="modal_container checkout_modal_container">
+            <div class="modal_header_row space_between">
+                <div class="modal_header_text">
+                    <h3 id="chat_modal_title" class="modal_title">Support Conversation</h3>
+                    <p class="modal_subtitle" id="chat_modal_subtitle">#TCK-4091: Inquiry on Frame Torque Specifications</p>
+                </div>
+                <button type="button" class="modal_close_btn" id="close_chat_modal" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal_card_box">
+                <div class="chat_messages_box" id="chat_messages_box">
+                    <div class="chat_message message_user">
+                        <div class="chat_msg_author">Juan Dela Cruz (You)</div>
+                        <div class="chat_msg_text">Hello, what are the recommended torque specs for tightening the Sagmit Carbon seatpost collar?</div>
+                    </div>
+                    <div class="chat_message message_support">
+                        <div class="chat_msg_author">Taurus Support Rep</div>
+                        <div class="chat_msg_text">Hi Juan! For carbon seatpost clamps, we recommend a torque setting of 5 Nm to 6 Nm maximum with carbon assembly paste.</div>
+                    </div>
+                </div>
+
+                <form id="chat_reply_form" class="chat_reply_form" style="margin-top: 14px;">
+                    <div class="discount_input_group">
+                        <input type="text" id="chat_reply_input" class="form_input" placeholder="Type your response..." required autocomplete="off">
+                        <button type="submit" class="btn_apply_discount"><i class="fas fa-paper-plane"></i> Send</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="footer_item">
-            <i class="fas fa-phone footer_icon"></i>
-            <span>2024-0541</span>
-        </div>
-        <div class="footer_item">
-            <i class="fas fa-info-circle footer_icon"></i>
-            <span>Contact Info Information</span>
-        </div>
-        <div class="footer_item">
-            <i class="fas fa-map-marker-alt footer_icon"></i>
-            <span>Manage Contact</span>
-        </div>
-    </footer>
+    </div>
 
     <!-- Create Support Ticket Modal -->
     <div id="ticket_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="ticket_modal_title">
@@ -238,6 +258,26 @@
             </form>
         </div>
     </div>
+
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
 
     <!-- main dashboard script -->
     <script src="/frontend/js/dashboard.js"></script>

@@ -1921,4 +1921,242 @@ body {
     gap: 12px;
 }
 
+/* Password Toggle Wrapper */
+.password_input_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.password_input_wrapper .form_input {
+    padding-right: 40px;
+}
+.btn_toggle_pwd {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
+}
+.btn_toggle_pwd:hover {
+    color: #8b1e28;
+}
+
+/* Action Link Button */
+.action_link_btn {
+    background: transparent;
+    border: none;
+    color: #8b1e28;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    transition: color 0.15s ease;
+}
+.action_link_btn:hover {
+    color: #6e151e;
+    text-decoration: underline;
+}
+
+/* Products Catalog Page Styles */
+.category_filter_bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.category_btn {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.category_btn:hover {
+    border-color: #8b1e28;
+    color: #8b1e28;
+}
+.category_btn.active {
+    background-color: #8b1e28;
+    border-color: #8b1e28;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(139, 30, 40, 0.25);
+}
+
+.products_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+.product_card_item {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product_card_item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.product_img_box {
+    height: 150px;
+    background-color: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #f1f5f9;
+}
+.product_icon_lg {
+    font-size: 54px;
+    color: #8b1e28;
+    opacity: 0.85;
+}
+.product_card_body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+.product_category_tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #8b1e28;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+.product_card_body .product_name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+.product_description {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+.product_card_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+}
+.product_card_footer .product_price {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.btn_add_to_cart_action {
+    background-color: #8b1e28;
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.btn_add_to_cart_action:hover {
+    background-color: #6e151e;
+    transform: scale(1.02);
+}
+
+/* Chat Messages Box */
+.chat_messages_box {
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.chat_message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+.message_user {
+    align-self: flex-end;
+    background-color: #8b1e28;
+    color: #ffffff;
+    border-bottom-right-radius: 2px;
+}
+.message_support {
+    align-self: flex-start;
+    background-color: #ffffff;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    border-bottom-left-radius: 2px;
+}
+.chat_msg_author {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    opacity: 0.85;
+}
+
+/* Toast Notifications */
+.toast_container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+.toast_msg {
+    pointer-events: auto;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: toastIn 0.25s ease forwards;
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
 

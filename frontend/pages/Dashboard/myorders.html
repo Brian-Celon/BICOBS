@@ -138,11 +138,11 @@
                     <p class="header_subtitle">Track and view detailed statuses of all your bike purchases.</p>
                 </div>
                 <div>
-                    <select class="filter_select">
-                        <option>All Statuses</option>
-                        <option>Processing</option>
-                        <option>Shipped</option>
-                        <option>Delivered</option>
+                    <select class="filter_select" id="order_status_filter">
+                        <option value="all">All Statuses</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
                     </select>
                 </div>
             </header>
@@ -161,8 +161,8 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody id="orders_table_body">
+                            <tr data-status="Processing" data-order-id="#TBR1045" data-date="2026-05-15" data-items="Shimano Upgrade Kit, Tire" data-total="₱11,000">
                                 <td><strong>#TBR1045</strong></td>
                                 <td>2026-05-15</td>
                                 <td>Shimano Upgrade Kit, Tire</td>
@@ -172,9 +172,9 @@
                                     </span>
                                 </td>
                                 <td><strong>₱11,000</strong></td>
-                                <td><a href="#" class="action_link">View Details</a></td>
+                                <td><button type="button" class="btn_view_order_details action_link_btn"><i class="fas fa-eye"></i> View Details</button></td>
                             </tr>
-                            <tr>
+                            <tr data-status="Shipped" data-order-id="#TBR1040" data-date="2026-04-28" data-items="Sagmit Carbon Frame" data-total="₱19,900">
                                 <td><strong>#TBR1040</strong></td>
                                 <td>2026-04-28</td>
                                 <td>Sagmit Carbon Frame</td>
@@ -184,9 +184,9 @@
                                     </span>
                                 </td>
                                 <td><strong>₱19,900</strong></td>
-                                <td><a href="#" class="action_link">View Details</a></td>
+                                <td><button type="button" class="btn_view_order_details action_link_btn"><i class="fas fa-eye"></i> View Details</button></td>
                             </tr>
-                            <tr>
+                            <tr data-status="Delivered" data-order-id="#TBR1012" data-date="2026-03-10" data-items="Cleats Shoe, Pedals" data-total="₱17,500">
                                 <td><strong>#TBR1012</strong></td>
                                 <td>2026-03-10</td>
                                 <td>Cleats Shoe, Pedals</td>
@@ -196,12 +196,66 @@
                                     </span>
                                 </td>
                                 <td><strong>₱17,500</strong></td>
-                                <td><a href="#" class="action_link">View Details</a></td>
+                                <td><button type="button" class="btn_view_order_details action_link_btn"><i class="fas fa-eye"></i> View Details</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <div id="no_orders_found" class="cart_empty_state" style="display: none;">
+                    <i class="fas fa-box-open cart_empty_icon"></i>
+                    <h3>No orders found</h3>
+                    <p>No orders match the selected filter or search keyword.</p>
+                </div>
             </section>
+        </main>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="order_details_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="order_details_title">
+        <div class="modal_container checkout_modal_container">
+            <div class="modal_header_row space_between">
+                <div class="modal_header_text">
+                    <h3 id="order_details_title" class="modal_title">Order Details <span id="modal_order_id_head">#TBR1045</span></h3>
+                    <p class="modal_subtitle">Placed on <span id="modal_order_date">2026-05-15</span></p>
+                </div>
+                <button type="button" class="modal_close_btn" id="close_order_details_modal" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal_card_box">
+                <div class="order_detail_group">
+                    <span class="form_label">ORDER STATUS</span>
+                    <div id="modal_order_status_badge" style="margin-top: 4px;">
+                        <span class="status_pill status_processing"><i class="fas fa-circle" style="font-size: 7px;"></i> Processing</span>
+                    </div>
+                </div>
+
+                <div class="order_detail_group" style="margin-top: 14px;">
+                    <span class="form_label">ORDERED ITEMS</span>
+                    <ul class="checkout_items_list" id="modal_order_items_list" style="margin-top: 6px;">
+                        <!-- Items list -->
+                    </ul>
+                </div>
+
+                <div class="order_detail_group" style="margin-top: 14px;">
+                    <span class="form_label">SHIPPING ADDRESS</span>
+                    <p class="order_detail_text" id="modal_order_address">1991 Roat State, Sector 4, Metro Manila, 19491</p>
+                </div>
+
+                <div class="checkout_totals_box" style="margin-top: 14px;">
+                    <div class="summary_row total_row">
+                        <span>Total Paid:</span>
+                        <strong id="modal_order_total" class="total_price">₱11,000</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal_actions">
+                <button type="button" class="btn_modal_cancel" id="close_order_details_btn">Close</button>
+            </div>
+        </div>
+    </div>
         </main>
     </div>
 
