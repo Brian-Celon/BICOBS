@@ -107,154 +107,237 @@
         <main class="shop_main_wrapper">
 
             <!-- left filter sidebar -->
+            <!-- left filter sidebar (desktop sticky / mobile drawer) -->
             <aside class="shop_sidebar" id="shop_sidebar">
                 <div class="sidebar_header">
                     <div class="sidebar_title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                         </svg>
-                        <span>Filter Catalog</span>
+                        <span>Categories & Filters</span>
                     </div>
                     <button class="sidebar_close_mobile" id="sidebar_close_mobile" aria-label="Close filters">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                     <button class="btn_reset_filters" id="btn_reset_filters">Reset All</button>
                 </div>
 
-                <!-- filter group: all products quick toggle -->
-                <div class="filter_group">
-                    <ul class="category_list">
-                        <li>
-                            <button class="category_item_btn active" data-category="all">
-                                <span class="category_name">All Products</span>
-                                <span class="category_item_count">18</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                <!-- scrollable content container for mobile drawer -->
+                <div class="sidebar_scroll_content">
 
-                <!-- filter group 1: prebuilt bikes -->
-                <div class="filter_group">
-                    <h3 class="filter_group_title">
-                        <span>Prebuilt Bikes</span>
-                        <span class="filter_badge_count">7</span>
-                    </h3>
-                    <ul class="category_list">
-                        <li>
-                            <button class="category_item_btn" data-category="all_bikes">
-                                <span class="category_name">All Prebuilt Bikes</span>
-                                <span class="category_item_count">7</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="mountain_bikes">
-                                <span class="category_name">Mountain Bikes (MTB)</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="road_bikes">
-                                <span class="category_name">Road Bikes</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="gravel_bikes">
-                                <span class="category_name">Gravel Bikes</span>
-                                <span class="category_item_count">1</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="bmx_urban">
-                                <span class="category_name">BMX & Urban</span>
-                                <span class="category_item_count">1</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="folding_commuter">
-                                <span class="category_name">Folding & Commuter</span>
-                                <span class="category_item_count">1</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                    <!-- filter group: all products quick toggle -->
+                    <div class="filter_group">
+                        <ul class="category_list">
+                            <li>
+                                <button class="category_item_btn active" data-category="all">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">All Products</span>
+                                    <span class="category_item_count">18</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- filter group 2: bike parts and components -->
-                <div class="filter_group">
-                    <h3 class="filter_group_title">
-                        <span>Bike Parts</span>
-                        <span class="filter_badge_count">11</span>
-                    </h3>
-                    <ul class="category_list">
-                        <li>
-                            <button class="category_item_btn" data-category="all_parts">
-                                <span class="category_name">All Bike Parts</span>
-                                <span class="category_item_count">11</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="pedals">
-                                <span class="category_name">Pedals & Cleats</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="gears">
-                                <span class="category_name">Gears & Drivetrain</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="brakes">
-                                <span class="category_name">Brakes & Rotors</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="frames">
-                                <span class="category_name">Frames & Forks</span>
-                                <span class="category_item_count">1</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="rims_tires">
-                                <span class="category_name">Rims & Tires</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category_item_btn" data-category="handlebars_saddles">
-                                <span class="category_name">Handlebars & Saddles</span>
-                                <span class="category_item_count">2</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                    <!-- filter group 1: prebuilt bikes -->
+                    <div class="filter_group">
+                        <h3 class="filter_group_title">
+                            <span>Prebuilt Bikes</span>
+                            <span class="filter_badge_count">7</span>
+                        </h3>
+                        <ul class="category_list">
+                            <li>
+                                <button class="category_item_btn" data-category="all_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">All Prebuilt Bikes</span>
+                                    <span class="category_item_count">7</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="mountain_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Mountain Bikes (MTB)</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="road_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Road Bikes</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="gravel_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Gravel Bikes</span>
+                                    <span class="category_item_count">1</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="bmx_urban">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">BMX & Urban</span>
+                                    <span class="category_item_count">1</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="folding_commuter">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Folding & Commuter</span>
+                                    <span class="category_item_count">1</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- filter group 3: price range -->
-                <div class="filter_group">
-                    <h3 class="filter_group_title">Price Range</h3>
-                    <input type="range" class="price_slider" id="price_slider" min="500" max="50000" step="500" value="50000">
-                    <div class="price_slider_display">
-                        <span>₱500</span>
-                        <span id="max_price_display">₱50,000</span>
+                    <!-- filter group 2: bike parts and components -->
+                    <div class="filter_group">
+                        <h3 class="filter_group_title">
+                            <span>Bike Parts</span>
+                            <span class="filter_badge_count">11</span>
+                        </h3>
+                        <ul class="category_list">
+                            <li>
+                                <button class="category_item_btn" data-category="all_parts">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">All Bike Parts</span>
+                                    <span class="category_item_count">11</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="pedals">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Pedals & Cleats</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="gears">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Gears & Drivetrain</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="brakes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Brakes & Rotors</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="frames">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Frames & Forks</span>
+                                    <span class="category_item_count">1</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="rims_tires">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Rims & Tires</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="handlebars_saddles">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Handlebars & Saddles</span>
+                                    <span class="category_item_count">2</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- filter group 3: price range -->
+                    <div class="filter_group">
+                        <h3 class="filter_group_title">Price Range</h3>
+                        <input type="range" class="price_slider" id="price_slider" min="500" max="50000" step="500" value="50000">
+                        <div class="price_slider_display">
+                            <span>₱500</span>
+                            <span id="max_price_display">₱50,000</span>
+                        </div>
+                    </div>
+
+                    <!-- filter group 4: special offers -->
+                    <div class="filter_group">
+                        <h3 class="filter_group_title">Special Offers</h3>
+                        <div class="checkbox_filter_list">
+                            <label class="checkbox_label">
+                                <input type="checkbox" id="filter_sale">
+                                <span>On Sale / Discounted</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- filter group 4: special offers -->
-                <div class="filter_group">
-                    <h3 class="filter_group_title">Special Offers</h3>
-                    <div class="checkbox_filter_list">
-                        <label class="checkbox_label">
-                            <input type="checkbox" id="filter_sale">
-                            <span>On Sale / Discounted</span>
-                        </label>
-                    </div>
+                <!-- mobile drawer footer with apply button -->
+                <div class="sidebar_mobile_footer">
+                    <button class="btn_apply_mobile_filters" id="btn_apply_mobile_filters">
+                        <span>View Products</span>
+                        <span class="mobile_apply_badge" id="mobile_apply_badge">18</span>
+                    </button>
                 </div>
             </aside>
 
             <!-- right catalog content area -->
             <section class="shop_catalog_area">
+
+                <!-- mobile dedicated category and sort toolbar -->
+                <div class="mobile_category_bar">
+                    <button class="btn_mobile_category_trigger" id="btn_mobile_category_trigger">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="12" x2="14" y2="12"></line>
+                            <line x1="4" y1="18" x2="18" y2="18"></line>
+                        </svg>
+                        <div class="mobile_btn_text_group">
+                            <span class="mobile_btn_sub">Browse Categories</span>
+                            <span class="mobile_btn_active_cat" id="mobile_btn_active_cat">All Products</span>
+                        </div>
+                        <span class="mobile_filter_badge" id="mobile_filter_badge">18</span>
+                    </button>
+
+                    <div class="mobile_sort_wrapper">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 18V4"/>
+                        </svg>
+                        <select class="mobile_sort_select" id="mobile_sort_select">
+                            <option value="featured">Featured</option>
+                            <option value="price_asc">Price: Low</option>
+                            <option value="price_desc">Price: High</option>
+                            <option value="name_asc">Name: A-Z</option>
+                        </select>
+                    </div>
+                </div>
 
                 <!-- toolbar: results info, search, sort, and mobile filter trigger -->
                 <div class="shop_toolbar">
