@@ -39,7 +39,7 @@ html, body {
 }
 
 .page_body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--page_background);
   color: var(--text_main);
   min-height: 100vh;
