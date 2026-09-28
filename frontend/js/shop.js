@@ -50,19 +50,29 @@ document.addEventListener('DOMContentLoaded', () => {
             card.setAttribute('data-price', item.price);
             card.setAttribute('data-name', item.name);
 
+            let badgeHTML = '';
+            if (item.stockQuantity === 0) {
+                badgeHTML = '<span class="card_tag_badge badge_sale">Out of Stock</span>';
+            } else if (item.stockQuantity <= 3 && item.stockQuantity > 0) {
+                badgeHTML = '<span class="card_tag_badge badge_new">Low Stock</span>';
+            }
+
             card.innerHTML = `
-                <div class="product_image_container">
-                    <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';">
-                    ${item.stockQuantity <= 3 && item.stockQuantity > 0 ? '<span class="badge low_stock">Low Stock</span>' : ''}
-                    ${item.stockQuantity === 0 ? '<span class="badge out_of_stock">Out of Stock</span>' : ''}
+                ${badgeHTML}
+                <div class="card_image_box">
+                    <img class="card_image" src="${item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';">
                 </div>
-                <div class="product_info_content">
-                    <span class="product_category_tag">${(item.category || '').toUpperCase()}</span>
-                    <h3 class="product_title">${item.name}</h3>
-                    <p class="product_description">${item.description || ''}</p>
-                    <div class="product_price_row">
-                        <span class="product_price">₱${item.price.toLocaleString()}</span>
-                        <button class="add_to_cart_btn" data-id="${item._id}" data-name="${item.name}">Add to Cart</button>
+                <div class="card_details">
+                    <span class="card_category_type">${(item.category || '').replace(/_/g, ' ').toUpperCase()}</span>
+                    <h3 class="card_title">${item.name}</h3>
+                    <div class="card_footer">
+                        <div class="card_price_block">
+                            <span class="card_current_price">&#8369;${item.price.toLocaleString()}</span>
+                        </div>
+                        <button class="btn_card_add_cart" data-id="${item._id}" data-name="${item.name}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            Add
+                        </button>
                     </div>
                 </div>
             `;

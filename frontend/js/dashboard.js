@@ -1308,7 +1308,7 @@ async function setup_products_catalog() {
 
             article.innerHTML = `
                 <div class="product_img_box">
-                    <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.name}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';">
+                    <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';">
                 </div>
                 <div class="product_card_body">
                     <span class="product_category_tag">${(item.category || '').toUpperCase()}</span>

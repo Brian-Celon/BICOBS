@@ -2055,12 +2055,22 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 .product_img_box {
-    height: 150px;
+    height: 190px;
     background-color: #f8fafc;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 16px;
     border-bottom: 1px solid #f1f5f9;
+}
+.product_img_box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+.product_card_item:hover .product_img_box img {
+    transform: scale(1.05);
 }
 .product_icon_lg {
     font-size: 54px;
