@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Taurus Mountain Bike 29er Alloy",
+    "description": "High performance 29er Mountain Bike featuring lightweight alloy frame, Shimano 3x7 drivetrain, and front suspension.",
+    "category": "bicycles",
+    "price": 12500,
+    "stockQuantity": 8,
+    "sku": "TBS-MTB-2901",
+    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600"
+  },
+  {
+    "name": "Taurus Road Bike Classic 700C",
+    "description": "Aerodynamic road bicycle designed for speed and long distance commuting with dual pivot caliper brakes.",
+    "category": "bicycles",
+    "price": 15800,
+    "stockQuantity": 5,
+    "sku": "TBS-RB-7001",
+    "imageUrl": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600"
+  },
+  {
+    "name": "Shimano Deore 12-Speed Rear Derailleur",
+    "description": "Smooth and precise shifting rear derailleur for mountain bikes.",
+    "category": "spare_parts",
+    "price": 2450,
+    "stockQuantity": 15,
+    "sku": "TBS-PRT-DER12",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600"
+  },
+  {
+    "name": "Hydraulic Disc Brake Set Front & Rear",
+    "description": "Complete hydraulic braking system with mineral oil and dual piston calipers.",
+    "category": "spare_parts",
+    "price": 1950,
+    "stockQuantity": 12,
+    "sku": "TBS-PRT-BRK02",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600"
+  },
+  {
+    "name": "LED Rechargeable Bike Headlight & Tail Light Set",
+    "description": "Super bright 400 lumen waterproof USB rechargeable front and rear lights.",
+    "category": "accessories",
+    "price": 650,
+    "stockQuantity": 25,
+    "sku": "TBS-ACC-LGT01",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600"
+  },
+  {
+    "name": "Heavy-Duty Cable Bike Lock with Combination",
+    "description": "1.2m steel cable lock with 4-digit resettable code for maximum anti-theft protection.",
+    "category": "accessories",
+    "price": 450,
+    "stockQuantity": 30,
+    "sku": "TBS-ACC-LCK01",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600"
+  }
+]
