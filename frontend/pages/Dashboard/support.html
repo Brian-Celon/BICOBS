@@ -172,35 +172,13 @@
 
             <!-- support tickets list section -->
             <section>
-                <ul class="ticket_list">
-                    <!-- ticket 1 -->
-                    <li class="ticket_card">
-                        <div class="ticket_info">
-                            <div class="ticket_title_row">
-                                <h4 class="ticket_title">#TCK-4091: Inquiry on Frame Torque Specifications</h4>
-                                <span class="ticket_status_open">Open</span>
-                            </div>
-                            <p class="ticket_meta">Created on 2026-05-20 • 3 messages in thread</p>
-                        </div>
-                        <a href="#" class="btn_open_chat">Open Chat</a>
-                    </li>
-
-                    <!-- ticket 2 -->
-                    <li class="ticket_card">
-                        <div class="ticket_info">
-                            <div class="ticket_title_row">
-                                <h4 class="ticket_title">#TCK-3882: Shipping delay regarding order #TBR1040</h4>
-                                <span class="ticket_status_resolved">Resolved</span>
-                            </div>
-                            <p class="ticket_meta">Created on 2026-04-29 • 5 messages in thread</p>
-                        </div>
-                        <a href="#" class="btn_open_chat">Open Chat</a>
-                    </li>
+                <ul class="ticket_list" id="tickets_list">
+                    <!-- Populated dynamically when user creates a ticket -->
                 </ul>
-                <div id="no_tickets_found" class="cart_empty_state" style="display: none;">
-                    <i class="fas fa-comment-slash cart_empty_icon"></i>
-                    <h3>No tickets found</h3>
-                    <p>No support tickets match your search filter.</p>
+                <div id="no_tickets_found" class="cart_empty_state" style="display: block; text-align: center; padding: 48px 16px;">
+                    <i class="fas fa-comment-dots cart_empty_icon" style="font-size: 40px; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
+                    <h3 style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No support tickets yet</h3>
+                    <p style="color: #64748b; margin-bottom: 16px;">Need help with your bike orders or services? Click <strong>+ Create Support Ticket</strong> above.</p>
                 </div>
             </section>
         </main>
@@ -212,7 +190,7 @@
             <div class="modal_header_row space_between">
                 <div class="modal_header_text">
                     <h3 id="chat_modal_title" class="modal_title">Support Conversation</h3>
-                    <p class="modal_subtitle" id="chat_modal_subtitle">#TCK-4091: Inquiry on Frame Torque Specifications</p>
+                    <p class="modal_subtitle" id="chat_modal_subtitle">Inquiry & Ticket Discussion</p>
                 </div>
                 <button type="button" class="modal_close_btn" id="close_chat_modal" aria-label="Close modal">
                     <i class="fas fa-times"></i>
@@ -222,12 +200,12 @@
             <div class="modal_card_box">
                 <div class="chat_messages_box" id="chat_messages_box">
                     <div class="chat_message message_user">
-                        <div class="chat_msg_author">Juan Dela Cruz (You)</div>
-                        <div class="chat_msg_text">Hello, what are the recommended torque specs for tightening the Sagmit Carbon seatpost collar?</div>
+                        <div class="chat_msg_author">You</div>
+                        <div class="chat_msg_text">Hello, I have an inquiry regarding my bike order.</div>
                     </div>
                     <div class="chat_message message_support">
                         <div class="chat_msg_author">Taurus Support Rep</div>
-                        <div class="chat_msg_text">Hi Juan! For carbon seatpost clamps, we recommend a torque setting of 5 Nm to 6 Nm maximum with carbon assembly paste.</div>
+                        <div class="chat_msg_text">Hello! How can we assist you today with your order or service?</div>
                     </div>
                 </div>
 

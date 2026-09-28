@@ -175,28 +175,43 @@ function setup_sidebar_links() {
 
 /* setup profile and location data persistence & sync across overview and profile */
 function setup_profile_sync() {
-    // Default profile values
-    const defaults = {
-        name: 'Juan Dela Cruz',
-        email: 'juan@taurusbike.ph',
-        phone: '+63 917 555 1234',
-        shippingAddress: '1991 Roat State, Sector 4, Metro Manila, 19491',
-        billingAddress: '2050 Roat State, Sector 4, Metro Manila, 19491'
+    // Helper to get stored profile values
+    const getProfile = () => {
+        let storedUser = null;
+        try {
+            const userStr = localStorage.getItem('user');
+            if (userStr) storedUser = JSON.parse(userStr);
+        } catch (e) {}
+
+        const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+        const isLoggedIn = !!(token && (storedUser || localStorage.getItem('tb_user_name')));
+
+        if (isLoggedIn) {
+            return {
+                name: (storedUser ? storedUser.name : localStorage.getItem('tb_user_name')) || 'Customer Rider',
+                email: (storedUser ? storedUser.email : localStorage.getItem('tb_user_email')) || '',
+                phone: (storedUser ? storedUser.phone : localStorage.getItem('tb_user_phone')) || '',
+                shippingAddress: (storedUser ? storedUser.address : localStorage.getItem('tb_user_shipping')) || 'Marilao, Bulacan',
+                billingAddress: localStorage.getItem('tb_user_billing') || '',
+                isLoggedIn: true
+            };
+        }
+
+        return {
+            name: 'Guest Rider',
+            email: '',
+            phone: '',
+            shippingAddress: 'Marilao, Bulacan',
+            billingAddress: '',
+            isLoggedIn: false
+        };
     };
 
-    // Helper to get stored profile values
-    const getProfile = () => ({
-        name: localStorage.getItem('tb_user_name') || defaults.name,
-        email: localStorage.getItem('tb_user_email') || defaults.email,
-        phone: localStorage.getItem('tb_user_phone') || defaults.phone,
-        shippingAddress: localStorage.getItem('tb_user_shipping') || defaults.shippingAddress,
-        billingAddress: localStorage.getItem('tb_user_billing') || defaults.billingAddress
-    });
-
     // Helper to compute initials from full name
-    const getInitials = (fullName) => {
+    const getInitials = (fullName, isLoggedIn) => {
+        if (!isLoggedIn) return 'TB';
         const parts = fullName.trim().split(/\s+/);
-        if (parts.length === 0 || !parts[0]) return 'JD';
+        if (parts.length === 0 || !parts[0]) return 'TB';
         if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
         return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
     };
@@ -204,7 +219,7 @@ function setup_profile_sync() {
     // Update DOM elements on page with current profile data
     const updateUI = () => {
         const profile = getProfile();
-        const initials = getInitials(profile.name);
+        const initials = getInitials(profile.name, profile.isLoggedIn);
 
         // Top navbar avatar circles and welcome card avatar
         const avatars = document.querySelectorAll('.user_avatar, #overview_welcome_avatar');
@@ -226,37 +241,37 @@ function setup_profile_sync() {
         if (overviewShipping) overviewShipping.textContent = profile.shippingAddress;
 
         const overviewBilling = document.getElementById('overview_billing_address');
-        if (overviewBilling) overviewBilling.textContent = profile.billingAddress;
+        if (overviewBilling) overviewBilling.textContent = profile.billingAddress || profile.shippingAddress;
 
-        // Profile page input fields initialization
-        const nameInput = document.getElementById('full_name_input');
-        if (nameInput && !nameInput.dataset.initialized) {
-            nameInput.value = profile.name;
-            nameInput.dataset.initialized = 'true';
-        }
+        // Profile page input fields initialization (only populate if user is logged in)
+        if (profile.isLoggedIn) {
+            const nameInput = document.getElementById('full_name_input');
+            if (nameInput && !nameInput.dataset.initialized) {
+                nameInput.value = profile.name;
+                nameInput.dataset.initialized = 'true';
+            }
 
-        const emailInput = document.getElementById('email_address_input');
-        if (emailInput && !emailInput.dataset.initialized) {
-            emailInput.value = profile.email;
-            emailInput.dataset.initialized = 'true';
-        }
+            const emailInput = document.getElementById('email_address_input');
+            if (emailInput && !emailInput.dataset.initialized) {
+                emailInput.value = profile.email;
+                emailInput.dataset.initialized = 'true';
+            }
 
-        const phoneInput = document.getElementById('phone_number_input');
-        if (phoneInput && !phoneInput.dataset.initialized) {
-            phoneInput.value = profile.phone;
-            phoneInput.dataset.initialized = 'true';
-        }
+            const phoneInput = document.getElementById('phone_number_input');
+            if (phoneInput && !phoneInput.dataset.initialized) {
+                phoneInput.value = profile.phone;
+                phoneInput.dataset.initialized = 'true';
+            }
 
-        const shippingInput = document.getElementById('shipping_address_input');
-        if (shippingInput && !shippingInput.dataset.initialized) {
-            shippingInput.value = profile.shippingAddress;
-            shippingInput.dataset.initialized = 'true';
-        }
+            const shippingInput = document.getElementById('shipping_address_input');
+            if (shippingInput && !shippingInput.dataset.initialized) {
+                shippingInput.value = profile.shippingAddress;
+                shippingInput.dataset.initialized = 'true';
+            }
 
-        const billingInput = document.getElementById('billing_address_input');
-        if (billingInput && !billingInput.dataset.initialized) {
-            billingInput.value = profile.billingAddress;
-            billingInput.dataset.initialized = 'true';
+            const billingInput = document.getElementById('billing_address_input');
+            if (billingInput && !billingInput.dataset.initialized) {
+                billingInput.value = profile.billingAddress;
         }
     };
 
@@ -269,17 +284,17 @@ function setup_profile_sync() {
         profileForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const newName = document.getElementById('full_name_input')?.value.trim() || defaults.name;
-            const newEmail = document.getElementById('email_address_input')?.value.trim() || defaults.email;
-            const newPhone = document.getElementById('phone_number_input')?.value.trim() || defaults.phone;
-            const newShipping = document.getElementById('shipping_address_input')?.value.trim() || defaults.shippingAddress;
-            const newBilling = document.getElementById('billing_address_input')?.value.trim() || defaults.billingAddress;
+            const newName = document.getElementById('full_name_input')?.value.trim();
+            const newEmail = document.getElementById('email_address_input')?.value.trim();
+            const newPhone = document.getElementById('phone_number_input')?.value.trim();
+            const newShipping = document.getElementById('shipping_address_input')?.value.trim();
+            const newBilling = document.getElementById('billing_address_input')?.value.trim();
 
-            localStorage.setItem('tb_user_name', newName);
-            localStorage.setItem('tb_user_email', newEmail);
-            localStorage.setItem('tb_user_phone', newPhone);
-            localStorage.setItem('tb_user_shipping', newShipping);
-            localStorage.setItem('tb_user_billing', newBilling);
+            if (newName) localStorage.setItem('tb_user_name', newName);
+            if (newEmail) localStorage.setItem('tb_user_email', newEmail);
+            if (newPhone) localStorage.setItem('tb_user_phone', newPhone);
+            if (newShipping) localStorage.setItem('tb_user_shipping', newShipping);
+            if (newBilling) localStorage.setItem('tb_user_billing', newBilling);
 
             updateUI();
 
@@ -368,10 +383,12 @@ function setup_payment_modal() {
             if (cardsGrid) {
                 const newCard = document.createElement('article');
                 
+                const currentUserName = localStorage.getItem('tb_user_name') || 'Account Holder';
+
                 if (provider === 'card') {
                     const cardNum = document.getElementById('card_number').value || '•••• •••• •••• 1234';
                     const expDate = document.getElementById('exp_date').value || '12/30';
-                    const holderName = document.getElementById('cardholder_name').value || 'Juan Dela Cruz';
+                    const holderName = document.getElementById('cardholder_name').value.trim() || currentUserName;
                     const last4 = cardNum.replace(/\s+/g, '').slice(-4) || '1234';
 
                     newCard.className = 'payment_card_item card_taurus';
@@ -397,7 +414,7 @@ function setup_payment_modal() {
                     `;
                 } else if (provider === 'gcash') {
                     const mobileNum = document.getElementById('gcash_number').value || '+63 917 ••• 0000';
-                    const holderName = document.getElementById('gcash_name').value || 'Juan Dela Cruz';
+                    const holderName = document.getElementById('gcash_name').value.trim() || currentUserName;
 
                     newCard.className = 'payment_card_item card_gcash';
                     newCard.innerHTML = `
@@ -421,7 +438,7 @@ function setup_payment_modal() {
                     `;
                 } else if (provider === 'paymaya') {
                     const mobileNum = document.getElementById('paymaya_number').value || '+63 918 ••• 0000';
-                    const holderName = document.getElementById('paymaya_name').value || 'Juan Dela Cruz';
+                    const holderName = document.getElementById('paymaya_name').value.trim() || currentUserName;
 
                     newCard.className = 'payment_card_item card_taurus';
                     newCard.style.backgroundColor = '#00a859';
@@ -1227,11 +1244,11 @@ function setup_ticket_chat_modal() {
             const text = replyInput.value.trim();
             if (!text) return;
 
-            if (chatBox) {
                 const userMsg = document.createElement('div');
                 userMsg.className = 'chat_message message_user';
+                const authorName = localStorage.getItem('tb_user_name') || 'You';
                 userMsg.innerHTML = `
-                    <div class="chat_msg_author">Juan Dela Cruz (You)</div>
+                    <div class="chat_msg_author">${escapeHTML(authorName)}</div>
                     <div class="chat_msg_text">${escapeHTML(text)}</div>
                 `;
                 chatBox.appendChild(userMsg);

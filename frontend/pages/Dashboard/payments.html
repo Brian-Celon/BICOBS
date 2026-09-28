@@ -171,49 +171,14 @@
             </header>
 
             <!-- saved payment methods grid -->
-            <section class="payment_cards_grid">
-                <!-- taurus pay card -->
-                <article class="payment_card_item card_taurus">
-                    <div class="card_top_row">
-                        <span>Taurus Pay Card</span>
-                        <span class="card_visa_badge">VISA</span>
-                    </div>
-                    <div>
-                        <div class="card_field_label">Card Number</div>
-                        <div class="card_number_text">•••• •••• •••• 4892</div>
-                    </div>
-                    <div class="card_bottom_row">
-                        <div>
-                            <div class="card_field_label">Cardholder</div>
-                            <strong>Juan Dela Cruz</strong>
-                        </div>
-                        <div style="text-align: right;">
-                            <div class="card_field_label">Expires</div>
-                            <strong>12/28</strong>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- gcash wallet card -->
-                <article class="payment_card_item card_gcash">
-                    <div class="card_top_row">
-                        <span>GCash / Wallet</span>
-                        <i class="fas fa-wallet" style="font-size: 20px;"></i>
-                    </div>
-                    <div>
-                        <div class="card_field_label">Mobile Account</div>
-                        <div class="card_number_text">+63 917 ••• 5012</div>
-                    </div>
-                    <div class="card_bottom_row">
-                        <div>
-                            <div class="card_field_label">Account Name</div>
-                            <strong>Juan Dela Cruz</strong>
-                        </div>
-                        <div>
-                            <span class="card_primary_badge">Primary</span>
-                        </div>
-                    </div>
-                </article>
+            <section id="payment_cards_section">
+                <div class="payment_cards_grid" id="payment_cards_container">
+                    <!-- Populated dynamically when user adds a payment method -->
+                </div>
+                <div id="no_payment_methods" class="cart_empty_state" style="text-align: center; padding: 24px 16px; color: #64748b; font-size: 14px; background: #ffffff; border-radius: 12px; border: 1px dashed #cbd5e1; margin-bottom: 24px;">
+                    <i class="fas fa-credit-card" style="font-size: 28px; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
+                    No saved payment cards or wallets yet. Click <strong>+ Add Payment Method</strong> to save a method for faster checkout.
+                </div>
             </section>
 
             <!-- transaction history table section -->
@@ -392,7 +357,7 @@
 
                         <div class="form_group">
                             <label class="form_label" for="cardholder_name">CARDHOLDER / ACCOUNT NAME</label>
-                            <input type="text" id="cardholder_name" class="form_input" placeholder="Juan Dela Cruz">
+                            <input type="text" id="cardholder_name" class="form_input" placeholder="e.g. Cardholder Full Name">
                         </div>
                     </div>
 
@@ -402,12 +367,12 @@
                             <label class="form_label" for="gcash_number">GCASH MOBILE NUMBER</label>
                             <div class="input_icon_wrapper">
                                 <i class="fas fa-mobile-alt input_prefix_icon"></i>
-                                <input type="text" id="gcash_number" class="form_input input_with_prefix" placeholder="+63 917 ••• 5012">
+                                <input type="text" id="gcash_number" class="form_input input_with_prefix" placeholder="0917XXXXXXX">
                             </div>
                         </div>
                         <div class="form_group">
                             <label class="form_label" for="gcash_name">ACCOUNT NAME</label>
-                            <input type="text" id="gcash_name" class="form_input" placeholder="Juan Dela Cruz">
+                            <input type="text" id="gcash_name" class="form_input" placeholder="e.g. GCash Account Full Name">
                         </div>
                     </div>
 
@@ -417,12 +382,12 @@
                             <label class="form_label" for="paymaya_number">PAYMAYA MOBILE NUMBER</label>
                             <div class="input_icon_wrapper">
                                 <i class="fas fa-mobile-alt input_prefix_icon"></i>
-                                <input type="text" id="paymaya_number" class="form_input input_with_prefix" placeholder="+63 918 ••• 9988">
+                                <input type="text" id="paymaya_number" class="form_input input_with_prefix" placeholder="0918XXXXXXX">
                             </div>
                         </div>
                         <div class="form_group">
                             <label class="form_label" for="paymaya_name">ACCOUNT NAME</label>
-                            <input type="text" id="paymaya_name" class="form_input" placeholder="Juan Dela Cruz">
+                            <input type="text" id="paymaya_name" class="form_input" placeholder="e.g. Maya Account Full Name">
                         </div>
                     </div>
 
