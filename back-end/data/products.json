@@ -6,7 +6,7 @@
     "price": 40000.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-2021PINE-001",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/2021 Pinewood Climber CARBON 27.5.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
     "isAvailable": true
   },
   {
@@ -16,7 +16,7 @@
     "price": 14500.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-CULTODYS-002",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Cult Odyssey Hydro Brakes 27.5.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600",
     "isAvailable": true
   },
   {
@@ -26,7 +26,7 @@
     "price": 11000.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-CULTODYS-003",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Cult Odyssey Hydro Brakes 27.5.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600",
     "isAvailable": true
   },
   {
@@ -36,7 +36,7 @@
     "price": 12500.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-TOSEEKCH-004",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Toseek Chester 700c Disc Brake ALLOY (2x9).jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
     "isAvailable": true
   },
   {
@@ -46,7 +46,7 @@
     "price": 17500.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-RYDERX32-005",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Ryder X3 27.5 2021 MT200 Hydro Brakes (3x8).jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600",
     "isAvailable": true
   },
   {
@@ -56,7 +56,7 @@
     "price": 14500.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-PINEWOOD-006",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Pinewood Trident Flux.png",
+    "imageUrl": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600",
     "isAvailable": true
   },
   {
@@ -66,7 +66,7 @@
     "price": 15500.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-GARUDARA-007",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Garuda Rampage.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
     "isAvailable": true
   },
   {
@@ -76,7 +76,7 @@
     "price": 55000.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-PINEWOOD-008",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Pinewood Challenger.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600",
     "isAvailable": true
   },
   {
@@ -86,7 +86,7 @@
     "price": 15500.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-KESPORST-009",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Kespor Stork Feather CX 1.0 2022.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600",
     "isAvailable": true
   },
   {
@@ -96,7 +96,7 @@
     "price": 32000.0,
     "stockQuantity": 10,
     "sku": "TBS-BIC-PINEWOOD-010",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Pinewood Lancer 1.0 2022 Gravel RX (2x9).jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
     "isAvailable": true
   },
   {
@@ -106,7 +106,7 @@
     "price": 4500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RYDERX2-011",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Ryder X2.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -116,7 +116,7 @@
     "price": 6500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RYDERX2-012",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Ryder X2.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -126,7 +126,7 @@
     "price": 7800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MOUNTAIN-013",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/MountainPeak Monster.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -136,7 +136,7 @@
     "price": 22000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MOUNTAIN-014",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Mountainpeak Everest 2.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -146,7 +146,7 @@
     "price": 6500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPECIALI-015",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Specialized Stumpjumper.png",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -156,7 +156,7 @@
     "price": 8500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONST-016",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Weapon Stealth 29.png",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -166,7 +166,7 @@
     "price": 8800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONSP-017",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Weapon Spartan 29.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -176,7 +176,7 @@
     "price": 7000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SATURNCA-018",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Saturn Calypso.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -186,7 +186,7 @@
     "price": 7500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SATURNDI-019",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Saturn Dione.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -196,7 +196,7 @@
     "price": 6000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITCH-020",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Sagmit Chaser.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -206,7 +206,7 @@
     "price": 8500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-COLENX27-021",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/COLE NX 27.5 TRI-FACTOR 2021.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -216,7 +216,7 @@
     "price": 2900.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-022",
-    "imageUrl": "/frontend/Pictures/products/Pre Build and Frameset/Speedone Floater BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -226,7 +226,7 @@
     "price": 7000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONCA-023",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Weapon Cannon 35 BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -236,7 +236,7 @@
     "price": 6000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONCA-024",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Weapon Cannon 35 BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -246,7 +246,7 @@
     "price": 6000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONRI-025",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Weapon Rifle.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -256,7 +256,7 @@
     "price": 4000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONRO-026",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Weapon Rocket Black.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -266,7 +266,7 @@
     "price": 5900.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-FORKWEAP-027",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Weapon Tower.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -276,7 +276,7 @@
     "price": 12000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-028",
-    "imageUrl": "/frontend/Pictures/products/Rim/Speedone Soldier.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -286,7 +286,7 @@
     "price": 16500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MANITOUM-029",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Manitou Markhor BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -296,7 +296,7 @@
     "price": 25000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MANITOUM-030",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Manitou Machete Comp BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -306,7 +306,7 @@
     "price": 8600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MANITOUM-031",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Manitou Mattoc Comp BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -316,7 +316,7 @@
     "price": 9000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SRSUNTOU-032",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/SR Suntour Epixon Stealth.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -326,7 +326,7 @@
     "price": 52000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SRSUNTOU-033",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/SR Suntour raidon BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -336,7 +336,7 @@
     "price": 2200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SRSUNTOU-034",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/SR Suntour XCR 32 BOOST.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -346,7 +346,7 @@
     "price": 3400.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-FORKWEAP-035",
-    "imageUrl": "/frontend/Pictures/products/Fork Suspension/Weapon Tower.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -356,7 +356,7 @@
     "price": 3000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-036",
-    "imageUrl": "/frontend/Pictures/products/Rim/Speedone Soldier.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -366,7 +366,7 @@
     "price": 4500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GENOVABI-037",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Hub Genova Big Dipper.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -376,7 +376,7 @@
     "price": 3400.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONAN-038",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Hub Weapon Animal.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -386,7 +386,7 @@
     "price": 950.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITEV-039",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Sagmit Evo 3.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -396,7 +396,7 @@
     "price": 3000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RAGUSAR1-040",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Ragusa R-100.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -406,7 +406,7 @@
     "price": 3450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-041",
-    "imageUrl": "/frontend/Pictures/products/Rim/Speedone Soldier.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -416,7 +416,7 @@
     "price": 3600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-042",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Speedone Pilot Carbon.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -426,7 +426,7 @@
     "price": 5200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-043",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Speedone Torpedo.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -436,7 +436,7 @@
     "price": 5200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-ORIGIN8N-044",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -446,7 +446,7 @@
     "price": 8000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-UPGRADEK-045",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -456,7 +456,7 @@
     "price": 9000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-12SPDLTW-046",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -466,7 +466,7 @@
     "price": 6800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-DEOREM61-047",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -476,7 +476,7 @@
     "price": 13000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-ZEEM6401-048",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -486,7 +486,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SRAMNXEA-049",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -496,7 +496,7 @@
     "price": 1600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-HANDLEPO-050",
-    "imageUrl": "/frontend/Pictures/products/Stem/HandlePost ControlTech CLS.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -506,7 +506,7 @@
     "price": 1700.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-HANDLEPO-051",
-    "imageUrl": "/frontend/Pictures/products/Stem/HandlePost ControlTech CLS.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -516,7 +516,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SEATPOST-052",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -526,7 +526,7 @@
     "price": 850.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-HANDLEPO-053",
-    "imageUrl": "/frontend/Pictures/products/Stem/HandlePost ControlTech CLS.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -536,7 +536,7 @@
     "price": 1000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONFU-054",
-    "imageUrl": "/frontend/Pictures/products/Stem/Weapon Fury Stem.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -546,7 +546,7 @@
     "price": 1100.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONAM-055",
-    "imageUrl": "/frontend/Pictures/products/Stem/Weapon Ambush Stem.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -556,7 +556,7 @@
     "price": 1200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONSA-056",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -566,7 +566,7 @@
     "price": 1100.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONBE-057",
-    "imageUrl": "/frontend/Pictures/products/Stem/Weapon Beast Stem.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -576,7 +576,7 @@
     "price": 1000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONAN-058",
-    "imageUrl": "/frontend/Pictures/products/Stem/Weapon Animal Stem.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -586,7 +586,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WEAPONPR-059",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -596,7 +596,7 @@
     "price": 2200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-HANDLEBA-060",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Handle Bar Pro Koryak.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -606,7 +606,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-HANDLEBA-061",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Handle Bar Pro Koryak.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -616,7 +616,7 @@
     "price": 2200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-DROPBARG-062",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Drop Bar Gravel Pro LT.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -626,7 +626,7 @@
     "price": 2000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-DROPBARG-063",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Drop Bar Gravel Pro Discovery.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -636,7 +636,7 @@
     "price": 2000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-ANSWERPR-064",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Answer Pro Taper.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -646,7 +646,7 @@
     "price": 1600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-ANSWERPR-065",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Answer Pro Taper.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -656,7 +656,7 @@
     "price": 550.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-ANSWERPR-066",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Answer Pro Taper.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -666,7 +666,7 @@
     "price": 550.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITBR-067",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Sagmit Brooklyn.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -676,7 +676,7 @@
     "price": 750.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITSH-068",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Sagmit Shadow.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -686,7 +686,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITST-069",
-    "imageUrl": "/frontend/Pictures/products/Handle Bar/Sagmit Static.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -696,7 +696,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GENOVAJU-070",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Genova Jupiter.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -706,7 +706,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GENOVAJU-071",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Genova Jupiter.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -716,7 +716,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GIANTWOH-072",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -726,7 +726,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GIANTWIT-073",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -736,7 +736,7 @@
     "price": 350.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RAGUSAR1-074",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Ragusa R-100.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -746,7 +746,7 @@
     "price": 350.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-TOPGRADE-075",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Topgrade.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -756,7 +756,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-DIAMOND-076",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Diamond.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -766,7 +766,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SANMARCO-077",
-    "imageUrl": "/frontend/Pictures/products/Saddle/San marco.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -776,7 +776,7 @@
     "price": 550.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-VELOPLUS-078",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -786,7 +786,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITOI-079",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Sagmit oilslick.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -796,7 +796,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GENOVAMA-080",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Genova Mars.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -806,7 +806,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPECIALI-081",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Specialized Black.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -816,7 +816,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPECIALI-082",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Specialized M811 Silver.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -826,7 +826,7 @@
     "price": 330.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-EASYDOES-083",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Easydo ES-01.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -836,7 +836,7 @@
     "price": 350.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SEERPOLY-084",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Seer Polymer Bartape.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -846,7 +846,7 @@
     "price": 400.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SEERPOLY-085",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Seer Polymer Bartape.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -856,7 +856,7 @@
     "price": 400.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SILICONG-086",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -866,7 +866,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SEERARTR-087",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Seer Art Racing Edition.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -876,7 +876,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SEERSILI-088",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Seer SILICON Hornet.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -886,7 +886,7 @@
     "price": 300.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SEERPOLY-089",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Seer Polymer Hornet.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -896,7 +896,7 @@
     "price": 370.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-SEERSUPE-090",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Seer Super Lite.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -906,7 +906,7 @@
     "price": 400.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-HANDLEGR-091",
-    "imageUrl": "/frontend/Pictures/products/Handle Grip/Handle Grip Attack Dual Lock-on.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -916,7 +916,7 @@
     "price": 200.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-WEAPONRA-092",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -926,7 +926,7 @@
     "price": 350.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-WEAPONRU-093",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -936,7 +936,7 @@
     "price": 1200.0,
     "stockQuantity": 10,
     "sku": "TBS-ACC-RAGUSAR1-094",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Ragusa R-100.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -946,7 +946,7 @@
     "price": 1200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-095",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Speedone Pilot Carbon.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -956,7 +956,7 @@
     "price": 800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-096",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Speedone Pilot Carbon.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -966,7 +966,7 @@
     "price": 800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-PEDALSAG-097",
-    "imageUrl": "/frontend/Pictures/products/Pedals/Sagmit 610.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -976,7 +976,7 @@
     "price": 500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-PEDALSAG-098",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -986,7 +986,7 @@
     "price": 800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RAGUSAR7-099",
-    "imageUrl": "/frontend/Pictures/products/Pedals/Ragusa R700.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -996,7 +996,7 @@
     "price": 800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RAGUSACN-100",
-    "imageUrl": "/frontend/Pictures/products/Pedals/Ragusa CNC Sealed Bearing 712.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1006,7 +1006,7 @@
     "price": 800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMIT62-101",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1016,7 +1016,7 @@
     "price": 1200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMIT61-102",
-    "imageUrl": "/frontend/Pictures/products/Pedals/Sagmit 618 CNC Sealed Bearing.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1026,7 +1026,7 @@
     "price": 1400.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MKSJAPAN-103",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1036,7 +1036,7 @@
     "price": 1550.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MKSSYLVA-104",
-    "imageUrl": "/frontend/Pictures/products/Pedals/MKS Sylvan Touring.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1046,7 +1046,7 @@
     "price": 5100.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MKSBM7-105",
-    "imageUrl": "/frontend/Pictures/products/Pedals/MKS BM-7.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1056,7 +1056,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITAE-106",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1066,7 +1066,7 @@
     "price": 1600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITAE-107",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1076,7 +1076,7 @@
     "price": 1100.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITLE-108",
-    "imageUrl": "/frontend/Pictures/products/Rim/Sagmit Legend.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1086,7 +1086,7 @@
     "price": 1600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-KOREREAL-109",
-    "imageUrl": "/frontend/Pictures/products/Rim/Kore Realm 4.2.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1096,7 +1096,7 @@
     "price": 1600.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WTBI21TU-110",
-    "imageUrl": "/frontend/Pictures/products/Rim/WTB i21.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1106,7 +1106,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-WTBI25TU-111",
-    "imageUrl": "/frontend/Pictures/products/Rim/WTB i25.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1116,7 +1116,7 @@
     "price": 1400.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-AMERICAN-112",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1126,7 +1126,7 @@
     "price": 2000.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-113",
-    "imageUrl": "/frontend/Pictures/products/Hubs/Speedone Pilot Carbon.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1136,7 +1136,7 @@
     "price": 1700.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-JALCOWEL-114",
-    "imageUrl": "/frontend/Pictures/products/Rim/Jalco Wellington.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1146,7 +1146,7 @@
     "price": 1900.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RAGUSAR1-115",
-    "imageUrl": "/frontend/Pictures/products/Saddle/Ragusa R-100.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1156,7 +1156,7 @@
     "price": 1700.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-116",
-    "imageUrl": "/frontend/Pictures/products/Rim/Speedone Bazooka.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1166,7 +1166,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITSA-117",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1176,7 +1176,7 @@
     "price": 1200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-JALCOMAR-118",
-    "imageUrl": "/frontend/Pictures/products/Rim/Jalco Maranello Black and Red.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1186,7 +1186,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-KOREREAL-119",
-    "imageUrl": "/frontend/Pictures/products/Rim/Kore Realm 2.4.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1196,7 +1196,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISAR-120",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1206,7 +1206,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISAR-121",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1216,7 +1216,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISIK-122",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1226,7 +1226,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISCR-123",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1236,7 +1236,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISIK-124",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1246,7 +1246,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISRE-125",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1256,7 +1256,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISAR-126",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1266,7 +1266,7 @@
     "price": 250.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISAR-127",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1276,7 +1276,7 @@
     "price": 150.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-MAXXISTU-128",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1286,7 +1286,7 @@
     "price": 85.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SAGMITTU-129",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1296,7 +1296,7 @@
     "price": 100.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SIZE20LE-130",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1306,7 +1306,7 @@
     "price": 380.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SIZE26LE-131",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1316,7 +1316,7 @@
     "price": 280.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SIZE20TI-132",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1326,7 +1326,7 @@
     "price": 85.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SIZE16TI-133",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1336,7 +1336,7 @@
     "price": 300.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SIZE16TU-134",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1346,7 +1346,7 @@
     "price": 380.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-9SPEEDSU-135",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1356,7 +1356,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-9SPEEDSU-136",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1366,7 +1366,7 @@
     "price": 650.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-10SPEEDS-137",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1376,7 +1376,7 @@
     "price": 1050.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-11SPEEDS-138",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1386,7 +1386,7 @@
     "price": 450.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-12SPEEDS-139",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1396,7 +1396,7 @@
     "price": 750.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-8SPEEDSU-140",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1406,7 +1406,7 @@
     "price": 1200.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-10SPEEDS-141",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1416,7 +1416,7 @@
     "price": 1500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-11SPEEDS-142",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1426,7 +1426,7 @@
     "price": 1100.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-12SPDKMC-143",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1436,7 +1436,7 @@
     "price": 900.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-11SPDKMC-144",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1446,7 +1446,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-10SPDKMC-145",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1456,7 +1456,7 @@
     "price": 1800.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-9SPDKMCC-146",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1466,7 +1466,7 @@
     "price": 2400.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-10SPDKMC-147",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1476,7 +1476,7 @@
     "price": 350.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-12SPDKMC-148",
-    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   },
   {
@@ -1486,7 +1486,7 @@
     "price": 500.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-CT1HX116-149",
-    "imageUrl": "/frontend/Pictures/products/Chains/CT-1HX 116links Heavy Duty for FIXIE.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=600",
     "isAvailable": true
   },
   {
@@ -1496,7 +1496,7 @@
     "price": 700.0,
     "stockQuantity": 10,
     "sku": "TBS-SPA-GT10126L-150",
-    "imageUrl": "/frontend/Pictures/products/Chains/GT-10 126links.jpg",
+    "imageUrl": "https://images.unsplash.com/photo-1559348349-86f1f65817fe?w=600",
     "isAvailable": true
   }
 ]
