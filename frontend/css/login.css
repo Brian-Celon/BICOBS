@@ -55,14 +55,57 @@ html, body {
 
 .app_header {
   width: 100%;
-  background-color: var(--brand_primary);
-  height: 96px;
+  background-color: #b82828;
+  height: 72px;
   display: flex;
   align-items: center;
-  padding: 0 48px;
+  gap: 18px;
+  padding: 0 5%;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
   flex-shrink: 0;
   z-index: 1000;
+}
+
+.back_button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 180px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid #731616;
+  border-radius: 6px;
+  background: #8b1e1e;
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(95, 17, 17, 0.28);
+}
+
+.auth_container > .back_button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 120;
+}
+
+.auth_container.right_panel_active > .back_button {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: var(--brand_primary);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.24);
+}
+
+.back_button:hover {
+  background: #731616;
+}
+
+.back_button:focus-visible {
+  outline: 2px solid black;
+  outline-offset: 2px;
 }
 
 .header_brand {
@@ -72,7 +115,7 @@ html, body {
 }
 
 .brand_logo_wrapper {
-  height: 72px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +123,7 @@ html, body {
 }
 
 .brand_logo {
-  height: 72px;
+  height: 44px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -90,7 +133,7 @@ html, body {
 .brand_title {
   color: #ffffff;
   font-weight: 800;
-  font-size: 2.5rem;
+  font-size: 26px;
   letter-spacing: -0.025em;
   user-select: none;
 }
@@ -585,8 +628,8 @@ html, body {
 /* Intermediate Screen Breakpoint (Laptops & Tablet Landscape 769px - 1200px) */
 @media (max-width: 1200px) {
   .app_header {
-    height: 84px;
-    padding: 0 32px;
+    height: 72px;
+    padding: 0 5%;
   }
 
   .header_brand {
@@ -594,16 +637,16 @@ html, body {
   }
 
   .brand_logo_wrapper {
-    height: 62px;
+    height: 44px;
   }
 
   .brand_logo {
-    height: 62px;
+    height: 44px;
     width: auto;
   }
 
   .brand_title {
-    font-size: 2.1rem;
+    font-size: 26px;
   }
 
   .auth_container {
@@ -649,8 +692,8 @@ html, body {
 /* Tablet Portrait & Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
   .app_header {
-    padding: 0 20px;
-    height: 74px;
+    padding: 0 4%;
+    height: 60px;
   }
 
   .header_brand {
@@ -658,21 +701,21 @@ html, body {
   }
 
   .brand_title {
-    font-size: 1.65rem;
+    font-size: 20px;
   }
 
   .brand_logo_wrapper {
-    height: 52px;
+    height: 36px;
   }
 
   .brand_logo {
-    height: 52px;
+    height: 36px;
     width: auto;
   }
 
   .main_wrapper {
     padding: 16px 12px;
-    min-height: calc(100vh - 74px);
+    min-height: calc(100vh - 60px);
   }
 
   .auth_container {
@@ -682,6 +725,11 @@ html, body {
     height: auto;
     border-radius: var(--radius_element);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .auth_container > .back_button {
+    top: 180px;
+    left: 14px;
   }
 
   /* Compact top banner overlay for mobile */
@@ -888,8 +936,8 @@ html, body {
 /* Extra small mobile devices (phones < 380px) */
 @media (max-width: 380px) {
   .app_header {
-    height: 66px;
-    padding: 0 14px;
+    height: 60px;
+    padding: 0 4%;
   }
 
   .header_brand {
@@ -897,16 +945,16 @@ html, body {
   }
 
   .brand_logo_wrapper {
-    height: 46px;
+    height: 36px;
   }
 
   .brand_logo {
-    height: 46px;
+    height: 36px;
     width: auto;
   }
 
   .brand_title {
-    font-size: 1.45rem;
+    font-size: 20px;
   }
 
   .auth_container {

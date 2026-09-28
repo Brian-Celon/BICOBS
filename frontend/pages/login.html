@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Taurus Bike - Sign In & Sign Up</title>
-  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="/frontend/css/login.css">
   <!-- Plus Jakarta Sans Font matching Taurus Bike Portal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -16,7 +16,7 @@
   <header class="app_header" id="app_header">
     <div class="header_brand" id="header_brand">
       <div class="brand_logo_wrapper">
-        <img src="TaurusLogo.png" alt="Taurus Bike Logo" class="brand_logo" id="brand_logo">
+        <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo" id="brand_logo">
       </div>
       <span class="brand_title" id="brand_title">Taurus Bike</span>
     </div>
@@ -25,6 +25,9 @@
   <!-- Main Content Area -->
   <main class="main_wrapper">
     <div class="auth_container detailed_auth_container" id="auth_container">
+      <button type="button" class="back_button" id="back_button" aria-label="Go back to the previous page">
+        <span aria-hidden="true">←</span> Back
+      </button>
       
       <!-- Detailed Sign Up Form (Right when active on desktop, full card on mobile) -->
       <div class="form_container sign_up_container" id="sign_up_container">

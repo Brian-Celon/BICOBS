@@ -4,6 +4,18 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const back_button = document.getElementById('back_button');
+
+  if (back_button) {
+    back_button.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/frontend/pages/index.html';
+      }
+    });
+  }
+
   const auth_container = document.getElementById('auth_container');
   const ghost_sign_up_btn = document.getElementById('ghost_sign_up_btn');
   const ghost_sign_in_btn = document.getElementById('ghost_sign_in_btn');
