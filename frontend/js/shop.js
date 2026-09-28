@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.innerHTML = `
                 <div class="product_image_container">
-                    <img src="${item.imageUrl || 'https://via.placeholder.com/300'}" alt="${item.name}" loading="lazy">
+                    <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';">
                     ${item.stockQuantity <= 3 && item.stockQuantity > 0 ? '<span class="badge low_stock">Low Stock</span>' : ''}
                     ${item.stockQuantity === 0 ? '<span class="badge out_of_stock">Out of Stock</span>' : ''}
                 </div>
