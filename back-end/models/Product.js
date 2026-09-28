@@ -53,13 +53,12 @@ const productSchema = new mongoose.Schema(
 );
 
 // Auto update availability status based on stock count
-productSchema.pre('save', function (next) {
+productSchema.pre('save', function () {
   if (this.stockQuantity <= 0) {
     this.isAvailable = false;
   } else {
     this.isAvailable = true;
   }
-  next();
 });
 
 module.exports = mongoose.model('Product', productSchema);

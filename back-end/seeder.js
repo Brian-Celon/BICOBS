@@ -1,6 +1,10 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const dns = require('dns');
+
+// Use Google/Cloudflare DNS for Windows SRV lookup fix
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 // Load environment variables
 dotenv.config();
@@ -21,7 +25,7 @@ const importData = async () => {
   try {
     await Product.deleteMany();
     await Product.create(products);
-    console.log('[Seeder] Product Data Imported Successfully!');
+    console.log('[Seeder] 150 Products Imported Successfully to MongoDB Atlas!');
     process.exit();
   } catch (err) {
     console.error(`[Seeder Error] ${err.message}`);
