@@ -382,7 +382,8 @@ html, body {
   font-size: 1.05rem;
 }
 
-.detailed_submit_btn {
+.detailed_submit_btn,
+#sign_in_submit_btn {
   margin-top: 16px;
   width: 100%;
 }
