@@ -16,7 +16,7 @@
         <header class="top_header" id="top_header">
             <!-- brand logo and mobile toggle container -->
             <div class="header_top_row">
-                <a href="#" class="brand_box">
+                <a href="/frontend/pages/index.html" class="brand_box">
                     <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
                     <span class="brand_title">Taurus Bike</span>
                 </a>
@@ -87,131 +87,150 @@
 
         <!-- hero banner section -->
         <section class="hero_section" id="hero_section">
-            <div class="hero_content">
-                <h1 class="hero_headline">BUY AND ENJOY</h1>
-                <h2 class="hero_subheadline">YOUR CYCLING EXPERIENCE HERE AT</h2>
-                <div class="hero_badge_box">
-                    <span class="hero_badge_text">TAURUS BIKE STORE</span>
-                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bull Logo" class="hero_bull_logo">
+            <div class="hero_inner">
+                <div class="hero_content">
+                    <h1 class="hero_headline">BUY AND ENJOY</h1>
+                    <h2 class="hero_subheadline">YOUR CYCLING EXPERIENCE HERE AT</h2>
+                    <div class="hero_badge_box">
+                        <div class="arched_badge_wrapper">
+                            <svg viewBox="0 0 280 110" class="badge_curve_svg" aria-hidden="true">
+                                <defs>
+                                    <path id="arch_text_path" d="M 20,100 A 120,70 0 0,1 260,100" fill="none" />
+                                </defs>
+                                <text class="arched_text">
+                                    <textPath href="#arch_text_path" startOffset="50%" text-anchor="middle">
+                                        TAURUS BIKE STORE
+                                    </textPath>
+                                </text>
+                            </svg>
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bull Logo" class="hero_bull_logo">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="hero_image_wrapper">
-                <img src="/frontend/Pictures/placeholder.png" alt="Featured Bike Frame" class="hero_image">
+                <div class="hero_image_wrapper">
+                    <img src="/frontend/Pictures/background-home.png" alt="Featured Bike Frame" class="hero_image">
+                </div>
             </div>
         </section>
 
         <!-- promo 3-column banner -->
         <section class="promo_section" id="promo_section">
-            <div class="promo_grid">
-                <!-- promo card 1 -->
-                <div class="promo_card">
-                    <div class="promo_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="New Arrivals" class="promo_image">
+            <div class="promo_inner">
+                <div class="promo_grid">
+                    <!-- promo card 1 -->
+                    <div class="promo_card">
+                        <div class="promo_image_box">
+                            <img src="/frontend/Pictures/new-arrival.jpg" alt="New Arrivals" class="promo_image">
+                        </div>
+                        <h3 class="promo_title">NEW ARRIVALS</h3>
                     </div>
-                    <h3 class="promo_title">NEW ARRIVALS</h3>
-                </div>
 
-                <!-- promo card 2 -->
-                <div class="promo_card">
-                    <div class="promo_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Exclusive" class="promo_image">
+                    <!-- promo card 2 -->
+                    <div class="promo_card">
+                        <div class="promo_image_box">
+                            <img src="/frontend/Pictures/exclusive.jpg" alt="Exclusive" class="promo_image">
+                        </div>
+                        <h3 class="promo_title">EXCLUSIVE</h3>
                     </div>
-                    <h3 class="promo_title">EXCLUSIVE</h3>
-                </div>
 
-                <!-- promo card 3 -->
-                <div class="promo_card">
-                    <div class="promo_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Best Sellers" class="promo_image">
+                    <!-- promo card 3 -->
+                    <div class="promo_card">
+                        <div class="promo_image_box">
+                            <img src="/frontend/Pictures/bestseller.jpg" alt="Best Sellers" class="promo_image">
+                        </div>
+                        <h3 class="promo_title">BEST SELLERS</h3>
                     </div>
-                    <h3 class="promo_title">BEST SELLERS</h3>
                 </div>
             </div>
         </section>
 
         <!-- featured products section -->
         <section class="featured_section" id="featured_section">
-            <h2 class="section_heading">FEATURED PRODUCTS</h2>
-            <div class="featured_grid">
-                <!-- product card 1 -->
-                <div class="product_card">
-                    <div class="product_card_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Shimano SLX Upgrade Kit" class="product_card_image">
+            <div class="featured_inner">
+                <h2 class="section_heading">FEATURED PRODUCTS</h2>
+                <div class="featured_grid">
+                    <!-- product card 1 -->
+                    <div class="product_card">
+                        <div class="product_card_image_box">
+                            <img src="/frontend/Pictures/shimano-slx.png" alt="Shimano SLX Upgrade Kit" class="product_card_image">
+                        </div>
+                        <h4 class="product_title">Shimano SLX M7100 12spd<br>Upgrade kit</h4>
+                        <div class="price_row">
+                            <span class="price_current">PHP 9,500</span>
+                            <span class="price_old">PHP 11,500</span>
+                        </div>
+                        <button class="btn_cart btn_cart_dark">+ Add to cart</button>
                     </div>
-                    <h4 class="product_title">Shimano SLX M7100 12spd Upgrade kit</h4>
-                    <div class="price_row">
-                        <span class="price_current">PHP 9,500</span>
-                        <span class="price_old">PHP 11,500</span>
-                    </div>
-                    <button class="btn_cart btn_cart_dark">+ Add to cart</button>
-                </div>
 
-                <!-- product card 2 -->
-                <div class="product_card">
-                    <div class="product_card_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Shimano RC903 Sphyre" class="product_card_image">
+                    <!-- product card 2 -->
+                    <div class="product_card">
+                        <div class="product_card_image_box">
+                            <img src="/frontend/Pictures/shoes.png" alt="Shimano RC903 Sphyre Cleats Shoe" class="product_card_image">
+                        </div>
+                        <h4 class="product_title">Shimano RC903 Sphyre<br>Cleats Shoe</h4>
+                        <div class="price_row">
+                            <span class="price_current">PHP 16,000</span>
+                        </div>
+                        <button class="btn_cart btn_cart_red">+ Add to cart</button>
                     </div>
-                    <h4 class="product_title">Shimano RC903 Sphyre Cleats Shoe</h4>
-                    <div class="price_row">
-                        <span class="price_current">PHP 16,000</span>
-                    </div>
-                    <button class="btn_cart btn_cart_red">+ Add to cart</button>
-                </div>
 
-                <!-- product card 3 -->
-                <div class="product_card">
-                    <div class="product_card_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="2026 Sagmit Carbon MTB Frame" class="product_card_image">
+                    <!-- product card 3 -->
+                    <div class="product_card">
+                        <div class="product_card_image_box">
+                            <img src="/frontend/Pictures/frame.png" alt="2026 The New Sagmit Evolution Carbon MTB Frame Boost" class="product_card_image">
+                        </div>
+                        <h4 class="product_title">2026 The New Sagmit Evolution<br>Carbon MTB Frame Boost</h4>
+                        <div class="price_row">
+                            <span class="price_current">PHP 19,900</span>
+                        </div>
+                        <button class="btn_cart btn_cart_red">+ Add to cart</button>
                     </div>
-                    <h4 class="product_title">2026 The New Sagmit Evolution Carbon MTB Frame Boost</h4>
-                    <div class="price_row">
-                        <span class="price_current">PHP 19,900</span>
-                    </div>
-                    <button class="btn_cart btn_cart_red">+ Add to cart</button>
-                </div>
 
-                <!-- product card 4 -->
-                <div class="product_card">
-                    <div class="product_card_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Ardent Tubeless Ready Tire" class="product_card_image">
+                    <!-- product card 4 -->
+                    <div class="product_card">
+                        <div class="product_card_image_box">
+                            <img src="/frontend/Pictures/tire.png" alt="Ardent 29 x 2.25 Tanwall EXO Tubeless Ready" class="product_card_image">
+                        </div>
+                        <h4 class="product_title">Ardent 29 x 2.25 Tanwall<br>EXO Tubeless Ready</h4>
+                        <div class="price_row">
+                            <span class="price_current">PHP 1,500</span>
+                        </div>
+                        <button class="btn_cart btn_cart_red">+ Add to cart</button>
                     </div>
-                    <h4 class="product_title">Ardent 29 x 2.25 Tanwall EXO Tubeless Ready</h4>
-                    <div class="price_row">
-                        <span class="price_current">PHP 1,500</span>
-                    </div>
-                    <button class="btn_cart btn_cart_red">+ Add to cart</button>
                 </div>
             </div>
         </section>
 
         <!-- product categories 3-column section -->
         <section class="categories_section" id="categories_section">
-            <div class="categories_grid">
-                <!-- category 1: bikes and frames -->
-                <div class="category_item">
-                    <div class="category_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Bikes and Frames" class="category_image">
+            <div class="categories_inner">
+                <div class="categories_grid">
+                    <!-- category 1: bikes and frames -->
+                    <div class="category_item">
+                        <div class="category_image_box">
+                            <img src="/frontend/Pictures/bike&frames.jpg" alt="Bikes and Frames" class="category_image">
+                        </div>
+                        <h3 class="category_title">BIKES & FRAMES</h3>
+                        <p class="category_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
                     </div>
-                    <h3 class="category_title">BIKES & FRAMES</h3>
-                    <p class="category_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                </div>
 
-                <!-- category 2: rims and tires -->
-                <div class="category_item">
-                    <div class="category_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Rims and Tires" class="category_image">
+                    <!-- category 2: rims and tires -->
+                    <div class="category_item">
+                        <div class="category_image_box">
+                            <img src="/frontend/Pictures/rims&tiles.jpg" alt="Rims and Tires" class="category_image">
+                        </div>
+                        <h3 class="category_title">RIMS & TIRES</h3>
+                        <p class="category_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
                     </div>
-                    <h3 class="category_title">RIMS & TIRES</h3>
-                    <p class="category_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                </div>
 
-                <!-- category 3: shoes and pedals -->
-                <div class="category_item">
-                    <div class="category_image_box">
-                        <img src="/frontend/Pictures/placeholder.png" alt="Shoes and Pedals" class="category_image">
+                    <!-- category 3: shoes and pedals -->
+                    <div class="category_item">
+                        <div class="category_image_box">
+                            <img src="/frontend/Pictures/shoes&pedals.jpg" alt="Shoes and Pedals" class="category_image">
+                        </div>
+                        <h3 class="category_title">SHOES & PEDALS</h3>
+                        <p class="category_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
                     </div>
-                    <h3 class="category_title">SHOES & PEDALS</h3>
-                    <p class="category_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
                 </div>
             </div>
         </section>
@@ -222,7 +241,7 @@
                 <div class="footer_grid">
                     <!-- footer col 1: brand info -->
                     <div class="footer_col">
-                        <a href="#" class="footer_brand">
+                        <a href="/frontend/pages/index.html" class="footer_brand">
                             <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
                             <span class="footer_brand_name">Taurus Bike</span>
                         </a>
@@ -238,7 +257,7 @@
                             <li><a href="/frontend/pages/index.html" class="footer_link">Home</a></li>
                             <li><a href="/frontend/pages/about.html" class="footer_link">About Us</a></li>
                             <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
-                            <li><a href="#" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/service.html" class="footer_link">Services</a></li>
                             <li><a href="/frontend/pages/Dashboard/dashboard.html" class="footer_link">Customer Dashboard</a></li>
                             <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
                         </ul>
