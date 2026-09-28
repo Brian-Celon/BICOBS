@@ -20,7 +20,47 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_logout_modal();
     setup_products_catalog();
     load_dashboard_summary_from_backend();
+    load_user_orders_from_backend();
 });
+
+/* Fetch user orders from backend API for myorders.html */
+async function load_user_orders_from_backend() {
+    const tableBody = document.getElementById('orders_table_body');
+    if (!tableBody) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch('/api/orders/myorders', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+            tableBody.innerHTML = '';
+            result.data.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-status', order.orderStatus);
+                const orderDate = new Date(order.createdAt).toLocaleDateString();
+                const itemsCount = order.orderItems.reduce((sum, item) => sum + item.quantity, 0);
+
+                tr.innerHTML = `
+                    <td><strong>#ORD-${order._id.slice(-6).toUpperCase()}</strong></td>
+                    <td>${orderDate}</td>
+                    <td>${itemsCount} Items</td>
+                    <td>₱${order.totalPrice.toLocaleString()}</td>
+                    <td><span class="status_pill status_${order.orderStatus}">${order.orderStatus.replace('_', ' ').toUpperCase()}</span></td>
+                    <td><button class="btn_view_details" data-id="${order._id}">View</button></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+    } catch (err) {
+        console.log('Orders table backend sync offline.');
+    }
+}
 
 /* Fetch live summary metrics from backend API */
 async function load_dashboard_summary_from_backend() {
@@ -778,28 +818,87 @@ function setup_shopping_cart() {
 
     // Confirm Order Handler
     if (confirmCheckoutBtn) {
-        confirmCheckoutBtn.addEventListener('click', () => {
+        confirmCheckoutBtn.addEventListener('click', async () => {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+
+            if (!token) {
+                alert('Please log in or register an account before placing an order.');
+                window.location.href = '/frontend/pages/login.html';
+                return;
+            }
+
+            const user = userStr ? JSON.parse(userStr) : {};
             const data = calculateTotals();
-            closeCheckout();
 
-            // Populate Success Modal
-            const randomTxnNum = Math.floor(100000 + Math.random() * 900000);
-            const txnId = '#TXN-' + randomTxnNum;
-            const successTxnEl = document.getElementById('success_txn_id');
-            const successTotalEl = document.getElementById('success_total_paid');
+            if (!data.items || data.items.length === 0) {
+                alert('Your cart is empty.');
+                return;
+            }
 
-            if (successTxnEl) successTxnEl.textContent = txnId;
-            if (successTotalEl) successTotalEl.textContent = `₱${data.total.toLocaleString('en-US')}`;
+            const payload = {
+                orderItems: data.items.map(i => ({
+                    product: i.id || '650000000000000000000001',
+                    name: i.name,
+                    quantity: i.qty,
+                    price: i.unitPrice
+                })),
+                shippingAddress: {
+                    phone: user.phone || '09171234567',
+                    street: user.address || 'Abangan Sur',
+                    city: 'Marilao',
+                    province: 'Bulacan'
+                },
+                fulfillmentType: 'pickup',
+                paymentMethod: 'cash',
+                deliveryFee: data.shippingFee
+            };
 
-            if (successModal) successModal.classList.add('active');
+            try {
+                confirmCheckoutBtn.disabled = true;
+                confirmCheckoutBtn.textContent = 'Processing Order...';
 
-            // Clear cart items upon confirmed order completion
-            if (cartList) {
-                cartList.innerHTML = '';
-                activeDiscount = null;
-                if (discountInput) discountInput.value = '';
-                if (discountMsg) discountMsg.textContent = '';
-                updateCartUI();
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                confirmCheckoutBtn.disabled = false;
+                confirmCheckoutBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Transaction';
+
+                if (response.ok && result.status === 'success') {
+                    closeCheckout();
+
+                    const successTxnEl = document.getElementById('success_txn_id');
+                    const successTotalEl = document.getElementById('success_total_paid');
+
+                    if (successTxnEl) successTxnEl.textContent = `#ORD-${result.data._id.slice(-6).toUpperCase()}`;
+                    if (successTotalEl) successTotalEl.textContent = `₱${result.data.totalPrice.toLocaleString('en-US')}`;
+
+                    if (successModal) successModal.classList.add('active');
+
+                    // Clear cart items upon confirmed order completion
+                    if (cartList) {
+                        cartList.innerHTML = '';
+                        activeDiscount = null;
+                        if (discountInput) discountInput.value = '';
+                        if (discountMsg) discountMsg.textContent = '';
+                        updateCartUI();
+                    }
+                } else {
+                    alert(result.message || 'Failed to place order. Please try again.');
+                }
+            } catch (err) {
+                console.error('Order submission error:', err);
+                confirmCheckoutBtn.disabled = false;
+                confirmCheckoutBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Transaction';
+                alert('Server connection error. Please ensure the backend is running.');
             }
         });
     }
