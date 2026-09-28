@@ -1175,7 +1175,8 @@ function setup_logout_modal() {
 }
 
 /* Products Catalog Filtering & Sorting (products.html) */
-function setup_products_catalog() {
+/* Products Catalog Filtering & Sorting (products.html) */
+async function setup_products_catalog() {
     const categoryBtns = document.querySelectorAll('.category_btn');
     const sortSelect = document.getElementById('product_sort_select');
     const grid = document.getElementById('products_catalog_grid');
@@ -1183,6 +1184,49 @@ function setup_products_catalog() {
     if (!grid) return;
 
     let activeCategory = 'all';
+
+    // Fetch products dynamically from backend API
+    try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+            const result = await res.json();
+            if (result.status === 'success' && result.data && result.data.length > 0) {
+                renderDashboardProductsGrid(result.data);
+            }
+        }
+    } catch (err) {
+        console.log('Using HTML template products fallback');
+    }
+
+    function renderDashboardProductsGrid(products) {
+        grid.innerHTML = '';
+        products.forEach(item => {
+            const article = document.createElement('article');
+            article.className = 'product_card_item';
+            article.setAttribute('data-category', item.category || 'all');
+            article.setAttribute('data-price', item.price);
+            article.setAttribute('data-name', item.name);
+
+            article.innerHTML = `
+                <div class="product_img_box">
+                    <img src="${item.imageUrl || 'https://via.placeholder.com/300'}" alt="${item.name}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                </div>
+                <div class="product_card_body">
+                    <span class="product_category_tag">${(item.category || '').toUpperCase()}</span>
+                    <h4 class="product_name">${item.name}</h4>
+                    <p class="product_description">${item.description || ''}</p>
+                    <div class="product_card_footer">
+                        <span class="product_price">₱${item.price.toLocaleString()}</span>
+                        <button type="button" class="btn_add_to_cart_action" data-id="${item._id}" data-name="${item.name}" data-price="${item.price}">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(article);
+        });
+        filterAndSortProducts();
+    }
 
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1220,7 +1264,7 @@ function setup_products_catalog() {
             if (sortVal === 'price_low') return priceA - priceB;
             if (sortVal === 'price_high') return priceB - priceA;
             if (sortVal === 'name_az') return nameA.localeCompare(nameB);
-            return 0; // featured default
+            return 0;
         });
 
         cards.forEach(card => grid.appendChild(card));
@@ -1230,5 +1274,7 @@ function setup_products_catalog() {
             noProductsMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
         }
     }
+
+    filterAndSortProducts();
 }
 
