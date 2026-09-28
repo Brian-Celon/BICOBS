@@ -26,7 +26,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 6. 404 Route Handler
+// 6. Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+
+// 7. 404 Route Handler
 app.use((req, res, next) => {
   res.status(404).json({
     status: 'error',
