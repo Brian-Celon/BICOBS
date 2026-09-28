@@ -18,7 +18,7 @@
                     <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
                     <span class="brand_title">Taurus Bike</span>
                 </a>
-                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu">
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu" aria-controls="dashboard_site_navigation" aria-expanded="false">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -58,7 +58,16 @@
         </header>
 
     <!-- Secondary site navigation -->
-    <nav class="nav_bar" aria-label="Main navigation">
+    <nav class="nav_bar" id="dashboard_site_navigation" aria-label="Main navigation">
+        <div class="sidebar_header_mobile">
+            <div class="brand_box_mobile">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                <span class="mobile_brand_title">Taurus Bike</span>
+            </div>
+            <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
         <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
         <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
         <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
@@ -66,6 +75,7 @@
         <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link active" aria-current="page">DASHBOARD</a>
         <a href="#main_footer" class="nav_link">CONTACT</a>
     </nav>
+    <div class="nav_overlay" id="nav_overlay"></div>
 
     <!-- main layout container with gap -->
     <div id="dashboard_container" class="dashboard_layout">

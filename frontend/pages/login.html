@@ -25,16 +25,13 @@
   <!-- Main Content Area -->
   <main class="main_wrapper">
     <div class="auth_container detailed_auth_container" id="auth_container">
-      <button type="button" class="back_button" id="back_button" aria-label="Go back to the previous page">
-        <span aria-hidden="true">←</span> Back
-      </button>
-      
+
       <!-- Detailed Sign Up Form (Right when active on desktop, full card on mobile) -->
       <div class="form_container sign_up_container" id="sign_up_container">
         <div class="form_scroll_wrapper" id="sign_up_scroll_wrapper">
           <form class="auth_form detailed_auth_form" id="sign_up_form" action="#" method="post">
             <h1 class="form_title">Create Account</h1>
-            
+
             <div class="social_container">
               <a href="#" class="social_btn google_btn" id="google_sign_up_btn" aria_label="Sign up with Google">
                 <svg class="google_icon" viewBox="0 0 24 24" width="20" height="20">
@@ -135,6 +132,7 @@
               Already have an account?
               <button type="button" class="mobile_switch_btn" id="mobile_switch_to_sign_in">Sign In</button>
             </p>
+            <button type="button" class="back_button" aria-label="Go back to the previous page"><span aria-hidden="true">&larr;</span> Back</button>
           </form>
         </div>
       </div>
@@ -143,7 +141,7 @@
       <div class="form_container sign_in_container" id="sign_in_container">
         <form class="auth_form" id="sign_in_form" action="#" method="post">
           <h1 class="form_title">Sign In</h1>
-          
+
           <div class="social_container">
             <a href="#" class="social_btn google_btn" id="google_sign_in_btn" aria_label="Sign in with Google">
               <svg class="google_icon" viewBox="0 0 24 24" width="20" height="20">
@@ -175,13 +173,14 @@
             Don't have an account?
             <button type="button" class="mobile_switch_btn" id="mobile_switch_to_sign_up">Sign Up</button>
           </p>
+          <button type="button" class="back_button" aria-label="Go back to the previous page"><span aria-hidden="true">&larr;</span> Back</button>
         </form>
       </div>
 
       <!-- Sliding Overlay Container -->
       <div class="overlay_container" id="overlay_container">
         <div class="overlay" id="overlay">
-          
+
           <!-- Overlay Left (Visible when Sign Up is active, offers Sign In) -->
           <div class="overlay_panel overlay_left" id="overlay_left">
             <h1 class="overlay_title">Welcome Back!</h1>

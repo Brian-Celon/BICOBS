@@ -4,7 +4,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* initialize dashboard functionalities */
     setup_sidebar_links();
-    setup_mobile_sidebar();
+    setup_site_navigation();
     setup_responsive_search();
     setup_payment_modal();
     setup_ticket_modal();
@@ -45,43 +45,33 @@ function setup_responsive_search() {
     if (closeBtn) closeBtn.addEventListener('click', closeSearch);
 }
 
-/* setup responsive side navigation bar toggle for small screens */
-function setup_mobile_sidebar() {
+/* public site hamburger drawer uses the same controls as the Home page */
+function setup_site_navigation() {
     const toggleBtn = document.getElementById('mobile_nav_toggle');
-    const closeBtn = document.getElementById('sidebar_close_btn');
-    const sidebar = document.getElementById('dashboard_sidebar');
-    let overlay = document.getElementById('sidebar_overlay');
+    const closeBtn = document.getElementById('mobile_nav_close');
+    const siteNav = document.getElementById('dashboard_site_navigation');
+    const overlay = document.getElementById('nav_overlay');
+    if (!toggleBtn || !siteNav || !overlay) return;
 
-    // Create backdrop overlay dynamically if not present in DOM
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'sidebar_overlay';
-        overlay.className = 'sidebar_overlay';
-        document.body.appendChild(overlay);
-    }
-
-    const openSidebar = () => {
-        if (sidebar) sidebar.classList.add('active');
-        if (overlay) overlay.classList.add('active');
+    const closeMenu = () => {
+        siteNav.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+    };
+    const openMenu = () => {
+        siteNav.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        toggleBtn.setAttribute('aria-expanded', 'true');
     };
 
-    const closeSidebar = () => {
-        if (sidebar) sidebar.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-    };
-
-    if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
-    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-    if (overlay) overlay.addEventListener('click', closeSidebar);
-
-    // Close side nav when clicking any nav item link on mobile screens
-    const navItems = document.querySelectorAll('.sidebar_container .nav_item');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            if (window.innerWidth <= 900) {
-                closeSidebar();
-            }
-        });
+    toggleBtn.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    siteNav.querySelectorAll('.nav_link').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMenu();
     });
 }
 

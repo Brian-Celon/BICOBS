@@ -6,6 +6,39 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const mobile_nav_toggle = document.getElementById('mobile_nav_toggle');
+  const main_navigation = document.getElementById('main_navigation');
+  const mobile_nav_close = document.getElementById('mobile_nav_close');
+  const nav_overlay = document.getElementById('nav_overlay');
+
+  function open_mobile_nav() {
+    if (main_navigation) main_navigation.classList.add('open');
+    if (nav_overlay) nav_overlay.classList.add('open');
+    if (mobile_nav_toggle) mobile_nav_toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close_mobile_nav() {
+    if (main_navigation) main_navigation.classList.remove('open');
+    if (nav_overlay) nav_overlay.classList.remove('open');
+    if (mobile_nav_toggle) mobile_nav_toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  if (mobile_nav_toggle) mobile_nav_toggle.addEventListener('click', open_mobile_nav);
+  if (mobile_nav_close) mobile_nav_close.addEventListener('click', close_mobile_nav);
+  if (nav_overlay) nav_overlay.addEventListener('click', close_mobile_nav);
+
+  document.querySelectorAll('#main_navigation .nav_link').forEach(link => {
+    link.addEventListener('click', close_mobile_nav);
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') close_mobile_nav();
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
 
   // =========================================================================
   // State & Data
@@ -65,11 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   // DOM Elements
   // =========================================================================
-  const mobile_nav_toggle = document.getElementById('mobile_nav_toggle');
-  const main_navigation = document.getElementById('main_navigation');
-  const mobile_nav_close = document.getElementById('mobile_nav_close');
-  const nav_overlay = document.getElementById('nav_overlay');
-
   // Search
   const hero_service_search = document.getElementById('hero_service_search');
   const hero_search_clear_btn = document.getElementById('hero_search_clear_btn');
@@ -224,29 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
-  // =========================================================================
-  // Mobile Nav Drawer Toggle (Matching Landing Page)
-  // =========================================================================
-  function open_mobile_nav() {
-    if (main_navigation) main_navigation.classList.add('open');
-    if (nav_overlay) nav_overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function close_mobile_nav() {
-    if (main_navigation) main_navigation.classList.remove('open');
-    if (nav_overlay) nav_overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  if (mobile_nav_toggle) mobile_nav_toggle.addEventListener('click', open_mobile_nav);
-  if (mobile_nav_close) mobile_nav_close.addEventListener('click', close_mobile_nav);
-  if (nav_overlay) nav_overlay.addEventListener('click', close_mobile_nav);
-
-  document.querySelectorAll('.nav_link').forEach(link => {
-    link.addEventListener('click', close_mobile_nav);
-  });
 
   // Escape key closes search suggestions
   document.addEventListener('keydown', (e) => {

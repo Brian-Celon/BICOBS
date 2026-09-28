@@ -4,9 +4,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const back_button = document.getElementById('back_button');
+  const back_buttons = document.querySelectorAll('.back_button');
 
-  if (back_button) {
+  back_buttons.forEach((back_button) => {
     back_button.addEventListener('click', () => {
       if (window.history.length > 1) {
         window.history.back();
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/frontend/pages/index.html';
       }
     });
-  }
+  });
 
   const auth_container = document.getElementById('auth_container');
   const ghost_sign_up_btn = document.getElementById('ghost_sign_up_btn');

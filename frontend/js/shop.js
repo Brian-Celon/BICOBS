@@ -347,6 +347,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobile_nav_close) mobile_nav_close.addEventListener('click', close_main_nav);
     if (nav_overlay) nav_overlay.addEventListener('click', close_main_nav);
 
+    document.querySelectorAll('#main_navigation .nav_link').forEach(link => {
+        link.addEventListener('click', close_main_nav);
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') close_main_nav();
+    });
+
     // initial setup
     apply_filters();
 });

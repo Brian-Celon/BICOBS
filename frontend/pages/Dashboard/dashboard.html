@@ -18,7 +18,7 @@
                     <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
                     <span class="brand_title">Taurus Bike</span>
                 </a>
-                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu">
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu" aria-controls="dashboard_site_navigation" aria-expanded="false">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -58,7 +58,16 @@
         </header>
 
     <!-- Secondary site navigation -->
-    <nav class="nav_bar" aria-label="Main navigation">
+    <nav class="nav_bar" id="dashboard_site_navigation" aria-label="Main navigation">
+        <div class="sidebar_header_mobile">
+            <div class="brand_box_mobile">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                <span class="mobile_brand_title">Taurus Bike</span>
+            </div>
+            <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
         <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
         <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
         <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
@@ -66,6 +75,7 @@
         <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link active" aria-current="page">DASHBOARD</a>
         <a href="#main_footer" class="nav_link">CONTACT</a>
     </nav>
+    <div class="nav_overlay" id="nav_overlay"></div>
 
     <!-- main layout container with gap -->
     <div id="dashboard_container" class="dashboard_layout">
@@ -174,7 +184,7 @@
             <section class="stats_section">
                 <h3 class="section_title">Quick Stats</h3>
                 <div class="stats_grid">
-                    <article class="stat_card">
+                    <a class="stat_card stat_card_link" href="myorders.html" aria-label="View all orders">
                         <div class="stat_card_top">
                             <span class="stat_label">Total Orders</span>
                             <i class="fas fa-box stat_icon"></i>
@@ -183,27 +193,27 @@
                             <span class="stat_value">12</span>
                             <i class="fas fa-chart-line stat_trend"></i>
                         </div>
-                    </article>
-                    <article class="stat_card">
+                    </a>
+                    <a class="stat_card stat_card_link" href="mycart.html" aria-label="View shopping cart">
                         <div class="stat_card_top">
                             <span class="stat_label">Cart Items</span>
                             <i class="fas fa-shopping-cart stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
                             <span class="stat_value">4</span>
-                            <a href="mycart.html" class="action_button">View Cart</a>
+                            <span class="stat_card_action">View Cart <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
-                    </article>
-                    <article class="stat_card">
+                    </a>
+                    <a class="stat_card stat_card_link" href="support.html" aria-label="View support tickets">
                         <div class="stat_card_top">
                             <span class="stat_label">Unread Messages</span>
                             <i class="fas fa-comments stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
                             <span class="stat_value">2</span>
-                            <a href="support.html" class="action_button">View Tickets</a>
+                            <span class="stat_card_action">View Tickets <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
-                    </article>
+                    </a>
                 </div>
             </section>
 

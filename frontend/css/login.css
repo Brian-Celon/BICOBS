@@ -70,7 +70,7 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  width: 180px;
+  width: min(180px, calc(100% - 40px));
   min-height: 44px;
   justify-content: center;
   padding: 8px 16px;
@@ -85,18 +85,9 @@ html, body {
   box-shadow: 0 3px 8px rgba(95, 17, 17, 0.28);
 }
 
-.auth_container > .back_button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 120;
-}
-
-.auth_container.right_panel_active > .back_button {
-  border-color: #ffffff;
-  background: #ffffff;
-  color: var(--brand_primary);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.24);
+.auth_form .back_button {
+  align-self: flex-start;
+  margin-top: 16px;
 }
 
 .back_button:hover {
@@ -727,9 +718,13 @@ html, body {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
 
-  .auth_container > .back_button {
-    top: 180px;
-    left: 14px;
+  .auth_form .back_button {
+    position: static;
+    width: clamp(116px, 40vw, 150px);
+    min-height: 42px;
+    padding: 8px 12px;
+    font-size: clamp(12px, 3.5vw, 13px);
+    margin: 16px 0 4px;
   }
 
   /* Compact top banner overlay for mobile */
