@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Customer Dashboard</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+        <header class="top_header" id="top_header">
+            <!-- brand logo and mobile toggle container -->
+            <div class="header_top_row">
+                <a href="/frontend/pages/index.html" class="brand_box">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
+                    <span class="brand_title">Taurus Bike</span>
+                </a>
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu" aria-controls="dashboard_site_navigation" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- search and action controls -->
+            <div class="header_controls">
+                <div class="search_wrapper">
+                    <input type="text" class="search_input" placeholder="Search...">
+                    <button class="search_btn" aria-label="Search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header_actions_group">
+                    <a href="/frontend/pages/Dashboard/mycart.html" class="btn_header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Shopping Cart</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </a>
+                    <a href="/frontend/pages/login.html" class="btn_header">
+                        <span>Sign In / Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+    <!-- Secondary site navigation -->
+    <nav class="nav_bar" id="dashboard_site_navigation" aria-label="Main navigation">
+        <div class="sidebar_header_mobile">
+            <div class="brand_box_mobile">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                <span class="mobile_brand_title">Taurus Bike</span>
+            </div>
+            <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
+        <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
+        <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
+        <a href="/frontend/pages/service.html" class="nav_link">SERVICES</a>
+        <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link active" aria-current="page">DASHBOARD</a>
+        <a href="#main_footer" class="nav_link">CONTACT</a>
+    </nav>
+    <div class="nav_overlay" id="nav_overlay"></div>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">My Account Overview</h1>
+                    <p class="header_subtitle">Welcome back, <strong id="overview_user_name">Juan Dela Cruz</strong>! Manage your profile, orders, and saved addresses.</p>
+                </div>
+            </header>
+
+            <!-- User Welcome & Location Summary Card -->
+            <section class="user_welcome_card">
+                <div class="welcome_card_left">
+                    <div class="welcome_avatar" id="overview_welcome_avatar">JD</div>
+                    <div class="welcome_text">
+                        <h2 class="welcome_name" id="overview_welcome_name">Juan Dela Cruz</h2>
+                        <p class="welcome_location">
+                            <i class="fas fa-map-marker-alt welcome_location_icon"></i>
+                            <span id="overview_welcome_location">1991 Roat State, Sector 4, Metro Manila, 19491</span>
+                        </p>
+                    </div>
+                </div>
+                <a href="profile.html" class="action_button"><i class="fas fa-user-edit"></i> Edit Profile & Location</a>
+            </section>
+
+            <!-- quick stats section -->
+            <section class="stats_section">
+                <h3 class="section_title">Quick Stats</h3>
+                <div class="stats_grid">
+                    <a class="stat_card stat_card_link" href="myorders.html" aria-label="View all orders">
+                        <div class="stat_card_top">
+                            <span class="stat_label">Total Orders</span>
+                            <i class="fas fa-box stat_icon"></i>
+                        </div>
+                        <div class="stat_card_bottom">
+                            <span class="stat_value">12</span>
+                            <i class="fas fa-chart-line stat_trend"></i>
+                        </div>
+                    </a>
+                    <a class="stat_card stat_card_link" href="mycart.html" aria-label="View shopping cart">
+                        <div class="stat_card_top">
+                            <span class="stat_label">Cart Items</span>
+                            <i class="fas fa-shopping-cart stat_icon"></i>
+                        </div>
+                        <div class="stat_card_bottom">
+                            <span class="stat_value">4</span>
+                            <span class="stat_card_action">View Cart <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+                    <a class="stat_card stat_card_link" href="support.html" aria-label="View support tickets">
+                        <div class="stat_card_top">
+                            <span class="stat_label">Unread Messages</span>
+                            <i class="fas fa-comments stat_icon"></i>
+                        </div>
+                        <div class="stat_card_bottom">
+                            <span class="stat_value">2</span>
+                            <span class="stat_card_action">View Tickets <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- recent orders section -->
+            <section class="orders_section">
+                <h3 class="section_title">Recent Orders</h3>
+                <div class="table_container">
+                    <table class="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TBR1045</td>
+                                <td>2024-05-15</td>
+                                <td>
+                                    <span class="status_pill status_processing">
+                                        <i class="fas fa-circle" style="font-size: 8px;"></i> Processing
+                                    </span>
+                                </td>
+                                <td>₱12,990.00</td>
+                                <td><a href="myorders.html" class="action_link">View Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- bottom split section -->
+            <div class="bottom_section">
+                <!-- recommended products -->
+                <section class="recommended_container">
+                    <h3 class="section_title">Recommended for You</h3>
+                    <ul class="products_scroll">
+                        <li class="product_card">
+                            <div class="product_image_placeholder"><i class="fas fa-bicycle"></i></div>
+                            <h4 class="product_name">Sagmit Evo Carbon</h4>
+                            <p class="product_price">₱19,900</p>
+                            <button class="action_button">Add to Cart</button>
+                        </li>
+                        <li class="product_card">
+                            <div class="product_image_placeholder"><i class="fas fa-life-ring"></i></div>
+                            <h4 class="product_name">Maxxis Ardent 29</h4>
+                            <p class="product_price">₱1,500</p>
+                            <button class="action_button">Add to Cart</button>
+                        </li>
+                        <li class="product_card">
+                            <div class="product_image_placeholder"><i class="fas fa-cogs"></i></div>
+                            <h4 class="product_name">Shimano SLX Kit</h4>
+                            <p class="product_price">₱9,500</p>
+                            <button class="action_button">Add to Cart</button>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- saved addresses -->
+                <section class="addresses_container">
+                    <h3 class="section_title">My Saved Addresses & Location</h3>
+                    <address class="address_block">
+                        <span class="address_label">Shipping Location / Address</span>
+                        <p class="address_text" id="overview_shipping_address">1991 Roat State, Sector 4, Metro Manila, 19491</p>
+                    </address>
+                    <address class="address_block">
+                        <span class="address_label">Billing Location / Address</span>
+                        <p class="address_text" id="overview_billing_address">2050 Roat State, Sector 4, Metro Manila, 19491</p>
+                    </address>
+                    <a href="profile.html" class="action_link">Manage Location & Addresses</a>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- sticky bottom footer -->
+        <footer class="main_footer" id="main_footer">
+            <div class="footer_top">
+                <div class="footer_grid">
+                    <!-- footer col 1: brand info -->
+                    <div class="footer_col">
+                        <a href="/frontend/pages/index.html" class="footer_brand">
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
+                            <span class="footer_brand_name">Taurus Bike</span>
+                        </a>
+                        <p class="footer_about_text">
+                            Your trusted bike shop in Marilao, Bulacan. Providing high-performance bicycles, quality components, accessories, and expert maintenance services.
+                        </p>
+                    </div>
+
+                    <!-- footer col 2: quick links -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Quick Links</h4>
+                        <ul class="footer_links">
+                            <li><a href="/frontend/pages/index.html" class="footer_link">Home</a></li>
+                            <li><a href="/frontend/pages/index.html#promo_section" class="footer_link">About Us</a></li>
+                            <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
+                            <li><a href="/frontend/pages/service.html" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/Dashboard/dashboard.html" class="footer_link">Customer Dashboard</a></li>
+                            <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 3: customer care -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Customer Care</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Track Order</a></li>
+                            <li><a href="#" class="footer_link">Shipping Information</a></li>
+                            <li><a href="#" class="footer_link">Return & Refund Policy</a></li>
+                            <li><a href="#" class="footer_link">Warranty & Repairs</a></li>
+                            <li><a href="#" class="footer_link">Support Tickets</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 4: store info -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Store Information</h4>
+                        <ul class="footer_info_list">
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Taurus Building Sandico Street Abangan Sur, Marilao, Philippines, 3019</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <span>2024-0541 / +63 912 345 6789</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </li>
+                        </ul>
+                        <div class="footer_store_social">
+                            <a href="https://www.facebook.com/taurusbikestore" target="_blank" rel="noopener noreferrer" class="social_link_group">
+                                <span class="social_link" aria-label="Facebook">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                    </svg>
+                                </span>
+                                <span class="social_link_text">Taurus Bike Shop Facebook page</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- copyright bottom bar -->
+            <div class="footer_bottom">
+                <p class="copyright_text">© 2026 Taurus Bike Shop (BICOBS). All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>

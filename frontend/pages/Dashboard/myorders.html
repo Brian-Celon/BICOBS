@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - My Order History</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+        <header class="top_header" id="top_header">
+            <!-- brand logo and mobile toggle container -->
+            <div class="header_top_row">
+                <a href="/frontend/pages/index.html" class="brand_box">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
+                    <span class="brand_title">Taurus Bike</span>
+                </a>
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu" aria-controls="dashboard_site_navigation" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- search and action controls -->
+            <div class="header_controls">
+                <div class="search_wrapper">
+                    <input type="text" class="search_input" placeholder="Search...">
+                    <button class="search_btn" aria-label="Search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header_actions_group">
+                    <a href="/frontend/pages/Dashboard/mycart.html" class="btn_header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Shopping Cart</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </a>
+                    <a href="/frontend/pages/login.html" class="btn_header">
+                        <span>Sign In / Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+    <!-- Secondary site navigation -->
+    <nav class="nav_bar" id="dashboard_site_navigation" aria-label="Main navigation">
+        <div class="sidebar_header_mobile">
+            <div class="brand_box_mobile">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                <span class="mobile_brand_title">Taurus Bike</span>
+            </div>
+            <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
+        <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
+        <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
+        <a href="/frontend/pages/service.html" class="nav_link">SERVICES</a>
+        <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link active" aria-current="page">DASHBOARD</a>
+        <a href="#main_footer" class="nav_link">CONTACT</a>
+    </nav>
+    <div class="nav_overlay" id="nav_overlay"></div>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">My Order History</h1>
+                    <p class="header_subtitle">Track and view detailed statuses of all your bike purchases.</p>
+                </div>
+                <div>
+                    <select class="filter_select" id="order_status_filter">
+                        <option value="all">All Statuses</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+            </header>
+
+            <!-- order history table section -->
+            <section class="orders_section" style="padding: 0;">
+                <div class="table_container">
+                    <table class="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders_table_body">
+                            <tr data-status="Processing" data-order-id="#TBR1045" data-date="2026-05-15" data-items="Shimano Upgrade Kit, Tire" data-total="₱11,000">
+                                <td><strong>#TBR1045</strong></td>
+                                <td>2026-05-15</td>
+                                <td>Shimano Upgrade Kit, Tire</td>
+                                <td>
+                                    <span class="status_pill status_processing">
+                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Processing
+                                    </span>
+                                </td>
+                                <td><strong>₱11,000</strong></td>
+                                <td><button type="button" class="btn_view_order_details action_link_btn"><i class="fas fa-eye"></i> View Details</button></td>
+                            </tr>
+                            <tr data-status="Shipped" data-order-id="#TBR1040" data-date="2026-04-28" data-items="Sagmit Carbon Frame" data-total="₱19,900">
+                                <td><strong>#TBR1040</strong></td>
+                                <td>2026-04-28</td>
+                                <td>Sagmit Carbon Frame</td>
+                                <td>
+                                    <span class="status_pill status_shipped">
+                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Shipped
+                                    </span>
+                                </td>
+                                <td><strong>₱19,900</strong></td>
+                                <td><button type="button" class="btn_view_order_details action_link_btn"><i class="fas fa-eye"></i> View Details</button></td>
+                            </tr>
+                            <tr data-status="Delivered" data-order-id="#TBR1012" data-date="2026-03-10" data-items="Cleats Shoe, Pedals" data-total="₱17,500">
+                                <td><strong>#TBR1012</strong></td>
+                                <td>2026-03-10</td>
+                                <td>Cleats Shoe, Pedals</td>
+                                <td>
+                                    <span class="status_pill status_delivered">
+                                        <i class="fas fa-circle" style="font-size: 7px;"></i> Delivered
+                                    </span>
+                                </td>
+                                <td><strong>₱17,500</strong></td>
+                                <td><button type="button" class="btn_view_order_details action_link_btn"><i class="fas fa-eye"></i> View Details</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no_orders_found" class="cart_empty_state" style="display: none;">
+                    <i class="fas fa-box-open cart_empty_icon"></i>
+                    <h3>No orders found</h3>
+                    <p>No orders match the selected filter or search keyword.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="order_details_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="order_details_title">
+        <div class="modal_container checkout_modal_container">
+            <div class="modal_header_row space_between">
+                <div class="modal_header_text">
+                    <h3 id="order_details_title" class="modal_title">Order Details <span id="modal_order_id_head">#TBR1045</span></h3>
+                    <p class="modal_subtitle">Placed on <span id="modal_order_date">2026-05-15</span></p>
+                </div>
+                <button type="button" class="modal_close_btn" id="close_order_details_modal" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal_card_box">
+                <div class="order_detail_group">
+                    <span class="form_label">ORDER STATUS</span>
+                    <div id="modal_order_status_badge" style="margin-top: 4px;">
+                        <span class="status_pill status_processing"><i class="fas fa-circle" style="font-size: 7px;"></i> Processing</span>
+                    </div>
+                </div>
+
+                <div class="order_detail_group" style="margin-top: 14px;">
+                    <span class="form_label">ORDERED ITEMS</span>
+                    <ul class="checkout_items_list" id="modal_order_items_list" style="margin-top: 6px;">
+                        <!-- Items list -->
+                    </ul>
+                </div>
+
+                <div class="order_detail_group" style="margin-top: 14px;">
+                    <span class="form_label">SHIPPING ADDRESS</span>
+                    <p class="order_detail_text" id="modal_order_address">1991 Roat State, Sector 4, Metro Manila, 19491</p>
+                </div>
+
+                <div class="checkout_totals_box" style="margin-top: 14px;">
+                    <div class="summary_row total_row">
+                        <span>Total Paid:</span>
+                        <strong id="modal_order_total" class="total_price">₱11,000</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal_actions">
+                <button type="button" class="btn_modal_cancel" id="close_order_details_btn">Close</button>
+            </div>
+        </div>
+    </div>
+        </main>
+    </div>
+
+    <!-- sticky bottom footer -->
+        <footer class="main_footer" id="main_footer">
+            <div class="footer_top">
+                <div class="footer_grid">
+                    <!-- footer col 1: brand info -->
+                    <div class="footer_col">
+                        <a href="/frontend/pages/index.html" class="footer_brand">
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
+                            <span class="footer_brand_name">Taurus Bike</span>
+                        </a>
+                        <p class="footer_about_text">
+                            Your trusted bike shop in Marilao, Bulacan. Providing high-performance bicycles, quality components, accessories, and expert maintenance services.
+                        </p>
+                    </div>
+
+                    <!-- footer col 2: quick links -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Quick Links</h4>
+                        <ul class="footer_links">
+                            <li><a href="/frontend/pages/index.html" class="footer_link">Home</a></li>
+                            <li><a href="/frontend/pages/index.html#promo_section" class="footer_link">About Us</a></li>
+                            <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
+                            <li><a href="/frontend/pages/service.html" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/Dashboard/dashboard.html" class="footer_link">Customer Dashboard</a></li>
+                            <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 3: customer care -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Customer Care</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Track Order</a></li>
+                            <li><a href="#" class="footer_link">Shipping Information</a></li>
+                            <li><a href="#" class="footer_link">Return & Refund Policy</a></li>
+                            <li><a href="#" class="footer_link">Warranty & Repairs</a></li>
+                            <li><a href="#" class="footer_link">Support Tickets</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 4: store info -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Store Information</h4>
+                        <ul class="footer_info_list">
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Taurus Building Sandico Street Abangan Sur, Marilao, Philippines, 3019</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <span>2024-0541 / +63 912 345 6789</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </li>
+                        </ul>
+                        <div class="footer_store_social">
+                            <a href="https://www.facebook.com/taurusbikestore" target="_blank" rel="noopener noreferrer" class="social_link_group">
+                                <span class="social_link" aria-label="Facebook">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                    </svg>
+                                </span>
+                                <span class="social_link_text">Taurus Bike Shop Facebook page</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- copyright bottom bar -->
+            <div class="footer_bottom">
+                <p class="copyright_text">© 2026 Taurus Bike Shop (BICOBS). All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>

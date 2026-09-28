@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Taurus Bike - Sign In & Sign Up</title>
+  <link rel="stylesheet" href="/frontend/css/login.css">
+  <!-- Plus Jakarta Sans Font matching Taurus Bike Portal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="page_body">
+
+  <!-- Taurus Bike Top Header -->
+  <header class="app_header" id="app_header">
+    <div class="header_brand" id="header_brand">
+      <div class="brand_logo_wrapper">
+        <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo" id="brand_logo">
+      </div>
+      <span class="brand_title" id="brand_title">Taurus Bike</span>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main_wrapper">
+    <div class="auth_container detailed_auth_container" id="auth_container">
+
+      <!-- Detailed Sign Up Form (Right when active on desktop, full card on mobile) -->
+      <div class="form_container sign_up_container" id="sign_up_container">
+        <div class="form_scroll_wrapper" id="sign_up_scroll_wrapper">
+          <form class="auth_form detailed_auth_form" id="sign_up_form" action="#" method="post">
+            <h1 class="form_title">Create Account</h1>
+
+            <div class="social_container">
+              <a href="#" class="social_btn google_btn" id="google_sign_up_btn" aria_label="Sign up with Google">
+                <svg class="google_icon" viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.28v3.15C3.26 21.36 7.33 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.28C.46 8.2.0 10.04.0 12s.46 3.8 1.28 5.42l4-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.28 6.58l4 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+              </a>
+            </div>
+
+            <span class="form_subtitle">Sign up via Google or complete the ordering profile below</span>
+
+            <!-- Section 1: Basic Account Information -->
+            <div class="form_section_header">
+              <span class="section_badge">1</span>
+              <h2 class="section_title">Basic Account Information</h2>
+            </div>
+
+            <div class="form_grid_two_col">
+              <div class="input_field_wrapper">
+                <label for="sign_up_username" class="field_label">Username</label>
+                <input type="text" class="form_input" id="sign_up_username" name="sign_up_username" placeholder="e.g. biker_rider99" required autocomplete="username">
+              </div>
+
+              <div class="input_field_wrapper">
+                <label for="sign_up_phone" class="field_label">Phone Number (for OTP)</label>
+                <input type="tel" class="form_input" id="sign_up_phone" name="sign_up_phone" placeholder="09XXXXXXXXX" pattern="[0-9]{11}" required autocomplete="tel">
+              </div>
+            </div>
+
+            <div class="form_grid_two_col">
+              <div class="input_field_wrapper">
+                <label for="sign_up_email" class="field_label">Email Address</label>
+                <input type="email" class="form_input" id="sign_up_email" name="sign_up_email" placeholder="name@email.com" required autocomplete="email">
+              </div>
+
+              <div class="input_field_wrapper">
+                <label for="sign_up_password" class="field_label">Password</label>
+                <input type="password" class="form_input" id="sign_up_password" name="sign_up_password" placeholder="Min. 8 characters" required autocomplete="new-password">
+              </div>
+            </div>
+
+            <!-- Section 2: Home & Delivery Address Information -->
+            <div class="form_section_header">
+              <span class="section_badge">2</span>
+              <h2 class="section_title">Home & Delivery Address</h2>
+            </div>
+
+            <div class="form_grid_two_col">
+              <div class="input_field_wrapper">
+                <label for="sign_up_island_group" class="field_label">Island Group</label>
+                <select class="form_input form_select" id="sign_up_island_group" name="sign_up_island_group" required>
+                  <option value="" disabled selected>Select Island Group</option>
+                  <option value="Luzon">Luzon</option>
+                  <option value="Visayas">Visayas</option>
+                  <option value="Mindanao">Mindanao</option>
+                </select>
+              </div>
+
+              <div class="input_field_wrapper">
+                <label for="sign_up_province" class="field_label">Province</label>
+                <select class="form_input form_select" id="sign_up_province" name="sign_up_province" required disabled>
+                  <option value="" disabled selected>Select Island Group First</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form_grid_two_col">
+              <div class="input_field_wrapper">
+                <label for="sign_up_city" class="field_label">City / Municipality</label>
+                <select class="form_input form_select" id="sign_up_city" name="sign_up_city" required disabled>
+                  <option value="" disabled selected>Select Province First</option>
+                </select>
+              </div>
+
+              <div class="input_field_wrapper">
+                <label for="sign_up_barangay" class="field_label">Barangay</label>
+                <select class="form_input form_select" id="sign_up_barangay" name="sign_up_barangay" required disabled>
+                  <option value="" disabled selected>Select City First</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input_field_wrapper">
+              <label for="sign_up_postal_code" class="field_label">Postal Code (ZIP)</label>
+              <input type="text" class="form_input" id="sign_up_postal_code" name="sign_up_postal_code" placeholder="e.g. 3019" maxlength="6" required>
+            </div>
+
+            <div class="input_field_wrapper">
+              <label for="sign_up_specific_address" class="field_label">Specific Home Address</label>
+              <textarea class="form_input form_textarea" id="sign_up_specific_address" name="sign_up_specific_address" rows="3" placeholder="House/Unit Number, Building Name, Street Name, Subdivision or Landmark" required></textarea>
+            </div>
+
+            <button type="submit" class="submit_btn detailed_submit_btn" id="sign_up_submit_btn">COMPLETE SIGN UP</button>
+
+            <p class="mobile_switch_text">
+              Already have an account?
+              <button type="button" class="mobile_switch_btn" id="mobile_switch_to_sign_in">Sign In</button>
+            </p>
+            <button type="button" class="back_button" aria-label="Go back to the previous page"><span aria-hidden="true">&larr;</span> Back</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sign In Form (Left when default on desktop, full card on mobile) -->
+      <div class="form_container sign_in_container" id="sign_in_container">
+        <form class="auth_form" id="sign_in_form" action="#" method="post">
+          <h1 class="form_title">Sign In</h1>
+
+          <div class="social_container">
+            <a href="#" class="social_btn google_btn" id="google_sign_in_btn" aria_label="Sign in with Google">
+              <svg class="google_icon" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.28v3.15C3.26 21.36 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.28C.46 8.2.0 10.04.0 12s.46 3.8 1.28 5.42l4-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.28 6.58l4 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+            </a>
+          </div>
+
+          <span class="form_subtitle">Sign in with your Google account or credentials</span>
+
+          <div class="input_field_wrapper">
+            <label for="sign_in_email" class="field_label">Email or Username</label>
+            <input type="text" class="form_input" id="sign_in_email" name="sign_in_email" placeholder="Enter E-mail or Username" required autocomplete="username">
+          </div>
+
+          <div class="input_field_wrapper">
+            <label for="sign_in_password" class="field_label">Password</label>
+            <input type="password" class="form_input" id="sign_in_password" name="sign_in_password" placeholder="Enter Password" required autocomplete="current-password">
+          </div>
+
+          <a href="#" class="forgot_link" id="forgot_password_link">Forget Password?</a>
+
+          <button type="submit" class="submit_btn detailed_submit_btn" id="sign_in_submit_btn">SIGN IN</button>
+
+          <p class="mobile_switch_text">
+            Don't have an account?
+            <button type="button" class="mobile_switch_btn" id="mobile_switch_to_sign_up">Sign Up</button>
+          </p>
+          <button type="button" class="back_button" aria-label="Go back to the previous page"><span aria-hidden="true">&larr;</span> Back</button>
+        </form>
+      </div>
+
+      <!-- Sliding Overlay Container -->
+      <div class="overlay_container" id="overlay_container">
+        <div class="overlay" id="overlay">
+
+          <!-- Overlay Left (Visible when Sign Up is active, offers Sign In) -->
+          <div class="overlay_panel overlay_left" id="overlay_left">
+            <h1 class="overlay_title">Welcome Back!</h1>
+            <p class="overlay_description">Already have a Taurus Bike account? Sign in to track orders and manage your billing</p>
+            <button type="button" class="ghost_btn" id="ghost_sign_in_btn">SIGN IN</button>
+          </div>
+
+          <!-- Overlay Right (Visible when Sign In is active, offers Sign Up) -->
+          <div class="overlay_panel overlay_right" id="overlay_right">
+            <h1 class="overlay_title">New Rider?</h1>
+            <p class="overlay_description">Create your ordering profile to purchase bikes, parts, and request custom servicing</p>
+            <button type="button" class="ghost_btn" id="ghost_sign_up_btn">SIGN UP</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../js/login.js"></script>
+</body>
+</html>

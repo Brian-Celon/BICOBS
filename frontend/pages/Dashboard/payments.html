@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Payments</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+        <header class="top_header" id="top_header">
+            <!-- brand logo and mobile toggle container -->
+            <div class="header_top_row">
+                <a href="/frontend/pages/index.html" class="brand_box">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
+                    <span class="brand_title">Taurus Bike</span>
+                </a>
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu" aria-controls="dashboard_site_navigation" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- search and action controls -->
+            <div class="header_controls">
+                <div class="search_wrapper">
+                    <input type="text" class="search_input" placeholder="Search...">
+                    <button class="search_btn" aria-label="Search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header_actions_group">
+                    <a href="/frontend/pages/Dashboard/mycart.html" class="btn_header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Shopping Cart</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </a>
+                    <a href="/frontend/pages/login.html" class="btn_header">
+                        <span>Sign In / Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+    <!-- Secondary site navigation -->
+    <nav class="nav_bar" id="dashboard_site_navigation" aria-label="Main navigation">
+        <div class="sidebar_header_mobile">
+            <div class="brand_box_mobile">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                <span class="mobile_brand_title">Taurus Bike</span>
+            </div>
+            <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
+        <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
+        <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
+        <a href="/frontend/pages/service.html" class="nav_link">SERVICES</a>
+        <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link active" aria-current="page">DASHBOARD</a>
+        <a href="#main_footer" class="nav_link">CONTACT</a>
+    </nav>
+    <div class="nav_overlay" id="nav_overlay"></div>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">Payment Methods & History</h1>
+                    <p class="header_subtitle">Manage saved cards and view past payment transactions.</p>
+                </div>
+                <div>
+                    <a href="#" class="action_button" id="btn_open_payment_modal">
+                        <i class="fas fa-plus"></i> Add Payment Method
+                    </a>
+                </div>
+            </header>
+
+            <!-- saved payment methods grid -->
+            <section class="payment_cards_grid">
+                <!-- taurus pay card -->
+                <article class="payment_card_item card_taurus">
+                    <div class="card_top_row">
+                        <span>Taurus Pay Card</span>
+                        <span class="card_visa_badge">VISA</span>
+                    </div>
+                    <div>
+                        <div class="card_field_label">Card Number</div>
+                        <div class="card_number_text">•••• •••• •••• 4892</div>
+                    </div>
+                    <div class="card_bottom_row">
+                        <div>
+                            <div class="card_field_label">Cardholder</div>
+                            <strong>Juan Dela Cruz</strong>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="card_field_label">Expires</div>
+                            <strong>12/28</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- gcash wallet card -->
+                <article class="payment_card_item card_gcash">
+                    <div class="card_top_row">
+                        <span>GCash / Wallet</span>
+                        <i class="fas fa-wallet" style="font-size: 20px;"></i>
+                    </div>
+                    <div>
+                        <div class="card_field_label">Mobile Account</div>
+                        <div class="card_number_text">+63 917 ••• 5012</div>
+                    </div>
+                    <div class="card_bottom_row">
+                        <div>
+                            <div class="card_field_label">Account Name</div>
+                            <strong>Juan Dela Cruz</strong>
+                        </div>
+                        <div>
+                            <span class="card_primary_badge">Primary</span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- transaction history table section -->
+            <section>
+                <h3 class="transaction_history_title">Transaction History</h3>
+                <div class="table_container">
+                    <table class="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Date</th>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#TXN-99821</strong></td>
+                                <td>2026-05-15 14:20</td>
+                                <td>Visa ending in 4892</td>
+                                <td><strong>₱1,299.00</strong></td>
+                                <td>
+                                    <span class="status_pill status_successful">Successful</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TXN-98210</strong></td>
+                                <td>2026-04-28 09:11</td>
+                                <td>GCash Wallet</td>
+                                <td><strong>₱19,900.00</strong></td>
+                                <td>
+                                    <span class="status_pill status_successful">Successful</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- sticky bottom footer -->
+        <footer class="main_footer" id="main_footer">
+            <div class="footer_top">
+                <div class="footer_grid">
+                    <!-- footer col 1: brand info -->
+                    <div class="footer_col">
+                        <a href="/frontend/pages/index.html" class="footer_brand">
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
+                            <span class="footer_brand_name">Taurus Bike</span>
+                        </a>
+                        <p class="footer_about_text">
+                            Your trusted bike shop in Marilao, Bulacan. Providing high-performance bicycles, quality components, accessories, and expert maintenance services.
+                        </p>
+                    </div>
+
+                    <!-- footer col 2: quick links -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Quick Links</h4>
+                        <ul class="footer_links">
+                            <li><a href="/frontend/pages/index.html" class="footer_link">Home</a></li>
+                            <li><a href="/frontend/pages/index.html#promo_section" class="footer_link">About Us</a></li>
+                            <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
+                            <li><a href="/frontend/pages/service.html" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/Dashboard/dashboard.html" class="footer_link">Customer Dashboard</a></li>
+                            <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 3: customer care -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Customer Care</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Track Order</a></li>
+                            <li><a href="#" class="footer_link">Shipping Information</a></li>
+                            <li><a href="#" class="footer_link">Return & Refund Policy</a></li>
+                            <li><a href="#" class="footer_link">Warranty & Repairs</a></li>
+                            <li><a href="#" class="footer_link">Support Tickets</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 4: store info -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Store Information</h4>
+                        <ul class="footer_info_list">
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Taurus Building Sandico Street Abangan Sur, Marilao, Philippines, 3019</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <span>2024-0541 / +63 912 345 6789</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </li>
+                        </ul>
+                        <div class="footer_store_social">
+                            <a href="https://www.facebook.com/taurusbikestore" target="_blank" rel="noopener noreferrer" class="social_link_group">
+                                <span class="social_link" aria-label="Facebook">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                    </svg>
+                                </span>
+                                <span class="social_link_text">Taurus Bike Shop Facebook page</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- copyright bottom bar -->
+            <div class="footer_bottom">
+                <p class="copyright_text">© 2026 Taurus Bike Shop (BICOBS). All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    <!-- Add Payment Method Modal -->
+    <div id="payment_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="payment_modal_title">
+        <div class="modal_container payment_modal_container">
+            <!-- Modal Top Header -->
+            <div class="modal_header_row">
+                <button type="button" class="modal_back_btn" id="close_payment_modal_back" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="modal_header_text">
+                    <h3 id="payment_modal_title" class="modal_title">Add Payment Method</h3>
+                    <p class="modal_subtitle">Securely link a credit card, debit card, or digital wallet.</p>
+                </div>
+            </div>
+
+            <!-- Outer Card Box inside Modal -->
+            <div class="modal_card_box">
+                <!-- Payment Provider Selection -->
+                <div class="form_group">
+                    <label class="form_label">SELECT PAYMENT PROVIDER</label>
+                    <div class="provider_selector">
+                        <button type="button" class="provider_option active" data-provider="card">
+                            <i class="fas fa-credit-card provider_icon card_icon"></i>
+                            <span>Credit / Debit</span>
+                        </button>
+                        <button type="button" class="provider_option" data-provider="gcash">
+                            <i class="fas fa-wallet provider_icon gcash_icon"></i>
+                            <span>GCash Wallet</span>
+                        </button>
+                        <button type="button" class="provider_option" data-provider="paymaya">
+                            <i class="fas fa-mobile-alt provider_icon paymaya_icon"></i>
+                            <span>PayMaya</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Provider Forms -->
+                <form id="add_payment_form">
+                    <!-- Card Provider Form Fields -->
+                    <div id="provider_card_fields" class="provider_form_section">
+                        <div class="form_group">
+                            <label class="form_label" for="card_number">CARD NUMBER</label>
+                            <div class="input_icon_wrapper">
+                                <i class="far fa-credit-card input_prefix_icon"></i>
+                                <input type="text" id="card_number" class="form_input input_with_prefix" placeholder="4532 •••• •••• ••••">
+                            </div>
+                        </div>
+
+                        <div class="form_row_two">
+                            <div class="form_group">
+                                <label class="form_label" for="exp_date">EXPIRATION DATE</label>
+                                <input type="text" id="exp_date" class="form_input" placeholder="MM/YY">
+                            </div>
+                            <div class="form_group">
+                                <label class="form_label" for="cvv_code">CVV / SECURITY CODE</label>
+                                <div class="input_icon_wrapper">
+                                    <input type="text" id="cvv_code" class="form_input input_with_suffix" placeholder="123" maxlength="4">
+                                    <i class="fas fa-lock input_suffix_icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form_group">
+                            <label class="form_label" for="cardholder_name">CARDHOLDER / ACCOUNT NAME</label>
+                            <input type="text" id="cardholder_name" class="form_input" placeholder="Juan Dela Cruz">
+                        </div>
+                    </div>
+
+                    <!-- GCash Provider Form Fields (Hidden by default) -->
+                    <div id="provider_gcash_fields" class="provider_form_section" style="display: none;">
+                        <div class="form_group">
+                            <label class="form_label" for="gcash_number">GCASH MOBILE NUMBER</label>
+                            <div class="input_icon_wrapper">
+                                <i class="fas fa-mobile-alt input_prefix_icon"></i>
+                                <input type="text" id="gcash_number" class="form_input input_with_prefix" placeholder="+63 917 ••• 5012">
+                            </div>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="gcash_name">ACCOUNT NAME</label>
+                            <input type="text" id="gcash_name" class="form_input" placeholder="Juan Dela Cruz">
+                        </div>
+                    </div>
+
+                    <!-- PayMaya Provider Form Fields (Hidden by default) -->
+                    <div id="provider_paymaya_fields" class="provider_form_section" style="display: none;">
+                        <div class="form_group">
+                            <label class="form_label" for="paymaya_number">PAYMAYA MOBILE NUMBER</label>
+                            <div class="input_icon_wrapper">
+                                <i class="fas fa-mobile-alt input_prefix_icon"></i>
+                                <input type="text" id="paymaya_number" class="form_input input_with_prefix" placeholder="+63 918 ••• 9988">
+                            </div>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="paymaya_name">ACCOUNT NAME</label>
+                            <input type="text" id="paymaya_name" class="form_input" placeholder="Juan Dela Cruz">
+                        </div>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div class="form_checkbox_group">
+                        <label class="custom_checkbox_label">
+                            <input type="checkbox" id="is_primary_payment" class="custom_checkbox">
+                            <span>Set as primary payment method</span>
+                        </label>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal_actions">
+                        <button type="button" class="btn_modal_cancel" id="close_payment_modal_cancel">Cancel</button>
+                        <button type="submit" class="btn_modal_submit">Save Payment Method</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>

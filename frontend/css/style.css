@@ -1,0 +1,12 @@
+/* global website styles */
+:root {
+    --font_main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: var(--font_main);
+}

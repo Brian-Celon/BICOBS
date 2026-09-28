@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Taurus Bike Shop</title>
+    <!-- global landing stylesheet for header and footer -->
+    <link rel="stylesheet" href="/frontend/css/landing_page.css">
+    <!-- scoped about page stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/about.css">
+</head>
+<body>
+
+    <!-- about page container wrapper -->
+    <div class="about_page_container" id="about_page_container">
+
+        <!-- top header section -->
+        <header class="top_header" id="top_header">
+            <!-- brand logo and mobile toggle container -->
+            <div class="header_top_row">
+                <a href="/frontend/pages/index.html" class="brand_box">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
+                    <span class="brand_title">Taurus Bike</span>
+                </a>
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- search and action controls -->
+            <div class="header_controls">
+                <div class="search_wrapper">
+                    <input type="text" class="search_input" placeholder="Search bikes, parts, or services...">
+                    <button class="search_btn" aria-label="Search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header_actions_group">
+                    <a href="/frontend/pages/Dashboard/mycart.html" class="btn_header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Shopping Cart</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </a>
+                    <a href="/frontend/pages/login.html" class="btn_header">
+                        <span>Sign In / Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- mobile navigation overlay backdrop -->
+        <div class="nav_overlay" id="nav_overlay"></div>
+
+        <!-- main navigation bar / mobile slide-in sidebar -->
+        <nav class="nav_bar" id="main_navigation">
+            <!-- mobile sidebar header -->
+            <div class="sidebar_header_mobile">
+                <div class="brand_box_mobile">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                    <span class="mobile_brand_title">Taurus Bike</span>
+                </div>
+                <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
+            <a href="/frontend/pages/about.html" class="nav_link active">ABOUT</a>
+            <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
+            <a href="/frontend/pages/service.html" class="nav_link">SERVICES</a>
+            <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link">DASHBOARD</a>
+            <a href="#main_footer" class="nav_link">CONTACT</a>
+        </nav>
+
+        <!-- hero banner section -->
+        <section class="about_hero" id="about_hero">
+            <div class="about_hero_content">
+                <div class="about_breadcrumb">
+                    <a href="/frontend/pages/index.html">Home</a>
+                    <span class="divider">/</span>
+                    <span>About Us</span>
+                </div>
+                <div class="about_est_badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <span>Est. 1989 &bull; Marilao, Bulacan</span>
+                </div>
+                <h1 class="about_hero_title">Dedicated to the Cycling Journey of Every Rider</h1>
+                <p class="about_hero_subtitle">For over three decades, Taurus Bike Shop has provided high-caliber bicycles, genuine replacement components, and honest workshop expertise to the community of Marilao and beyond.</p>
+            </div>
+        </section>
+
+        <!-- stats ribbon strip -->
+        <section class="about_stats_strip" id="about_stats_strip">
+            <div class="stats_grid">
+                <div class="stat_item">
+                    <div class="stat_icon_box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="7"/>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                        </svg>
+                    </div>
+                    <div class="stat_content">
+                        <span class="stat_number">37+</span>
+                        <span class="stat_label">Years Serving Riders</span>
+                    </div>
+                </div>
+                <div class="stat_item">
+                    <div class="stat_icon_box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </div>
+                    <div class="stat_content">
+                        <span class="stat_number">1989</span>
+                        <span class="stat_label">Year Established</span>
+                    </div>
+                </div>
+                <div class="stat_item">
+                    <div class="stat_icon_box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="stat_content">
+                        <span class="stat_number">100%</span>
+                        <span class="stat_label">Genuine Components</span>
+                    </div>
+                </div>
+                <div class="stat_item">
+                    <div class="stat_icon_box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <div class="stat_content">
+                        <span class="stat_number">Thousands</span>
+                        <span class="stat_label">Bikes Repaired & Tuned</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- main about content wrapper -->
+        <main class="about_main_content" id="about_main_content">
+
+            <!-- story heritage two-column section -->
+            <section class="story_section" id="story_section">
+                <div class="story_text_col">
+                    <span class="section_subtitle_tag">Our Heritage & Story</span>
+                    <h2 class="section_main_title">A Pillar of Cycling Culture in Bulacan Since 1989</h2>
+                    <p class="story_lead_p">Taurus Bike Shop is an independent bicycle and components retailer situated along Sandico Street, Abangan Sur, Marilao, Bulacan. Established in 1989, our enterprise has continuously served the local cycling community for approximately 37 years.</p>
+                    <p class="story_body_p">Officially registered under the leadership of Rowell Lu Caisido, with Russel Lu Caisido serving as co-owner, Taurus Bike Shop has grown from a humble local workshop into a comprehensive destination for cycling gear, pre-built bikes, and top-tier bicycle mechanics.</p>
+                    <p class="story_body_p">Our customer base primarily consists of students, daily commuters, workforce employees, and seasoned cycling enthusiasts. We understand that whether a bike is used for a daily commute to school or work, a high-octane trail adventure, or a long-distance weekend ride, riders depend on their bicycles for safety, fitness, and reliable mobility.</p>
+                    <ul class="story_highlights_list">
+                        <li class="story_highlight_item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Independent, family-founded retailer rooted in Marilao, Bulacan</span>
+                        </li>
+                        <li class="story_highlight_item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Thorough mechanical inspections before any bicycle or part is released</span>
+                        </li>
+                        <li class="story_highlight_item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Priority workshop service and guaranteed compatibility for in-store purchases</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="story_card_col">
+                    <div class="story_feature_card">
+                        <div class="story_card_image_wrap">
+                            <img src="/frontend/Pictures/shop-cover.jpg" alt="Taurus Bike Shop Storefront in Sandico St., Marilao" class="story_card_image">
+                            <span class="story_card_badge">Sandico St., Marilao</span>
+                        </div>
+                        <div class="story_card_body">
+                            <div class="card_meta_row">
+                                <span class="card_meta_label">Business Registration</span>
+                                <span class="card_meta_val">Rowell Lu Caisido</span>
+                            </div>
+                            <div class="card_meta_row">
+                                <span class="card_meta_label">Co-Ownership</span>
+                                <span class="card_meta_val">Russel Lu Caisido</span>
+                            </div>
+                            <div class="card_meta_row">
+                                <span class="card_meta_label">Founded</span>
+                                <span class="card_meta_val">1989 (37+ Years)</span>
+                            </div>
+                            <div class="card_meta_row">
+                                <span class="card_meta_label">Operating Schedule</span>
+                                <span class="card_meta_val">Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </div>
+                            <div class="card_meta_row">
+                                <span class="card_meta_label">Storefront Location</span>
+                                <span class="card_meta_val">Abangan Sur, Marilao, Bulacan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- mission vision section -->
+            <section class="mission_vision_section" id="mission_vision_section">
+                <div class="mv_card">
+                    <div class="mv_icon_box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 14 14"/>
+                        </svg>
+                    </div>
+                    <h3 class="mv_title">Our Mission</h3>
+                    <p class="mv_desc">To deliver dependable, authentic bicycles and mechanical components that empower riders of all backgrounds—students, daily commuters, and sports cyclists alike. We strive to provide transparent diagnostics, high-standard maintenance, and long-term customer relationships built on integrity and mechanical precision.</p>
+                </div>
+
+                <div class="mv_card">
+                    <div class="mv_icon_box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="mv_title">Our Vision</h3>
+                    <p class="mv_desc">To stand as Bulacan's most trusted independent cycling institution, seamlessly blending hands-on workshop heritage with modern digital ordering solutions (BICOBS / TaurOS) to keep communities moving smoothly, sustainably, and safely.</p>
+                </div>
+            </section>
+
+            <!-- core values pillars -->
+            <section class="values_section" id="values_section">
+                <div class="values_header_center">
+                    <span class="section_subtitle_tag">Our Core Pillars</span>
+                    <h2 class="section_main_title">Built on Trust, Precision, and Community</h2>
+                </div>
+                <div class="values_grid">
+                    <div class="value_card">
+                        <div class="value_icon_wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h4 class="value_title">100% Authenticity</h4>
+                        <p class="value_desc">Every component, frame, brake set, and drivetrain in our catalog is sourced from verified suppliers to ensure total durability and safety on the road.</p>
+                    </div>
+
+                    <div class="value_card">
+                        <div class="value_icon_wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                        </div>
+                        <h4 class="value_title">Mechanical Expertise</h4>
+                        <p class="value_desc">Our skilled mechanics carry out hands-on inspections, wheel truing, tune-ups, and assemblies with rigorous attention to detail and 30-minute to 4-hour turnarounds.</p>
+                    </div>
+
+                    <div class="value_card">
+                        <div class="value_icon_wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h4 class="value_title">Community First</h4>
+                        <p class="value_desc">We serve students, workforce employees, and cycling enthusiasts alike with fair pricing, practical advice, and dependable service that riders can rely on.</p>
+                    </div>
+
+                    <div class="value_card">
+                        <div class="value_icon_wrap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </div>
+                        <h4 class="value_title">Modern Convenience</h4>
+                        <p class="value_desc">Through the BICOBS TaurOS initiative, we integrate digital catalog browsing, automated billing, transparent receipts, and express delivery tracking.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- services overview 3-col -->
+            <section class="services_overview_section" id="services_overview_section">
+                <div class="values_header_center">
+                    <span class="section_subtitle_tag">What We Offer</span>
+                    <h2 class="section_main_title">Comprehensive Cycling Solutions</h2>
+                </div>
+                <div class="services_grid_3col">
+                    <div class="service_item_box">
+                        <span class="service_badge_tag">Showroom Retail</span>
+                        <h3 class="service_item_title">Pre-Built Bikes & Genuine Parts</h3>
+                        <p class="service_item_desc">Browse our curated selection of mountain bikes, road bikes, gravel bikes, BMX, and folding bikes, paired with pedals, gear sets, chains, tires, and protective gear.</p>
+                    </div>
+
+                    <div class="service_item_box">
+                        <span class="service_badge_tag">Hands-On Workshop</span>
+                        <h3 class="service_item_title">Inspection, Tuning & Repairs</h3>
+                        <p class="service_item_desc">Bring your bicycle to our Sandico Street workshop for diagnosis, hydraulic brake bleeding, gear index adjustment, and full mechanical rebuilds. Priority is given to parts purchased in-store.</p>
+                    </div>
+
+                    <div class="service_item_box">
+                        <span class="service_badge_tag">Order Fulfillment</span>
+                        <h3 class="service_item_title">Store Pickup & Safe Delivery</h3>
+                        <p class="service_item_desc">Choose ready store pickup in Marilao or reliable delivery via Grab and Lalamove within Bulacan and Greater Manila, plus cargo freight options nationwide with secure digital payment.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- cta banner -->
+            <section class="about_cta_section" id="about_cta_section">
+                <div class="cta_text_group">
+                    <h2 class="cta_title">Ready to Upgrade Your Ride?</h2>
+                    <p class="cta_subtitle">Explore our complete catalog of pre-built bicycles and authentic components, or stop by our Marilao shop for professional service.</p>
+                </div>
+                <div class="cta_buttons_group">
+                    <a href="/frontend/pages/shop.html" class="btn_cta_primary">Explore Shop Catalog</a>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- main footer section -->
+        <footer class="main_footer" id="main_footer">
+            <div class="footer_top">
+                <div class="footer_grid">
+                    <!-- footer col 1: brand info -->
+                    <div class="footer_col">
+                        <a href="/frontend/pages/index.html" class="footer_brand">
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
+                            <span class="footer_brand_name">Taurus Bike</span>
+                        </a>
+                        <p class="footer_about_text">
+                            Your trusted bike shop in Marilao, Bulacan. Providing high-performance bicycles, quality components, accessories, and expert maintenance services since 1989.
+                        </p>
+                    </div>
+
+                    <!-- footer col 2: quick links -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Quick Links</h4>
+                        <ul class="footer_links">
+                            <li><a href="/frontend/pages/index.html" class="footer_link">Home</a></li>
+                            <li><a href="/frontend/pages/about.html" class="footer_link">About Us</a></li>
+                            <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
+                            <li><a href="/frontend/pages/service.html" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/Dashboard/dashboard.html" class="footer_link">Customer Dashboard</a></li>
+                            <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 3: customer care -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Customer Care</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Track Order</a></li>
+                            <li><a href="#" class="footer_link">Shipping Information</a></li>
+                            <li><a href="#" class="footer_link">Return & Refund Policy</a></li>
+                            <li><a href="#" class="footer_link">Warranty & Repairs</a></li>
+                            <li><a href="#" class="footer_link">Support Tickets</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 4: store info -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Store Information</h4>
+                        <ul class="footer_info_list">
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Taurus Building Sandico Street Abangan Sur, Marilao, Philippines, 3019</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <span>2024-0541 / +63 912 345 6789</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </li>
+                        </ul>
+                        <div class="footer_store_social">
+                            <a href="https://www.facebook.com/taurusbikestore" target="_blank" rel="noopener noreferrer" class="social_link_group">
+                                <span class="social_link" aria-label="Facebook">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                    </svg>
+                                </span>
+                                <span class="social_link_text">Taurus Bike Shop Facebook page</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- copyright bottom bar -->
+            <div class="footer_bottom">
+                <p class="copyright_text">&copy; 2026 Taurus Bike Shop (BICOBS). All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- landing page interactive script -->
+    <script src="/frontend/js/landing-page.js"></script>
+</body>
+</html>

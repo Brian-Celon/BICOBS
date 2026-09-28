@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Taurus Bike - Services & Maintenance</title>
+
+  <!-- Google Font & FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Service Page Stylesheet aligned with Landing Page Design -->
+  <link rel="stylesheet" href="/frontend/css/service.css">
+</head>
+<body class="page_body" id="page_body">
+
+  <!-- Landing Container Wrapper matching System Index -->
+  <div class="landing_container" id="landing_container">
+
+    <!-- top header section -->
+        <header class="top_header" id="top_header">
+            <!-- brand logo and mobile toggle container -->
+            <div class="header_top_row">
+                <a href="/frontend/pages/index.html" class="brand_box">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="brand_logo">
+                    <span class="brand_title">Taurus Bike</span>
+                </a>
+                <button class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Open menu" aria-controls="main_navigation" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- search and action controls -->
+            <div class="header_controls">
+                <div class="search_wrapper">
+                    <input type="text" class="search_input" id="hero_service_search" placeholder="Search..." autocomplete="off">
+                    <div class="search_live_suggestions" id="search_live_suggestions"></div>
+                    <button class="search_btn" aria-label="Search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header_actions_group">
+                    <a href="/frontend/pages/Dashboard/mycart.html" class="btn_header">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Shopping Cart</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </a>
+                    <a href="/frontend/pages/login.html" class="btn_header">
+                        <span>Sign In / Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- mobile navigation overlay backdrop -->
+        <div class="nav_overlay" id="nav_overlay"></div>
+
+        <!-- main navigation bar / mobile slide-in sidebar -->
+        <nav class="nav_bar" id="main_navigation">
+            <!-- mobile sidebar header -->
+            <div class="sidebar_header_mobile">
+                <div class="brand_box_mobile">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="mobile_logo">
+                    <span class="mobile_brand_title">Taurus Bike</span>
+                </div>
+                <button class="mobile_nav_close" id="mobile_nav_close" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
+            <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
+            <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
+            <a href="/frontend/pages/service.html" class="nav_link active">SERVICES</a>
+            <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link">DASHBOARD</a>
+            <a href="#main_footer" class="nav_link">CONTACT</a>
+        </nav>
+
+    <!-- Hero Section (Blended with System Red & Clean Gray Accents) -->
+    <section class="hero_section" id="hero_section" style="background-image: url('/frontend/Pictures/cover.jpg');">
+      <div class="hero_overlay" id="hero_overlay"></div>
+      <div class="hero_content_container" id="hero_content_container">
+        <span class="hero_badge" id="hero_badge"><i class="fa-solid fa-shield-halved"></i> Walk-In Service • Certified Mechanics</span>
+        <h1 class="hero_title" id="hero_title">BIKE SHOP SERVICES</h1>
+        <p class="hero_description" id="hero_description">
+          Whether it's time for a routine tune-up, bike assembly, or a complete overhaul, our service department at Taurus Bike Shop is here to keep your bike performing at its absolute best. Walk-in customers are always welcome!
+        </p>
+
+        <!-- Hero Buttons -->
+        <div class="hero_cta_group" id="hero_cta_group">
+          <a href="#tunes_section" class="hero_primary_btn" id="hero_find_services_btn">
+            <span>Explore Service Rates</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a href="#diagnostic_section" class="hero_secondary_btn" id="hero_diagnostic_btn">
+            <i class="fa-solid fa-stethoscope"></i>
+            <span>Diagnose My Bike</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Highlights Strip -->
+    <section class="trust_strip_section" id="trust_strip_section">
+      <div class="trust_strip_container" id="trust_strip_container">
+        <div class="trust_item" id="trust_item_1">
+          <i class="fa-solid fa-certificate trust_icon"></i>
+          <div class="trust_info">
+            <h4 class="trust_title">Trained Technicians</h4>
+            <p class="trust_desc">Shimano & professional certified mechanics</p>
+          </div>
+        </div>
+        <div class="trust_item" id="trust_item_2">
+          <i class="fa-solid fa-person-walking trust_icon"></i>
+          <div class="trust_info">
+            <h4 class="trust_title">Walk-In Service Only</h4>
+            <p class="trust_desc">No appointment needed, drop by anytime</p>
+          </div>
+        </div>
+        <div class="trust_item" id="trust_item_3">
+          <i class="fa-solid fa-clipboard-check trust_icon"></i>
+          <div class="trust_info">
+            <h4 class="trust_title">Free 15-Point Check</h4>
+            <p class="trust_desc">Complimentary stand safety check</p>
+          </div>
+        </div>
+        <div class="trust_item" id="trust_item_4">
+          <i class="fa-solid fa-clock trust_icon"></i>
+          <div class="trust_info">
+            <h4 class="trust_title">Mon - Sat: 8AM - 6PM</h4>
+            <p class="trust_desc">Sandico St., Abangan Sur, Marilao</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About / Experienced Experts Section -->
+    <section class="about_section" id="about_section">
+      <div class="about_container" id="about_container">
+        
+        <!-- Left Column: Workshop Image with Interactive Badge -->
+        <div class="about_media_col" id="about_media_col">
+          <div class="about_image_card" id="about_image_card">
+            <img src="/frontend/Pictures/service.jpg" alt="Taurus Bike Shop Trained Mechanics Working" class="about_image" id="about_image">
+            <div class="about_floating_badge" id="about_floating_badge">
+              <div class="badge_pulse_dot"></div>
+              <div class="badge_text_wrap">
+                <strong>Walk-In Customers Welcome</strong>
+                <span>Mon - Sat: 8:00 AM - 6:00 PM • Marilao</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Simple Info without Brands -->
+        <div class="about_content_col" id="about_content_col">
+          
+          <div class="about_feature_block" id="about_feature_block_1">
+            <h2 class="about_headline" id="about_headline_1">EXPERIENCED, TRAINED EXPERTS</h2>
+            <p class="about_paragraph" id="about_paragraph_1">
+              Our skilled mechanics have the expertise to service and repair all types of bicycles. Whether you ride a mountain bike, road bike, gravel, or daily commuter, we provide reliable maintenance and tune-ups. Not sure what your bike needs? Bring it to our shop in Marilao for a free inspection, and our experts will recommend the right service for you.
+            </p>
+          </div>
+
+          <div class="about_feature_block" id="about_feature_block_2">
+            <h2 class="about_headline" id="about_headline_2">FAST TURNAROUND</h2>
+            <p class="about_paragraph" id="about_paragraph_2">
+              Our quick turn around time will get you back out there in no time.
+            </p>
+          </div>
+
+          <!-- Bike Compatibility Bar (No E-Bikes) -->
+          <div class="bike_compatibility_strip" id="bike_compatibility_strip">
+            <span class="compat_label">Bikes We Service:</span>
+            <div class="compat_tags" id="compat_tags">
+              <span class="compat_tag"><i class="fa-solid fa-person-biking"></i> Mountain Bikes (MTB)</span>
+              <span class="compat_tag"><i class="fa-solid fa-bicycle"></i> Road Bikes</span>
+              <span class="compat_tag"><i class="fa-solid fa-route"></i> Gravel & Cyclocross</span>
+              <span class="compat_tag"><i class="fa-solid fa-gear"></i> Fixie / Single Speed</span>
+              <span class="compat_tag"><i class="fa-solid fa-arrows-split-up-and-left"></i> Folding Bikes</span>
+              <span class="compat_tag"><i class="fa-solid fa-city"></i> City & Commuter Bikes</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Bike Tunes Section (3 Specific Cards: Assemble ₱650, Overhaul in middle ₱450, Alignment ₱100) -->
+    <section class="tunes_section" id="tunes_section">
+      <div class="tunes_container" id="tunes_container">
+        
+        <!-- Section Header -->
+        <div class="tunes_header" id="tunes_header">
+          <h2 class="tunes_main_title" id="tunes_main_title">Bike Tunes</h2>
+          <p class="tunes_subtitle" id="tunes_subtitle">Standard labor rates for Taurus Bike Shop walk-in service.</p>
+        </div>
+
+        <!-- 3 Cards -->
+        <div class="tunes_grid" id="tunes_grid">
+
+          <!-- Card 1: Bike Assemble (₱650) -->
+          <div class="tune_card" id="tune_card_assemble" data-package="assemble">
+            <div class="card_header">
+              <h3 class="card_title" id="assemble_card_title">BIKE ASSEMBLE <span class="card_price" id="assemble_price_val">₱650</span></h3>
+              <h4 class="card_tagline" id="assemble_card_tagline">Complete Bike Build & Setup</h4>
+              <p class="card_summary">Unboxing or bare frame assembly, groupset mounting, and precision alignment for new bikes.</p>
+            </div>
+
+            <div class="card_divider"></div>
+
+            <ul class="card_features_list" id="assemble_features_list">
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Complete Bare Frame / Box Assembly</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Headset & Bottom Bracket Installation</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Crankset, Cassette & Chain Sizing / Mounting</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Front & Rear Derailleur Cable Routing & Indexing</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Brake System Caliper / Disc Alignment & Pad Centering</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Cockpit Ergonomics & Torque Specification Check</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>15-Point Pre-Ride Stand Inspection & Road Test</span></li>
+            </ul>
+
+            <div class="card_action_area">
+              <div class="walkin_rate_tag"><i class="fa-solid fa-wrench"></i> Walk-In Standard Rate</div>
+              <button type="button" class="details_expand_btn" id="details_assemble_btn" data-target="assemble_details">
+                <span>View Full Checklist</span> <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="tune_details_drawer" id="assemble_details">
+                <p><strong>Estimated Labor Time:</strong> 2 to 3 Hours</p>
+                <p><strong>Applicable to:</strong> Boxed bikes, online purchases, or custom builds.</p>
+                <p><strong>Note:</strong> Walk-in drop-off available anytime during store hours.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 (In the Middle): Overhaul (₱450) - Featured / Recommended -->
+          <div class="tune_card popular_card" id="tune_card_overhaul" data-package="overhaul">
+            <div class="popular_ribbon" id="popular_ribbon">RECOMMENDED</div>
+            <div class="card_header">
+              <h3 class="card_title" id="overhaul_card_title">OVERHAUL <span class="card_price" id="overhaul_price_val">₱450</span></h3>
+              <h4 class="card_tagline" id="overhaul_card_tagline">Deep Clean & Bearing Overhaul</h4>
+              <p class="card_summary">Our comprehensive mechanical refresh to restore peak pedaling smoothness and extend component life.</p>
+            </div>
+
+            <div class="card_divider"></div>
+
+            <ul class="card_features_list" id="overhaul_features_list">
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span><strong>Full Drivetrain Ultrasonic Degreasing & Bath</strong></span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Bottom Bracket Teardown, Clean & Fresh Marine Grease</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Headset Bearing Inspection, Degrease & Repack</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Front & Rear Hub Bearing Inspection & Lubrication</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Derailleur Hanger Alignment & Precision Shifting Tune</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Brake Alignment, Rotor Degrease & Pad Resurfacing</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Frame Wash, Wipe-Down & Protective Glaze</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Master Mechanic Safety Test Ride</span></li>
+            </ul>
+
+            <div class="card_action_area">
+              <div class="walkin_rate_tag popular_tag"><i class="fa-solid fa-star"></i> Most Popular Walk-In Service</div>
+              <button type="button" class="details_expand_btn" id="details_overhaul_btn" data-target="overhaul_details">
+                <span>View Full Checklist</span> <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="tune_details_drawer" id="overhaul_details">
+                <p><strong>Turnaround:</strong> Same-day or 24 Hours depending on shop bay queue.</p>
+                <p><strong>Recommended:</strong> Every 6 months or 1,500 km of road/trail riding.</p>
+                <p><strong>Includes:</strong> High-grade waterproof grease on all bearing assemblies.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Bike Alignment (₱100) -->
+          <div class="tune_card" id="tune_card_alignment" data-package="alignment">
+            <div class="card_header">
+              <h3 class="card_title" id="alignment_card_title">BIKE ALIGNMENT <span class="card_price" id="alignment_price_val">₱100</span></h3>
+              <h4 class="card_tagline" id="alignment_card_tagline">Precision Truing & Centering</h4>
+              <p class="card_summary">Eliminate wheel wobble, pad rubbing, and misaligned hangers for crisp steering and braking.</p>
+            </div>
+
+            <div class="card_divider"></div>
+
+            <ul class="card_features_list" id="alignment_features_list">
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Precision Wheel Lateral Truing on Stand</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Derailleur Hanger Alignment Gauge Check</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Disc Brake Caliper & Rotor Gap Centering (No Rubbing)</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Fork Steerer & Handlebar Stem Centerline Alignment</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Spoke Tension Inspection & Loose Nipple Torquing</span></li>
+              <li class="feature_item"><i class="fa-solid fa-check feature_icon"></i> <span>Quick Wheel Dropout & Axle Seating Check</span></li>
+            </ul>
+
+            <div class="card_action_area">
+              <div class="walkin_rate_tag"><i class="fa-solid fa-bolt"></i> Express Walk-In Service</div>
+              <button type="button" class="details_expand_btn" id="details_alignment_btn" data-target="alignment_details">
+                <span>View Full Checklist</span> <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="tune_details_drawer" id="alignment_details">
+                <p><strong>Estimated Labor Time:</strong> ~15 - 25 Minutes (Express Service).</p>
+                <p><strong>Recommended:</strong> Immediately after minor crashes, rim bumps, or brake rub.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive "Diagnose My Bike" Diagnostic Symptom Solver -->
+    <section class="diagnostic_section" id="diagnostic_section">
+      <div class="diagnostic_container" id="diagnostic_container">
+        
+        <div class="diagnostic_header" id="diagnostic_header">
+          <span class="diagnostic_chip"><i class="fa-solid fa-wrench"></i> Interactive Troubleshooter</span>
+          <h2 class="diagnostic_title" id="diagnostic_title">What's Going On With Your Bike?</h2>
+          <p class="diagnostic_subtitle" id="diagnostic_subtitle">
+            Click the symptom your bike is experiencing to get an instant diagnosis and walk-in labor rate.
+          </p>
+        </div>
+
+        <!-- Clickable Symptom Pills -->
+        <div class="symptom_grid" id="symptom_grid">
+          <button type="button" class="symptom_card" id="symptom_shifting" data-service="drivetrain">
+            <i class="fa-solid fa-gears symptom_icon"></i>
+            <span class="symptom_name">Skipping or Noisy Gears</span>
+            <span class="symptom_hint">Difficulty changing gears or noisy pedaling</span>
+          </button>
+
+          <button type="button" class="symptom_card" id="symptom_brakes" data-service="brakes">
+            <i class="fa-solid fa-hand-sparkles symptom_icon"></i>
+            <span class="symptom_name">Squeaky or Weak Brakes</span>
+            <span class="symptom_hint">Brake lever hits handlebar or loud screech</span>
+          </button>
+
+          <button type="button" class="symptom_card" id="symptom_flat" data-service="wheels">
+            <i class="fa-solid fa-circle-notch symptom_icon"></i>
+            <span class="symptom_name">Flat Tire or Air Leak</span>
+            <span class="symptom_hint">Punctured tube or valve leak</span>
+          </button>
+
+          <button type="button" class="symptom_card" id="symptom_wobble" data-service="truing">
+            <i class="fa-solid fa-arrows-left-right symptom_icon"></i>
+            <span class="symptom_name">Wobbly or Rubbing Wheel</span>
+            <span class="symptom_hint">Wheel out of true or bent derailleur hanger</span>
+          </button>
+
+          <button type="button" class="symptom_card" id="symptom_creak" data-service="overhaul">
+            <i class="fa-solid fa-ear-listen symptom_icon"></i>
+            <span class="symptom_name">Creaking or Clicking Sounds</span>
+            <span class="symptom_hint">Bottom bracket or headset bearings dry & dirty</span>
+          </button>
+
+          <button type="button" class="symptom_card" id="symptom_new_bike" data-service="assemble">
+            <i class="fa-solid fa-box-open symptom_icon"></i>
+            <span class="symptom_name">Boxed Bike Assembly</span>
+            <span class="symptom_hint">Full build from scratch, torque check, and setup</span>
+          </button>
+        </div>
+
+        <!-- Diagnostic Interactive Recommendation Box -->
+        <div class="diagnostic_result_box" id="diagnostic_result_box">
+          <div class="diag_result_content" id="diag_result_content">
+            <div class="diag_header_row">
+              <span class="diag_badge" id="diag_badge">Recommendation</span>
+              <span class="diag_close" id="diag_close"><i class="fa-solid fa-xmark"></i></span>
+            </div>
+            <h3 class="diag_rec_title" id="diag_rec_title">Select a symptom above to get diagnosis</h3>
+            <p class="diag_rec_desc" id="diag_rec_desc">Click any of the bike issues above to discover what maintenance or repair is required.</p>
+            <div class="diag_action_row" id="diag_action_row">
+              <span class="diag_price_est" id="diag_price_est">Walk-In Labor: ₱0</span>
+              <a href="#location_section" class="diag_visit_btn" id="diag_visit_btn">
+                <i class="fa-solid fa-location-dot"></i> Visit Shop in Marilao
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Individual / A-La-Carte Services Directory -->
+    <section class="individual_section" id="individual_section">
+      <div class="individual_container" id="individual_container">
+        
+        <div class="individual_header" id="individual_header">
+          <h2 class="individual_title" id="individual_title">Individual Services & Repairs</h2>
+          <p class="individual_subtitle" id="individual_subtitle">
+            Transparent labor pricing for specific repairs. Walk-ins are accommodated at our Marilao shop.
+          </p>
+
+          <!-- Category Filters -->
+          <div class="service_filter_tabs" id="service_filter_tabs">
+            <button type="button" class="filter_tab active" data-category="all" id="tab_all">All Services</button>
+            <button type="button" class="filter_tab" data-category="alignment" id="tab_alignment"><i class="fa-solid fa-arrows-left-right"></i> Alignment</button>
+            <button type="button" class="filter_tab" data-category="assembly" id="tab_assembly"><i class="fa-solid fa-wrench"></i> Assembly & Overhaul</button>
+            <button type="button" class="filter_tab" data-category="drivetrain" id="tab_drivetrain"><i class="fa-solid fa-gears"></i> Drivetrain</button>
+            <button type="button" class="filter_tab" data-category="brakes" id="tab_brakes"><i class="fa-solid fa-hand"></i> Brakes</button>
+            <button type="button" class="filter_tab" data-category="wheels" id="tab_wheels"><i class="fa-solid fa-circle-dot"></i> Wheels & Tires</button>
+          </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="services_cards_grid" id="services_cards_grid">
+
+          <!-- Card 1: Bike Alignment (₱100) -->
+          <div class="service_card" data-category="alignment" id="sc_alignment" data-name="Bike Alignment (Wheel & Hanger)" data-price="100">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-arrows-left-right"></i> Alignment</span>
+              <span class="sc_price">₱100</span>
+            </div>
+            <h4 class="sc_title">Bike Alignment (Wheel & Hanger)</h4>
+            <p class="sc_desc">Precision lateral wheel truing on stand, derailleur hanger straightening, and brake caliper centering.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~15-20 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Bike Assemble (₱650) -->
+          <div class="service_card" data-category="assembly" id="sc_assemble" data-name="Bike Assemble (Complete Build)" data-price="650">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-wrench"></i> Assembly</span>
+              <span class="sc_price">₱650</span>
+            </div>
+            <h4 class="sc_title">Bike Assemble (Complete Build)</h4>
+            <p class="sc_desc">Full unboxing, fork & headset install, groupset mounting, brake setup, and 15-point safety inspection.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~2-3 hours</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Complete Bike Overhaul (₱450) -->
+          <div class="service_card" data-category="assembly" id="sc_overhaul" data-name="Complete Bike Overhaul" data-price="450">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-wrench"></i> Overhaul</span>
+              <span class="sc_price">₱450</span>
+            </div>
+            <h4 class="sc_title">Complete Bike Overhaul</h4>
+            <p class="sc_desc">Ultrasonic drivetrain clean, bottom bracket & headset bearing repack with marine grease, and safety tune.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~3-4 hours</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Chain Replacement (₱50) -->
+          <div class="service_card" data-category="drivetrain" id="sc_chain_install" data-name="Chain Replacement & Sizing" data-price="50">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-gears"></i> Drivetrain</span>
+              <span class="sc_price">₱50</span>
+            </div>
+            <h4 class="sc_title">Chain Replacement & Sizing</h4>
+            <p class="sc_desc">Inspection of chain wear, precise link sizing, quick-link installation, and lubrication.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~15 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Derailleur Indexing (₱50) -->
+          <div class="service_card" data-category="drivetrain" id="sc_derailleur_tune" data-name="Derailleur Indexing & Adjustment" data-price="50">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-gears"></i> Drivetrain</span>
+              <span class="sc_price">₱50</span>
+            </div>
+            <h4 class="sc_title">Derailleur Indexing & Adjustment</h4>
+            <p class="sc_desc">Front or rear derailleur limit screw calibration, cable tension fine-tuning, and crisp gear shifts.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~20 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Hydraulic Brake Bleed (₱100) -->
+          <div class="service_card" data-category="brakes" id="sc_brake_bleed" data-name="Hydraulic Brake Bleed (Per Brake)" data-price="100">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-hand"></i> Brakes</span>
+              <span class="sc_price">₱100</span>
+            </div>
+            <h4 class="sc_title">Hydraulic Brake Bleed (Per Brake)</h4>
+            <p class="sc_desc">Purge air bubbles and refill with fresh mineral oil or DOT fluid for firm lever response.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~30 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 7: Brake Pad Replacement (₱80) -->
+          <div class="service_card" data-category="brakes" id="sc_pad_replace" data-name="Brake Pad Replacement & Rotor Clean" data-price="80">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-hand"></i> Brakes</span>
+              <span class="sc_price">₱80</span>
+            </div>
+            <h4 class="sc_title">Brake Pad Replacement & Rotor Clean</h4>
+            <p class="sc_desc">Installation of fresh disc or rim pads, isopropyl alcohol rotor degrease, and alignment.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~15 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 8: Inner Tube Replacement (₱50) -->
+          <div class="service_card" data-category="wheels" id="sc_tube_replace" data-name="Inner Tube Replacement / Flat Fix" data-price="50">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-circle-dot"></i> Wheels & Tires</span>
+              <span class="sc_price">₱50</span>
+            </div>
+            <h4 class="sc_title">Inner Tube Replacement / Flat Fix</h4>
+            <p class="sc_desc">Tire inspection for thorns/glass, tube swap, rim tape inspection, and inflation to optimal PSI.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~10 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+          <!-- Card 9: Tubeless Tire Setup (₱250) -->
+          <div class="service_card" data-category="wheels" id="sc_tubeless_setup" data-name="Tubeless Tire Setup (Per Wheel)" data-price="250">
+            <div class="sc_top">
+              <span class="sc_badge"><i class="fa-solid fa-circle-dot"></i> Wheels & Tires</span>
+              <span class="sc_price">₱250</span>
+            </div>
+            <h4 class="sc_title">Tubeless Tire Setup (Per Wheel)</h4>
+            <p class="sc_desc">Tubeless rim taping, valve stem installation, tire bead blast seating, and fresh sealant injection.</p>
+            <div class="sc_bottom">
+              <span class="sc_duration"><i class="fa-regular fa-clock"></i> ~30 mins</span>
+              <span class="sc_walkin_status"><i class="fa-solid fa-circle-check"></i> Walk-In Ready</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Shop Location & Service Hours Section -->
+    <section class="location_section" id="location_section">
+      <div class="location_container" id="location_container">
+        
+        <div class="location_card" id="location_card">
+          <div class="location_info_col">
+            <span class="location_badge"><i class="fa-solid fa-store"></i> TAURUS BIKE SERVICE CENTER</span>
+            <h3 class="location_heading">Visit Our Marilao Workshop</h3>
+            <p class="location_address">
+              <i class="fa-solid fa-location-dot location_icon"></i>
+              <span>Sandico Street, Abangan Sur, Marilao, Bulacan, Philippines</span>
+            </p>
+
+            <div class="hours_block">
+              <h4 class="hours_title"><i class="fa-regular fa-clock"></i> Service Department Hours:</h4>
+              <div class="hours_row"><span>Monday – Saturday:</span> <strong>8:00 AM – 6:00 PM</strong></div>
+              <div class="hours_row"><span>Sunday:</span> <strong>Closed (Walk-In Mon - Sat Only)</strong></div>
+            </div>
+
+            <div class="location_cta_group">
+              <a href="https://maps.google.com/?q=Sandico+Street+Abangan+Sur+Marilao+Bulacan" target="_blank" class="loc_map_btn" id="loc_map_btn">
+                <i class="fa-solid fa-diamond-turn-right"></i> Get Directions
+              </a>
+            </div>
+          </div>
+
+          <div class="location_map_col">
+            <div class="interactive_map_placeholder" id="interactive_map_placeholder">
+              <div class="map_pin_card">
+                <div class="pin_icon_wrap"><i class="fa-solid fa-bicycle"></i></div>
+                <div class="pin_details">
+                  <strong>Taurus Bike Shop</strong>
+                  <small>Abangan Sur, Marilao, Bulacan</small>
+                  <span class="pin_status"><i class="fa-solid fa-circle"></i> Service Bays Open (Mon-Sat 8AM-6PM)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer strictly following user screenshot (media_1790515943100.png) -->
+        <footer class="main_footer" id="main_footer">
+            <div class="footer_top">
+                <div class="footer_grid">
+                    <!-- footer col 1: brand info -->
+                    <div class="footer_col">
+                        <a href="#" class="footer_brand">
+                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bike Logo" class="footer_logo">
+                            <span class="footer_brand_name">Taurus Bike</span>
+                        </a>
+                        <p class="footer_about_text">
+                            Your trusted bike shop in Marilao, Bulacan. Providing high-performance bicycles, quality components, accessories, and expert maintenance services.
+                        </p>
+                    </div>
+
+                    <!-- footer col 2: quick links -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Quick Links</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Home</a></li>
+                            <li><a href="#" class="footer_link">About Us</a></li>
+                            <li><a href="/frontend/pages/shop.html" class="footer_link">Shop Products</a></li>
+                            <li><a href="#" class="footer_link">Services</a></li>
+                            <li><a href="/frontend/pages/Dashboard/dashboard.html" class="footer_link">Customer Dashboard</a></li>
+                            <li><a href="#main_footer" class="footer_link">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 3: customer care -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Customer Care</h4>
+                        <ul class="footer_links">
+                            <li><a href="#" class="footer_link">Track Order</a></li>
+                            <li><a href="#" class="footer_link">Shipping Information</a></li>
+                            <li><a href="#" class="footer_link">Return & Refund Policy</a></li>
+                            <li><a href="#" class="footer_link">Warranty & Repairs</a></li>
+                            <li><a href="#" class="footer_link">Support Tickets</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- footer col 4: store info -->
+                    <div class="footer_col">
+                        <h4 class="footer_title">Store Information</h4>
+                        <ul class="footer_info_list">
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span>Taurus Building Sandico Street Abangan Sur, Marilao, Philippines, 3019</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <span>2024-0541 / +63 912 345 6789</span>
+                            </li>
+                            <li class="footer_info_item">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM</span>
+                            </li>
+                        </ul>
+                        <div class="footer_store_social">
+                            <a href="https://www.facebook.com/taurusbikestore" target="_blank" rel="noopener noreferrer" class="social_link_group">
+                                <span class="social_link" aria-label="Facebook">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                    </svg>
+                                </span>
+                                <span class="social_link_text">Taurus Bike Shop Facebook page</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- copyright bottom bar -->
+            <div class="footer_bottom">
+                <p class="copyright_text">© 2026 Taurus Bike Shop (BICOBS). All Rights Reserved.</p>
+            </div>
+        </footer>
+
+  </div>
+
+  <!-- Script for Dynamic Interactivity -->
+  <script src="/frontend/js/service.js"></script>
+</body>
+</html>
