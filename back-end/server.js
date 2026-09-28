@@ -29,6 +29,8 @@ app.get('/api/health', (req, res) => {
 // 6. Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/billing', require('./routes/billingRoutes'));
 
 // 7. 404 Route Handler
 app.use((req, res, next) => {
