@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - My Profile</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+    <header class="top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img">
+            </div>
+            <h2 class="top_nav_logo_text">Taurus Bike</h2>
+            <span class="top_nav_portal_text">CUSTOMER PORTAL</span>
+        </div>
+        <div class="top_nav_center">
+            <div class="search_bar_container">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" placeholder="Search bikes, parts, accessories...">
+            </div>
+        </div>
+        <div class="top_nav_right">
+            <button type="button" class="mobile_search_btn" id="mobile_search_btn" aria-label="Toggle Search">
+                <i class="fas fa-search"></i>
+            </button>
+            <a href="mycart.html" class="cart_icon_container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart_badge_top">4</span>
+            </a>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
+        </div>
+
+        <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
+        <div class="mobile_search_bar_expand" id="mobile_search_bar_expand">
+            <div class="mobile_search_wrapper">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" id="mobile_search_input" placeholder="Search bikes, parts, accessories...">
+                <button type="button" class="mobile_search_close" id="close_mobile_search" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">My Profile Settings</h1>
+                    <p class="header_subtitle">Update your personal account credentials and notification preferences.</p>
+                </div>
+            </header>
+
+            <!-- profile form -->
+            <form id="profile_form" class="profile_form">
+                <!-- personal information section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Personal Information</h3>
+                    <div class="form_row_two">
+                        <div class="form_group">
+                            <label class="form_label" for="full_name_input">Full Name</label>
+                            <input class="form_input" type="text" id="full_name_input" value="Juan Dela Cruz" required>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="email_address_input">Email Address</label>
+                            <input class="form_input" type="email" id="email_address_input" value="juan@taurusbike.ph" required>
+                        </div>
+                    </div>
+                    <div class="form_group" style="margin-bottom: 0;">
+                        <label class="form_label" for="phone_number_input">Phone Number</label>
+                        <input class="form_input" type="tel" id="phone_number_input" value="+63 917 555 1234">
+                    </div>
+                </section>
+
+                <!-- location & address section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Location & Address Details</h3>
+                    <div class="form_group">
+                        <label class="form_label" for="shipping_address_input">Shipping Location / Address</label>
+                        <input class="form_input" type="text" id="shipping_address_input" value="1991 Roat State, Sector 4, Metro Manila, 19491" required>
+                    </div>
+                    <div class="form_group" style="margin-bottom: 0;">
+                        <label class="form_label" for="billing_address_input">Billing Location / Address</label>
+                        <input class="form_input" type="text" id="billing_address_input" value="2050 Roat State, Sector 4, Metro Manila, 19491">
+                    </div>
+                </section>
+
+                <!-- change password section -->
+                <section class="profile_card">
+                    <h3 class="profile_card_title">Change Password</h3>
+                    <div class="form_row_two" style="margin-bottom: 0;">
+                        <div class="form_group" style="margin-bottom: 0;">
+                            <label class="form_label" for="new_password_input">New Password</label>
+                            <div class="password_input_wrapper">
+                                <input class="form_input" type="password" id="new_password_input" placeholder="Enter new password (leave blank to keep current)">
+                                <button type="button" class="btn_toggle_pwd" data-target="new_password_input" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form_group" style="margin-bottom: 0;">
+                            <label class="form_label" for="confirm_password_input">Confirm New Password</label>
+                            <div class="password_input_wrapper">
+                                <input class="form_input" type="password" id="confirm_password_input" placeholder="Confirm new password">
+                                <button type="button" class="btn_toggle_pwd" data-target="confirm_password_input" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="password_match_error" class="discount_msg error" style="display: none; margin-top: 10px;">
+                        <i class="fas fa-exclamation-circle"></i> Passwords do not match. Please verify your new password.
+                    </div>
+                </section>
+
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <button type="submit" class="btn_save_changes">Save Changes</button>
+                    <span id="profile_save_toast" style="display: none; color: #137333; font-weight: 600; font-size: 14px; background: #e6f9ed; padding: 8px 14px; border-radius: 6px;">
+                        <i class="fas fa-check-circle"></i> Profile & Location updated successfully!
+                    </span>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>

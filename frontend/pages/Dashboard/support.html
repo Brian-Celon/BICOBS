@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Support Tickets</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+    <header class="top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img">
+            </div>
+            <h2 class="top_nav_logo_text">Taurus Bike</h2>
+            <span class="top_nav_portal_text">CUSTOMER PORTAL</span>
+        </div>
+        <div class="top_nav_center">
+            <div class="search_bar_container">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" placeholder="Search bikes, parts, accessories...">
+            </div>
+        </div>
+        <div class="top_nav_right">
+            <button type="button" class="mobile_search_btn" id="mobile_search_btn" aria-label="Toggle Search">
+                <i class="fas fa-search"></i>
+            </button>
+            <a href="mycart.html" class="cart_icon_container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart_badge_top">4</span>
+            </a>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
+        </div>
+
+        <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
+        <div class="mobile_search_bar_expand" id="mobile_search_bar_expand">
+            <div class="mobile_search_wrapper">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" id="mobile_search_input" placeholder="Search bikes, parts, accessories...">
+                <button type="button" class="mobile_search_close" id="close_mobile_search" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">Customer Support Tickets</h1>
+                    <p class="header_subtitle">Need help with parts assembly or shipping? Open a ticket with our support team.</p>
+                </div>
+                <div>
+                    <a href="#" class="action_button" id="btn_open_ticket_modal">
+                        <i class="fas fa-plus"></i> Create New Ticket
+                    </a>
+                </div>
+            </header>
+
+            <!-- support tickets list section -->
+            <section>
+                <ul class="ticket_list">
+                    <!-- ticket 1 -->
+                    <li class="ticket_card">
+                        <div class="ticket_info">
+                            <div class="ticket_title_row">
+                                <h4 class="ticket_title">#TCK-4091: Inquiry on Frame Torque Specifications</h4>
+                                <span class="ticket_status_open">Open</span>
+                            </div>
+                            <p class="ticket_meta">Created on 2026-05-20 • 3 messages in thread</p>
+                        </div>
+                        <a href="#" class="btn_open_chat">Open Chat</a>
+                    </li>
+
+                    <!-- ticket 2 -->
+                    <li class="ticket_card">
+                        <div class="ticket_info">
+                            <div class="ticket_title_row">
+                                <h4 class="ticket_title">#TCK-3882: Shipping delay regarding order #TBR1040</h4>
+                                <span class="ticket_status_resolved">Resolved</span>
+                            </div>
+                            <p class="ticket_meta">Created on 2026-04-29 • 5 messages in thread</p>
+                        </div>
+                        <a href="#" class="btn_open_chat">Open Chat</a>
+                    </li>
+                </ul>
+                <div id="no_tickets_found" class="cart_empty_state" style="display: none;">
+                    <i class="fas fa-comment-slash cart_empty_icon"></i>
+                    <h3>No tickets found</h3>
+                    <p>No support tickets match your search filter.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Ticket Chat Modal -->
+    <div id="ticket_chat_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="chat_modal_title">
+        <div class="modal_container checkout_modal_container">
+            <div class="modal_header_row space_between">
+                <div class="modal_header_text">
+                    <h3 id="chat_modal_title" class="modal_title">Support Conversation</h3>
+                    <p class="modal_subtitle" id="chat_modal_subtitle">#TCK-4091: Inquiry on Frame Torque Specifications</p>
+                </div>
+                <button type="button" class="modal_close_btn" id="close_chat_modal" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal_card_box">
+                <div class="chat_messages_box" id="chat_messages_box">
+                    <div class="chat_message message_user">
+                        <div class="chat_msg_author">Juan Dela Cruz (You)</div>
+                        <div class="chat_msg_text">Hello, what are the recommended torque specs for tightening the Sagmit Carbon seatpost collar?</div>
+                    </div>
+                    <div class="chat_message message_support">
+                        <div class="chat_msg_author">Taurus Support Rep</div>
+                        <div class="chat_msg_text">Hi Juan! For carbon seatpost clamps, we recommend a torque setting of 5 Nm to 6 Nm maximum with carbon assembly paste.</div>
+                    </div>
+                </div>
+
+                <form id="chat_reply_form" class="chat_reply_form" style="margin-top: 14px;">
+                    <div class="discount_input_group">
+                        <input type="text" id="chat_reply_input" class="form_input" placeholder="Type your response..." required autocomplete="off">
+                        <button type="submit" class="btn_apply_discount"><i class="fas fa-paper-plane"></i> Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Support Ticket Modal -->
+    <div id="ticket_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="ticket_modal_title">
+        <div class="modal_container ticket_modal_container">
+            <!-- Modal Top Header -->
+            <div class="modal_header_row space_between">
+                <h3 id="ticket_modal_title" class="modal_title">Create Support Ticket</h3>
+                <button type="button" class="modal_close_btn" id="close_ticket_modal_x" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Ticket Form -->
+            <form id="create_ticket_form" class="modal_form_body">
+                <div class="form_group">
+                    <label class="form_label" for="ticket_category">ISSUE CATEGORY</label>
+                    <select id="ticket_category" class="form_select" required>
+                        <option value="Warranty / Repairs" selected>Warranty / Repairs</option>
+                        <option value="Shipping / Delivery">Shipping / Delivery</option>
+                        <option value="Product Information">Product Information</option>
+                        <option value="Billing & Payment">Billing & Payment</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_subject">SUBJECT / TITLE</label>
+                    <input type="text" id="ticket_subject" class="form_input" placeholder="Briefly describe your issue..." required>
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_description">DESCRIPTION & DETAILS</label>
+                    <textarea id="ticket_description" class="form_textarea" placeholder="Provide as much detail as possible (bike model, serial #, pictures if any)..." rows="4" required></textarea>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="modal_actions">
+                    <button type="button" class="btn_modal_cancel" id="close_ticket_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_modal_submit">Submit Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>

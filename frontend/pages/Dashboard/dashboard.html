@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Customer Dashboard</title>
+    <!-- link to designated dashboard styles -->
+    <link rel="stylesheet" href="/frontend/css/dashboard.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- global top navbar -->
+    <header class="top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="mobile_nav_toggle" id="mobile_nav_toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img">
+            </div>
+            <h2 class="top_nav_logo_text">Taurus Bike</h2>
+            <span class="top_nav_portal_text">CUSTOMER PORTAL</span>
+        </div>
+        <div class="top_nav_center">
+            <div class="search_bar_container">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" placeholder="Search bikes, parts, accessories...">
+            </div>
+        </div>
+        <div class="top_nav_right">
+            <button type="button" class="mobile_search_btn" id="mobile_search_btn" aria-label="Toggle Search">
+                <i class="fas fa-search"></i>
+            </button>
+            <a href="mycart.html" class="cart_icon_container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart_badge_top">4</span>
+            </a>
+            <a href="profile.html" class="user_avatar" title="My Profile">JD</a>
+        </div>
+
+        <!-- Expandable Mobile Search Dropdown Bar (< 600px) -->
+        <div class="mobile_search_bar_expand" id="mobile_search_bar_expand">
+            <div class="mobile_search_wrapper">
+                <i class="fas fa-search search_icon"></i>
+                <input type="text" class="search_input" id="mobile_search_input" placeholder="Search bikes, parts, accessories...">
+                <button type="button" class="mobile_search_close" id="close_mobile_search" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- main layout container with gap -->
+    <div id="dashboard_container" class="dashboard_layout">
+        <!-- floating sidebar card -->
+        <aside id="dashboard_sidebar" class="sidebar_container">
+            <!-- customer dashboard title -->
+            <div class="sidebar_title">
+                <div class="sidebar_title_left">
+                    <i class="fas fa-th-large sidebar_title_icon"></i>
+                    <span>Customer Dashboard</span>
+                </div>
+                <button type="button" class="sidebar_close_btn" id="sidebar_close_btn" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- navigation links -->
+            <nav class="sidebar_nav">
+                <ul class="nav_list">
+                    <li>
+                        <a href="dashboard.html" class="nav_item active">
+                            <div class="nav_item_left">
+                                <i class="fas fa-home"></i>
+                                <span>Overview</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mycart.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>My Cart</span>
+                            </div>
+                            <span class="badge_green">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="myorders.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-box"></i>
+                                <span>My Orders</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="payments.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="support.html" class="nav_item">
+                            <div class="nav_item_left">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Support Tickets</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- logout section -->
+            <div class="sidebar_logout">
+                <a href="#" class="logout_item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- floating main content card -->
+        <main id="dashboard_main_content" class="main_content">
+            <header class="main_header">
+                <div>
+                    <h1 class="header_title">My Account Overview</h1>
+                    <p class="header_subtitle">Welcome back, <strong id="overview_user_name">Juan Dela Cruz</strong>! Manage your profile, orders, and saved addresses.</p>
+                </div>
+            </header>
+
+            <!-- User Welcome & Location Summary Card -->
+            <section class="user_welcome_card">
+                <div class="welcome_card_left">
+                    <div class="welcome_avatar" id="overview_welcome_avatar">JD</div>
+                    <div class="welcome_text">
+                        <h2 class="welcome_name" id="overview_welcome_name">Juan Dela Cruz</h2>
+                        <p class="welcome_location">
+                            <i class="fas fa-map-marker-alt welcome_location_icon"></i>
+                            <span id="overview_welcome_location">1991 Roat State, Sector 4, Metro Manila, 19491</span>
+                        </p>
+                    </div>
+                </div>
+                <a href="profile.html" class="action_button"><i class="fas fa-user-edit"></i> Edit Profile & Location</a>
+            </section>
+
+            <!-- quick stats section -->
+            <section class="stats_section">
+                <h3 class="section_title">Quick Stats</h3>
+                <div class="stats_grid">
+                    <article class="stat_card">
+                        <div class="stat_card_top">
+                            <span class="stat_label">Total Orders</span>
+                            <i class="fas fa-box stat_icon"></i>
+                        </div>
+                        <div class="stat_card_bottom">
+                            <span class="stat_value">12</span>
+                            <i class="fas fa-chart-line stat_trend"></i>
+                        </div>
+                    </article>
+                    <article class="stat_card">
+                        <div class="stat_card_top">
+                            <span class="stat_label">Cart Items</span>
+                            <i class="fas fa-shopping-cart stat_icon"></i>
+                        </div>
+                        <div class="stat_card_bottom">
+                            <span class="stat_value">4</span>
+                            <a href="mycart.html" class="action_button">View Cart</a>
+                        </div>
+                    </article>
+                    <article class="stat_card">
+                        <div class="stat_card_top">
+                            <span class="stat_label">Unread Messages</span>
+                            <i class="fas fa-comments stat_icon"></i>
+                        </div>
+                        <div class="stat_card_bottom">
+                            <span class="stat_value">2</span>
+                            <a href="support.html" class="action_button">View Tickets</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- recent orders section -->
+            <section class="orders_section">
+                <h3 class="section_title">Recent Orders</h3>
+                <div class="table_container">
+                    <table class="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TBR1045</td>
+                                <td>2024-05-15</td>
+                                <td>
+                                    <span class="status_pill status_processing">
+                                        <i class="fas fa-circle" style="font-size: 8px;"></i> Processing
+                                    </span>
+                                </td>
+                                <td>₱12,990.00</td>
+                                <td><a href="myorders.html" class="action_link">View Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- bottom split section -->
+            <div class="bottom_section">
+                <!-- recommended products -->
+                <section class="recommended_container">
+                    <h3 class="section_title">Recommended for You</h3>
+                    <ul class="products_scroll">
+                        <li class="product_card">
+                            <div class="product_image_placeholder"><i class="fas fa-bicycle"></i></div>
+                            <h4 class="product_name">Sagmit Evo Carbon</h4>
+                            <p class="product_price">₱19,900</p>
+                            <button class="action_button">Add to Cart</button>
+                        </li>
+                        <li class="product_card">
+                            <div class="product_image_placeholder"><i class="fas fa-life-ring"></i></div>
+                            <h4 class="product_name">Maxxis Ardent 29</h4>
+                            <p class="product_price">₱1,500</p>
+                            <button class="action_button">Add to Cart</button>
+                        </li>
+                        <li class="product_card">
+                            <div class="product_image_placeholder"><i class="fas fa-cogs"></i></div>
+                            <h4 class="product_name">Shimano SLX Kit</h4>
+                            <p class="product_price">₱9,500</p>
+                            <button class="action_button">Add to Cart</button>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- saved addresses -->
+                <section class="addresses_container">
+                    <h3 class="section_title">My Saved Addresses & Location</h3>
+                    <address class="address_block">
+                        <span class="address_label">Shipping Location / Address</span>
+                        <p class="address_text" id="overview_shipping_address">1991 Roat State, Sector 4, Metro Manila, 19491</p>
+                    </address>
+                    <address class="address_block">
+                        <span class="address_label">Billing Location / Address</span>
+                        <p class="address_text" id="overview_billing_address">2050 Roat State, Sector 4, Metro Manila, 19491</p>
+                    </address>
+                    <a href="profile.html" class="action_link">Manage Location & Addresses</a>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- sticky bottom footer -->
+    <footer class="dashboard_footer">
+        <div class="footer_item">
+            <i class="fas fa-home footer_icon"></i>
+            <span>Taurus Bike / customer dashboard</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-phone footer_icon"></i>
+            <span>2024-0541</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-info-circle footer_icon"></i>
+            <span>Contact Info Information</span>
+        </div>
+        <div class="footer_item">
+            <i class="fas fa-map-marker-alt footer_icon"></i>
+            <span>Manage Contact</span>
+        </div>
+    </footer>
+
+    <!-- main dashboard script -->
+    <script src="/frontend/js/dashboard.js"></script>
+</body>
+</html>
