@@ -535,6 +535,10 @@ function setup_profile_navigation() {
 
 /* Shopping Cart Interactivity, Quantity Updates, Delete Handling, Totals & Checkout Modal */
 function setup_shopping_cart() {
+    // If BICOBS_Cart and cart_view.js are active, delegate cart rendering to cart_view.js
+    if (window.BICOBS_Cart && document.getElementById('cart_item_list')) {
+        return;
+    }
     const cartList = document.getElementById('cart_item_list') || document.querySelector('.cart_item_list');
     const orderSummary = document.querySelector('.order_summary_section');
 
@@ -1077,26 +1081,43 @@ function setup_add_to_cart_buttons() {
         // Ensure it's not a modal trigger or different action button
         if (btn.id === 'btn_open_ticket_modal' || btn.classList.contains('user_welcome_card') || btn.closest('.profile_form')) return;
 
+        const card = btn.closest('.product_card') || btn.closest('.product_card_item') || btn.closest('.catalog_card');
+        let id = btn.getAttribute('data-id') || (card ? card.getAttribute('data-id') : null);
         let name = btn.getAttribute('data-name');
+        let price = parseFloat(btn.getAttribute('data-price'));
+        let img = btn.getAttribute('data-img');
 
-        if (!name) {
-            const card = btn.closest('.product_card') || btn.closest('.product_card_item');
-            if (card) {
-                const nameEl = card.querySelector('.product_name');
+        if (card) {
+            if (!name) {
+                const nameEl = card.querySelector('.product_name') || card.querySelector('.card_title') || card.querySelector('.product_title');
                 name = nameEl ? nameEl.textContent.trim() : 'Bike Product';
+            }
+            if (isNaN(price)) {
+                const priceEl = card.querySelector('.product_price') || card.querySelector('.card_current_price') || card.querySelector('.price_current');
+                price = priceEl ? parseFloat(priceEl.textContent.replace(/[^0-9.]/g, '')) : 1000;
+            }
+            if (!img) {
+                const imgEl = card.querySelector('img');
+                img = imgEl ? imgEl.src : '/frontend/Pictures/placeholder.png';
+            }
+            if (!id) {
+                id = name;
             }
         }
 
         if (!name) return;
 
-        // Increment cart badges in UI
-        const badges = document.querySelectorAll('.cart_badge_top, .badge_green');
-        badges.forEach(badge => {
-            let current = parseInt(badge.textContent, 10) || 0;
-            badge.textContent = current + 1;
-        });
-
-        showToast(`Added "${name}" to your cart!`, true);
+        if (window.BICOBS_Cart) {
+            window.BICOBS_Cart.addToCart({
+                id: id || name,
+                name: name,
+                price: price || 0,
+                imageUrl: img || '/frontend/Pictures/placeholder.png',
+                stockQuantity: 10
+            }, 1);
+        } else {
+            showToast(`Added "${name}" to your cart!`, true);
+        }
     });
 }
 
@@ -1265,10 +1286,17 @@ function setup_logout_modal() {
     if (confirmBtn) {
         confirmBtn.addEventListener('click', () => {
             closeModal();
-            showToast('Logged out successfully! Redirecting to Overview...', true);
+            localStorage.removeItem('token');
+            localStorage.removeItem('bicobs_token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('tb_user_name');
+            localStorage.removeItem('tb_user_email');
+            localStorage.removeItem('tb_user_phone');
+            localStorage.removeItem('tb_user_shipping');
+            showToast('Logged out successfully! Redirecting to login...', true);
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1200);
+                window.location.href = '/frontend/pages/login.html';
+            }, 1000);
         });
     }
 }

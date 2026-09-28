@@ -311,43 +311,148 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // Form Submission Handlers
+  // Form Submission Handlers (Production Backend Integration)
   // ==========================================================================
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectTarget = urlParams.get('redirect');
+
+  function getRedirectUrl() {
+    if (redirectTarget === 'cart') return '/frontend/pages/Dashboard/mycart.html';
+    if (redirectTarget === 'orders') return '/frontend/pages/Dashboard/myorders.html';
+    if (redirectTarget === 'shop') return '/frontend/pages/shop.html';
+    return '/frontend/pages/Dashboard/dashboard.html';
+  }
+
+  // 1. Handle Sign In
   if (sign_in_form) {
-    sign_in_form.addEventListener('submit', (e) => {
+    sign_in_form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('sign_in_email').value;
+      const email = document.getElementById('sign_in_email').value.trim();
       const password = document.getElementById('sign_in_password').value;
-      console.log('Sign in submitted for:', email);
-      // Backend integration hook
+      const submitBtn = document.getElementById('sign_in_submit_btn');
+
+      if (!email || !password) {
+        alert('Please fill in both email/username and password.');
+        return;
+      }
+
+      const originalText = submitBtn ? submitBtn.textContent : 'SIGN IN';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'SIGNING IN...';
+      }
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+          // Store authentication token and user profile
+          localStorage.setItem('token', result.token);
+          localStorage.setItem('bicobs_token', result.token);
+          localStorage.setItem('user', JSON.stringify(result.data));
+          localStorage.setItem('tb_user_name', result.data.name);
+          localStorage.setItem('tb_user_email', result.data.email);
+          localStorage.setItem('tb_user_phone', result.data.phone || '');
+          localStorage.setItem('tb_user_shipping', result.data.address || '');
+
+          window.location.href = getRedirectUrl();
+        } else {
+          alert(result.message || 'Invalid email/username or password. Please try again.');
+        }
+      } catch (err) {
+        console.error('Sign in error:', err);
+        alert('Server connection error. Please make sure the server is running.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      }
     });
   }
 
+  // 2. Handle Sign Up
   if (sign_up_form) {
-    sign_up_form.addEventListener('submit', (e) => {
+    sign_up_form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const username = document.getElementById('sign_up_username')?.value.trim();
+      const phone = document.getElementById('sign_up_phone')?.value.trim();
+      const email = document.getElementById('sign_up_email')?.value.trim();
+      const password = document.getElementById('sign_up_password')?.value;
+      const submitBtn = document.getElementById('sign_up_submit_btn');
+
+      const island = sign_up_island_group?.value || '';
       const provinceOption = sign_up_province?.options[sign_up_province.selectedIndex];
       const cityOption = sign_up_city?.options[sign_up_city.selectedIndex];
       const barangayOption = sign_up_barangay?.options[sign_up_barangay.selectedIndex];
+      const postalCode = document.getElementById('sign_up_postal_code')?.value.trim();
+      const specificAddress = document.getElementById('sign_up_specific_address')?.value.trim();
 
-      const user_payload = {
-        username: document.getElementById('sign_up_username')?.value,
-        phone: document.getElementById('sign_up_phone')?.value,
-        email: document.getElementById('sign_up_email')?.value,
-        password: document.getElementById('sign_up_password')?.value,
-        island_group: sign_up_island_group?.value,
-        province: provinceOption?.dataset.name || provinceOption?.textContent || '',
-        city: cityOption?.dataset.name || cityOption?.textContent || '',
-        barangay: barangayOption?.dataset.name || barangayOption?.textContent || '',
-        postal_code: sign_up_postal_code?.value,
-        specific_address: document.getElementById('sign_up_specific_address')?.value
-      };
+      const province = provinceOption?.dataset.name || provinceOption?.textContent || '';
+      const city = cityOption?.dataset.name || cityOption?.textContent || '';
+      const barangay = barangayOption?.dataset.name || barangayOption?.textContent || '';
 
-      console.log('Detailed sign-up submitted with payload:', user_payload);
-      alert(`Account created successfully for ${user_payload.username}!\n\nDelivery Address:\n${user_payload.specific_address}\nBrgy. ${user_payload.barangay}, ${user_payload.city}, ${user_payload.province}\nPostal Code: ${user_payload.postal_code}\nIsland Group: ${user_payload.island_group}`);
-      // Backend registration endpoint hook
+      const fullAddress = `${specificAddress}, Brgy. ${barangay}, ${city}, ${province} ${postalCode} (${island})`.trim();
+
+      if (!username || !email || !password) {
+        alert('Please fill in username, email, and password.');
+        return;
+      }
+
+      const originalText = submitBtn ? submitBtn.textContent : 'COMPLETE SIGN UP';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'CREATING ACCOUNT...';
+      }
+
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: username,
+            email: email,
+            password: password,
+            phone: phone,
+            address: fullAddress,
+            role: 'customer'
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+          // Store authentication token and user profile
+          localStorage.setItem('token', result.token);
+          localStorage.setItem('bicobs_token', result.token);
+          localStorage.setItem('user', JSON.stringify(result.data));
+          localStorage.setItem('tb_user_name', result.data.name);
+          localStorage.setItem('tb_user_email', result.data.email);
+          localStorage.setItem('tb_user_phone', result.data.phone || phone);
+          localStorage.setItem('tb_user_shipping', fullAddress);
+
+          alert(`Welcome to Taurus Bike, ${username}! Your account is ready.`);
+          window.location.href = getRedirectUrl();
+        } else {
+          alert(result.message || 'Registration failed. Please check your information.');
+        }
+      } catch (err) {
+        console.error('Sign up error:', err);
+        alert('Server connection error. Please make sure the server is running.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      }
     });
   }
 });

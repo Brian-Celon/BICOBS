@@ -4,9 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let active_category = 'all';
     let search_query = '';
     let sort_mode = 'featured';
-    let max_price = 50000;
+    let max_price = 100000;
     let only_sale = false;
-    let cart_items_count = 0;
+    let all_products = [];
 
     // dom elements
     const products_grid = document.getElementById('products_grid');
@@ -21,20 +21,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const sale_checkbox = document.getElementById('filter_sale');
     const btn_reset_filters = document.getElementById('btn_reset_filters');
     const category_item_btns = document.querySelectorAll('.category_item_btn');
-    const cart_counter_badge = document.getElementById('cart_badge_counter');
-    const cart_toast = document.getElementById('cart_toast');
 
-    // Fetch Products dynamically from Backend API if available
+    // Fetch Products dynamically from Backend API
     async function loadProductsFromBackend() {
         try {
             const res = await fetch('/api/products');
             if (!res.ok) return;
             const result = await res.json();
-            if (result.status === 'success' && result.data && result.data.length > 0) {
-                renderProductsGrid(result.data);
+            if (result.status === 'success' && Array.isArray(result.data) && result.data.length > 0) {
+                all_products = result.data;
+                renderProductsGrid(all_products);
             }
         } catch (err) {
-            console.log('Using static HTML product cards fallback.');
+            console.log('Using static HTML product cards fallback:', err);
         }
     }
 
@@ -45,16 +44,18 @@ document.addEventListener('DOMContentLoaded', () => {
         products.forEach(item => {
             const card = document.createElement('div');
             card.className = 'product_card_item';
+            card.setAttribute('data-id', item._id || item.id);
             card.setAttribute('data-category', item.category || 'all');
             card.setAttribute('data-type', item.category === 'bicycles' ? 'bike' : 'parts');
             card.setAttribute('data-price', item.price);
             card.setAttribute('data-name', item.name);
 
             let badgeHTML = '';
-            if (item.stockQuantity === 0) {
+            const isOutOfStock = item.stockQuantity === 0;
+            if (isOutOfStock) {
                 badgeHTML = '<span class="card_tag_badge badge_sale">Out of Stock</span>';
             } else if (item.stockQuantity <= 3 && item.stockQuantity > 0) {
-                badgeHTML = '<span class="card_tag_badge badge_new">Low Stock</span>';
+                badgeHTML = '<span class="card_tag_badge badge_new">Low Stock (' + item.stockQuantity + ')</span>';
             }
 
             card.innerHTML = `
@@ -67,11 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 class="card_title">${item.name}</h3>
                     <div class="card_footer">
                         <div class="card_price_block">
-                            <span class="card_current_price">&#8369;${item.price.toLocaleString()}</span>
+                            <span class="card_current_price">&#8369;${(item.price || 0).toLocaleString()}</span>
                         </div>
-                        <button class="btn_card_add_cart" data-id="${item._id}" data-name="${item.name}">
+                        <button class="btn_card_add_cart" data-id="${item._id || item.id}" ${isOutOfStock ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                            Add
+                            ${isOutOfStock ? 'Out of Stock' : 'Add'}
                         </button>
                     </div>
                 </div>
@@ -83,7 +84,40 @@ document.addEventListener('DOMContentLoaded', () => {
         apply_filters();
     }
 
-    // filter and sort execution
+    // Delegated Add to Cart click handler
+    if (products_grid) {
+        products_grid.addEventListener('click', (e) => {
+            const addBtn = e.target.closest('.btn_card_add_cart');
+            if (!addBtn || addBtn.disabled) return;
+
+            const productId = addBtn.getAttribute('data-id');
+            const product = all_products.find(p => (p._id || p.id) === productId);
+
+            if (product && window.BICOBS_Cart) {
+                const added = window.BICOBS_Cart.addToCart(product, 1);
+                if (added) {
+                    const originalHTML = addBtn.innerHTML;
+                    addBtn.innerHTML = '✓ Added!';
+                    addBtn.style.backgroundColor = '#16a34a';
+                    addBtn.style.color = '#ffffff';
+                    setTimeout(() => {
+                        addBtn.innerHTML = originalHTML;
+                        addBtn.style.backgroundColor = '';
+                        addBtn.style.color = '';
+                    }, 1200);
+                }
+            } else if (!product && window.BICOBS_Cart) {
+                // Fallback for static card
+                const card = addBtn.closest('.product_card_item');
+                const name = card?.getAttribute('data-name') || 'Product';
+                const price = parseFloat(card?.getAttribute('data-price')) || 0;
+                const img = card?.querySelector('.card_image')?.src;
+                window.BICOBS_Cart.addToCart({ _id: productId || name, name, price, imageUrl: img, stockQuantity: 10 }, 1);
+            }
+        });
+    }
+
+    // Filter and sort execution
     function apply_filters() {
         let visible_count = 0;
 
@@ -119,6 +153,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (empty_state_el) empty_state_el.style.display = visible_count === 0 ? 'block' : 'none';
     }
 
+    // Category button filters
+    if (category_item_btns) {
+        category_item_btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                category_item_btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                active_category = btn.getAttribute('data-category') || 'all';
+                if (active_heading_el) active_heading_el.textContent = btn.textContent.trim();
+                apply_filters();
+            });
+        });
+    }
+
+    // Live search input
     if (search_input) {
         search_input.addEventListener('input', (e) => {
             search_query = e.target.value.toLowerCase().trim();
@@ -126,7 +174,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Try loading products from backend API
+    // Price slider
+    if (price_slider) {
+        price_slider.addEventListener('input', (e) => {
+            max_price = parseFloat(e.target.value) || 100000;
+            if (max_price_display) max_price_display.textContent = `₱${max_price.toLocaleString()}`;
+            apply_filters();
+        });
+    }
+
+    // Reset filters
+    if (btn_reset_filters) {
+        btn_reset_filters.addEventListener('click', () => {
+            active_category = 'all';
+            search_query = '';
+            max_price = 100000;
+            if (search_input) search_input.value = '';
+            if (price_slider) price_slider.value = 100000;
+            if (max_price_display) max_price_display.textContent = '₱100,000';
+            category_item_btns.forEach(b => b.classList.remove('active'));
+            const allBtn = document.querySelector('.category_item_btn[data-category="all"]');
+            if (allBtn) allBtn.classList.add('active');
+            if (active_heading_el) active_heading_el.textContent = 'All Products';
+            apply_filters();
+        });
+    }
+
+    // Initial load
     loadProductsFromBackend();
-    apply_filters();
 });

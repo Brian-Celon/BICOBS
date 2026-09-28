@@ -71,8 +71,13 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    // Check for user (include password field)
-    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+    // Check for user by email or name (include password field)
+    const user = await User.findOne({
+      $or: [
+        { email: email.toLowerCase() },
+        { name: email }
+      ]
+    }).select('+password');
 
     if (!user) {
       return res.status(401).json({

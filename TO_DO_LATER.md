@@ -4,22 +4,22 @@ This document tracks upcoming tasks, completed features, and backlog items for t
 
 ---
 
-## 🎯 Phase 1: Core Ordering & Cart Pipeline (In Progress / Next Up)
+## 🎯 Phase 1: Core Ordering & Cart Pipeline (✅ Completed)
 
-- [ ] **1. Shopping Cart State Management (`shop.html` & `mycart.html`)**
-  - [ ] Implement `Add to Cart` functionality in product cards with stock check.
-  - [ ] Store cart items in browser `localStorage` with quantity, product ID, unit price, and image.
-  - [ ] Update live cart badge counter in the navigation header across all pages.
-  - [ ] Render dynamic cart items inside [mycart.html](file:///d:/BICOBS/frontend/pages/Dashboard/mycart.html).
-  - [ ] Quantity controls (+ / -) with maximum stock limits and item removal.
+- [x] **1. Shopping Cart State Management (`shop.html` & `mycart.html`)**
+  - [x] Implement `Add to Cart` functionality in product cards with stock check.
+  - [x] Store cart items in browser `localStorage` with quantity, product ID, unit price, and image.
+  - [x] Update live cart badge counter in the navigation header across all pages.
+  - [x] Render dynamic cart items inside [mycart.html](file:///d:/BICOBS/frontend/pages/Dashboard/mycart.html).
+  - [x] Quantity controls (+ / -) with maximum stock limits and item removal.
 
-- [ ] **2. Checkout & Order Placement (`/api/orders`)**
-  - [ ] Order summary breakdown (Subtotal, Estimated Shipping/Delivery, Total).
-  - [ ] Customer checkout form (Name, Contact Number, Delivery Address / In-Store Pickup option).
-  - [ ] Payment method selection (*GCash, Cash on Delivery / Over-the-counter, Credit/Debit Card*).
-  - [ ] API endpoint `POST /api/orders` to save order in MongoDB.
-  - [ ] Real-time stock deduction: Automatically decrement `stockQuantity` in [Product.js](file:///d:/BICOBS/back-end/models/Product.js) upon order confirmation.
-  - [ ] Order confirmation modal / success page with order tracking number.
+- [x] **2. Checkout & Order Placement (`/api/orders`)**
+  - [x] Order summary breakdown (Subtotal, Estimated Shipping/Delivery, Total).
+  - [x] Customer checkout form (Name, Contact Number, Delivery Address / In-Store Pickup option).
+  - [x] Payment method selection (*GCash, Cash on Delivery / Over-the-counter, Credit/Debit Card*).
+  - [x] API endpoint `POST /api/orders` to save order in MongoDB.
+  - [x] Real-time stock deduction: Automatically decrement `stockQuantity` in [Product.js](file:///d:/BICOBS/back-end/models/Product.js) upon order confirmation.
+  - [x] Order confirmation modal / success page with order tracking number.
 
 ---
 
