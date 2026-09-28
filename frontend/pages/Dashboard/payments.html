@@ -230,27 +230,15 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>#TXN-99821</strong></td>
-                                <td>2026-05-15 14:20</td>
-                                <td>Visa ending in 4892</td>
-                                <td><strong>₱1,299.00</strong></td>
-                                <td>
-                                    <span class="status_pill status_successful">Successful</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>#TXN-98210</strong></td>
-                                <td>2026-04-28 09:11</td>
-                                <td>GCash Wallet</td>
-                                <td><strong>₱19,900.00</strong></td>
-                                <td>
-                                    <span class="status_pill status_successful">Successful</span>
-                                </td>
-                            </tr>
+                        <tbody id="payment_transactions_body">
+                            <!-- Populated dynamically from backend billing records -->
                         </tbody>
                     </table>
+                </div>
+                <div id="no_payments_found" class="cart_empty_state" style="display: block; text-align: center; padding: 48px 16px;">
+                    <i class="fas fa-receipt cart_empty_icon" style="font-size: 40px; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
+                    <h3 style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No transaction records yet</h3>
+                    <p style="color: #64748b; margin-bottom: 16px;">Completed purchases and billing invoices will appear here once you place an order.</p>
                 </div>
             </section>
         </main>

@@ -11,6 +11,9 @@ dotenv.config();
 
 // Load models
 const Product = require('./models/Product');
+const Order = require('./models/Order');
+const Billing = require('./models/Billing');
+const User = require('./models/User');
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI);
@@ -24,8 +27,13 @@ const products = JSON.parse(
 const importData = async () => {
   try {
     await Product.deleteMany();
+    await Order.deleteMany();
+    await Billing.deleteMany();
+    await User.deleteMany();
+
     await Product.create(products);
-    console.log('[Seeder] 150 Products Imported Successfully to MongoDB Atlas!');
+    console.log('[Seeder] Cleaned Orders, Billing, and Users.');
+    console.log('[Seeder] 150 Fresh Products Imported Successfully to MongoDB Atlas!');
     process.exit();
   } catch (err) {
     console.error(`[Seeder Error] ${err.message}`);
@@ -37,7 +45,10 @@ const importData = async () => {
 const destroyData = async () => {
   try {
     await Product.deleteMany();
-    console.log('[Seeder] Product Data Destroyed!');
+    await Order.deleteMany();
+    await Billing.deleteMany();
+    await User.deleteMany();
+    console.log('[Seeder] All Collections Cleared from Database!');
     process.exit();
   } catch (err) {
     console.error(`[Seeder Error] ${err.message}`);

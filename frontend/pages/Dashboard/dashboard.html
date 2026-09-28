@@ -190,8 +190,8 @@
                             <i class="fas fa-box stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <span class="stat_value">12</span>
-                            <i class="fas fa-chart-line stat_trend"></i>
+                            <span class="stat_value" id="overview_total_orders">0</span>
+                            <span class="stat_card_action">View Orders <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
                     </a>
                     <a class="stat_card stat_card_link" href="mycart.html" aria-label="View shopping cart">
@@ -200,7 +200,7 @@
                             <i class="fas fa-shopping-cart stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <span class="stat_value">4</span>
+                            <span class="stat_value" id="overview_cart_count">0</span>
                             <span class="stat_card_action">View Cart <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
                     </a>
@@ -210,7 +210,7 @@
                             <i class="fas fa-comments stat_icon"></i>
                         </div>
                         <div class="stat_card_bottom">
-                            <span class="stat_value">2</span>
+                            <span class="stat_value">0</span>
                             <span class="stat_card_action">View Tickets <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
                     </a>
@@ -231,20 +231,13 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>#TBR1045</td>
-                                <td>2024-05-15</td>
-                                <td>
-                                    <span class="status_pill status_processing">
-                                        <i class="fas fa-circle" style="font-size: 8px;"></i> Processing
-                                    </span>
-                                </td>
-                                <td>₱12,990.00</td>
-                                <td><a href="myorders.html" class="action_link">View Details</a></td>
-                            </tr>
+                        <tbody id="overview_orders_table">
+                            <!-- Populated dynamically from backend user orders API -->
                         </tbody>
                     </table>
+                </div>
+                <div id="overview_no_orders" style="text-align: center; padding: 24px 16px; color: #64748b; font-size: 14px;">
+                    No recent orders placed yet.
                 </div>
             </section>
 

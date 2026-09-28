@@ -23,12 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
     load_user_orders_from_backend();
 });
 
-/* Fetch user orders from backend API for myorders.html */
+/* Fetch user orders from backend API for dashboard overview and order history */
 async function load_user_orders_from_backend() {
     const tableBody = document.getElementById('orders_table_body');
-    if (!tableBody) return;
+    const overviewTable = document.getElementById('overview_orders_table');
+    const overviewTotalOrders = document.getElementById('overview_total_orders');
+    const overviewNoOrders = document.getElementById('overview_no_orders');
+    const noOrdersFound = document.getElementById('no_orders_found');
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
     if (!token) return;
 
     try {
@@ -38,27 +41,37 @@ async function load_user_orders_from_backend() {
         if (!response.ok) return;
 
         const result = await response.json();
-        if (result.status === 'success' && result.data && result.data.length > 0) {
-            tableBody.innerHTML = '';
-            result.data.forEach(order => {
-                const tr = document.createElement('tr');
-                tr.setAttribute('data-status', order.orderStatus);
-                const orderDate = new Date(order.createdAt).toLocaleDateString();
-                const itemsCount = order.orderItems.reduce((sum, item) => sum + item.quantity, 0);
+        if (result.status === 'success' && Array.isArray(result.data)) {
+            const orders = result.data;
 
-                tr.innerHTML = `
-                    <td><strong>#ORD-${order._id.slice(-6).toUpperCase()}</strong></td>
-                    <td>${orderDate}</td>
-                    <td>${itemsCount} Items</td>
-                    <td>₱${order.totalPrice.toLocaleString()}</td>
-                    <td><span class="status_pill status_${order.orderStatus}">${order.orderStatus.replace('_', ' ').toUpperCase()}</span></td>
-                    <td><button class="btn_view_details" data-id="${order._id}">View</button></td>
-                `;
-                tableBody.appendChild(tr);
-            });
+            if (overviewTotalOrders) overviewTotalOrders.textContent = orders.length;
+
+            if (orders.length > 0) {
+                if (noOrdersFound) noOrdersFound.style.display = 'none';
+                if (overviewNoOrders) overviewNoOrders.style.display = 'none';
+
+                if (overviewTable) {
+                    overviewTable.innerHTML = '';
+                    orders.slice(0, 5).forEach(order => {
+                        const tr = document.createElement('tr');
+                        const orderDate = new Date(order.createdAt).toISOString().slice(0, 10);
+                        tr.innerHTML = `
+                            <td><strong>#${order._id.slice(-6).toUpperCase()}</strong></td>
+                            <td>${orderDate}</td>
+                            <td><span class="status_pill status_${order.orderStatus || 'processing'}">${(order.orderStatus || 'processing').replace('_', ' ').toUpperCase()}</span></td>
+                            <td>₱${(order.totalPrice || 0).toLocaleString()}</td>
+                            <td><a href="myorders.html" class="action_link">View Details</a></td>
+                        `;
+                        overviewTable.appendChild(tr);
+                    });
+                }
+            } else {
+                if (noOrdersFound) noOrdersFound.style.display = 'block';
+                if (overviewNoOrders) overviewNoOrders.style.display = 'block';
+            }
         }
     } catch (err) {
-        console.log('Orders table backend sync offline.');
+        console.log('Orders table backend sync offline:', err);
     }
 }
 
