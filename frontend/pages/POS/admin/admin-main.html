@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Admin - Management Dashboard</title>
+    <!-- pos unified stylesheet with atlas sidebar -->
+    <link rel="stylesheet" href="/frontend/css/POS.css">
+</head>
+<body>
+
+    <!-- atlas-style layout container -->
+    <div class="atlas_admin_layout">
+
+        <!-- left vertical sidebar navigation (atlas style) -->
+        <aside class="atlas_sidebar" id="atlas_sidebar">
+
+            <!-- brand header -->
+            <div class="atlas_brand_header">
+                <a href="admin-main.html" class="atlas_brand_link">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="atlas_brand_logo">
+                    <span class="atlas_brand_text">TAURUS</span>
+                </a>
+            </div>
+
+            <!-- standalone overview item with settings gear -->
+            <div class="atlas_overview_row">
+                <a href="admin-main.html" class="atlas_overview_link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Project Overview</span>
+                </a>
+                <button class="atlas_btn_settings" title="Store Settings" onclick="triggerToast('Store & System Settings Opened');">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- navigation menu -->
+            <nav class="atlas_nav_menu">
+
+                <!-- group 1: INVENTORY & PRODUCTS -->
+                <div class="atlas_group open">
+                    <button class="atlas_group_header" type="button">
+                        <span class="atlas_group_title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                            <span>INVENTORY &amp; PRODUCTS</span>
+                        </span>
+                        <span class="atlas_caret">&blacktriangle;</span>
+                    </button>
+                    <div class="atlas_sub_menu">
+                        <a href="admin-main.html" class="atlas_sub_link active">
+                            <span>Product Catalog</span>
+                        </a>
+                        <a href="admin-inventory.html" class="atlas_sub_link">
+                            <span>Stock Levels &amp; Restock</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- group 2: STAFF & ACCOUNTS -->
+                <div class="atlas_group open">
+                    <button class="atlas_group_header" type="button">
+                        <span class="atlas_group_title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>STAFF &amp; ACCOUNTS</span>
+                        </span>
+                        <span class="atlas_caret">&blacktriangle;</span>
+                    </button>
+                    <div class="atlas_sub_menu">
+                        <a href="admin-accmanage.html" class="atlas_sub_link">
+                            <span>Staff Directory</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- group 3: REPORTS & ANALYTICS -->
+                <div class="atlas_group open">
+                    <button class="atlas_group_header" type="button">
+                        <span class="atlas_group_title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                            <span>REPORTS &amp; ANALYTICS</span>
+                        </span>
+                        <span class="atlas_caret">&blacktriangle;</span>
+                    </button>
+                    <div class="atlas_sub_menu">
+                        <a href="admin-report.html" class="atlas_sub_link">
+                            <span>Sales &amp; Revenue Reports</span>
+                        </a>
+                    </div>
+                </div>
+
+            </nav>
+
+        </aside>
+
+        <!-- right main container -->
+        <div class="atlas_main_wrap">
+
+            <!-- top header bar -->
+            <header class="atlas_top_header" id="atlas_top_header">
+                <div class="atlas_top_left">
+                    <span class="atlas_org_label">ORGANIZATION</span>
+                    <span class="atlas_org_name">Taurus Bike Shop &bull; Main Branch</span>
+                </div>
+
+                <!-- right side profile and clock -->
+                <div class="pos_header_right">
+                    <div class="admin_user_pill">
+                        <img src="/frontend/Pictures/placeholder.png" alt="Admin Avatar" class="admin_avatar_img">
+                        <div class="cashier_status_wrap" style="gap: 6px;">
+                            <span><strong class="cashier_name">Russel Lu Caisido</strong></span>
+                            <span class="badge_role_admin">ADMIN</span>
+                        </div>
+                    </div>
+                    <span class="clock_display" id="clock_display">06:06:45 PM</span>
+                    <a href="/frontend/pages/POS/POS-main.html" class="btn_back_home" title="Switch to POS Terminal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        POS Terminal &rarr;
+                    </a>
+                </div>
+            </header>
+
+            <!-- main content area -->
+            <main class="pos_main_content">
+
+                <!-- hero welcome banner with placeholder bull watermark -->
+                <section class="pos_hero_banner">
+                    <div class="hero_left_box">
+                        <span class="hero_tagline">TAURUS MANAGEMENT CONSOLE &bull; BICOBS SYSTEM</span>
+                        <h1 class="hero_title">Welcome back,<br>Administrator Russel</h1>
+                        <div class="hero_actions_group">
+                            <button class="btn_hero_primary" id="btn_hero_add_product" style="border: none; cursor: pointer;">+ Add New Product</button>
+                            <a href="admin-inventory.html" class="btn_hero_secondary">Manage Inventory</a>
+                            <a href="admin-report.html" class="btn_hero_secondary">Sales Reports</a>
+                            <a href="/frontend/pages/POS/POS-main.html" class="btn_hero_secondary">Launch POS</a>
+                        </div>
+                    </div>
+                    <img src="/frontend/Pictures/placeholder.png" alt="Taurus Bull Watermark" class="hero_bull_graphic">
+                </section>
+
+                <!-- admin 4 kpi summary stats cards -->
+                <section class="admin_stats_grid">
+                    <!-- stat 1: revenue -->
+                    <div class="admin_stat_card card_revenue">
+                        <div class="stat_top_row">
+                            <span class="stat_title_label">Today's Revenue</span>
+                            <div class="stat_icon_pill pill_red">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat_number_bold" id="kpi_revenue">&#8369;52,060.00</div>
+                        <div class="stat_meta_desc">
+                            <span class="stat_trend_up">&uarr; +14.8%</span> vs yesterday &bull; 28 orders
+                        </div>
+                    </div>
+
+                    <!-- stat 2: inventory -->
+                    <div class="admin_stat_card card_inventory">
+                        <div class="stat_top_row">
+                            <span class="stat_title_label">Active Catalog</span>
+                            <div class="stat_icon_pill pill_blue">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat_number_bold" id="kpi_catalog_count">142 Items</div>
+                        <div class="stat_meta_desc">
+                            12 active categories &bull; &#8369;489.6k total value
+                        </div>
+                    </div>
+
+                    <!-- stat 3: low stock warnings -->
+                    <div class="admin_stat_card card_warning">
+                        <div class="stat_top_row">
+                            <span class="stat_title_label">Stock Warnings</span>
+                            <div class="stat_icon_pill pill_amber">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat_number_bold" id="kpi_low_stock" style="color: #ea580c;">3 Items</div>
+                        <div class="stat_meta_desc">
+                            <span class="stat_trend_warn">&bull; Stock &le; 3</span> requires replenishment
+                        </div>
+                    </div>
+
+                    <!-- stat 4: active staff -->
+                    <div class="admin_stat_card card_staff">
+                        <div class="stat_top_row">
+                            <span class="stat_title_label">Active Staff</span>
+                            <div class="stat_icon_pill pill_green">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat_number_bold">4 On Duty</div>
+                        <div class="stat_meta_desc">
+                            1 POS cashier &bull; 3 store technicians
+                        </div>
+                    </div>
+                </section>
+
+                <!-- split layout: catalog & transactions on left, admin side operations on right -->
+                <div class="pos_split_layout">
+
+                    <!-- left column: catalog & recent activity -->
+                    <div class="catalog_column">
+
+                        <!-- subheader section with add product trigger -->
+                        <section class="sub_header_row">
+                            <div class="sub_header_left">
+                                <span class="sub_label_red">INVENTORY &bull; ADMIN CONTROLS</span>
+                                <h2 class="page_title_bold">Product Catalog &amp; Stock Management</h2>
+                            </div>
+                            <button class="btn_charge_action" id="btn_open_add_modal_2" style="width: auto; padding: 8px 18px; margin: 0; font-size: 13px;">
+                                + Add New Product
+                            </button>
+                        </section>
+
+                        <!-- full-width search bar -->
+                        <section class="pos_search_wrapper">
+                            <span class="search_icon_left">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </span>
+                            <input type="text" class="pos_search_input" id="admin_product_search" placeholder="Search products by title, SKU code, or category...">
+                        </section>
+
+                        <!-- category filter pills -->
+                        <section class="category_filter_bar" id="admin_category_filter_bar">
+                            <button class="pill_filter_btn active" data-category="all">All</button>
+                            <button class="pill_filter_btn" data-category="accessories">Accessories</button>
+                            <button class="pill_filter_btn" data-category="bicycle">Bicycle</button>
+                            <button class="pill_filter_btn" data-category="brakes">Brakes</button>
+                            <button class="pill_filter_btn" data-category="cockpit">Cockpit</button>
+                            <button class="pill_filter_btn" data-category="drivetrain">Drivetrain</button>
+                            <button class="pill_filter_btn" data-category="headset">Headset</button>
+                            <button class="pill_filter_btn" data-category="pedals">Pedals</button>
+                            <button class="pill_filter_btn" data-category="saddle">Saddle</button>
+                            <button class="pill_filter_btn" data-category="safety">Safety</button>
+                            <button class="pill_filter_btn" data-category="suspension">Suspension</button>
+                            <button class="pill_filter_btn" data-category="tires">Tires</button>
+                            <button class="pill_filter_btn" data-category="tools">Tools</button>
+                        </section>
+
+                        <!-- products info row -->
+                        <div class="products_info_row">
+                            <span class="products_count_text" id="admin_products_count_label">ALL PRODUCTS &mdash; 12 ITEMS</span>
+                            <span class="helper_hint_text">Click Edit or + Stock to update live inventory</span>
+                        </div>
+
+                        <!-- product grid with placeholder.png pictures -->
+                        <section class="pos_product_grid" id="admin_product_grid">
+
+                            <!-- product 1 -->
+                            <div class="pos_product_card" data-sku="SH-XT-001" data-name="Shimano Deore XT Derailleur" data-price="3850" data-stock="4" data-category="drivetrain">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Shimano Deore XT Derailleur" class="product_visual_img">
+                                    <span class="product_category_badge">DRIVETRAIN</span>
+                                </div>
+                                <span class="product_sku_text">SH-XT-001</span>
+                                <h3 class="product_title_text">Shimano Deore XT Derailleur</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;3,850.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">4</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="SH-XT-001">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="SH-XT-001">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 2 -->
+                            <div class="pos_product_card" data-sku="MX-MIN-002" data-name="Maxxis Minion DHF 29x2.5" data-price="2200" data-stock="8" data-category="tires">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Maxxis Minion DHF 29x2.5" class="product_visual_img">
+                                    <span class="product_category_badge">TIRES</span>
+                                </div>
+                                <span class="product_sku_text">MX-MIN-002</span>
+                                <h3 class="product_title_text">Maxxis Minion DHF 29&times;2.5</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;2,200.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">8</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="MX-MIN-002">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="MX-MIN-002">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 3 (Low stock) -->
+                            <div class="pos_product_card" data-sku="RS-PK-003" data-name="RockShox Pike Ultimate Fork" data-price="28500" data-stock="2" data-category="suspension">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="RockShox Pike Ultimate Fork" class="product_visual_img">
+                                    <span class="product_category_badge">SUSPENSION</span>
+                                </div>
+                                <span class="product_sku_text">RS-PK-003</span>
+                                <h3 class="product_title_text">RockShox Pike Ultimate Fork</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;28,500.00</span>
+                                    <span class="stock_badge_low"><span class="stock_num">2</span> left (Low)</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="RS-PK-003">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="RS-PK-003">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 4 -->
+                            <div class="pos_product_card" data-sku="SR-GX-004" data-name="SRAM Eagle GX Cassette" data-price="4100" data-stock="6" data-category="drivetrain">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="SRAM Eagle GX Cassette" class="product_visual_img">
+                                    <span class="product_category_badge">DRIVETRAIN</span>
+                                </div>
+                                <span class="product_sku_text">SR-GX-004</span>
+                                <h3 class="product_title_text">SRAM Eagle GX Cassette</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;4,100.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">6</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="SR-GX-004">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="SR-GX-004">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 5 -->
+                            <div class="pos_product_card" data-sku="ER-GP5-005" data-name="Ergon GP5 Grips" data-price="950" data-stock="12" data-category="cockpit">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Ergon GP5 Grips" class="product_visual_img">
+                                    <span class="product_category_badge">COCKPIT</span>
+                                </div>
+                                <span class="product_sku_text">ER-GP5-005</span>
+                                <h3 class="product_title_text">Ergon GP5 Grips</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;950.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">12</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="ER-GP5-005">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="ER-GP5-005">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 6 -->
+                            <div class="pos_product_card" data-sku="GI-ATX-006" data-name="Giant ATX 26 Mountain Bike" data-price="14500" data-stock="3" data-category="bicycle">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Giant ATX 26 Mountain Bike" class="product_visual_img">
+                                    <span class="product_category_badge">BICYCLE</span>
+                                </div>
+                                <span class="product_sku_text">GI-ATX-006</span>
+                                <h3 class="product_title_text">Giant ATX 26" Mountain Bike</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;14,500.00</span>
+                                    <span class="stock_badge_warn"><span class="stock_num">3</span> left</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="GI-ATX-006">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="GI-ATX-006">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 7 (Low stock) -->
+                            <div class="pos_product_card" data-sku="TR-M5-007" data-name="Trek Marlin 5 27.5" data-price="22000" data-stock="2" data-category="bicycle">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Trek Marlin 5 27.5" class="product_visual_img">
+                                    <span class="product_category_badge">BICYCLE</span>
+                                </div>
+                                <span class="product_sku_text">TR-M5-007</span>
+                                <h3 class="product_title_text">Trek Marlin 5 27.5"</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;22,000.00</span>
+                                    <span class="stock_badge_low"><span class="stock_num">2</span> left (Low)</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="TR-M5-007">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="TR-M5-007">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 8 -->
+                            <div class="pos_product_card" data-sku="SH-BL-008" data-name="Shimano BL-M315 Brake Lever Set" data-price="1200" data-stock="9" data-category="brakes">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Shimano BL-M315 Brake Lever Set" class="product_visual_img">
+                                    <span class="product_category_badge">BRAKES</span>
+                                </div>
+                                <span class="product_sku_text">SH-BL-008</span>
+                                <h3 class="product_title_text">Shimano BL-M315 Brake Lever Set</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;1,200.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">9</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="SH-BL-008">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="SH-BL-008">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 9 -->
+                            <div class="pos_product_card" data-sku="CO-RK-009" data-name="Continental Race King 29x2.2" data-price="1750" data-stock="5" data-category="tires">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Continental Race King 29x2.2" class="product_visual_img">
+                                    <span class="product_category_badge">TIRES</span>
+                                </div>
+                                <span class="product_sku_text">CO-RK-009</span>
+                                <h3 class="product_title_text">Continental Race King 29&times;2.2</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;1,750.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">5</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="CO-RK-009">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="CO-RK-009">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 10 -->
+                            <div class="pos_product_card" data-sku="WB-VT-010" data-name="WTB Volt Saddle" data-price="1600" data-stock="7" data-category="saddle">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="WTB Volt Saddle" class="product_visual_img">
+                                    <span class="product_category_badge">SADDLE</span>
+                                </div>
+                                <span class="product_sku_text">WB-VT-010</span>
+                                <h3 class="product_title_text">WTB Volt Saddle</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;1,600.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">7</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="WB-VT-010">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="WB-VT-010">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 11 -->
+                            <div class="pos_product_card" data-sku="CC-40-011" data-name="Cane Creek 40 Headset" data-price="2800" data-stock="3" data-category="headset">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="Cane Creek 40 Headset" class="product_visual_img">
+                                    <span class="product_category_badge">HEADSET</span>
+                                </div>
+                                <span class="product_sku_text">CC-40-011</span>
+                                <h3 class="product_title_text">Cane Creek 40 Headset</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;2,800.00</span>
+                                    <span class="stock_badge_warn"><span class="stock_num">3</span> left</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="CC-40-011">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="CC-40-011">+ Stock</button>
+                                </div>
+                            </div>
+
+                            <!-- product 12 -->
+                            <div class="pos_product_card" data-sku="KM-X11-012" data-name="KMC X11 Chain" data-price="680" data-stock="15" data-category="drivetrain">
+                                <div class="product_visual_box">
+                                    <img src="/frontend/Pictures/placeholder.png" alt="KMC X11 Chain" class="product_visual_img">
+                                    <span class="product_category_badge">DRIVETRAIN</span>
+                                </div>
+                                <span class="product_sku_text">KM-X11-012</span>
+                                <h3 class="product_title_text">KMC X11 Chain</h3>
+                                <div class="product_price_stock_row">
+                                    <span class="product_price_red">&#8369;680.00</span>
+                                    <span class="stock_badge_ok"><span class="stock_num">15</span> in stock</span>
+                                </div>
+                                <div class="admin_card_actions">
+                                    <button class="btn_admin_edit" data-sku="KM-X11-012">Edit</button>
+                                    <button class="btn_admin_restock" data-sku="KM-X11-012">+ Stock</button>
+                                </div>
+                            </div>
+
+                        </section>
+
+                        <!-- recent transactions table section -->
+                        <section class="recent_txn_section" id="recent_txns_section" style="margin-top: 16px;">
+                            <div class="section_header_row">
+                                <h2 class="section_title_bold">Recent POS Transactions Audit</h2>
+                                <a href="admin-report.html" class="link_view_all">Full Reports &rarr;</a>
+                            </div>
+
+                            <div class="pos_table_card">
+                                <table class="pos_data_table">
+                                <thead>
+                                    <tr>
+                                        <th>TRANSACTION ID</th>
+                                        <th>DATE &amp; TIME</th>
+                                        <th>CASHIER</th>
+                                        <th>ITEMS</th>
+                                        <th>TOTAL</th>
+                                        <th>PAYMENT</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="txn_id_cell">TXN-20240801-001</td>
+                                        <td>Sep 26, 2026, 2:37 PM</td>
+                                        <td>Russel Lu Caisido</td>
+                                        <td>2 items</td>
+                                        <td class="txn_total_cell">&#8369;2,210.00</td>
+                                        <td><span class="badge_method_cash">Cash</span></td>
+                                        <td><span class="badge_status_paid">PAID</span></td>
+                                        <td>
+                                            <button class="btn_admin_edit btn_view_receipt" data-txnid="TXN-20240801-001" data-date="Sep 26, 2026, 2:37 PM" data-items="2 items" data-total="₱2,210.00" data-method="Cash">Details</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="txn_id_cell">TXN-20240801-002</td>
+                                        <td>Sep 26, 2026, 4:41 PM</td>
+                                        <td>Russel Lu Caisido</td>
+                                        <td>2 items</td>
+                                        <td class="txn_total_cell">&#8369;17,200.00</td>
+                                        <td><span class="badge_method_gcash">GCash</span></td>
+                                        <td><span class="badge_status_paid">PAID</span></td>
+                                        <td>
+                                            <button class="btn_admin_edit btn_view_receipt" data-txnid="TXN-20240801-002" data-date="Sep 26, 2026, 4:41 PM" data-items="2 items" data-total="₱17,200.00" data-method="GCash">Details</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="txn_id_cell">TXN-20240731-001</td>
+                                        <td>Sep 25, 2026, 11:58 AM</td>
+                                        <td>Russel Lu Caisido</td>
+                                        <td>2 items</td>
+                                        <td class="txn_total_cell">&#8369;6,150.00</td>
+                                        <td><span class="badge_method_cash">Cash</span></td>
+                                        <td><span class="badge_status_paid">PAID</span></td>
+                                        <td>
+                                            <button class="btn_admin_edit btn_view_receipt" data-txnid="TXN-20240731-001" data-date="Sep 25, 2026, 11:58 AM" data-items="2 items" data-total="₱6,150.00" data-method="Cash">Details</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="txn_id_cell">TXN-20240730-001</td>
+                                        <td>Sep 24, 2026, 4:03 PM</td>
+                                        <td>Russel Lu Caisido</td>
+                                        <td>3 items</td>
+                                        <td class="txn_total_cell">&#8369;5,500.00</td>
+                                        <td><span class="badge_method_cash">Cash</span></td>
+                                        <td><span class="badge_status_paid">PAID</span></td>
+                                        <td>
+                                            <button class="btn_admin_edit btn_view_receipt" data-txnid="TXN-20240730-001" data-date="Sep 24, 2026, 4:03 PM" data-items="3 items" data-total="₱5,500.00" data-method="Cash">Details</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="txn_id_cell">TXN-20240729-001</td>
+                                        <td>Sep 23, 2026, 10:28 AM</td>
+                                        <td>Russel Lu Caisido</td>
+                                        <td>1 item</td>
+                                        <td class="txn_total_cell">&#8369;21,000.00</td>
+                                        <td><span class="badge_method_gcash">GCash</span></td>
+                                        <td><span class="badge_status_paid">PAID</span></td>
+                                        <td>
+                                            <button class="btn_admin_edit btn_view_receipt" data-txnid="TXN-20240729-001" data-date="Sep 23, 2026, 10:28 AM" data-items="1 item" data-total="₱21,000.00" data-method="GCash">Details</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    </div>
+
+                    <!-- right column: admin operations side panel -->
+                    <aside class="admin_side_panel">
+
+                        <!-- panel 1: low stock alerts widget with placeholder.png pictures -->
+                        <div class="admin_panel_card">
+                            <div class="admin_panel_header">
+                                <h3 class="admin_panel_title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c51f26" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                    Low Stock Alerts
+                                </h3>
+                                <span class="order_badge_count" id="admin_alert_count">3</span>
+                            </div>
+                            <div class="admin_panel_body" id="low_stock_list">
+                                <!-- low stock item 1 -->
+                                <div class="low_stock_item" data-sku="RS-PK-003">
+                                    <div class="low_stock_left">
+                                        <img src="/frontend/Pictures/placeholder.png" alt="RockShox Fork" class="low_stock_thumb">
+                                        <div class="low_stock_info">
+                                            <span class="low_stock_name">RockShox Pike Ultimate</span>
+                                            <span class="low_stock_sku">SKU: RS-PK-003</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                                        <span class="low_stock_badge_urgent">2 left</span>
+                                        <button class="btn_quick_restock" data-sku="RS-PK-003">+ Restock</button>
+                                    </div>
+                                </div>
+
+                                <!-- low stock item 2 -->
+                                <div class="low_stock_item" data-sku="TR-M5-007">
+                                    <div class="low_stock_left">
+                                        <img src="/frontend/Pictures/placeholder.png" alt="Trek Marlin" class="low_stock_thumb">
+                                        <div class="low_stock_info">
+                                            <span class="low_stock_name">Trek Marlin 5 27.5"</span>
+                                            <span class="low_stock_sku">SKU: TR-M5-007</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                                        <span class="low_stock_badge_urgent">2 left</span>
+                                        <button class="btn_quick_restock" data-sku="TR-M5-007">+ Restock</button>
+                                    </div>
+                                </div>
+
+                                <!-- low stock item 3 -->
+                                <div class="low_stock_item" data-sku="GI-ATX-006">
+                                    <div class="low_stock_left">
+                                        <img src="/frontend/Pictures/placeholder.png" alt="Giant ATX" class="low_stock_thumb">
+                                        <div class="low_stock_info">
+                                            <span class="low_stock_name">Giant ATX 26" MTB</span>
+                                            <span class="low_stock_sku">SKU: GI-ATX-006</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                                        <span class="stock_badge_warn">3 left</span>
+                                        <button class="btn_quick_restock" data-sku="GI-ATX-006">+ Restock</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- panel 2: payment method breakdown -->
+                        <div class="admin_panel_card">
+                            <div class="admin_panel_header">
+                                <h3 class="admin_panel_title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                                    </svg>
+                                    Today's Sales Channel
+                                </h3>
+                                <span class="summary_row_label">&#8369;52,060 Total</span>
+                            </div>
+                            <div class="admin_panel_body">
+                                <!-- cash breakdown -->
+                                <div class="payment_bar_block">
+                                    <div class="payment_bar_row">
+                                        <span style="font-weight: 700; color: #16a34a; display: flex; align-items: center; gap: 6px;">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #16a34a;"></span>
+                                            Cash (18 orders)
+                                        </span>
+                                        <span style="font-weight: 800;">&#8369;32,860.00 (63%)</span>
+                                    </div>
+                                    <div class="payment_bar_track">
+                                        <div class="payment_bar_fill_cash"></div>
+                                    </div>
+                                </div>
+
+                                <!-- gcash breakdown -->
+                                <div class="payment_bar_block">
+                                    <div class="payment_bar_row">
+                                        <span style="font-weight: 700; color: #2563eb; display: flex; align-items: center; gap: 6px;">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #2563eb;"></span>
+                                            GCash (10 orders)
+                                        </span>
+                                        <span style="font-weight: 800;">&#8369;19,200.00 (37%)</span>
+                                    </div>
+                                    <div class="payment_bar_track">
+                                        <div class="payment_bar_fill_gcash"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- panel 3: top selling items with placeholder.png pictures -->
+                        <div class="admin_panel_card">
+                            <div class="admin_panel_header">
+                                <h3 class="admin_panel_title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                    </svg>
+                                    Top Selling Today
+                                </h3>
+                                <a href="admin-report.html" class="link_view_all">View &rarr;</a>
+                            </div>
+                            <div class="admin_panel_body">
+                                <!-- top 1 -->
+                                <div class="low_stock_item">
+                                    <div class="low_stock_left">
+                                        <img src="/frontend/Pictures/placeholder.png" alt="Shimano Derailleur" class="low_stock_thumb">
+                                        <div class="low_stock_info">
+                                            <span class="low_stock_name">Shimano Deore XT</span>
+                                            <span class="low_stock_sku">12 sold &bull; &#8369;46,200</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge_method_gcash" style="font-size: 11px;">#1 Rank</span>
+                                </div>
+
+                                <!-- top 2 -->
+                                <div class="low_stock_item">
+                                    <div class="low_stock_left">
+                                        <img src="/frontend/Pictures/placeholder.png" alt="Maxxis Tire" class="low_stock_thumb">
+                                        <div class="low_stock_info">
+                                            <span class="low_stock_name">Maxxis Minion DHF</span>
+                                            <span class="low_stock_sku">8 sold &bull; &#8369;17,600</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge_method_gcash" style="font-size: 11px;">#2 Rank</span>
+                                </div>
+
+                                <!-- top 3 -->
+                                <div class="low_stock_item">
+                                    <div class="low_stock_left">
+                                        <img src="/frontend/Pictures/placeholder.png" alt="KMC Chain" class="low_stock_thumb">
+                                        <div class="low_stock_info">
+                                            <span class="low_stock_name">KMC X11 Chain</span>
+                                            <span class="low_stock_sku">15 sold &bull; &#8369;10,200</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge_method_gcash" style="font-size: 11px;">#3 Rank</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- panel 4: quick admin actions -->
+                        <div class="admin_panel_card">
+                            <div class="admin_panel_header">
+                                <h3 class="admin_panel_title">Quick Operations</h3>
+                            </div>
+                            <div class="admin_panel_body" style="gap: 8px;">
+                                <button class="admin_quick_btn btn_quick_primary" id="btn_quick_add_prod">+ Add New Product</button>
+                                <button class="admin_quick_btn btn_quick_secondary" id="btn_export_csv">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Export Today's Report (CSV)
+                                </button>
+                                <a href="/frontend/pages/POS/POS-main.html" class="admin_quick_btn btn_quick_secondary">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="9" cy="21" r="1"></circle>
+                                        <circle cx="20" cy="21" r="1"></circle>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                    Open POS Cashier Terminal
+                                </a>
+                            </div>
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- modal: add product -->
+    <div class="pos_modal_overlay" id="modal_add_product">
+        <div class="pos_modal_box">
+            <div class="modal_header">
+                <h3 class="modal_title">+ Add New Product to Inventory</h3>
+                <button class="btn_close_modal" data-close="modal_add_product">&times;</button>
+            </div>
+            <form id="form_add_product">
+                <div class="modal_body">
+                    <!-- product photo preview using placeholder.png -->
+                    <div class="image_upload_preview_box">
+                        <img src="/frontend/Pictures/placeholder.png" alt="Product Photo" class="modal_preview_thumb" id="add_img_preview">
+                        <div>
+                            <span style="font-size: 13px; font-weight: 700; color: var(--pos_text_dark); display: block;">Product Picture</span>
+                            <span style="font-size: 11.5px; color: var(--pos_text_muted);">Default image: placeholder.png</span>
+                            <button type="button" class="btn_admin_edit" style="margin-top: 6px; display: inline-block;" onclick="triggerToast('Using placeholder.png for product photo');">Choose Image</button>
+                        </div>
+                    </div>
+
+                    <div class="form_group">
+                        <label class="form_label" for="add_prod_name">Product Name *</label>
+                        <input type="text" class="form_input" id="add_prod_name" placeholder="e.g. Shimano SLX M7100 Cassette" required>
+                    </div>
+
+                    <div class="form_row_2">
+                        <div class="form_group">
+                            <label class="form_label" for="add_prod_sku">SKU Code *</label>
+                            <input type="text" class="form_input" id="add_prod_sku" placeholder="e.g. SH-SLX-013" required>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="add_prod_category">Category *</label>
+                            <select class="form_select" id="add_prod_category" required>
+                                <option value="drivetrain">Drivetrain</option>
+                                <option value="bicycle">Bicycle</option>
+                                <option value="tires">Tires</option>
+                                <option value="suspension">Suspension</option>
+                                <option value="brakes">Brakes</option>
+                                <option value="cockpit">Cockpit</option>
+                                <option value="headset">Headset</option>
+                                <option value="pedals">Pedals</option>
+                                <option value="saddle">Saddle</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="safety">Safety</option>
+                                <option value="tools">Tools</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form_row_2">
+                        <div class="form_group">
+                            <label class="form_label" for="add_prod_price">Selling Price (&#8369;) *</label>
+                            <input type="number" class="form_input" id="add_prod_price" placeholder="3200" min="1" step="0.01" required>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="add_prod_stock">Initial Stock *</label>
+                            <input type="number" class="form_input" id="add_prod_stock" placeholder="10" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_modal_cancel" data-close="modal_add_product">Cancel</button>
+                    <button type="submit" class="btn_modal_submit">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- modal: edit product -->
+    <div class="pos_modal_overlay" id="modal_edit_product">
+        <div class="pos_modal_box">
+            <div class="modal_header">
+                <h3 class="modal_title">Edit Product Details</h3>
+                <button class="btn_close_modal" data-close="modal_edit_product">&times;</button>
+            </div>
+            <form id="form_edit_product">
+                <div class="modal_body">
+                    <!-- product photo preview using placeholder.png -->
+                    <div class="image_upload_preview_box">
+                        <img src="/frontend/Pictures/placeholder.png" alt="Product Photo" class="modal_preview_thumb" id="edit_img_preview">
+                        <div>
+                            <span style="font-size: 13px; font-weight: 700; color: var(--pos_text_dark); display: block;" id="edit_modal_title_label">Product Picture</span>
+                            <span style="font-size: 11.5px; color: var(--pos_text_muted);">Photo asset: placeholder.png</span>
+                        </div>
+                    </div>
+
+                    <div class="form_group">
+                        <label class="form_label" for="edit_prod_name">Product Name</label>
+                        <input type="text" class="form_input" id="edit_prod_name" required>
+                    </div>
+
+                    <div class="form_row_2">
+                        <div class="form_group">
+                            <label class="form_label" for="edit_prod_sku">SKU Code</label>
+                            <input type="text" class="form_input" id="edit_prod_sku" readonly style="background:#f1f5f9;">
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="edit_prod_category">Category</label>
+                            <select class="form_select" id="edit_prod_category">
+                                <option value="drivetrain">Drivetrain</option>
+                                <option value="bicycle">Bicycle</option>
+                                <option value="tires">Tires</option>
+                                <option value="suspension">Suspension</option>
+                                <option value="brakes">Brakes</option>
+                                <option value="cockpit">Cockpit</option>
+                                <option value="headset">Headset</option>
+                                <option value="pedals">Pedals</option>
+                                <option value="saddle">Saddle</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="safety">Safety</option>
+                                <option value="tools">Tools</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form_row_2">
+                        <div class="form_group">
+                            <label class="form_label" for="edit_prod_price">Price (&#8369;)</label>
+                            <input type="number" class="form_input" id="edit_prod_price" min="1" step="0.01" required>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="edit_prod_stock">Current Stock</label>
+                            <input type="number" class="form_input" id="edit_prod_stock" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_modal_cancel" data-close="modal_edit_product">Cancel</button>
+                    <button type="submit" class="btn_modal_submit">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- modal: receipt details -->
+    <div class="pos_modal_overlay" id="modal_receipt">
+        <div class="pos_modal_box" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title">Transaction Details</h3>
+                <button class="btn_close_modal" data-close="modal_receipt">&times;</button>
+            </div>
+            <div class="modal_body">
+                <div style="text-align: center; border-bottom: 1px dashed var(--pos_border); padding-bottom: 12px;">
+                    <img src="/frontend/Pictures/placeholder.png" alt="Taurus" style="width: 44px; height: 44px; margin-bottom: 4px;">
+                    <h4 style="font-size: 16px; font-weight: 800; color: var(--pos_red);">TAURUS BIKE SHOP</h4>
+                    <p style="font-size: 11px; color: var(--pos_text_muted);">BICOBS POS Terminal Receipt</p>
+                    <div style="font-family: monospace; font-size: 13px; font-weight: 700; margin-top: 6px;" id="receipt_txnid">TXN-20240801-001</div>
+                    <div style="font-size: 11.5px; color: var(--pos_text_muted);" id="receipt_date">Sep 26, 2026, 2:37 PM</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="summary_row_label">Cashier:</span>
+                        <span style="font-weight: 600;">Russel Lu Caisido</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="summary_row_label">Purchased Items:</span>
+                        <span style="font-weight: 600;" id="receipt_items">2 items</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="summary_row_label">Payment Channel:</span>
+                        <span style="font-weight: 600;" id="receipt_method">Cash</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="summary_row_label">Status:</span>
+                        <span class="badge_status_paid">PAID &bull; COMPLETED</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--pos_border); padding-top: 8px; font-size: 15px; font-weight: 800;">
+                        <span>Total Paid:</span>
+                        <span style="color: var(--pos_red);" id="receipt_total">&#8369;2,210.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_modal_cancel" data-close="modal_receipt">Close</button>
+                <button type="button" class="btn_modal_submit" onclick="window.print();">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- toast message notification -->
+    <div class="pos_toast" id="admin_toast">
+        <svg class="toast_check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="toast_message">Notification text</span>
+    </div>
+
+    <!-- pos interactive scripts -->
+    <script src="/frontend/js/POS.js"></script>
+
+    <!-- admin interactive logic & atlas collapsible sidebar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAtlasSidebar();
+            initAdminPortal();
+        });
+
+        function triggerToast(message) {
+            const toast = document.getElementById('admin_toast');
+            const toastMsg = document.getElementById('toast_message');
+            if (!toast || !toastMsg) return;
+            toastMsg.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Accordion collapsible groups in Atlas sidebar
+        function initAtlasSidebar() {
+            document.querySelectorAll('.atlas_group_header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const group = header.closest('.atlas_group');
+                    if (group) group.classList.toggle('open');
+                });
+            });
+        }
+
+        function initAdminPortal() {
+            // Live clock fallback
+            const clockEl = document.getElementById('clock_display');
+            if (clockEl) {
+                function updateClock() {
+                    const now = new Date();
+                    let hours = now.getHours();
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? String(hours).padStart(2, '0') : '12';
+                    clockEl.textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+                }
+                setInterval(updateClock, 1000);
+                updateClock();
+            }
+
+            // Product search and category filter
+            const searchInput = document.getElementById('admin_product_search');
+            const categoryBtns = document.querySelectorAll('#admin_category_filter_bar .pill_filter_btn');
+            const productGrid = document.getElementById('admin_product_grid');
+            const countLabel = document.getElementById('admin_products_count_label');
+
+            let activeCategory = 'all';
+
+            function filterAdminProducts() {
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const cards = document.querySelectorAll('#admin_product_grid .pos_product_card');
+                let count = 0;
+
+                cards.forEach(card => {
+                    const name = (card.getAttribute('data-name') || '').toLowerCase();
+                    const sku = (card.getAttribute('data-sku') || '').toLowerCase();
+                    const cat = (card.getAttribute('data-category') || '').toLowerCase();
+
+                    const matchesCategory = (activeCategory === 'all' || cat === activeCategory);
+                    const matchesQuery = (name.includes(query) || sku.includes(query) || cat.includes(query));
+
+                    if (matchesCategory && matchesQuery) {
+                        card.style.display = '';
+                        count++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (countLabel) {
+                    if (activeCategory === 'all' && query === '') {
+                        countLabel.textContent = `ALL PRODUCTS — ${count} ITEMS`;
+                    } else {
+                        countLabel.textContent = `FILTERED PRODUCTS — ${count} ITEMS`;
+                    }
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', filterAdminProducts);
+            }
+
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeCategory = btn.getAttribute('data-category');
+                    filterAdminProducts();
+                });
+            });
+
+            // Modal openers and closers
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.add('active');
+            }
+
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.remove('active');
+            }
+
+            document.querySelectorAll('[data-close]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const modalId = btn.getAttribute('data-close');
+                    closeModal(modalId);
+                });
+            });
+
+            document.querySelectorAll('.pos_modal_overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+
+            const btnHeroAdd = document.getElementById('btn_hero_add_product');
+            const btnOpenAdd2 = document.getElementById('btn_open_add_modal_2');
+            const btnQuickAdd = document.getElementById('btn_quick_add_prod');
+
+            [btnHeroAdd, btnOpenAdd2, btnQuickAdd].forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', () => openModal('modal_add_product'));
+                }
+            });
+
+            // Quick restock button action on cards
+            function updateStockUi(card, newStock) {
+                card.setAttribute('data-stock', newStock);
+                const stockRow = card.querySelector('.product_price_stock_row');
+                if (stockRow) {
+                    const priceSpan = stockRow.querySelector('.product_price_red');
+                    const priceHtml = priceSpan ? priceSpan.outerHTML : '';
+                    if (newStock <= 2) {
+                        stockRow.innerHTML = `${priceHtml} <span class="stock_badge_low"><span class="stock_num">${newStock}</span> left (Low)</span>`;
+                    } else if (newStock <= 3) {
+                        stockRow.innerHTML = `${priceHtml} <span class="stock_badge_warn"><span class="stock_num">${newStock}</span> left</span>`;
+                    } else {
+                        stockRow.innerHTML = `${priceHtml} <span class="stock_badge_ok"><span class="stock_num">${newStock}</span> in stock</span>`;
+                    }
+                }
+            }
+
+            if (productGrid) {
+                productGrid.addEventListener('click', (e) => {
+                    const restockBtn = e.target.closest('.btn_admin_restock');
+                    const editBtn = e.target.closest('.btn_admin_edit');
+
+                    if (restockBtn) {
+                        e.stopPropagation();
+                        const card = restockBtn.closest('.pos_product_card');
+                        if (!card) return;
+                        let currentStock = parseInt(card.getAttribute('data-stock') || '0', 10);
+                        currentStock += 5;
+                        updateStockUi(card, currentStock);
+                        triggerToast(`Added +5 units to ${card.getAttribute('data-name')}! Stock is now ${currentStock}.`);
+                    } else if (editBtn) {
+                        e.stopPropagation();
+                        const card = editBtn.closest('.pos_product_card');
+                        if (!card) return;
+                        const sku = card.getAttribute('data-sku');
+                        const name = card.getAttribute('data-name');
+                        const price = card.getAttribute('data-price');
+                        const stock = card.getAttribute('data-stock');
+                        const category = card.getAttribute('data-category');
+
+                        document.getElementById('edit_prod_sku').value = sku;
+                        document.getElementById('edit_prod_name').value = name;
+                        document.getElementById('edit_prod_price').value = price;
+                        document.getElementById('edit_prod_stock').value = stock;
+                        document.getElementById('edit_prod_category').value = category;
+                        document.getElementById('edit_modal_title_label').textContent = name;
+
+                        openModal('modal_edit_product');
+                    }
+                });
+            }
+
+            // Quick restock buttons in Low Stock widget
+            document.querySelectorAll('.btn_quick_restock').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const sku = btn.getAttribute('data-sku');
+                    const card = document.querySelector(`#admin_product_grid .pos_product_card[data-sku="${sku}"]`);
+                    if (card) {
+                        let currentStock = parseInt(card.getAttribute('data-stock') || '0', 10);
+                        currentStock += 10;
+                        updateStockUi(card, currentStock);
+                        const itemRow = btn.closest('.low_stock_item');
+                        if (itemRow) {
+                            itemRow.style.opacity = '0.4';
+                            itemRow.style.pointerEvents = 'none';
+                            const badge = itemRow.querySelector('.low_stock_badge_urgent, .stock_badge_warn');
+                            if (badge) {
+                                badge.className = 'stock_badge_ok';
+                                badge.textContent = `${currentStock} in stock`;
+                            }
+                            btn.textContent = '✓ Done';
+                            btn.style.backgroundColor = '#16a34a';
+                        }
+                        triggerToast(`Restocked ${sku} with +10 units!`);
+                    }
+                });
+            });
+
+            // Form: Edit product submit
+            const formEdit = document.getElementById('form_edit_product');
+            if (formEdit) {
+                formEdit.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const sku = document.getElementById('edit_prod_sku').value;
+                    const name = document.getElementById('edit_prod_name').value;
+                    const price = parseFloat(document.getElementById('edit_prod_price').value || '0');
+                    const stock = parseInt(document.getElementById('edit_prod_stock').value || '0', 10);
+                    const category = document.getElementById('edit_prod_category').value;
+
+                    const card = document.querySelector(`#admin_product_grid .pos_product_card[data-sku="${sku}"]`);
+                    if (card) {
+                        card.setAttribute('data-name', name);
+                        card.setAttribute('data-price', price);
+                        card.setAttribute('data-stock', stock);
+                        card.setAttribute('data-category', category);
+
+                        const titleEl = card.querySelector('.product_title_text');
+                        if (titleEl) titleEl.textContent = name;
+
+                        const badgeEl = card.querySelector('.product_category_badge');
+                        if (badgeEl) badgeEl.textContent = category.toUpperCase();
+
+                        const priceEl = card.querySelector('.product_price_red');
+                        if (priceEl) priceEl.textContent = '₱' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                        updateStockUi(card, stock);
+                    }
+
+                    closeModal('modal_edit_product');
+                    triggerToast(`Product "${name}" updated successfully!`);
+                });
+            }
+
+            // Form: Add product submit
+            const formAdd = document.getElementById('form_add_product');
+            if (formAdd) {
+                formAdd.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('add_prod_name').value.trim();
+                    const sku = document.getElementById('add_prod_sku').value.trim();
+                    const category = document.getElementById('add_prod_category').value;
+                    const price = parseFloat(document.getElementById('add_prod_price').value || '0');
+                    const stock = parseInt(document.getElementById('add_prod_stock').value || '0', 10);
+
+                    const newCard = document.createElement('div');
+                    newCard.className = 'pos_product_card';
+                    newCard.setAttribute('data-sku', sku);
+                    newCard.setAttribute('data-name', name);
+                    newCard.setAttribute('data-price', price);
+                    newCard.setAttribute('data-stock', stock);
+                    newCard.setAttribute('data-category', category);
+
+                    const formattedPrice = '₱' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const stockClass = stock <= 2 ? 'stock_badge_low' : (stock <= 3 ? 'stock_badge_warn' : 'stock_badge_ok');
+                    const stockLabel = stock <= 2 ? `${stock} left (Low)` : `${stock} in stock`;
+
+                    newCard.innerHTML = `
+                        <div class="product_visual_box">
+                            <img src="/frontend/Pictures/placeholder.png" alt="${name}" class="product_visual_img">
+                            <span class="product_category_badge">${category.toUpperCase()}</span>
+                        </div>
+                        <span class="product_sku_text">${sku}</span>
+                        <h3 class="product_title_text">${name}</h3>
+                        <div class="product_price_stock_row">
+                            <span class="product_price_red">${formattedPrice}</span>
+                            <span class="${stockClass}"><span class="stock_num">${stock}</span> ${stockLabel}</span>
+                        </div>
+                        <div class="admin_card_actions">
+                            <button class="btn_admin_edit" data-sku="${sku}">Edit</button>
+                            <button class="btn_admin_restock" data-sku="${sku}">+ Stock</button>
+                        </div>
+                    `;
+
+                    if (productGrid) {
+                        productGrid.insertBefore(newCard, productGrid.firstChild);
+                    }
+
+                    formAdd.reset();
+                    closeModal('modal_add_product');
+                    filterAdminProducts();
+                    triggerToast(`New product "${name}" added with placeholder.png image!`);
+                });
+            }
+
+            // Receipt detail buttons
+            document.querySelectorAll('.btn_view_receipt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const txnid = btn.getAttribute('data-txnid');
+                    const date = btn.getAttribute('data-date');
+                    const items = btn.getAttribute('data-items');
+                    const total = btn.getAttribute('data-total');
+                    const method = btn.getAttribute('data-method');
+
+                    document.getElementById('receipt_txnid').textContent = txnid;
+                    document.getElementById('receipt_date').textContent = date;
+                    document.getElementById('receipt_items').textContent = items;
+                    document.getElementById('receipt_total').textContent = total;
+                    document.getElementById('receipt_method').textContent = method;
+
+                    openModal('modal_receipt');
+                });
+            });
+
+            // Export CSV button
+            const btnExport = document.getElementById('btn_export_csv');
+            if (btnExport) {
+                btnExport.addEventListener('click', () => {
+                    triggerToast('Preparing daily transaction report download (CSV)...');
+                    setTimeout(() => {
+                        const csvContent = "data:text/csv;charset=utf-8,Transaction ID,Date,Cashier,Items,Total,Method,Status\n" +
+                            "TXN-20240801-001,2026-09-26 14:37,Russel Lu Caisido,2,2210.00,Cash,PAID\n" +
+                            "TXN-20240801-002,2026-09-26 16:41,Russel Lu Caisido,2,17200.00,GCash,PAID\n" +
+                            "TXN-20240731-001,2026-09-25 11:58,Russel Lu Caisido,2,6150.00,Cash,PAID\n" +
+                            "TXN-20240730-001,2026-09-24 16:03,Russel Lu Caisido,3,5500.00,Cash,PAID\n" +
+                            "TXN-20240729-001,2026-09-23 10:28,Russel Lu Caisido,1,21000.00,GCash,PAID";
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", `Taurus_Sales_Report_${new Date().toISOString().slice(0, 10)}.csv`);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        triggerToast('CSV report generated and downloaded!');
+                    }, 600);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

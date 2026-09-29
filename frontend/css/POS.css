@@ -1025,6 +1025,590 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
+   Page 4: Admin Portal Styles (admin-main, admin-inventory, admin-accmanage, admin-report)
+   ========================================================================== */
+
+/* admin visual thumbnail image */
+.product_visual_img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.pos_product_card:hover .product_visual_img {
+    transform: scale(1.08);
+}
+
+/* admin avatar */
+.admin_user_pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #f1f5f9;
+    padding: 3px 10px 3px 4px;
+    border-radius: 20px;
+    border: 1px solid var(--pos_border);
+}
+
+.admin_avatar_img {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #ffffff;
+    border: 1.5px solid var(--pos_red);
+}
+
+.badge_role_admin {
+    background-color: var(--pos_red);
+    color: #ffffff;
+    font-size: 9.5px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* admin stats grid */
+.admin_stats_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.admin_stat_card {
+    background-color: var(--pos_card_bg);
+    border: 1px solid var(--pos_border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin_stat_card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.admin_stat_card.card_revenue::before { background-color: var(--pos_red); }
+.admin_stat_card.card_inventory::before { background-color: var(--pos_blue); }
+.admin_stat_card.card_warning::before { background-color: #ea580c; }
+.admin_stat_card.card_staff::before { background-color: #16a34a; }
+
+.stat_top_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat_title_label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--pos_text_muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.stat_icon_pill {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pill_red { background-color: var(--pos_red_light); color: var(--pos_red); }
+.pill_blue { background-color: var(--pos_blue_light); color: var(--pos_blue); }
+.pill_amber { background-color: #fef3c7; color: #d97706; }
+.pill_green { background-color: #dcfce7; color: #16a34a; }
+
+.stat_number_bold {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+}
+
+.stat_meta_desc {
+    font-size: 11.5px;
+    color: var(--pos_text_muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stat_trend_up {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.stat_trend_warn {
+    color: #ea580c;
+    font-weight: 700;
+}
+
+/* stock status indicators */
+.stock_badge_ok {
+    background-color: #dcfce7;
+    color: #16a34a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+}
+
+.stock_badge_warn {
+    background-color: #fef3c7;
+    color: #b45309;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+}
+
+.stock_badge_low {
+    background-color: #fee2e2;
+    color: var(--pos_red);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+}
+
+/* admin product card actions */
+.admin_card_actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.btn_admin_edit {
+    flex: 1;
+    background-color: #f1f5f9;
+    border: 1px solid var(--pos_border);
+    color: var(--pos_text_dark);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.15s ease;
+}
+
+.btn_admin_edit:hover {
+    background-color: #e2e8f0;
+}
+
+.btn_admin_restock {
+    background-color: var(--pos_red_btn_bg);
+    border: 1px solid rgba(197, 31, 38, 0.2);
+    color: var(--pos_red);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    white-space: nowrap;
+}
+
+.btn_admin_restock:hover {
+    background-color: #fecdd3;
+}
+
+/* admin side panel */
+.admin_side_panel {
+    width: 380px;
+    min-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.admin_panel_card {
+    background-color: var(--pos_card_bg);
+    border: 1px solid var(--pos_border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+}
+
+.admin_panel_header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--pos_border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+}
+
+.admin_panel_title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin_panel_body {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.low_stock_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pos_border_light);
+}
+
+.low_stock_item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.low_stock_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.low_stock_thumb {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    border: 1px solid var(--pos_border);
+    background-color: #f8fafc;
+    object-fit: contain;
+    padding: 4px;
+    flex-shrink: 0;
+}
+
+.low_stock_info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.low_stock_name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--pos_text_dark);
+}
+
+.low_stock_sku {
+    font-size: 10.5px;
+    color: var(--pos_text_muted);
+    font-family: monospace;
+}
+
+.btn_quick_restock {
+    background-color: var(--pos_red);
+    color: #ffffff;
+    border: none;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.btn_quick_restock:hover {
+    background-color: var(--pos_red_dark);
+}
+
+/* payment progress bars */
+.payment_bar_block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.payment_bar_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.payment_bar_track {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.payment_bar_fill_cash {
+    height: 100%;
+    width: 63%;
+    background-color: #16a34a;
+    border-radius: 9999px;
+}
+
+.payment_bar_fill_gcash {
+    height: 100%;
+    width: 37%;
+    background-color: #2563eb;
+    border-radius: 9999px;
+}
+
+/* quick admin action buttons */
+.admin_quick_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+}
+
+.btn_quick_primary {
+    background-color: var(--pos_red);
+    color: #ffffff;
+}
+
+.btn_quick_primary:hover {
+    background-color: var(--pos_red_dark);
+}
+
+.btn_quick_secondary {
+    background-color: #f1f5f9;
+    border: 1px solid var(--pos_border);
+    color: var(--pos_text_dark);
+}
+
+.btn_quick_secondary:hover {
+    background-color: #e2e8f0;
+}
+
+/* modals */
+.pos_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.pos_modal_overlay.active {
+    display: flex;
+}
+
+.pos_modal_box {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--pos_border);
+    animation: modalIn 0.18s ease-out;
+}
+
+@keyframes modalIn {
+    from { transform: translateY(12px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal_header {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--pos_border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal_title {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+}
+
+.btn_close_modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--pos_text_muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px;
+}
+
+.btn_close_modal:hover {
+    color: var(--pos_red);
+}
+
+.modal_body {
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form_label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--pos_text_dark);
+}
+
+.form_input, .form_select {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--pos_border);
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    background-color: #ffffff;
+    color: var(--pos_text_dark);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form_input:focus, .form_select:focus {
+    border-color: var(--pos_red);
+    box-shadow: 0 0 0 3px rgba(197, 31, 38, 0.1);
+}
+
+.form_row_2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.image_upload_preview_box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background-color: #f8fafc;
+    border: 1px dashed var(--pos_border);
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.modal_preview_thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    border: 1px solid var(--pos_border);
+    background-color: #ffffff;
+    object-fit: contain;
+    padding: 6px;
+}
+
+.modal_footer {
+    padding: 14px 22px;
+    border-top: 1px solid var(--pos_border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: #f8fafc;
+    border-radius: 0 0 12px 12px;
+}
+
+.btn_modal_cancel {
+    background-color: #ffffff;
+    border: 1px solid var(--pos_border);
+    color: var(--pos_text_body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn_modal_cancel:hover {
+    background-color: #f1f5f9;
+}
+
+.btn_modal_submit {
+    background-color: var(--pos_red);
+    border: none;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn_modal_submit:hover {
+    background-color: var(--pos_red_dark);
+}
+
+/* toast popup notification */
+.pos_toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: var(--pos_slate_dark);
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2000;
+}
+
+.pos_toast.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 
@@ -1043,6 +1627,14 @@ button, input, select, textarea {
         width: 100%;
         position: static;
         max-height: none;
+    }
+
+    .admin_side_panel {
+        width: 100%;
+    }
+
+    .admin_stats_grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .action_cards_row {
@@ -1078,10 +1670,19 @@ button, input, select, textarea {
 
     .pos_nav_tabs {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .pos_header_right {
         justify-content: space-between;
+    }
+
+    .admin_stats_grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form_row_2 {
+        grid-template-columns: 1fr;
     }
 
     .pos_hero_banner {
@@ -1120,3 +1721,285 @@ button, input, select, textarea {
         overflow-x: auto;
     }
 }
+
+/* ==========================================================================
+   Page 5: Atlas-Style Sidebar Navigation for Admin
+   ========================================================================== */
+
+.atlas_admin_layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--pos_bg_page);
+}
+
+/* left fixed/sticky sidebar */
+.atlas_sidebar {
+    width: 260px;
+    min-width: 260px;
+    background-color: #ffffff;
+    border-right: 1px solid var(--pos_border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+    z-index: 100;
+}
+
+.atlas_sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.atlas_sidebar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 4px;
+}
+
+.atlas_sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* brand header */
+.atlas_brand_header {
+    height: 60px;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--pos_border_light);
+    flex-shrink: 0;
+}
+
+.atlas_brand_link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.atlas_brand_logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.atlas_brand_text {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--pos_red);
+    letter-spacing: -0.2px;
+}
+
+/* top overview row with gear icon */
+.atlas_overview_row {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--pos_border_light);
+    flex-shrink: 0;
+}
+
+.atlas_overview_link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--pos_text_dark);
+    transition: color 0.15s ease;
+}
+
+.atlas_overview_link:hover {
+    color: var(--pos_red);
+}
+
+.atlas_overview_link svg {
+    color: #475569;
+}
+
+.atlas_btn_settings {
+    background: none;
+    border: none;
+    color: var(--pos_text_muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.atlas_btn_settings:hover {
+    background-color: #f1f5f9;
+    color: var(--pos_text_dark);
+}
+
+/* nav scrollable list */
+.atlas_nav_menu {
+    flex: 1;
+    padding: 10px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* group item */
+.atlas_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.atlas_group_header {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 18px 6px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 0.15s ease;
+}
+
+.atlas_group_header:hover {
+    opacity: 0.85;
+}
+
+.atlas_group_title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--pos_red);
+}
+
+.atlas_group_title svg {
+    color: var(--pos_red);
+    flex-shrink: 0;
+}
+
+.atlas_caret {
+    font-size: 10px;
+    color: var(--pos_text_muted);
+    transition: transform 0.2s ease;
+}
+
+.atlas_group:not(.open) .atlas_caret {
+    transform: rotate(180deg);
+}
+
+.atlas_sub_menu {
+    display: flex;
+    flex-direction: column;
+    padding: 2px 0 6px;
+}
+
+.atlas_group:not(.open) .atlas_sub_menu {
+    display: none;
+}
+
+.atlas_sub_link {
+    display: flex;
+    align-items: center;
+    padding: 8px 18px 8px 38px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--pos_text_body);
+    text-decoration: none;
+    position: relative;
+    transition: all 0.15s ease;
+}
+
+.atlas_sub_link:hover {
+    background-color: #f8fafc;
+    color: var(--pos_text_dark);
+}
+
+.atlas_sub_link.active {
+    background-color: var(--pos_red_light);
+    color: var(--pos_red);
+    font-weight: 700;
+}
+
+.atlas_sub_link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 22px;
+    background-color: var(--pos_red);
+    border-radius: 0 4px 4px 0;
+}
+
+/* right main view wrap */
+.atlas_main_wrap {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* top bar inside right view */
+.atlas_top_header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--pos_border);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
+
+.atlas_top_left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.atlas_org_label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--pos_text_muted);
+}
+
+.atlas_org_name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pos_text_dark);
+}
+
+@media (max-width: 960px) {
+    .atlas_admin_layout {
+        flex-direction: column;
+    }
+
+    .atlas_sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--pos_border);
+    }
+
+    .atlas_top_header {
+        padding: 10px 18px;
+    }
+}
+
