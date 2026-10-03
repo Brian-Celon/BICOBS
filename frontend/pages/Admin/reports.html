@@ -72,18 +72,66 @@
                 <i class="fas fa-search top_search_icon"></i>
                 <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
             </div>
-            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
-                <i class="fas fa-bell"></i>
-                <span class="notification_badge_dot"></span>
-            </button>
-            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
-                <div class="admin_profile_avatar">A</div>
-                <div class="admin_profile_details">
-                    <span class="admin_user_name">Admin</span>
-                    <span class="admin_user_role">Administrator</span>
+
+            <!-- notifications dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="notification_list">
+                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
+                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
+                            <div>
+                                <strong>New Order #ORD-1008</strong>
+                                <p style="color: #64748b; font-size: 11px;">2 mins ago &bull; ₱12,500</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
+                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Low Stock Alert</strong>
+                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
+                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Repair Completed</strong>
+                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
-            </a>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="admin_profile_trigger" onclick="toggleDropdown('admin_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="admin_profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="users.html" class="dropdown_menu_item">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="openLogoutModal()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -152,6 +200,12 @@
                                 <span>Settings</span>
                             </a>
                         </li>
+                        <li class="sidebar_nav_item">
+                            <button type="button" class="sidebar_nav_link sidebar_nav_logout_btn" onclick="openLogoutModal()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </button>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -178,6 +232,9 @@
                         <i class="fas fa-calendar-alt"></i>
                         <span id="date_range_label">Sep 1, 2025 - Sep 30, 2025</span>
                     </button>
+                    <button type="button" class="btn_primary" onclick="openModal('generate_report_modal')">
+                        <i class="fas fa-file-invoice"></i> <span>Generate Report</span>
+                    </button>
                 </div>
             </div>
 
@@ -188,6 +245,8 @@
                 <button type="button" class="filter_tab_btn tab_underline" data-report-tab="units_sold" onclick="switchReportTab('units_sold')">Units Sold</button>
                 <button type="button" class="filter_tab_btn tab_underline" data-report-tab="online_orders" onclick="switchReportTab('online_orders')">Online Orders</button>
                 <button type="button" class="filter_tab_btn tab_underline" data-report-tab="repairs" onclick="switchReportTab('repairs')">Repairs</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-report-tab="inventory" onclick="switchReportTab('inventory')">Inventory Report</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-report-tab="generator" onclick="switchReportTab('generator')">Report Generator</button>
             </div>
 
             <!-- 4 metric summary stat cards -->
@@ -569,15 +628,283 @@
                     </div>
                 </article>
             </div>
+
+            <!-- SUB-PANEL 6: INVENTORY REPORT -->
+            <div class="tab_panel" id="report_panel_inventory">
+                <article class="admin_card">
+                    <div class="card_header">
+                        <div>
+                            <h2 class="card_title">Inventory Valuation & Stock Health Report</h2>
+                            <p class="page_subtitle">Comprehensive audit of stock levels, cost valuation, and reorder triggers across all catalog items.</p>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn_secondary" onclick="exportInventoryReportCSV()">
+                                <i class="fas fa-file-csv"></i> <span>Export Inventory CSV</span>
+                            </button>
+                            <button type="button" class="btn_primary" onclick="generateSpecificReport('inventory', 'Current Stock (Oct 2026)')">
+                                <i class="fas fa-print"></i> <span>Print Valuation Sheet</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4 INVENTORY SUMMARY TILES -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
+                        <div class="stat_card" style="padding: 16px;">
+                            <span class="stat_card_label">Total Inventory Value</span>
+                            <div class="stat_card_value" style="font-size: 22px; color: #b91c1c;">₱2,845,000</div>
+                            <span style="font-size: 11px; color: #16a34a; font-weight: 600;"><i class="fas fa-chart-line"></i> At retail selling price</span>
+                        </div>
+                        <div class="stat_card" style="padding: 16px;">
+                            <span class="stat_card_label">Total Catalog SKUs</span>
+                            <div class="stat_card_value" style="font-size: 22px;">248 items</div>
+                            <span style="font-size: 11px; color: #64748b;">12 product categories</span>
+                        </div>
+                        <div class="stat_card" style="padding: 16px;">
+                            <span class="stat_card_label">Low Stock Alerts</span>
+                            <div class="stat_card_value" style="font-size: 22px; color: #d97706;">32 items</div>
+                            <span style="font-size: 11px; color: #d97706; font-weight: 600;"><i class="fas fa-exclamation-triangle"></i> Reorder recommended</span>
+                        </div>
+                        <div class="stat_card" style="padding: 16px;">
+                            <span class="stat_card_label">Out of Stock</span>
+                            <div class="stat_card_value" style="font-size: 22px; color: #dc2626;">15 items</div>
+                            <span style="font-size: 11px; color: #dc2626; font-weight: 600;"><i class="fas fa-times-circle"></i> Requires supplier PO</span>
+                        </div>
+                    </div>
+
+                    <!-- CATEGORY VALUATION PROGRESS -->
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 20px;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">Stock Valuation by Category</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                    <span style="font-weight: 600;">Complete Bicycles (MTB, Road, Gravel, BMX, Folding)</span>
+                                    <strong>₱1,820,000 (64%)</strong>
+                                </div>
+                                <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 64%; height: 100%; background: #b91c1c;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                    <span style="font-weight: 600;">Groupsets, Drivetrain & Gears</span>
+                                    <strong>₱640,000 (22%)</strong>
+                                </div>
+                                <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 22%; height: 100%; background: #0284c7;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                    <span style="font-weight: 600;">Wheelsets, Rims & Tires</span>
+                                    <strong>₱215,000 (8%)</strong>
+                                </div>
+                                <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 8%; height: 100%; background: #16a34a;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                    <span style="font-weight: 600;">Apparel, Shoes & Accessories</span>
+                                    <strong>₱170,000 (6%)</strong>
+                                </div>
+                                <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 6%; height: 100%; background: #eab308;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INVENTORY BREAKDOWN TABLE -->
+                    <div class="table_responsive">
+                        <table class="admin_table">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Item Description</th>
+                                    <th>Category</th>
+                                    <th>Stock Level</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Value</th>
+                                    <th>Health Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-family: monospace;">TR-MTB-001</td>
+                                    <td class="cell_customer_name">Taurus Stealth Carbon MTB 29"</td>
+                                    <td>Bicycles</td>
+                                    <td style="font-weight: 700;">14 units</td>
+                                    <td>₱34,500</td>
+                                    <td class="cell_amount">₱483,000</td>
+                                    <td><span class="status_pill status_in_stock">In Stock</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: monospace;">TR-ROAD-002</td>
+                                    <td class="cell_customer_name">Sagmit Veneno Aero Road Bike 700c</td>
+                                    <td>Bicycles</td>
+                                    <td style="font-weight: 700;">10 units</td>
+                                    <td>₱28,900</td>
+                                    <td class="cell_amount">₱289,000</td>
+                                    <td><span class="status_pill status_in_stock">In Stock</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: monospace;">TR-FRM-008</td>
+                                    <td class="cell_customer_name">2026 Sagmit Evolution Frame Boost</td>
+                                    <td>Frames & Forks</td>
+                                    <td style="font-weight: 700;">6 units</td>
+                                    <td>₱19,900</td>
+                                    <td class="cell_amount">₱119,400</td>
+                                    <td><span class="status_pill status_in_stock">In Stock</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: monospace;">TR-GR-009</td>
+                                    <td class="cell_customer_name">Shimano Deore M6100 12spd Groupset</td>
+                                    <td>Gears</td>
+                                    <td style="font-weight: 700; color: #d97706;">3 units</td>
+                                    <td>₱16,800</td>
+                                    <td class="cell_amount">₱50,400</td>
+                                    <td><span class="status_pill status_low_stock">Low Stock</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: monospace;">TR-BRK-012</td>
+                                    <td class="cell_customer_name">Shimano MT200 Hydraulic Disc Brake Set</td>
+                                    <td>Brakes</td>
+                                    <td style="font-weight: 700; color: #dc2626;">2 units</td>
+                                    <td>₱2,300</td>
+                                    <td class="cell_amount">₱4,600</td>
+                                    <td><span class="status_pill status_low_stock">Low Stock</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: monospace;">TR-RIM-016</td>
+                                    <td class="cell_customer_name">Maxxis Ardent 29x2.25 Tanwall EXO</td>
+                                    <td>Tires</td>
+                                    <td style="font-weight: 700;">18 units</td>
+                                    <td>₱1,850</td>
+                                    <td class="cell_amount">₱33,300</td>
+                                    <td><span class="status_pill status_in_stock">In Stock</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+
+            <!-- SUB-PANEL 7: REPORT GENERATOR -->
+            <div class="tab_panel" id="report_panel_generator">
+                <article class="admin_card">
+                    <div class="card_header">
+                        <div>
+                            <h2 class="card_title">Report Generation Suite</h2>
+                            <p class="page_subtitle">Create customized business intelligence reports for accounting, inventory audits, and workshop analytics.</p>
+                        </div>
+                        <button type="button" class="btn_primary" onclick="openModal('generate_report_modal')">
+                            <i class="fas fa-plus"></i> <span>Custom Report Query</span>
+                        </button>
+                    </div>
+
+                    <!-- 4 PRESET GENERATION CARDS -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 10px;">
+                        <!-- CARD 1: SALES REPORT -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 44px; height: 44px; border-radius: 8px; background: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Sales Performance Report</h3>
+                                    <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Revenue streams, order volume, channel breakdown</p>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: #475569; line-height: 1.5; margin: 0;">
+                                Generates executive sales summaries with online vs in-store ratios, payment method volumes (GCash, Maya, BPI, Cash), and average order value.
+                            </p>
+                            <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+                                <button type="button" class="btn_secondary" style="flex: 1;" onclick="generateSpecificReport('sales', 'Last 7 Days')">
+                                    <i class="fas fa-clock"></i> 7 Days
+                                </button>
+                                <button type="button" class="btn_primary" style="flex: 1;" onclick="generateSpecificReport('sales', 'Sep 1, 2025 - Sep 30, 2025')">
+                                    <i class="fas fa-file-invoice"></i> This Month
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: INVENTORY REPORT -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 44px; height: 44px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                    <i class="fas fa-boxes-stacked"></i>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Inventory Valuation & Stock Health</h3>
+                                    <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Warehouse valuation, low stock, out of stock alerts</p>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: #475569; line-height: 1.5; margin: 0;">
+                                Calculates total retail and wholesale inventory valuation across 248 SKUs, flagging items needing immediate purchase orders.
+                            </p>
+                            <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+                                <button type="button" class="btn_secondary" style="flex: 1;" onclick="exportInventoryReportCSV()">
+                                    <i class="fas fa-download"></i> CSV
+                                </button>
+                                <button type="button" class="btn_primary" style="flex: 1;" onclick="generateSpecificReport('inventory', 'Current Stock Valuation')">
+                                    <i class="fas fa-file-invoice"></i> Generate
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CARD 3: REPAIRS WORKSHOP -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 44px; height: 44px; border-radius: 8px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                    <i class="fas fa-wrench"></i>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Workshop & Repair Services Report</h3>
+                                    <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Ticket turnaround, mechanic productivity, labor revenue</p>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: #475569; line-height: 1.5; margin: 0;">
+                                Itemized mechanical repair analysis: average job completion time, revenue from labor vs replacement parts, and technician performance.
+                            </p>
+                            <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+                                <button type="button" class="btn_primary" style="flex: 1;" onclick="generateSpecificReport('repairs', 'Sep 1, 2025 - Sep 30, 2025')">
+                                    <i class="fas fa-file-invoice"></i> Generate Workshop Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CARD 4: BILLING & FINANCIAL -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 44px; height: 44px; border-radius: 8px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Billing & Financial Summary</h3>
+                                    <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Invoices generated, tax totals, reconciled receivables</p>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: #475569; line-height: 1.5; margin: 0;">
+                                Accounting summary of all official billing transactions, VAT breakdowns, payment method fee reconciliation, and refunded amounts.
+                            </p>
+                            <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+                                <button type="button" class="btn_primary" style="flex: 1;" onclick="generateSpecificReport('billing', 'Sep 1, 2025 - Sep 30, 2025')">
+                                    <i class="fas fa-file-invoice"></i> Generate Financial Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </main>
     </div>
 
-    <!-- interactive date range modal picker -->
+    <!-- MODAL 1: INTERACTIVE DATE RANGE PICKER -->
     <div class="modal_backdrop" id="date_picker_modal">
         <div class="modal_card">
             <div class="modal_header">
                 <h3 class="modal_title">Select Reporting Period</h3>
-                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+                <button type="button" class="modal_close_btn" onclick="closeModal('date_picker_modal')" aria-label="Close dialog">&times;</button>
             </div>
             <div class="modal_body">
                 <div class="date_presets_group">
@@ -600,7 +927,199 @@
                 </div>
             </div>
             <div class="modal_footer">
-                <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                <button type="button" class="btn_secondary" onclick="closeModal('date_picker_modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: GENERATE REPORT DIALOG -->
+    <div class="modal_backdrop" id="generate_report_modal" role="dialog" aria-modal="true" aria-labelledby="generate_report_title">
+        <div class="modal_card">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="generate_report_title">Generate Business Report</h3>
+                    <p class="modal_subtitle" style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Select your reporting criteria, category, and preferred output format.</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('generate_report_modal')" aria-label="Close dialog">&times;</button>
+            </div>
+            <form id="generate_report_form" onsubmit="handleGenerateReportSubmit(event)">
+                <div class="modal_body">
+                    <!-- REPORT TYPE -->
+                    <div class="form_group">
+                        <label for="gen_report_type" class="form_label">Report Type *</label>
+                        <select id="gen_report_type" class="form_select" required>
+                            <option value="sales" selected>Sales & Revenue Performance Report</option>
+                            <option value="inventory">Inventory Valuation & Stock Health Report</option>
+                            <option value="repairs">Workshop & Mechanical Repairs Report</option>
+                            <option value="billing">Billing & Financial Audit Report</option>
+                        </select>
+                    </div>
+
+                    <!-- REPORTING PERIOD -->
+                    <div class="form_group">
+                        <label for="gen_report_period" class="form_label">Reporting Period *</label>
+                        <select id="gen_report_period" class="form_select" required onchange="handlePeriodChange(this.value)">
+                            <option value="today">Today (Sep 22, 2025)</option>
+                            <option value="last_7_days">Last 7 Days</option>
+                            <option value="this_month" selected>This Month (September 2025)</option>
+                            <option value="last_month">Last Month (August 2025)</option>
+                            <option value="year_to_date">Year-to-Date (2025)</option>
+                            <option value="custom">Custom Date Range...</option>
+                        </select>
+                    </div>
+
+                    <!-- CUSTOM DATE RANGE INPUTS (HIDDEN BY DEFAULT) -->
+                    <div id="gen_custom_date_row" style="display: none; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                        <div>
+                            <label for="gen_date_start" class="form_label">Start Date</label>
+                            <input type="date" id="gen_date_start" class="form_input" value="2025-09-01">
+                        </div>
+                        <div>
+                            <label for="gen_date_end" class="form_label">End Date</label>
+                            <input type="date" id="gen_date_end" class="form_input" value="2025-09-30">
+                        </div>
+                    </div>
+
+                    <!-- CATEGORY FILTER -->
+                    <div class="form_group">
+                        <label for="gen_report_category" class="form_label">Product / Service Category</label>
+                        <select id="gen_report_category" class="form_select">
+                            <option value="all" selected>All Categories</option>
+                            <option value="bicycles">Bicycles (MTB, Road, Gravel)</option>
+                            <option value="parts">Groupsets & Components</option>
+                            <option value="tires">Wheelsets & Tires</option>
+                            <option value="apparel">Apparel & Shoes</option>
+                            <option value="repairs">Maintenance & Repair Services</option>
+                        </select>
+                    </div>
+
+                    <!-- OUTPUT FORMAT -->
+                    <div class="form_group">
+                        <label for="gen_report_format" class="form_label">Output Format</label>
+                        <select id="gen_report_format" class="form_select">
+                            <option value="view" selected>Interactive Document View (with Print to PDF)</option>
+                            <option value="csv">Direct CSV Spreadsheet Download</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary" onclick="closeModal('generate_report_modal')">Cancel</button>
+                    <button type="submit" class="btn_primary">
+                        <i class="fas fa-file-invoice"></i> <span>Generate Report</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: VIEW GENERATED OFFICIAL REPORT DOCUMENT -->
+    <div class="modal_backdrop" id="view_generated_report_modal" role="dialog" aria-modal="true" aria-labelledby="report_doc_title">
+        <div class="modal_card modal_card_wide">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="report_doc_modal_title">Official Management Report</h3>
+                    <p class="modal_subtitle" style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Generated on-demand from TaurOS database records.</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('view_generated_report_modal')" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px;">
+                <!-- DOCUMENT HEADER -->
+                <div class="report_document_header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <img src="/assets/Taurus Logo.jpg" alt="Logo" style="height: 28px; width: 28px; border-radius: 4px; object-fit: cover;" onerror="this.style.display='none';">
+                            <span style="font-size: 17px; font-weight: 800; color: #b91c1c; letter-spacing: 0.5px;">TAURUS BIKE STORE</span>
+                        </div>
+                        <h2 id="report_doc_title" style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 4px 0;">Sales Performance Report</h2>
+                        <span id="report_doc_period" style="font-size: 13px; color: #64748b;">Period: Sep 1, 2025 - Sep 30, 2025</span>
+                    </div>
+                    <div style="text-align: right; font-size: 12px; color: #64748b;">
+                        <p style="margin: 0;">Ref: <strong id="report_doc_ref" style="font-family: monospace; color: #0f172a;">REP-2025-1003</strong></p>
+                        <p style="margin: 2px 0 0 0;">Generated: <span id="report_doc_date">Oct 03, 2026 02:15 PM</span></p>
+                        <p style="margin: 2px 0 0 0;">Prepared By: <strong>Admin Staff</strong></p>
+                    </div>
+                </div>
+
+                <!-- 4 DYNAMIC SUMMARY KPI TILES -->
+                <div class="report_kpi_grid" id="report_kpi_container">
+                    <div class="report_kpi_box">
+                        <span class="report_kpi_label" id="report_kpi_1_label">Total Revenue</span>
+                        <div class="report_kpi_value" id="report_kpi_1_val" style="color: #b91c1c;">₱185,420</div>
+                    </div>
+                    <div class="report_kpi_box">
+                        <span class="report_kpi_label" id="report_kpi_2_label">Total Orders</span>
+                        <div class="report_kpi_value" id="report_kpi_2_val">342</div>
+                    </div>
+                    <div class="report_kpi_box">
+                        <span class="report_kpi_label" id="report_kpi_3_label">Avg Order Value</span>
+                        <div class="report_kpi_value" id="report_kpi_3_val">₱542.16</div>
+                    </div>
+                    <div class="report_kpi_box">
+                        <span class="report_kpi_label" id="report_kpi_4_label">Net Margin</span>
+                        <div class="report_kpi_value" id="report_kpi_4_val" style="color: #16a34a;">32.4%</div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC TABULAR DATA BREAKDOWN -->
+                <div class="table_responsive">
+                    <table class="admin_table">
+                        <thead id="report_table_head">
+                            <tr>
+                                <th>Category / Item</th>
+                                <th>Volume</th>
+                                <th>Average Price</th>
+                                <th style="text-align: right;">Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report_table_body">
+                            <!-- INJECTED BY JAVASCRIPT -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- SIGNATURE FOOTER -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; padding-top: 16px; border-top: 1px dashed #e2e8f0; font-size: 11px; color: #64748b;">
+                    <div>
+                        <p style="margin: 0;">Official TaurOS Generated Document.</p>
+                        <p style="margin: 2px 0 0 0;">Taurus Building, Sandico St., Abangan Sur, Marilao, Bulacan</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="display: block; border-bottom: 1px solid #94a3b8; width: 140px; margin-bottom: 4px;"></span>
+                        <span>Audited By Management</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary" onclick="closeModal('view_generated_report_modal')">Close</button>
+                <button type="button" class="btn_secondary" onclick="exportCurrentReportCSV()">
+                    <i class="fas fa-file-csv"></i> <span>Export CSV</span>
+                </button>
+                <button type="button" class="btn_primary" onclick="window.print(); showToast('Printing report...');">
+                    <i class="fas fa-print"></i> <span>Print / Save PDF</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- logout confirmation modal -->
+    <div class="modal_backdrop" id="logout_confirm_modal">
+        <div class="modal_card" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-sign-out-alt" style="color: #b91c1c; margin-right: 8px;"></i>Confirm Sign Out</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('logout_confirm_modal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Sign out of Taurus Admin?</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">You are about to end your current administrative session. Any unsaved edits will be discarded.</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn_secondary" onclick="closeModal('logout_confirm_modal')" style="flex: 1; justify-content: center;">Cancel</button>
+                    <button type="button" class="btn_primary" onclick="executeAdminLogout()" style="flex: 1; justify-content: center; background-color: #b91c1c; border-color: #b91c1c;">
+                        <i class="fas fa-sign-out-alt"></i> <span>Yes, Sign Out</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -608,6 +1127,18 @@
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
     <script>
+        let currentActiveReportData = null;
+
+        // CHECK URL PARAMS ON LOAD (e.g. ?tab=inventory)
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get("tab");
+            if (tabParam) {
+                switchReportTab(tabParam);
+            }
+        });
+
+        // SUB-TAB SWITCHING
         function switchReportTab(tabKey) {
             const tabs = document.querySelectorAll("#reports_tabs .filter_tab_btn");
             tabs.forEach(t => {
@@ -628,6 +1159,7 @@
             });
         }
 
+        // DATE PRESET APPLY
         function applyDatePreset(label, sales, units, orders, repairs) {
             document.getElementById("date_range_label").textContent = label;
             document.getElementById("stat_total_sales").textContent = sales;
@@ -636,6 +1168,221 @@
             document.getElementById("stat_repairs").textContent = repairs;
             closeModal("date_picker_modal");
             showToast("Report metrics updated for: " + label);
+        }
+
+        // PERIOD SELECTOR CUSTOM RANGE TOGGLE
+        function handlePeriodChange(val) {
+            const row = document.getElementById("gen_custom_date_row");
+            if (row) {
+                row.style.display = (val === "custom") ? "grid" : "none";
+            }
+        }
+
+        // REPORT DATA GENERATOR ENGINE
+        function generateSpecificReport(type, periodLabel) {
+            const data = buildReportData(type, periodLabel);
+            currentActiveReportData = data;
+            renderReportDocument(data);
+            openModal("view_generated_report_modal");
+        }
+
+        function handleGenerateReportSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById("gen_report_type").value;
+            const periodSelect = document.getElementById("gen_report_period");
+            let periodText = periodSelect.options[periodSelect.selectedIndex].text;
+            if (periodSelect.value === "custom") {
+                const start = document.getElementById("gen_date_start").value;
+                const end = document.getElementById("gen_date_end").value;
+                periodText = `${start} to ${end}`;
+            }
+            const format = document.getElementById("gen_report_format").value;
+
+            const data = buildReportData(type, periodText);
+            currentActiveReportData = data;
+
+            closeModal("generate_report_modal");
+
+            if (format === "csv") {
+                exportCurrentReportCSV();
+            } else {
+                renderReportDocument(data);
+                openModal("view_generated_report_modal");
+                showToast(`Generated ${data.title}`);
+            }
+        }
+
+        // COMPILE STRUCTURED REPORT DATA
+        function buildReportData(type, periodText) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
+            const refCode = "TR-" + type.toUpperCase().slice(0, 3) + "-" + Math.floor(1000 + Math.random() * 9000);
+
+            if (type === "inventory") {
+                return {
+                    type: "inventory",
+                    title: "Inventory Valuation & Stock Health Report",
+                    period: periodText,
+                    ref: refCode,
+                    date: dateStr,
+                    kpis: [
+                        { label: "Total Valuation", val: "₱2,845,000", color: "#b91c1c" },
+                        { label: "Total SKUs", val: "248 items" },
+                        { label: "Low Stock Items", val: "32 items", color: "#d97706" },
+                        { label: "Out of Stock", val: "15 items", color: "#dc2626" }
+                    ],
+                    headers: ["SKU", "Item Description", "Category", "Stock Qty", "Unit Price", "Total Valuation"],
+                    rows: [
+                        ["TR-MTB-001", "Taurus Stealth Carbon MTB 29\"", "Bicycles", "14 units", "₱34,500", "₱483,000"],
+                        ["TR-ROAD-002", "Sagmit Veneno Aero Road Bike 700c", "Bicycles", "10 units", "₱28,900", "₱289,000"],
+                        ["TR-FRM-008", "2026 Sagmit Evolution Frame Boost", "Frames & Forks", "6 units", "₱19,900", "₱119,400"],
+                        ["TR-GR-009", "Shimano Deore M6100 12spd Groupset", "Gears", "3 units", "₱16,800", "₱50,400"],
+                        ["TR-BRK-012", "Shimano MT200 Hydraulic Disc Brake Set", "Brakes", "2 units", "₱2,300", "₱4,600"],
+                        ["TR-RIM-016", "Maxxis Ardent 29x2.25 Tanwall EXO", "Tires", "18 units", "₱1,850", "₱33,300"],
+                        ["TR-PED-014", "Shimano PD-M520 SPD Mountain Pedals", "Pedals", "12 units", "₱2,100", "₱25,200"],
+                        ["TR-APP-020", "Shimano RC903 Sphyre Cleats Shoe", "Apparel", "8 units", "₱16,000", "₱128,000"]
+                    ]
+                };
+            } else if (type === "repairs") {
+                return {
+                    type: "repairs",
+                    title: "Workshop & Mechanical Repairs Report",
+                    period: periodText,
+                    ref: refCode,
+                    date: dateStr,
+                    kpis: [
+                        { label: "Completed Repairs", val: "68 jobs", color: "#b91c1c" },
+                        { label: "Workshop Revenue", val: "₱41,100" },
+                        { label: "Avg Turnaround", val: "1.4 days" },
+                        { label: "Customer Satisfaction", val: "98.5%", color: "#16a34a" }
+                    ],
+                    headers: ["Service Package", "Jobs Finished", "Lead Mechanic", "Parts Replaced", "Total Revenue"],
+                    rows: [
+                        ["Full Safety Tune-up & Inspection", "28 jobs", "Reynaldo Santos", "Cables, Ferrules", "₱14,000"],
+                        ["Hydraulic Disc Brake Bleeding & Overhaul", "18 jobs", "Mark Javier", "Mineral Oil, Pads", "₱12,600"],
+                        ["Wheel Truing & Spoke Tensioning", "12 jobs", "Reynaldo Santos", "14g Spokes, Nipples", "₱6,000"],
+                        ["Drivetrain De-greasing & Cable Tuning", "10 jobs", "Jun Dela Rosa", "KMC Chain Link", "₱8,500"]
+                    ]
+                };
+            } else if (type === "billing") {
+                return {
+                    type: "billing",
+                    title: "Billing & Financial Audit Report",
+                    period: periodText,
+                    ref: refCode,
+                    date: dateStr,
+                    kpis: [
+                        { label: "Total Invoiced", val: "₱185,420", color: "#b91c1c" },
+                        { label: "Invoices Issued", val: "120 txns" },
+                        { label: "VAT Collected (12%)", val: "₱19,866" },
+                        { label: "Unpaid / Pending", val: "₱0.00", color: "#16a34a" }
+                    ],
+                    headers: ["Payment Method", "Transactions", "Share of Total", "Status", "Gross Collected"],
+                    rows: [
+                        ["GCash Gateway", "58 transactions", "48.3%", "Reconciled", "₱89,550"],
+                        ["Maya QR", "26 transactions", "21.6%", "Reconciled", "₱40,050"],
+                        ["BPI Bank Transfer", "20 transactions", "16.7%", "Reconciled", "₱30,920"],
+                        ["Cash on Counter", "16 transactions", "13.4%", "Audited in Register", "₱24,900"]
+                    ]
+                };
+            } else {
+                // DEFAULT: SALES
+                return {
+                    type: "sales",
+                    title: "Sales & Revenue Performance Report",
+                    period: periodText,
+                    ref: refCode,
+                    date: dateStr,
+                    kpis: [
+                        { label: "Total Revenue", val: "₱185,420", color: "#b91c1c" },
+                        { label: "Units Sold", val: "342 items" },
+                        { label: "Online vs Walk-in", val: "76 / 44" },
+                        { label: "Gross Margin", val: "32.4%", color: "#16a34a" }
+                    ],
+                    headers: ["Category / Channel", "Units Sold", "Share of Volume", "Avg Selling Price", "Gross Revenue"],
+                    rows: [
+                        ["Complete Bicycles (MTB, Road, Gravel)", "34 bikes", "9.9%", "₱32,400", "₱1,101,600"],
+                        ["Groupsets, Drivetrain & Gears", "82 units", "24.0%", "₱9,750", "₱799,500"],
+                        ["Wheelsets, Rims & Tires", "118 units", "34.5%", "₱3,850", "₱454,300"],
+                        ["Apparel, Shoes & Helmets", "64 items", "18.7%", "₱4,800", "₱307,200"],
+                        ["Workshop Labor & Tuning", "44 jobs", "12.9%", "₱1,200", "₱52,800"]
+                    ]
+                };
+            }
+        }
+
+        // RENDER DOCUMENT INTO MODAL
+        function renderReportDocument(data) {
+            document.getElementById("report_doc_title").textContent = data.title;
+            document.getElementById("report_doc_period").textContent = "Period: " + data.period;
+            document.getElementById("report_doc_ref").textContent = data.ref;
+            document.getElementById("report_doc_date").textContent = data.date;
+
+            // KPIS
+            data.kpis.forEach((kpi, idx) => {
+                const labelEl = document.getElementById(`report_kpi_${idx + 1}_label`);
+                const valEl = document.getElementById(`report_kpi_${idx + 1}_val`);
+                if (labelEl) labelEl.textContent = kpi.label;
+                if (valEl) {
+                    valEl.textContent = kpi.val;
+                    valEl.style.color = kpi.color || "#0f172a";
+                }
+            });
+
+            // TABLE HEAD
+            const thead = document.getElementById("report_table_head");
+            if (thead) {
+                thead.innerHTML = `<tr>${data.headers.map((h, i) => `<th style="${i === data.headers.length - 1 ? 'text-align: right;' : ''}">${h}</th>`).join("")}</tr>`;
+            }
+
+            // TABLE BODY
+            const tbody = document.getElementById("report_table_body");
+            if (tbody) {
+                tbody.innerHTML = data.rows.map(row => `
+                    <tr>
+                        ${row.map((cell, idx) => {
+                            if (idx === 0) return `<td class="cell_customer_name">${cell}</td>`;
+                            if (idx === row.length - 1) return `<td class="cell_amount" style="text-align: right;">${cell}</td>`;
+                            return `<td>${cell}</td>`;
+                        }).join("")}
+                    </tr>
+                `).join("");
+            }
+        }
+
+        // EXPORT CURRENT REPORT TO CSV
+        function exportCurrentReportCSV() {
+            if (!currentActiveReportData) {
+                currentActiveReportData = buildReportData("sales", "September 2025");
+            }
+            const data = currentActiveReportData;
+            let csv = `${data.title} (${data.period})\nRef: ${data.ref}, Date: ${data.date}\n\n`;
+            csv += data.headers.join(",") + "\n";
+            data.rows.forEach(r => {
+                csv += r.map(c => `"${c.replace(/"/g, '""')}"`).join(",") + "\n";
+            });
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${data.ref}_${data.type}_report.csv`;
+            link.click();
+            showToast("Exporting " + data.title + " CSV...");
+        }
+
+        // EXPORT INVENTORY SPECIFIC CSV
+        function exportInventoryReportCSV() {
+            const data = buildReportData("inventory", "Current Stock Health");
+            let csv = "SKU,Item Description,Category,Stock Level,Unit Price,Total Value\n";
+            data.rows.forEach(r => {
+                csv += `"${r[0]}","${r[1]}","${r[2]}","${r[3]}","${r[4]}","${r[5]}"\n`;
+            });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Taurus_Inventory_Valuation_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            showToast("Exporting Inventory Valuation CSV...");
         }
     </script>
 </body>

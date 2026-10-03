@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Admin Sign In</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #0b0f19;">
+
+    <main class="admin_login_wrapper">
+        <div class="admin_login_card">
+            <!-- card header with logo -->
+            <div class="admin_login_header">
+                <div class="admin_login_logo_box">
+                    <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="admin_login_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <i class="fas fa-bicycle" style="font-size: 28px; color: #b91c1c; display: none;"></i>
+                </div>
+                <h1 class="admin_login_title">Administrator Portal</h1>
+                <p class="admin_login_subtitle">Sign in to access your TaurOS store operations panel.</p>
+            </div>
+
+            <!-- sign out alert message -->
+            <div class="admin_login_alert" id="login_status_alert" style="display: none;">
+                <i class="fas fa-check-circle" style="color: #16a34a; font-size: 16px;"></i>
+                <span id="login_status_text">You have successfully signed out.</span>
+            </div>
+
+            <!-- login form -->
+            <form id="admin_login_form" onsubmit="handleAdminLogin(event)">
+                <div class="form_group" style="margin-bottom: 18px;">
+                    <label class="form_label" for="admin_username">Admin Username / Email</label>
+                    <div class="login_input_group">
+                        <i class="fas fa-user login_input_icon"></i>
+                        <input type="text" class="login_input_field" id="admin_username" placeholder="admin@taurusbike.ph" value="admin@taurusbike.ph" required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form_group" style="margin-bottom: 20px;">
+                    <label class="form_label" for="admin_password">Password</label>
+                    <div class="login_input_group">
+                        <i class="fas fa-lock login_input_icon"></i>
+                        <input type="password" class="login_input_field" id="admin_password" placeholder="Enter your password" value="taurus2026" required autocomplete="current-password">
+                        <button type="button" class="login_pwd_toggle" id="toggle_pwd_btn" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye" id="toggle_pwd_icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #475569; cursor: pointer; user-select: none;">
+                        <input type="checkbox" id="remember_workstation" checked style="accent-color: #b91c1c;">
+                        <span>Remember workstation</span>
+                    </label>
+                    <button type="button" onclick="showToast('Password recovery link sent to registered admin email.')" style="background: none; border: none; font-size: 12px; color: #b91c1c; cursor: pointer; font-weight: 600; padding: 0;">Forgot password?</button>
+                </div>
+
+                <button type="submit" class="btn_admin_login" id="btn_admin_login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Sign In to Admin Panel</span>
+                </button>
+            </form>
+
+            <div class="admin_login_card_footer">
+                <p>Taurus Bike Store &bull; TaurOS Admin Panel v1.0</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("logged_out") === "true") {
+                const alertEl = document.getElementById("login_status_alert");
+                if (alertEl) {
+                    alertEl.style.display = "flex";
+                }
+            }
+        });
+
+        // toggle password view
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById("admin_password");
+            const icon = document.getElementById("toggle_pwd_icon");
+            if (pwdInput && icon) {
+                if (pwdInput.type === "password") {
+                    pwdInput.type = "text";
+                    icon.className = "fas fa-eye-slash";
+                } else {
+                    pwdInput.type = "password";
+                    icon.className = "fas fa-eye";
+                }
+            }
+        }
+
+        // authenticate and redirect
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById("btn_admin_login");
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Authenticating...</span>';
+            }
+
+            try {
+                localStorage.setItem("taurus_admin_session", "active");
+            } catch (err) {
+                console.error(err);
+            }
+
+            showToast("Welcome back, Administrator!", true);
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

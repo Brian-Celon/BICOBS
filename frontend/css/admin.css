@@ -260,14 +260,20 @@ body {
     border-right: 1px solid #1e2433;
     transition: transform 0.3s ease;
     z-index: 900;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    align-self: flex-start;
+    overflow-y: auto;
 }
 
 /* top area of sidebar containing header and links */
 .sidebar_top_section {
-    padding: 24px 16px;
+    padding: 24px 16px 16px 16px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
+    flex: 1;
 }
 
 /* admin panel category heading */
@@ -342,11 +348,14 @@ body {
 
 /* bottom branding footer in sidebar */
 .sidebar_footer {
-    padding: 20px;
+    padding: 16px 20px;
     border-top: 1px solid #1e2433;
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
+    margin-top: auto;
+    background-color: #121620;
 }
 
 /* sidebar footer logo icon */
@@ -372,6 +381,23 @@ body {
 .sidebar_footer_version {
     font-size: 11px;
     color: #64748b;
+}
+
+/* sidebar dedicated logout button */
+.sidebar_nav_logout_btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+}
+.sidebar_nav_logout_btn:hover {
+    color: #f87171 !important;
+    background-color: rgba(239, 68, 68, 0.1) !important;
+}
+.sidebar_nav_logout_btn:hover i {
+    color: #f87171 !important;
 }
 
 /* backdrop overlay for mobile sidebar */
@@ -2135,6 +2161,257 @@ input:checked + .slider::before {
 .modal_overlay.modal_active {
     display: flex;
 }
+
+/* wide modal card for generated reports */
+.modal_card_wide {
+    max-width: 840px;
+    width: 95%;
+}
+
+/* report document container */
+.report_document_wrap {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+/* report document header */
+.report_document_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #b91c1c;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+/* report document kpi grid */
+.report_kpi_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* single report kpi box */
+.report_kpi_box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+/* report kpi label */
+.report_kpi_label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* report kpi value */
+.report_kpi_value {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* admin login portal page wrapper */
+.admin_login_wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: radial-gradient(circle at top, #2a1518 0%, #111827 50%, #0b0f19 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* admin login decorative glow */
+.admin_login_wrapper::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(185, 28, 28, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+    top: -150px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* admin login card */
+.admin_login_card {
+    width: 100%;
+    max-width: 440px;
+    background-color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    padding: 36px 32px;
+    z-index: 10;
+    position: relative;
+}
+
+/* admin login header */
+.admin_login_header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+/* admin login logo box */
+.admin_login_logo_box {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #fef2f2;
+    border: 2px solid #fecaca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    overflow: hidden;
+}
+
+/* admin login logo image */
+.admin_login_logo_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* admin login title */
+.admin_login_title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+}
+
+/* admin login subtitle */
+.admin_login_subtitle {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* admin login alert notice */
+.admin_login_alert {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* admin login input wrapper with icon */
+.login_input_group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* login input prefix icon */
+.login_input_icon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 15px;
+    pointer-events: none;
+}
+
+/* login form input */
+.login_input_field {
+    width: 100%;
+    height: 44px;
+    padding: 10px 42px 10px 40px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+}
+
+.login_input_field:focus {
+    background-color: #ffffff;
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+}
+
+/* toggle password button */
+.login_pwd_toggle {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+}
+
+.login_pwd_toggle:hover {
+    color: #334155;
+}
+
+/* login submit button */
+.btn_admin_login {
+    width: 100%;
+    height: 44px;
+    background-color: #b91c1c;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35);
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    margin-top: 10px;
+}
+
+.btn_admin_login:hover {
+    background-color: #991b1b;
+    transform: translateY(-1px);
+}
+
+/* admin login footer */
+.admin_login_card_footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.admin_login_card_footer a {
+    color: #b91c1c;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin_login_card_footer a:hover {
+    text-decoration: underline;
+}
+
+
 
 
 

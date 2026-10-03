@@ -27,18 +27,66 @@
                 <i class="fas fa-search top_search_icon"></i>
                 <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
             </div>
-            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
-                <i class="fas fa-bell"></i>
-                <span class="notification_badge_dot"></span>
-            </button>
-            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
-                <div class="admin_profile_avatar">A</div>
-                <div class="admin_profile_details">
-                    <span class="admin_user_name">Admin</span>
-                    <span class="admin_user_role">Administrator</span>
+
+            <!-- notifications dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="notification_list">
+                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
+                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
+                            <div>
+                                <strong>New Order #ORD-1008</strong>
+                                <p style="color: #64748b; font-size: 11px;">2 mins ago &bull; ₱12,500</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
+                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Low Stock Alert</strong>
+                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
+                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Repair Completed</strong>
+                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
-            </a>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="admin_profile_trigger" onclick="toggleDropdown('admin_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="admin_profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="users.html" class="dropdown_menu_item">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="openLogoutModal()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -106,6 +154,12 @@
                                 <i class="fas fa-gear"></i>
                                 <span>Settings</span>
                             </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <button type="button" class="sidebar_nav_link sidebar_nav_logout_btn" onclick="openLogoutModal()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </button>
                         </li>
                     </ul>
                 </nav>
@@ -320,6 +374,29 @@
             </div>
             <div class="modal_footer">
                 <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- logout confirmation modal -->
+    <div class="modal_backdrop" id="logout_confirm_modal">
+        <div class="modal_card" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-sign-out-alt" style="color: #b91c1c; margin-right: 8px;"></i>Confirm Sign Out</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('logout_confirm_modal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Sign out of Taurus Admin?</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">You are about to end your current administrative session. Any unsaved edits will be discarded.</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn_secondary" onclick="closeModal('logout_confirm_modal')" style="flex: 1; justify-content: center;">Cancel</button>
+                    <button type="button" class="btn_primary" onclick="executeAdminLogout()" style="flex: 1; justify-content: center; background-color: #b91c1c; border-color: #b91c1c;">
+                        <i class="fas fa-sign-out-alt"></i> <span>Yes, Sign Out</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

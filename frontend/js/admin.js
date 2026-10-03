@@ -190,6 +190,43 @@ function initClickOutsideDropdowns() {
     });
 }
 
+// clear notifications from dropdown box
+function clearNotifications() {
+    const list = document.getElementById("notification_list");
+    if (list) {
+        list.innerHTML = "<li style='padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;'>No unread notifications</li>";
+    }
+    const dot = document.querySelector(".notification_badge_dot");
+    if (dot) {
+        dot.style.display = "none";
+    }
+    showToast("All notifications marked as read");
+}
+
+// open logout confirmation modal
+function openLogoutModal() {
+    // close dropdown menu if open
+    document.querySelectorAll(".dropdown_menu").forEach(menu => {
+        menu.classList.remove("dropdown_active");
+    });
+    openModal("logout_confirm_modal");
+}
+
+// execute admin sign out
+function executeAdminLogout() {
+    closeModal("logout_confirm_modal");
+    try {
+        localStorage.removeItem("taurus_admin_session");
+        sessionStorage.removeItem("taurus_admin_session");
+    } catch (e) {
+        console.error(e);
+    }
+    showToast("Signed out successfully. Redirecting to login...", true);
+    setTimeout(() => {
+        window.location.href = "login.html?logged_out=true";
+    }, 1200);
+}
+
 // handle save settings action with feedback
 function handleSaveSettings(event, sectionName = "Store settings") {
     if (event) event.preventDefault();
@@ -200,3 +237,4 @@ function handleSaveSettings(event, sectionName = "Store settings") {
 function handleQuickAction(actionName) {
     showToast(`${actionName} modal opened`);
 }
+

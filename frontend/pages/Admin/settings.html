@@ -80,7 +80,7 @@
                     <button type="button" class="dropdown_menu_item" onclick="switchSettingsTab('audit_log')">
                         <i class="fas fa-history"></i> Audit Logs
                     </button>
-                    <button type="button" class="dropdown_menu_item" onclick="showToast('Logged out successfully');">
+                    <button type="button" class="dropdown_menu_item" onclick="openLogoutModal()">
                         <i class="fas fa-sign-out-alt"></i> Sign Out
                     </button>
                 </div>
@@ -152,6 +152,12 @@
                                 <i class="fas fa-gear"></i>
                                 <span>Settings</span>
                             </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <button type="button" class="sidebar_nav_link sidebar_nav_logout_btn" onclick="openLogoutModal()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </button>
                         </li>
                     </ul>
                 </nav>
@@ -556,6 +562,29 @@
         </main>
     </div>
 
+    <!-- logout confirmation modal -->
+    <div class="modal_backdrop" id="logout_confirm_modal">
+        <div class="modal_card" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-sign-out-alt" style="color: #b91c1c; margin-right: 8px;"></i>Confirm Sign Out</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('logout_confirm_modal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Sign out of Taurus Admin?</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">You are about to end your current administrative session. Any unsaved edits will be discarded.</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn_secondary" onclick="closeModal('logout_confirm_modal')" style="flex: 1; justify-content: center;">Cancel</button>
+                    <button type="button" class="btn_primary" onclick="executeAdminLogout()" style="flex: 1; justify-content: center; background-color: #b91c1c; border-color: #b91c1c;">
+                        <i class="fas fa-sign-out-alt"></i> <span>Yes, Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
     <script>
@@ -581,16 +610,6 @@
 
         function exportAuditLog() {
             showToast("Exporting audit log CSV...");
-        }
-
-        function clearNotifications() {
-            const list = document.getElementById("notification_list");
-            if (list) {
-                list.innerHTML = "<li style='padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;'>No unread notifications</li>";
-            }
-            const dot = document.querySelector(".notification_badge_dot");
-            if (dot) dot.style.display = "none";
-            showToast("All notifications marked as read");
         }
     </script>
 </body>
