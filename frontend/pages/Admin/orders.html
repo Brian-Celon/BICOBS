@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Order Management</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification_badge_dot"></span>
+            </button>
+            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
+                <div class="admin_profile_avatar">A</div>
+                <div class="admin_profile_details">
+                    <span class="admin_user_name">Admin</span>
+                    <span class="admin_user_role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Order Management</h1>
+                    <p class="page_subtitle">Track online orders, verify payments, and manage fulfillment.</p>
+                </div>
+            </div>
+
+            <!-- order categories filter tabs bar -->
+            <div class="filter_tabs_bar" id="order_tabs_bar">
+                <button type="button" class="filter_tab_btn tab_active" data-filter="all">All Orders (12)</button>
+                <button type="button" class="filter_tab_btn" data-filter="online">Online Orders (7)</button>
+                <button type="button" class="filter_tab_btn" data-filter="walk-in">In-Store (3)</button>
+                <button type="button" class="filter_tab_btn" data-filter="pending">Pending Payment (2)</button>
+            </div>
+
+            <!-- search and toolbar filters -->
+            <div class="filter_toolbar">
+                <div class="toolbar_search_box">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="order_search_input" placeholder="Search by order number, customer name, or product...">
+                </div>
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="order_status_filter">
+                        <option value="all">All Statuses</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    <button type="button" class="btn_date_filter" onclick="openModal('order_date_modal')">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="order_date_label">Date Range</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- orders table card -->
+            <article class="admin_card">
+                <div class="table_responsive">
+                    <table class="admin_table" id="orders_table">
+                        <thead>
+                            <tr>
+                                <th>Order No.</th>
+                                <th>Customer</th>
+                                <th>Type</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders_tbody">
+                            <tr data-type="online" data-status="paid" id="order_row_1">
+                                <td class="cell_order_id">ORD-1008</td>
+                                <td class="cell_customer_name">Maria Santos</td>
+                                <td>Online</td>
+                                <td>GCash</td>
+                                <td class="order_status_cell"><span class="status_pill status_paid">Paid</span></td>
+                                <td class="cell_amount">₱3,500</td>
+                                <td>
+                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_1', 'ORD-1008', 'Maria Santos', 'Online', 'GCash', 'Paid', '₱3,500', '1x Shimano Deore Groupset')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-type="online" data-status="paid" id="order_row_2">
+                                <td class="cell_order_id">ORD-1007</td>
+                                <td class="cell_customer_name">James Reyes</td>
+                                <td>Online</td>
+                                <td>BPI</td>
+                                <td class="order_status_cell"><span class="status_pill status_paid">Paid</span></td>
+                                <td class="cell_amount">₱2,750</td>
+                                <td>
+                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_2', 'ORD-1007', 'James Reyes', 'Online', 'BPI', 'Paid', '₱2,750', '2x Maxxis Tires + 1x KMC Chain')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-type="online" data-status="paid" id="order_row_3">
+                                <td class="cell_order_id">ORD-1006</td>
+                                <td class="cell_customer_name">Ana Cruz</td>
+                                <td>Online</td>
+                                <td>GCash</td>
+                                <td class="order_status_cell"><span class="status_pill status_paid">Paid</span></td>
+                                <td class="cell_amount">₱1,980</td>
+                                <td>
+                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_3', 'ORD-1006', 'Ana Cruz', 'Online', 'GCash', 'Paid', '₱1,980', '1x Giant Helmet + 1x Bottle Cage')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-type="walk-in" data-status="completed" id="order_row_4">
+                                <td class="cell_order_id">ORD-1005</td>
+                                <td class="cell_customer_name">Paolo Dela Cruz</td>
+                                <td>Walk-in</td>
+                                <td>Cash</td>
+                                <td class="order_status_cell"><span class="status_pill status_completed">Completed</span></td>
+                                <td class="cell_amount">₱1,250</td>
+                                <td>
+                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_4', 'ORD-1005', 'Paolo Dela Cruz', 'Walk-in', 'Cash', 'Completed', '₱1,250', '1x Tune-up Service + Brake Pads')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-type="online" data-status="pending" id="order_row_5">
+                                <td class="cell_order_id">ORD-1004</td>
+                                <td class="cell_customer_name">Liza Fernandez</td>
+                                <td>Online</td>
+                                <td>Maya</td>
+                                <td class="order_status_cell"><span class="status_pill status_pending">Pending</span></td>
+                                <td class="cell_amount">₱4,200</td>
+                                <td>
+                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_5', 'ORD-1004', 'Liza Fernandez', 'Online', 'Maya', 'Pending', '₱4,200', '1x Hydraulic Brakeset + Grips')">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- pagination controls -->
+                <div class="pagination_wrapper">
+                    <span class="pagination_info" id="orders_pagination_info">Showing 1-5 of 12 orders</span>
+                    <div class="pagination_controls" id="orders_pagination_controls">
+                        <button type="button" class="pagination_btn" aria-label="Previous page" onclick="changeOrderPage(currentOrderPage - 1)"><i class="fas fa-chevron-left"></i></button>
+                        <button type="button" class="pagination_btn page_active" data-page="1" onclick="changeOrderPage(1)">1</button>
+                        <button type="button" class="pagination_btn" data-page="2" onclick="changeOrderPage(2)">2</button>
+                        <button type="button" class="pagination_btn" data-page="3" onclick="changeOrderPage(3)">3</button>
+                        <button type="button" class="pagination_btn" aria-label="Next page" onclick="changeOrderPage(currentOrderPage + 1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- order details modal dialog -->
+    <div class="modal_backdrop" id="order_detail_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title" id="order_modal_title">Order Details</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body">
+                <input type="hidden" id="modal_order_row_id">
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Customer:</span>
+                        <strong id="modal_order_customer" style="font-size: 13px; color: #0f172a;">Maria Santos</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Order Type:</span>
+                        <strong id="modal_order_type" style="font-size: 13px; color: #0f172a;">Online</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Payment Method:</span>
+                        <strong id="modal_order_payment" style="font-size: 13px; color: #0f172a;">GCash</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-size: 13px; color: #64748b;">Total Amount:</span>
+                        <strong id="modal_order_total" style="font-size: 15px; color: #b91c1c;">₱3,500</strong>
+                    </div>
+                </div>
+                <div class="form_group">
+                    <label class="form_label">Items Ordered</label>
+                    <p id="modal_order_items" style="font-size: 13px; color: #334155; padding: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;"></p>
+                </div>
+                <div class="form_group">
+                    <label class="form_label" for="modal_fulfillment_status">Update Fulfillment Status</label>
+                    <select class="form_input admin_select" id="modal_fulfillment_status">
+                        <option value="Paid">Paid (Processing)</option>
+                        <option value="Completed">Completed & Delivered</option>
+                        <option value="Pending">Pending Payment</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary btn_modal_cancel">Close</button>
+                <button type="button" class="btn_primary" onclick="saveFulfillmentStatus()">Save Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- date filter modal -->
+    <div class="modal_backdrop" id="order_date_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Filter Orders by Date</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body">
+                <div class="date_presets_group">
+                    <button type="button" class="date_preset_btn" onclick="applyOrderDate('Today', 5)">
+                        <span>Today</span>
+                        <small>5 orders</small>
+                    </button>
+                    <button type="button" class="date_preset_btn" onclick="applyOrderDate('This Week', 12)">
+                        <span>This Week</span>
+                        <small>12 orders</small>
+                    </button>
+                    <button type="button" class="date_preset_btn" onclick="applyOrderDate('September 2025', 12)">
+                        <span>Full Month</span>
+                        <small>12 orders</small>
+                    </button>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        let currentOrderPage = 1;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            filterTableBySearch("order_search_input", "orders_table");
+            filterTableBySelect("order_status_filter", "orders_table", 4);
+
+            const tabButtons = document.querySelectorAll("#order_tabs_bar .filter_tab_btn");
+            const rows = document.querySelectorAll("#orders_table tbody tr");
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener("click", function () {
+                    tabButtons.forEach(b => b.classList.remove("tab_active"));
+                    this.classList.add("tab_active");
+
+                    const filter = this.getAttribute("data-filter");
+                    rows.forEach(row => {
+                        const type = row.getAttribute("data-type");
+                        const status = row.getAttribute("data-status");
+
+                        if (filter === "all") {
+                            row.style.display = "";
+                        } else if (filter === "online" && type === "online") {
+                            row.style.display = "";
+                        } else if (filter === "walk-in" && type === "walk-in") {
+                            row.style.display = "";
+                        } else if (filter === "pending" && status === "pending") {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                });
+            });
+        });
+
+        function viewOrderDetails(rowId, orderId, customer, type, payment, status, total, items) {
+            document.getElementById("modal_order_row_id").value = rowId;
+            document.getElementById("order_modal_title").textContent = "Order Details: " + orderId;
+            document.getElementById("modal_order_customer").textContent = customer;
+            document.getElementById("modal_order_type").textContent = type;
+            document.getElementById("modal_order_payment").textContent = payment;
+            document.getElementById("modal_order_total").textContent = total;
+            document.getElementById("modal_order_items").textContent = items;
+            document.getElementById("modal_fulfillment_status").value = status;
+            openModal("order_detail_modal");
+        }
+
+        function saveFulfillmentStatus() {
+            const rowId = document.getElementById("modal_order_row_id").value;
+            const newStatus = document.getElementById("modal_fulfillment_status").value;
+            const row = document.getElementById(rowId);
+
+            if (row) {
+                row.setAttribute("data-status", newStatus.toLowerCase());
+                const statusCell = row.querySelector(".order_status_cell");
+                if (newStatus === "Completed") {
+                    statusCell.innerHTML = '<span class="status_pill status_completed">Completed</span>';
+                } else if (newStatus === "Paid") {
+                    statusCell.innerHTML = '<span class="status_pill status_paid">Paid</span>';
+                } else {
+                    statusCell.innerHTML = '<span class="status_pill status_pending">Pending</span>';
+                }
+            }
+
+            closeModal("order_detail_modal");
+            showToast("Order status updated successfully!");
+        }
+
+        function applyOrderDate(label, count) {
+            document.getElementById("order_date_label").textContent = label;
+            document.getElementById("orders_pagination_info").textContent = `Showing 1-5 of ${count} orders`;
+            closeModal("order_date_modal");
+            showToast("Filtered orders for: " + label);
+        }
+
+        function changeOrderPage(page) {
+            if (page < 1 || page > 3) return;
+            currentOrderPage = page;
+            const pageBtns = document.querySelectorAll("#orders_pagination_controls .pagination_btn");
+            pageBtns.forEach(btn => {
+                if (btn.getAttribute("data-page") == page) {
+                    btn.classList.add("page_active");
+                } else if (btn.getAttribute("data-page")) {
+                    btn.classList.remove("page_active");
+                }
+            });
+            document.getElementById("orders_pagination_info").textContent = `Showing ${(page - 1) * 5 + 1}-${Math.min(page * 5, 12)} of 12 orders`;
+            showToast("Loaded orders page " + page);
+        }
+    </script>
+</body>
+</html>

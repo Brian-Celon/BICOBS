@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Products</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification_badge_dot"></span>
+            </button>
+            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
+                <div class="admin_profile_avatar">A</div>
+                <div class="admin_profile_details">
+                    <span class="admin_user_name">Admin</span>
+                    <span class="admin_user_role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Products</h1>
+                    <p class="page_subtitle">Browse, filter, and add products available across all store categories.</p>
+                </div>
+                <div class="page_header_actions">
+                    <button type="button" class="btn_primary" onclick="openModal('add_product_modal')">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- categories filter tabs bar on top -->
+            <div class="filter_tabs_bar" id="category_tabs_bar">
+                <button type="button" class="filter_tab_btn tab_active" data-cat="all" onclick="selectCategoryTab('all', this)">
+                    All Products <span id="count_all">(21)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="bicycles" onclick="selectCategoryTab('bicycles', this)">
+                    Bicycles <span id="count_bicycles">(7)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="frames" onclick="selectCategoryTab('frames', this)">
+                    Frames & Forks <span id="count_frames">(1)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="gears" onclick="selectCategoryTab('gears', this)">
+                    Gears & Drivetrain <span id="count_gears">(3)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="brakes" onclick="selectCategoryTab('brakes', this)">
+                    Brakes & Rotors <span id="count_brakes">(2)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="pedals" onclick="selectCategoryTab('pedals', this)">
+                    Pedals & Cleats <span id="count_pedals">(2)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="rims_tires" onclick="selectCategoryTab('rims_tires', this)">
+                    Rims & Tires <span id="count_rims_tires">(2)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="handlebars_saddles" onclick="selectCategoryTab('handlebars_saddles', this)">
+                    Handlebars & Saddles <span id="count_handlebars_saddles">(2)</span>
+                </button>
+                <button type="button" class="filter_tab_btn" data-cat="apparel" onclick="selectCategoryTab('apparel', this)">
+                    Apparel & Shoes <span id="count_apparel">(2)</span>
+                </button>
+            </div>
+
+            <!-- search and toolbar filters -->
+            <div class="filter_toolbar" style="margin-bottom: 20px;">
+                <div class="toolbar_search_box" style="flex: 1; max-width: 400px;">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="product_search_input" placeholder="Search by product name or SKU..." oninput="filterProducts()">
+                </div>
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="product_sort_select" onchange="filterProducts()">
+                        <option value="default">Default Order</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="name_asc">Name: A to Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- products clean grid showcase -->
+            <section id="products_grid" class="products_grid">
+                <!-- INJECTED BY JAVASCRIPT -->
+            </section>
+
+            <!-- empty search state -->
+            <div id="empty_products_state" style="display: none; padding: 48px 20px; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; margin-top: 10px;">
+                <i class="fas fa-search" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px;"></i>
+                <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">No Products Found</h3>
+                <p style="font-size: 13px; color: #64748b; margin: 0 0 16px 0;">No items match the selected category or search query.</p>
+                <button type="button" class="btn_secondary" onclick="resetProductFilters()">Clear Filter</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- modal dialog: add product -->
+    <div class="modal_backdrop" id="add_product_modal" role="dialog" aria-modal="true" aria-labelledby="add_product_title">
+        <div class="modal_card">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="add_product_title">Add New Product</h3>
+                    <p class="modal_subtitle" style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Enter product details and select or upload a product image.</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('add_product_modal')" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="add_product_form" onsubmit="handleAddProductSubmit(event)">
+                <div class="modal_body">
+                    <!-- product title -->
+                    <div class="form_group">
+                        <label for="new_product_title" class="form_label">Product Name *</label>
+                        <input type="text" id="new_product_title" class="form_input" placeholder="e.g., Taurus Stealth Carbon MTB 29&quot;" required>
+                    </div>
+
+                    <!-- category and sku -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label for="new_product_category" class="form_label">Category *</label>
+                            <select id="new_product_category" class="form_select" required>
+                                <option value="" disabled selected>Select category...</option>
+                                <option value="bicycles">Bicycles</option>
+                                <option value="frames">Frames & Forks</option>
+                                <option value="gears">Gears & Drivetrain</option>
+                                <option value="brakes">Brakes & Rotors</option>
+                                <option value="pedals">Pedals & Cleats</option>
+                                <option value="rims_tires">Rims & Tires</option>
+                                <option value="handlebars_saddles">Handlebars & Saddles</option>
+                                <option value="apparel">Apparel & Shoes</option>
+                            </select>
+                        </div>
+                        <div class="form_group">
+                            <label for="new_product_sku" class="form_label">SKU Code *</label>
+                            <input type="text" id="new_product_sku" class="form_input" placeholder="e.g., TR-MTB-008" required>
+                        </div>
+                    </div>
+
+                    <!-- price and stock -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label for="new_product_price" class="form_label">Price (₱) *</label>
+                            <input type="number" id="new_product_price" class="form_input" min="1" placeholder="e.g., 24500" required>
+                        </div>
+                        <div class="form_group">
+                            <label for="new_product_stock" class="form_label">Initial Stock</label>
+                            <input type="number" id="new_product_stock" class="form_input" min="0" value="10">
+                        </div>
+                    </div>
+
+                    <!-- image insertion section -->
+                    <div class="form_group">
+                        <label class="form_label">Product Image</label>
+                        <!-- hidden file input -->
+                        <input type="file" id="new_product_file" accept="image/*" style="display: none;" onchange="handleProductImageFile(event)">
+                        <!-- chosen value -->
+                        <input type="hidden" id="new_product_image_val" value="/frontend/Pictures/placeholder.png">
+
+                        <!-- upload click box -->
+                        <div class="clean_upload_box" id="clean_upload_dropzone" onclick="document.getElementById('new_product_file').click()">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 26px; color: #94a3b8; margin-bottom: 6px;"></i>
+                            <p style="font-size: 13px; font-weight: 600; color: #334155; margin: 0;">Upload product photo</p>
+                            <span style="font-size: 11px; color: #94a3b8;">PNG, JPG, or WEBP</span>
+                        </div>
+
+                        <!-- image preview -->
+                        <div id="new_product_preview_wrap" style="display: none; margin-top: 10px; align-items: center; gap: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <img src="" id="new_product_preview_img" alt="Preview" style="width: 50px; height: 50px; object-fit: contain; background: #fff; border-radius: 6px; padding: 2px;">
+                            <div style="flex: 1;">
+                                <span style="font-size: 12px; font-weight: 600; color: #0f172a;">Image selected</span>
+                                <p style="font-size: 11px; color: #64748b; margin: 0;">Ready to save with product</p>
+                            </div>
+                            <button type="button" class="btn_secondary" style="padding: 4px 8px; font-size: 11px;" onclick="resetProductImage()">Remove</button>
+                        </div>
+
+                        <!-- or quick select preset -->
+                        <div style="margin-top: 10px;">
+                            <span style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase;">Or select from store assets:</span>
+                            <div class="clean_preset_row" id="clean_preset_container">
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/frame.png', this)" title="MTB Frame">
+                                    <img src="/frontend/Pictures/frame.png" alt="Frame">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/shimano-slx.png', this)" title="Groupset">
+                                    <img src="/frontend/Pictures/shimano-slx.png" alt="Groupset">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/shoes.png', this)" title="Shoes">
+                                    <img src="/frontend/Pictures/shoes.png" alt="Shoes">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/tire.png', this)" title="Tire">
+                                    <img src="/frontend/Pictures/tire.png" alt="Tire">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/bike&frames.jpg', this)" title="Bicycle">
+                                    <img src="/frontend/Pictures/bike&frames.jpg" alt="Bicycle">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/bestseller.jpg', this)" title="Road Bike">
+                                    <img src="/frontend/Pictures/bestseller.jpg" alt="Road Bike">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/rims&tiles.jpg', this)" title="Wheelset">
+                                    <img src="/frontend/Pictures/rims&tiles.jpg" alt="Wheelset">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/shoes&pedals.jpg', this)" title="Pedals">
+                                    <img src="/frontend/Pictures/shoes&pedals.jpg" alt="Pedals">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- short description -->
+                    <div class="form_group">
+                        <label for="new_product_desc" class="form_label">Description</label>
+                        <textarea id="new_product_desc" class="form_input" rows="2" placeholder="Brief product description or specifications..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary" onclick="closeModal('add_product_modal')">Cancel</button>
+                    <button type="submit" class="btn_primary">
+                        <i class="fas fa-plus"></i> <span>Add Product</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- modal dialog: edit product -->
+    <div class="modal_backdrop" id="edit_product_modal" role="dialog" aria-modal="true" aria-labelledby="edit_modal_title">
+        <div class="modal_card">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="edit_modal_title">Edit Product</h3>
+                    <p class="modal_subtitle" style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Update product information and pricing.</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('edit_product_modal')" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="edit_product_form" onsubmit="handleEditProductSubmit(event)">
+                <input type="hidden" id="edit_item_id">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label for="edit_item_title" class="form_label">Product Name</label>
+                        <input type="text" id="edit_item_title" class="form_input" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label for="edit_item_price" class="form_label">Price (₱)</label>
+                            <input type="number" id="edit_item_price" class="form_input" required>
+                        </div>
+                        <div class="form_group">
+                            <label for="edit_item_category" class="form_label">Category</label>
+                            <select id="edit_item_category" class="form_select" required>
+                                <option value="bicycles">Bicycles</option>
+                                <option value="frames">Frames & Forks</option>
+                                <option value="gears">Gears & Drivetrain</option>
+                                <option value="brakes">Brakes & Rotors</option>
+                                <option value="pedals">Pedals & Cleats</option>
+                                <option value="rims_tires">Rims & Tires</option>
+                                <option value="handlebars_saddles">Handlebars & Saddles</option>
+                                <option value="apparel">Apparel & Shoes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary" onclick="closeModal('edit_product_modal')">Cancel</button>
+                    <button type="submit" class="btn_primary">
+                        <i class="fas fa-save"></i> <span>Save Changes</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- toast notification container -->
+    <div class="toast_container" id="toast_container"></div>
+
+    <!-- client controller script -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        // master products dataset from before-main
+        const INITIAL_PRODUCTS = [
+            { id: "p1", sku: "TR-MTB-001", title: "Taurus Stealth Carbon MTB 29\"", category: "bicycles", category_name: "Bicycles", price: 34500, image: "/frontend/Pictures/bike&frames.jpg" },
+            { id: "p2", sku: "TR-ROAD-002", title: "Sagmit Veneno Aero Road Bike 700c", category: "bicycles", category_name: "Bicycles", price: 28900, image: "/frontend/Pictures/bestseller.jpg" },
+            { id: "p3", sku: "TR-GRAV-003", title: "Sunpeed Charisma All-Road Gravel Bike", category: "bicycles", category_name: "Bicycles", price: 26500, image: "/frontend/Pictures/shop-cover.jpg" },
+            { id: "p4", sku: "TR-MTB-004", title: "Taurus Trailblazer Full-Suspension MTB", category: "bicycles", category_name: "Bicycles", price: 48000, image: "/frontend/Pictures/cover.jpg" },
+            { id: "p5", sku: "TR-ROAD-005", title: "Taurus Apex Carbon Disc Road Racer", category: "bicycles", category_name: "Bicycles", price: 52000, image: "/frontend/Pictures/exclusive.jpg" },
+            { id: "p6", sku: "TR-BMX-006", title: "Legion Freestyle Pro BMX 20\"", category: "bicycles", category_name: "Bicycles", price: 14800, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p7", sku: "TR-FOLD-007", title: "Trinx Swift Urban Folding Bike 20\"", category: "bicycles", category_name: "Bicycles", price: 12500, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p8", sku: "TR-FRM-008", title: "2026 Sagmit Evolution Carbon MTB Frame Boost", category: "frames", category_name: "Frames & Forks", price: 19900, image: "/frontend/Pictures/frame.png" },
+            { id: "p9", sku: "TR-GR-009", title: "Shimano Deore M6100 12-Speed Groupset", category: "gears", category_name: "Gears & Drivetrain", price: 16800, image: "/frontend/Pictures/shimano-slx.png" },
+            { id: "p10", sku: "TR-GR-010", title: "Shimano SLX M7100 12spd Upgrade Kit", category: "gears", category_name: "Gears & Drivetrain", price: 9500, image: "/frontend/Pictures/shimano-slx.png" },
+            { id: "p11", sku: "TR-GR-011", title: "Shimano 105 R7000 Rear Derailleur 11-Speed", category: "gears", category_name: "Gears & Drivetrain", price: 2950, image: "/frontend/Pictures/shimano-slx.png" },
+            { id: "p12", sku: "TR-BRK-012", title: "Shimano MT200 Hydraulic Disc Brake Set", category: "brakes", category_name: "Brakes & Rotors", price: 2300, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p13", sku: "TR-BRK-013", title: "Sagmit Floating Disc Brake Rotors 160mm", category: "brakes", category_name: "Brakes & Rotors", price: 1150, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p14", sku: "TR-PED-014", title: "Shimano PD-M520 SPD Mountain Pedals", category: "pedals", category_name: "Pedals & Cleats", price: 2100, image: "/frontend/Pictures/shoes&pedals.jpg" },
+            { id: "p15", sku: "TR-PED-015", title: "Sagmit CNC Flat Sealed Bearing Pedals", category: "pedals", category_name: "Pedals & Cleats", price: 1450, image: "/frontend/Pictures/shoes&pedals.jpg" },
+            { id: "p16", sku: "TR-RIM-016", title: "Maxxis Ardent 29 x 2.25 Tanwall EXO TR", category: "rims_tires", category_name: "Rims & Tires", price: 1850, image: "/frontend/Pictures/tire.png" },
+            { id: "p17", sku: "TR-RIM-017", title: "Sagmit Racing Pro Wheelset 700c Thru-Axle", category: "rims_tires", category_name: "Rims & Tires", price: 7900, image: "/frontend/Pictures/rims&tiles.jpg" },
+            { id: "p18", sku: "TR-BAR-018", title: "Taurus Integrated Carbon Drop Handlebar", category: "handlebars_saddles", category_name: "Handlebars & Saddles", price: 4500, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p19", sku: "TR-SAD-019", title: "Selle Royal Ergonomic Memory Foam Saddle", category: "handlebars_saddles", category_name: "Handlebars & Saddles", price: 1350, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p20", sku: "TR-APP-020", title: "Shimano RC903 Sphyre Cleats Shoe", category: "apparel", category_name: "Apparel & Shoes", price: 16000, image: "/frontend/Pictures/shoes.png" },
+            { id: "p21", sku: "TR-APP-021", title: "Taurus Pro Aerodynamic Cycling Jersey", category: "apparel", category_name: "Apparel & Shoes", price: 3200, image: "/frontend/Pictures/placeholder.png" }
+        ];
+
+        let storeProducts = [];
+        const savedData = localStorage.getItem("taurus_store_products");
+        if (savedData) {
+            try {
+                storeProducts = JSON.parse(savedData);
+            } catch (err) {
+                storeProducts = [...INITIAL_PRODUCTS];
+            }
+        } else {
+            storeProducts = [...INITIAL_PRODUCTS];
+            localStorage.setItem("taurus_store_products", JSON.stringify(storeProducts));
+        }
+
+        let selectedCategory = "all";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderProductGrid();
+            updateCategoryCounters();
+        });
+
+        // update tab counters
+        function updateCategoryCounters() {
+            const counts = {
+                all: storeProducts.length,
+                bicycles: storeProducts.filter(p => p.category === "bicycles").length,
+                frames: storeProducts.filter(p => p.category === "frames").length,
+                gears: storeProducts.filter(p => p.category === "gears").length,
+                brakes: storeProducts.filter(p => p.category === "brakes").length,
+                pedals: storeProducts.filter(p => p.category === "pedals").length,
+                rims_tires: storeProducts.filter(p => p.category === "rims_tires").length,
+                handlebars_saddles: storeProducts.filter(p => p.category === "handlebars_saddles").length,
+                apparel: storeProducts.filter(p => p.category === "apparel").length
+            };
+
+            for (const key in counts) {
+                const el = document.getElementById("count_" + key);
+                if (el) el.textContent = `(${counts[key]})`;
+            }
+        }
+
+        // render products grid
+        function renderProductGrid(items = null) {
+            const list = items || getFilteredProducts();
+            const grid = document.getElementById("products_grid");
+            const emptyState = document.getElementById("empty_products_state");
+
+            if (list.length === 0) {
+                if (grid) grid.style.display = "none";
+                if (emptyState) emptyState.style.display = "block";
+                return;
+            }
+
+            if (emptyState) emptyState.style.display = "none";
+            if (grid) {
+                grid.style.display = "grid";
+                grid.innerHTML = list.map(item => `
+                    <article class="product_card" data_item="${item.id}">
+                        <div class="product_card_img_wrap">
+                            <img src="${item.image}" alt="${item.title}" class="product_card_img" onerror="this.onerror=null; this.src='/frontend/Pictures/placeholder.png';">
+                        </div>
+                        <div class="product_card_body">
+                            <span class="product_card_category">${item.category_name}</span>
+                            <h3 class="product_card_title" title="${item.title}">${item.title}</h3>
+                            <span class="product_card_sku">${item.sku}</span>
+                            <div class="product_card_footer">
+                                <span class="product_card_price">₱${Number(item.price).toLocaleString()}</span>
+                                <div class="product_card_actions">
+                                    <button type="button" class="product_action_btn" onclick="openEditProduct('${item.id}')" title="Edit Product">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button type="button" class="product_action_btn product_action_btn_danger" onclick="deleteProductItem('${item.id}')" title="Delete Product">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `).join("");
+            }
+        }
+
+        // tab switching
+        function selectCategoryTab(category, btnElement) {
+            selectedCategory = category;
+            document.querySelectorAll(".filter_tab_btn").forEach(btn => btn.classList.remove("tab_active"));
+            if (btnElement) btnElement.classList.add("tab_active");
+            filterProducts();
+        }
+
+        // search and filtering
+        function getFilteredProducts() {
+            const query = (document.getElementById("product_search_input")?.value || "").toLowerCase().trim();
+            const sort = document.getElementById("product_sort_select")?.value || "default";
+
+            let result = storeProducts.filter(item => {
+                const matchCategory = selectedCategory === "all" || item.category === selectedCategory;
+                const matchQuery = !query || item.title.toLowerCase().includes(query) || item.sku.toLowerCase().includes(query);
+                return matchCategory && matchQuery;
+            });
+
+            if (sort === "price_asc") {
+                result.sort((a, b) => a.price - b.price);
+            } else if (sort === "price_desc") {
+                result.sort((a, b) => b.price - a.price);
+            } else if (sort === "name_asc") {
+                result.sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            return result;
+        }
+
+        function filterProducts() {
+            renderProductGrid();
+        }
+
+        function resetProductFilters() {
+            const search = document.getElementById("product_search_input");
+            if (search) search.value = "";
+            const sort = document.getElementById("product_sort_select");
+            if (sort) sort.value = "default";
+            selectCategoryTab("all", document.querySelector(".filter_tab_btn[data-cat='all']"));
+        }
+
+        // image file upload
+        function handleProductImageFile(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64 = evt.target.result;
+                document.getElementById("new_product_image_val").value = base64;
+                showUploadPreview(base64);
+                clearPresetHighlights();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function pickPresetAsset(path, element) {
+            document.getElementById("new_product_image_val").value = path;
+            showUploadPreview(path);
+
+            clearPresetHighlights();
+            if (element) element.classList.add("selected");
+        }
+
+        function clearPresetHighlights() {
+            document.querySelectorAll(".clean_preset_thumb").forEach(el => el.classList.remove("selected"));
+        }
+
+        function showUploadPreview(src) {
+            const wrap = document.getElementById("new_product_preview_wrap");
+            const img = document.getElementById("new_product_preview_img");
+            if (img) img.src = src;
+            if (wrap) wrap.style.display = "flex";
+        }
+
+        function resetProductImage() {
+            document.getElementById("new_product_image_val").value = "/frontend/Pictures/placeholder.png";
+            const wrap = document.getElementById("new_product_preview_wrap");
+            const fileInput = document.getElementById("new_product_file");
+            if (fileInput) fileInput.value = "";
+            if (wrap) wrap.style.display = "none";
+            clearPresetHighlights();
+        }
+
+        // add product submit
+        function handleAddProductSubmit(e) {
+            e.preventDefault();
+
+            const title = document.getElementById("new_product_title").value.trim();
+            const category = document.getElementById("new_product_category").value;
+            const sku = document.getElementById("new_product_sku").value.trim();
+            const price = parseFloat(document.getElementById("new_product_price").value) || 0;
+            const image = document.getElementById("new_product_image_val").value || "/frontend/Pictures/placeholder.png";
+
+            const catMap = {
+                bicycles: "Bicycles",
+                frames: "Frames & Forks",
+                gears: "Gears & Drivetrain",
+                brakes: "Brakes & Rotors",
+                pedals: "Pedals & Cleats",
+                rims_tires: "Rims & Tires",
+                handlebars_saddles: "Handlebars & Saddles",
+                apparel: "Apparel & Shoes"
+            };
+
+            const newItem = {
+                id: "p_" + Date.now(),
+                sku: sku,
+                title: title,
+                category: category,
+                category_name: catMap[category] || category,
+                price: price,
+                image: image
+            };
+
+            storeProducts.unshift(newItem);
+            localStorage.setItem("taurus_store_products", JSON.stringify(storeProducts));
+
+            renderProductGrid();
+            updateCategoryCounters();
+            closeModal("add_product_modal");
+            e.target.reset();
+            resetProductImage();
+
+            showToast(`Added product "${title}" successfully!`);
+        }
+
+        // edit product
+        function openEditProduct(productId) {
+            const item = storeProducts.find(p => p.id === productId);
+            if (!item) return;
+
+            document.getElementById("edit_item_id").value = item.id;
+            document.getElementById("edit_item_title").value = item.title;
+            document.getElementById("edit_item_price").value = item.price;
+            document.getElementById("edit_item_category").value = item.category;
+
+            openModal("edit_product_modal");
+        }
+
+        function handleEditProductSubmit(e) {
+            e.preventDefault();
+
+            const id = document.getElementById("edit_item_id").value;
+            const item = storeProducts.find(p => p.id === id);
+            if (!item) return;
+
+            item.title = document.getElementById("edit_item_title").value.trim();
+            item.price = parseFloat(document.getElementById("edit_item_price").value) || 0;
+            item.category = document.getElementById("edit_item_category").value;
+
+            const catMap = {
+                bicycles: "Bicycles",
+                frames: "Frames & Forks",
+                gears: "Gears & Drivetrain",
+                brakes: "Brakes & Rotors",
+                pedals: "Pedals & Cleats",
+                rims_tires: "Rims & Tires",
+                handlebars_saddles: "Handlebars & Saddles",
+                apparel: "Apparel & Shoes"
+            };
+            item.category_name = catMap[item.category] || item.category;
+
+            localStorage.setItem("taurus_store_products", JSON.stringify(storeProducts));
+            renderProductGrid();
+            updateCategoryCounters();
+            closeModal("edit_product_modal");
+
+            showToast(`Updated "${item.title}"`);
+        }
+
+        // delete product
+        function deleteProductItem(productId) {
+            const item = storeProducts.find(p => p.id === productId);
+            if (!item) return;
+
+            if (confirm(`Are you sure you want to delete "${item.title}"?`)) {
+                storeProducts = storeProducts.filter(p => p.id !== productId);
+                localStorage.setItem("taurus_store_products", JSON.stringify(storeProducts));
+                renderProductGrid();
+                updateCategoryCounters();
+                showToast(`Deleted "${item.title}"`);
+            }
+        }
+    </script>
+</body>
+</html>

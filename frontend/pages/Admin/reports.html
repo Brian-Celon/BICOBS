@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Sales & Performance Reports</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* custom svg chart enhancements */
+        .chart_svg {
+            width: 100%;
+            height: 240px;
+            overflow: visible;
+        }
+        .chart_line {
+            fill: none;
+            stroke: #b91c1c;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .chart_area {
+            fill: url(#chart_gradient);
+        }
+        .chart_dot {
+            fill: #ffffff;
+            stroke: #b91c1c;
+            stroke-width: 2.5;
+            cursor: pointer;
+            transition: r 0.2s ease, fill 0.2s ease;
+        }
+        .chart_dot:hover {
+            r: 6;
+            fill: #b91c1c;
+        }
+        .chart_axis_text {
+            font-size: 11px;
+            fill: #94a3b8;
+        }
+        .chart_grid_line {
+            stroke: #e2e8f0;
+            stroke-dasharray: 4 4;
+            stroke-width: 1;
+        }
+        .bar_chart_row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification_badge_dot"></span>
+            </button>
+            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
+                <div class="admin_profile_avatar">A</div>
+                <div class="admin_profile_details">
+                    <span class="admin_user_name">Admin</span>
+                    <span class="admin_user_role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Sales & Performance Reports</h1>
+                    <p class="page_subtitle">Analyze your business performance with detailed reports.</p>
+                </div>
+                <div class="page_header_actions">
+                    <button type="button" class="btn_date_filter" id="reports_date_btn" onclick="openModal('date_picker_modal')">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="date_range_label">Sep 1, 2025 - Sep 30, 2025</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- sub-tabs row -->
+            <div class="filter_tabs_bar" id="reports_tabs">
+                <button type="button" class="filter_tab_btn tab_underline tab_active" data-report-tab="sales_summary" onclick="switchReportTab('sales_summary')">Sales Summary</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-report-tab="monthly_sales" onclick="switchReportTab('monthly_sales')">Monthly Sales</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-report-tab="units_sold" onclick="switchReportTab('units_sold')">Units Sold</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-report-tab="online_orders" onclick="switchReportTab('online_orders')">Online Orders</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-report-tab="repairs" onclick="switchReportTab('repairs')">Repairs</button>
+            </div>
+
+            <!-- 4 metric summary stat cards -->
+            <section class="stat_cards_grid">
+                <!-- card 1: total sales -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Total Sales</span>
+                        <div class="stat_card_icon_box icon_theme_red">
+                            <i class="fas fa-peso-sign"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_total_sales">₱185,420</div>
+                    <div class="stat_card_footer">
+                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +14%</span>
+                        <span class="stat_trend_label">vs last month</span>
+                    </div>
+                </article>
+
+                <!-- card 2: units sold -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Units Sold</span>
+                        <div class="stat_card_icon_box icon_theme_blue">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_units_sold">342</div>
+                    <div class="stat_card_footer">
+                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +12%</span>
+                        <span class="stat_trend_label">vs last month</span>
+                    </div>
+                </article>
+
+                <!-- card 3: online orders -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Online Orders</span>
+                        <div class="stat_card_icon_box icon_theme_green">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_online_orders">76</div>
+                    <div class="stat_card_footer">
+                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +28%</span>
+                        <span class="stat_trend_label">vs last month</span>
+                    </div>
+                </article>
+
+                <!-- card 4: completed repairs -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Completed Repairs</span>
+                        <div class="stat_card_icon_box icon_theme_yellow">
+                            <i class="fas fa-wrench"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_repairs">68</div>
+                    <div class="stat_card_footer">
+                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +10%</span>
+                        <span class="stat_trend_label">vs last month</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- SUB-PANEL 1: SALES SUMMARY -->
+            <div class="tab_panel tab_panel_active" id="report_panel_sales_summary">
+                <section class="reports_visual_grid">
+                    <!-- left panel: sales overview svg line chart -->
+                    <article class="admin_card">
+                        <div class="card_header">
+                            <h2 class="card_title">Sales Overview</h2>
+                        </div>
+                        <div class="chart_box">
+                            <svg class="chart_svg" viewBox="0 0 600 240" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="chart_gradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#b91c1c" stop-opacity="0.3" />
+                                        <stop offset="100%" stop-color="#b91c1c" stop-opacity="0.0" />
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- horizontal grid lines and y-axis labels -->
+                                <line x1="40" y1="20" x2="580" y2="20" class="chart_grid_line" />
+                                <text x="5" y="24" class="chart_axis_text">100k</text>
+
+                                <line x1="40" y1="65" x2="580" y2="65" class="chart_grid_line" />
+                                <text x="12" y="69" class="chart_axis_text">75k</text>
+
+                                <line x1="40" y1="110" x2="580" y2="110" class="chart_grid_line" />
+                                <text x="12" y="114" class="chart_axis_text">50k</text>
+
+                                <line x1="40" y1="155" x2="580" y2="155" class="chart_grid_line" />
+                                <text x="12" y="159" class="chart_axis_text">25k</text>
+
+                                <line x1="40" y1="200" x2="580" y2="200" class="chart_grid_line" />
+                                <text x="18" y="204" class="chart_axis_text">0k</text>
+
+                                <!-- x-axis date labels -->
+                                <text x="60" y="224" class="chart_axis_text">Sep 1</text>
+                                <text x="180" y="224" class="chart_axis_text">Sep 8</text>
+                                <text x="300" y="224" class="chart_axis_text">Sep 15</text>
+                                <text x="420" y="224" class="chart_axis_text">Sep 22</text>
+                                <text x="530" y="224" class="chart_axis_text">Sep 29</text>
+
+                                <!-- area path -->
+                                <path class="chart_area" d="
+                                    M 80,165 
+                                    Q 130,120 180,140 
+                                    T 280,130 
+                                    T 380,95 
+                                    T 480,110 
+                                    T 550,70 
+                                    L 550,200 
+                                    L 80,200 Z" />
+
+                                <!-- line path -->
+                                <path class="chart_line" d="
+                                    M 80,165 
+                                    Q 130,120 180,140 
+                                    T 280,130 
+                                    T 380,95 
+                                    T 480,110 
+                                    T 550,70" />
+
+                                <!-- data interactive dots -->
+                                <circle cx="80" cy="165" r="4.5" class="chart_dot" onclick="showToast('Sep 1 Revenue: ₱22,400')"><title>Sep 1: ₱22,400</title></circle>
+                                <circle cx="180" cy="140" r="4.5" class="chart_dot" onclick="showToast('Sep 8 Revenue: ₱38,150')"><title>Sep 8: ₱38,150</title></circle>
+                                <circle cx="280" cy="130" r="4.5" class="chart_dot" onclick="showToast('Sep 15 Revenue: ₱44,200')"><title>Sep 15: ₱44,200</title></circle>
+                                <circle cx="380" cy="95" r="4.5" class="chart_dot" onclick="showToast('Sep 22 Revenue: ₱61,850')"><title>Sep 22: ₱61,850</title></circle>
+                                <circle cx="480" cy="110" r="4.5" class="chart_dot" onclick="showToast('Sep 26 Revenue: ₱55,320')"><title>Sep 26: ₱55,320</title></circle>
+                                <circle cx="550" cy="70" r="4.5" class="chart_dot" onclick="showToast('Sep 29 Revenue: ₱78,500')"><title>Sep 29: ₱78,500</title></circle>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- right panel: top selling products -->
+                    <article class="admin_card">
+                        <div class="card_header">
+                            <h2 class="card_title">Top Selling Products</h2>
+                        </div>
+                        <ul class="top_products_list">
+                            <li class="top_product_item">
+                                <div class="top_product_info">
+                                    <span class="product_rank_badge">#1</span>
+                                    <span class="product_rank_name">Trek Marlin 6</span>
+                                </div>
+                                <span class="product_rank_count">42 units</span>
+                            </li>
+                            <li class="top_product_item">
+                                <div class="top_product_info">
+                                    <span class="product_rank_badge">#2</span>
+                                    <span class="product_rank_name">Shimano Groupset</span>
+                                </div>
+                                <span class="product_rank_count">38 units</span>
+                            </li>
+                            <li class="top_product_item">
+                                <div class="top_product_info">
+                                    <span class="product_rank_badge">#3</span>
+                                    <span class="product_rank_name">Maxxis Tire</span>
+                                </div>
+                                <span class="product_rank_count">24 units</span>
+                            </li>
+                            <li class="top_product_item">
+                                <div class="top_product_info">
+                                    <span class="product_rank_badge">#4</span>
+                                    <span class="product_rank_name">KMC Chain</span>
+                                </div>
+                                <span class="product_rank_count">20 units</span>
+                            </li>
+                            <li class="top_product_item">
+                                <div class="top_product_info">
+                                    <span class="product_rank_badge">#5</span>
+                                    <span class="product_rank_name">Giant Helmet</span>
+                                </div>
+                                <span class="product_rank_count">18 units</span>
+                            </li>
+                        </ul>
+                    </article>
+                </section>
+            </div>
+
+            <!-- SUB-PANEL 2: MONTHLY SALES -->
+            <div class="tab_panel" id="report_panel_monthly_sales">
+                <article class="admin_card">
+                    <div class="card_header">
+                        <h2 class="card_title">Monthly Revenue Performance (2025)</h2>
+                        <span style="font-size: 13px; color: #16a34a; font-weight: 600;"><i class="fas fa-arrow-trend-up"></i> +26% Year-to-Date Growth</span>
+                    </div>
+                    <div class="table_responsive">
+                        <table class="admin_table">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Gross Sales</th>
+                                    <th>Orders Fulfilled</th>
+                                    <th>Average Order Value</th>
+                                    <th>Growth Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell_customer_name">September 2025 (Current)</td>
+                                    <td class="cell_amount">₱185,420</td>
+                                    <td>120 orders</td>
+                                    <td>₱1,545</td>
+                                    <td><span class="status_pill status_completed">+14.4%</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">August 2025</td>
+                                    <td class="cell_amount">₱162,100</td>
+                                    <td>108 orders</td>
+                                    <td>₱1,500</td>
+                                    <td><span class="status_pill status_completed">+9.2%</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">July 2025</td>
+                                    <td class="cell_amount">₱148,400</td>
+                                    <td>96 orders</td>
+                                    <td>₱1,545</td>
+                                    <td><span class="status_pill status_completed">+6.8%</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">June 2025</td>
+                                    <td class="cell_amount">₱139,000</td>
+                                    <td>91 orders</td>
+                                    <td>₱1,527</td>
+                                    <td><span class="status_pill status_completed">+11.5%</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">May 2025</td>
+                                    <td class="cell_amount">₱124,650</td>
+                                    <td>84 orders</td>
+                                    <td>₱1,483</td>
+                                    <td><span class="status_pill status_completed">+4.1%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+
+            <!-- SUB-PANEL 3: UNITS SOLD -->
+            <div class="tab_panel" id="report_panel_units_sold">
+                <article class="admin_card">
+                    <h2 class="card_title">Category Volume Distribution</h2>
+                    <p class="page_subtitle" style="margin-bottom: 20px;">Breakdown of the 342 total inventory units sold during this period.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                                <span>Bicycles & Frame Sets</span>
+                                <span style="color: #b91c1c;">120 units (35.1%)</span>
+                            </div>
+                            <div class="metric_progress_track">
+                                <div class="metric_progress_fill" style="width: 35.1%;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                                <span>Bike Components & Drivetrains</span>
+                                <span style="color: #0284c7;">98 units (28.7%)</span>
+                            </div>
+                            <div class="metric_progress_track">
+                                <div class="metric_progress_fill" style="width: 28.7%; background-color: #0284c7;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                                <span>Tires, Tubes & Wheels</span>
+                                <span style="color: #d97706;">64 units (18.7%)</span>
+                            </div>
+                            <div class="metric_progress_track">
+                                <div class="metric_progress_fill" style="width: 18.7%; background-color: #d97706;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                                <span>Rider Accessories & Safety Gear</span>
+                                <span style="color: #16a34a;">60 units (17.5%)</span>
+                            </div>
+                            <div class="metric_progress_track">
+                                <div class="metric_progress_fill" style="width: 17.5%; background-color: #16a34a;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- SUB-PANEL 4: ONLINE ORDERS -->
+            <div class="tab_panel" id="report_panel_online_orders">
+                <article class="admin_card">
+                    <h2 class="card_title">Online Sales & Digital Channel Performance</h2>
+                    <p class="page_subtitle" style="margin-bottom: 20px;">Analysis of 76 verified online customer orders.</p>
+                    <div class="settings_grid">
+                        <div class="admin_card" style="box-shadow: none; border-color: #edf2f7;">
+                            <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">Payment Method Split</h3>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>GCash (52 orders)</span>
+                                    <strong>₱112,400</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>Maya (14 orders)</span>
+                                    <strong>₱42,100</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>BPI Transfer (10 orders)</span>
+                                    <strong>₱30,920</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin_card" style="box-shadow: none; border-color: #edf2f7;">
+                            <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">Fulfillment Summary</h3>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>Home Delivery</span>
+                                    <strong style="color: #16a34a;">54 delivered (100%)</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>Store Pickup</span>
+                                    <strong style="color: #0284c7;">22 collected</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>Cancellation Rate</span>
+                                    <strong style="color: #64748b;">0.0%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- SUB-PANEL 5: REPAIRS -->
+            <div class="tab_panel" id="report_panel_repairs">
+                <article class="admin_card">
+                    <h2 class="card_title">Workshop & Bike Repair Revenue</h2>
+                    <p class="page_subtitle" style="margin-bottom: 20px;">Breakdown of 68 completed mechanical repairs generating ₱41,100 total workshop revenue.</p>
+                    <div class="table_responsive">
+                        <table class="admin_table">
+                            <thead>
+                                <tr>
+                                    <th>Repair Category</th>
+                                    <th>Jobs Completed</th>
+                                    <th>Lead Mechanic</th>
+                                    <th>Revenue Generated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell_customer_name">Full Safety Tune-up & Inspection</td>
+                                    <td>28 jobs</td>
+                                    <td>Reynaldo Santos</td>
+                                    <td class="cell_amount">₱14,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">Hydraulic Disc Brake Bleeding & Overhaul</td>
+                                    <td>18 jobs</td>
+                                    <td>Mark Javier</td>
+                                    <td class="cell_amount">₱12,600</td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">Wheel Truing & Spoke Tensioning</td>
+                                    <td>12 jobs</td>
+                                    <td>Reynaldo Santos</td>
+                                    <td class="cell_amount">₱6,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_customer_name">Drivetrain De-greasing & Cable Tuning</td>
+                                    <td>10 jobs</td>
+                                    <td>Jun Dela Rosa</td>
+                                    <td class="cell_amount">₱8,500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- interactive date range modal picker -->
+    <div class="modal_backdrop" id="date_picker_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Select Reporting Period</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body">
+                <div class="date_presets_group">
+                    <button type="button" class="date_preset_btn" onclick="applyDatePreset('Today (Sep 22, 2025)', '₱24,850', '14', '5', '4')">
+                        <span>Today</span>
+                        <small style="color: #64748b;">Sep 22, 2025</small>
+                    </button>
+                    <button type="button" class="date_preset_btn" onclick="applyDatePreset('Last 7 Days', '₱68,200', '95', '28', '22')">
+                        <span>Last 7 Days</span>
+                        <small style="color: #64748b;">Sep 15 - Sep 22</small>
+                    </button>
+                    <button type="button" class="date_preset_btn" onclick="applyDatePreset('Sep 1, 2025 - Sep 30, 2025', '₱185,420', '342', '76', '68')">
+                        <span>This Month (September 2025)</span>
+                        <small style="color: #64748b;">Full calendar month</small>
+                    </button>
+                    <button type="button" class="date_preset_btn" onclick="applyDatePreset('Aug 1, 2025 - Aug 31, 2025', '₱162,100', '305', '59', '62')">
+                        <span>Last Month (August 2025)</span>
+                        <small style="color: #64748b;">Previous calendar month</small>
+                    </button>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        function switchReportTab(tabKey) {
+            const tabs = document.querySelectorAll("#reports_tabs .filter_tab_btn");
+            tabs.forEach(t => {
+                if (t.getAttribute("data-report-tab") === tabKey) {
+                    t.classList.add("tab_active");
+                } else {
+                    t.classList.remove("tab_active");
+                }
+            });
+
+            const panels = document.querySelectorAll(".tab_panel");
+            panels.forEach(p => {
+                if (p.id === "report_panel_" + tabKey) {
+                    p.classList.add("tab_panel_active");
+                } else {
+                    p.classList.remove("tab_panel_active");
+                }
+            });
+        }
+
+        function applyDatePreset(label, sales, units, orders, repairs) {
+            document.getElementById("date_range_label").textContent = label;
+            document.getElementById("stat_total_sales").textContent = sales;
+            document.getElementById("stat_units_sold").textContent = units;
+            document.getElementById("stat_online_orders").textContent = orders;
+            document.getElementById("stat_repairs").textContent = repairs;
+            closeModal("date_picker_modal");
+            showToast("Report metrics updated for: " + label);
+        }
+    </script>
+</body>
+</html>

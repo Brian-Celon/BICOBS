@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - System Settings</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="notification_list">
+                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
+                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
+                            <div>
+                                <strong>New Order #ORD-1008</strong>
+                                <p style="color: #64748b; font-size: 11px;">Maria Santos placed an order for ₱3,500</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
+                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Low Stock Alert</strong>
+                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
+                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Repair Completed</strong>
+                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) finished</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="profile_dropdown_trigger" onclick="toggleDropdown('profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="switchSettingsTab('audit_log')">
+                        <i class="fas fa-history"></i> Audit Logs
+                    </button>
+                    <button type="button" class="dropdown_menu_item" onclick="showToast('Logged out successfully');">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">System Settings</h1>
+                    <p class="page_subtitle">Configure your store settings, business hours, and preferences.</p>
+                </div>
+            </div>
+
+            <!-- settings navigation horizontal tabs -->
+            <div class="filter_tabs_bar" id="settings_tabs_bar">
+                <button type="button" class="filter_tab_btn tab_underline tab_active" data-tab="general" onclick="switchSettingsTab('general')">General</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-tab="business_hours" onclick="switchSettingsTab('business_hours')">Business Hours</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-tab="payments" onclick="switchSettingsTab('payments')">Payments</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-tab="delivery" onclick="switchSettingsTab('delivery')">Delivery</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-tab="inventory" onclick="switchSettingsTab('inventory')">Inventory</button>
+                <button type="button" class="filter_tab_btn tab_underline" data-tab="audit_log" onclick="switchSettingsTab('audit_log')">Audit Log</button>
+            </div>
+
+            <!-- TAB PANEL 1: GENERAL -->
+            <div class="tab_panel tab_panel_active" id="panel_general">
+                <form onsubmit="handleSaveSettings(event, 'General store settings')">
+                    <div class="settings_grid">
+                        <!-- left column: store information -->
+                        <article class="admin_card">
+                            <h2 class="card_title">Store Information</h2>
+                            
+                            <div class="form_group">
+                                <label class="form_label" for="setting_store_name">Store Name</label>
+                                <input type="text" class="form_input" id="setting_store_name" value="Taurus Bike Store" required>
+                            </div>
+
+                            <div class="form_group">
+                                <label class="form_label" for="setting_business_reg">Business Registration</label>
+                                <input type="text" class="form_input" id="setting_business_reg" value="Howell Lu Caludio" required>
+                            </div>
+
+                            <div class="form_group">
+                                <label class="form_label" for="setting_address">Address</label>
+                                <input type="text" class="form_input" id="setting_address" value="Santisima Street, Abangan Sur, Marilao, Bulacan" required>
+                            </div>
+
+                            <div class="form_group">
+                                <label class="form_label" for="setting_contact">Contact Number</label>
+                                <input type="text" class="form_input" id="setting_contact" value="+63 912 345 6789" required>
+                            </div>
+
+                            <div class="form_group">
+                                <label class="form_label" for="setting_email">Email</label>
+                                <input type="email" class="form_input" id="setting_email" value="info@tauros.com" required>
+                            </div>
+                        </article>
+
+                        <!-- right column: system preferences -->
+                        <article class="admin_card" style="justify-content: space-between;">
+                            <div>
+                                <h2 class="card_title" style="margin-bottom: 12px;">System Preferences</h2>
+
+                                <div class="preference_item">
+                                    <span class="preference_label">Enable Online Orders</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="pref_online_orders" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="preference_item">
+                                    <span class="preference_label">Enable Notifications</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="pref_notifications" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="preference_item">
+                                    <span class="preference_label">Auto Backup</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="pref_auto_backup">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- save changes button -->
+                            <div style="display: flex; justify-content: flex-end; padding-top: 20px;">
+                                <button type="submit" class="btn_primary" style="padding: 12px 24px;">
+                                    <i class="fas fa-save"></i>
+                                    <span>Save Changes</span>
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TAB PANEL 2: BUSINESS HOURS -->
+            <div class="tab_panel" id="panel_business_hours">
+                <article class="admin_card">
+                    <div class="card_header">
+                        <h2 class="card_title">Store Operating Schedule</h2>
+                        <span style="font-size: 13px; color: #64748b;">Marilao, Bulacan Branch</span>
+                    </div>
+                    <form onsubmit="handleSaveSettings(event, 'Business hours schedule')">
+                        <div class="table_responsive">
+                            <table class="admin_table">
+                                <thead>
+                                    <tr>
+                                        <th>Day of Week</th>
+                                        <th>Status</th>
+                                        <th>Opening Time</th>
+                                        <th>Closing Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="cell_customer_name">Monday – Friday</td>
+                                        <td><span class="status_pill status_active">Open</span></td>
+                                        <td><input type="time" class="form_input" value="08:00" style="max-width: 140px;"></td>
+                                        <td><input type="time" class="form_input" value="18:00" style="max-width: 140px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cell_customer_name">Saturday</td>
+                                        <td><span class="status_pill status_active">Open</span></td>
+                                        <td><input type="time" class="form_input" value="08:00" style="max-width: 140px;"></td>
+                                        <td><input type="time" class="form_input" value="17:00" style="max-width: 140px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cell_customer_name">Sunday</td>
+                                        <td><span class="status_pill status_active">Open</span></td>
+                                        <td><input type="time" class="form_input" value="09:00" style="max-width: 140px;"></td>
+                                        <td><input type="time" class="form_input" value="15:00" style="max-width: 140px;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form_group" style="margin-top: 20px;">
+                            <label class="form_label" for="setting_holiday_note">Public Holiday & Special Announcement Notice</label>
+                            <input type="text" class="form_input" id="setting_holiday_note" value="Regular store hours apply on non-working holidays unless announced on our Facebook page.">
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; padding-top: 14px;">
+                            <button type="submit" class="btn_primary">
+                                <i class="fas fa-save"></i> <span>Save Operating Hours</span>
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </div>
+
+            <!-- TAB PANEL 3: PAYMENTS -->
+            <div class="tab_panel" id="panel_payments">
+                <article class="admin_card">
+                    <h2 class="card_title" style="margin-bottom: 8px;">Payment Gateway & Accounts Configuration</h2>
+                    <p class="page_subtitle" style="margin-bottom: 20px;">Manage active customer payment channels accepted in-store and online.</p>
+                    <form onsubmit="handleSaveSettings(event, 'Payment channel settings')">
+                        <!-- GCash -->
+                        <div class="payment_channel_card">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div class="stat_card_icon_box icon_theme_blue" style="font-size: 20px;">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div>
+                                    <strong style="font-size: 14px; color: #0f172a;">GCash Digital Wallet</strong>
+                                    <p style="font-size: 12px; color: #64748b;">Account: Taurus Bike Store (0912 345 6789)</p>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Maya -->
+                        <div class="payment_channel_card">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div class="stat_card_icon_box icon_theme_green" style="font-size: 20px;">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <strong style="font-size: 14px; color: #0f172a;">Maya (PayMaya)</strong>
+                                    <p style="font-size: 12px; color: #64748b;">Account: Taurus Bike Store (0912 345 6789)</p>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- BPI -->
+                        <div class="payment_channel_card">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div class="stat_card_icon_box icon_theme_red" style="font-size: 20px;">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div>
+                                    <strong style="font-size: 14px; color: #0f172a;">BPI Bank Transfer</strong>
+                                    <p style="font-size: 12px; color: #64748b;">Account: Howell Lu Caludio (1234-5678-90)</p>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Cash -->
+                        <div class="payment_channel_card">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div class="stat_card_icon_box icon_theme_yellow" style="font-size: 20px;">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div>
+                                    <strong style="font-size: 14px; color: #0f172a;">Cash on Delivery & In-store Cash</strong>
+                                    <p style="font-size: 12px; color: #64748b;">Accept cash payments upon delivery or counter checkout</p>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; padding-top: 14px;">
+                            <button type="submit" class="btn_primary">
+                                <i class="fas fa-save"></i> <span>Save Payment Options</span>
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </div>
+
+            <!-- TAB PANEL 4: DELIVERY -->
+            <div class="tab_panel" id="panel_delivery">
+                <article class="admin_card">
+                    <h2 class="card_title" style="margin-bottom: 8px;">Delivery & Fulfillment Configuration</h2>
+                    <p class="page_subtitle" style="margin-bottom: 20px;">Configure shipping rates, local delivery radius, and store pickup options.</p>
+                    <form onsubmit="handleSaveSettings(event, 'Delivery settings')">
+                        <div class="settings_grid">
+                            <div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_standard_fee">Standard Delivery Fee (₱)</label>
+                                    <input type="number" class="form_input" id="setting_standard_fee" value="150" required>
+                                </div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_free_threshold">Free Delivery Minimum Order Amount (₱)</label>
+                                    <input type="number" class="form_input" id="setting_free_threshold" value="5000" required>
+                                </div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_lead_time">Estimated Delivery Lead Time</label>
+                                    <input type="text" class="form_input" id="setting_lead_time" value="1 – 3 Business Days" required>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_coverage_areas">Primary Serviceable Areas (Bulacan / Metro North)</label>
+                                    <textarea class="form_input" id="setting_coverage_areas" rows="4" style="height: auto; padding: 10px;">Marilao, Meycauayan, Bocaue, Santa Maria, Balagtas, Valenzuela North</textarea>
+                                </div>
+                                <div class="preference_item" style="margin-top: 10px;">
+                                    <span class="preference_label">Allow In-Store Pickup (Free)</span>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; padding-top: 16px;">
+                            <button type="submit" class="btn_primary">
+                                <i class="fas fa-save"></i> <span>Save Delivery Settings</span>
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </div>
+
+            <!-- TAB PANEL 5: INVENTORY -->
+            <div class="tab_panel" id="panel_inventory">
+                <article class="admin_card">
+                    <h2 class="card_title" style="margin-bottom: 8px;">Inventory Rules & Thresholds</h2>
+                    <p class="page_subtitle" style="margin-bottom: 20px;">Manage low stock triggers and automated stock notifications.</p>
+                    <form onsubmit="handleSaveSettings(event, 'Inventory rules')">
+                        <div class="settings_grid">
+                            <div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_low_stock_threshold">Low Stock Warning Threshold</label>
+                                    <input type="number" class="form_input" id="setting_low_stock_threshold" value="5" min="1" required>
+                                    <span style="font-size: 11px; color: #64748b;">Triggers amber warning badge and dashboard alert when stock drops below this count.</span>
+                                </div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_out_of_stock_action">Action on Zero Stock</label>
+                                    <select class="form_input admin_select" id="setting_out_of_stock_action">
+                                        <option value="disable">Disable Ordering Immediately</option>
+                                        <option value="backorder">Allow Backorders with Notice</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="preference_item">
+                                    <span class="preference_label">Daily Low Stock Digest Email</span>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="preference_item">
+                                    <span class="preference_label">Auto-Reserve Items on Checkout</span>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; padding-top: 16px;">
+                            <button type="submit" class="btn_primary">
+                                <i class="fas fa-save"></i> <span>Save Inventory Rules</span>
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </div>
+
+            <!-- TAB PANEL 6: AUDIT LOG -->
+            <div class="tab_panel" id="panel_audit_log">
+                <article class="admin_card">
+                    <div class="card_header">
+                        <div>
+                            <h2 class="card_title">System Audit Log</h2>
+                            <p class="page_subtitle">Timestamped security record of staff actions and database modifications.</p>
+                        </div>
+                        <button type="button" class="btn_secondary" onclick="exportAuditLog()">
+                            <i class="fas fa-download"></i> <span>Export Log</span>
+                        </button>
+                    </div>
+                    <div class="table_responsive">
+                        <table class="admin_table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Action Performed</th>
+                                    <th>Target Resource</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sep 22, 2025 10:15 AM</td>
+                                    <td class="cell_customer_name">Admin User</td>
+                                    <td><span class="status_pill status_active">Login</span> Successful login</td>
+                                    <td>Session #AU-883</td>
+                                    <td>192.168.1.10</td>
+                                </tr>
+                                <tr>
+                                    <td>Sep 22, 2025 09:50 AM</td>
+                                    <td class="cell_customer_name">Juan Dela Cruz</td>
+                                    <td><span class="status_pill status_paid">Status Update</span> Order marked Paid</td>
+                                    <td>Order #ORD-1008</td>
+                                    <td>192.168.1.15</td>
+                                </tr>
+                                <tr>
+                                    <td>Sep 22, 2025 09:30 AM</td>
+                                    <td class="cell_customer_name">Reynaldo Santos</td>
+                                    <td><span class="status_pill status_completed">Repair Finish</span> Ticket closed</td>
+                                    <td>Ticket #R009 (MTB)</td>
+                                    <td>192.168.1.18</td>
+                                </tr>
+                                <tr>
+                                    <td>Sep 22, 2025 08:45 AM</td>
+                                    <td class="cell_customer_name">Admin User</td>
+                                    <td><span class="status_pill status_low_stock">Stock Edit</span> Stock adjusted to 12</td>
+                                    <td>TBR-001 (Trek Marlin 6)</td>
+                                    <td>192.168.1.10</td>
+                                </tr>
+                                <tr>
+                                    <td>Sep 21, 2025 05:15 PM</td>
+                                    <td class="cell_customer_name">Maria Lopez</td>
+                                    <td><span class="status_pill status_active">User Create</span> Account provisioned</td>
+                                    <td>staff3@tauros.com</td>
+                                    <td>192.168.1.12</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        function switchSettingsTab(tabName) {
+            const tabs = document.querySelectorAll("#settings_tabs_bar .filter_tab_btn");
+            tabs.forEach(t => {
+                if (t.getAttribute("data-tab") === tabName) {
+                    t.classList.add("tab_active");
+                } else {
+                    t.classList.remove("tab_active");
+                }
+            });
+
+            const panels = document.querySelectorAll(".tab_panel");
+            panels.forEach(p => {
+                if (p.id === "panel_" + tabName) {
+                    p.classList.add("tab_panel_active");
+                } else {
+                    p.classList.remove("tab_panel_active");
+                }
+            });
+        }
+
+        function exportAuditLog() {
+            showToast("Exporting audit log CSV...");
+        }
+
+        function clearNotifications() {
+            const list = document.getElementById("notification_list");
+            if (list) {
+                list.innerHTML = "<li style='padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;'>No unread notifications</li>";
+            }
+            const dot = document.querySelector(".notification_badge_dot");
+            if (dot) dot.style.display = "none";
+            showToast("All notifications marked as read");
+        }
+    </script>
+</body>
+</html>

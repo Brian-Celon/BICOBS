@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Inventory Management</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification_badge_dot"></span>
+            </button>
+            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
+                <div class="admin_profile_avatar">A</div>
+                <div class="admin_profile_details">
+                    <span class="admin_user_name">Admin</span>
+                    <span class="admin_user_role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Inventory Management</h1>
+                    <p class="page_subtitle">Track your stock levels, add new products, and manage your inventory.</p>
+                </div>
+                <div class="page_header_actions">
+                    <a href="products.html" class="btn_secondary">
+                        <i class="fas fa-tags"></i>
+                        <span>Products Catalog</span>
+                    </a>
+                    <button type="button" class="btn_primary" onclick="openModal('add_inventory_product_modal')">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- search and category filters row -->
+            <div class="filter_toolbar">
+                <div class="toolbar_search_box">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="inventory_search_input" placeholder="Search by name, SKU, or category...">
+                </div>
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="inventory_category_filter">
+                        <option value="all">All Categories</option>
+                        <option value="Bicycles">Bicycles</option>
+                        <option value="Components">Components</option>
+                        <option value="Tires">Tires</option>
+                        <option value="Accessories">Accessories</option>
+                    </select>
+                    <select class="admin_select" id="inventory_status_filter">
+                        <option value="all">All Status</option>
+                        <option value="In Stock">In Stock</option>
+                        <option value="Low Stock">Low Stock</option>
+                        <option value="Out of Stock">Out of Stock</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 4 metric summary stat cards -->
+            <section class="stat_cards_grid">
+                <!-- card 1: total products -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Total Products</span>
+                        <div class="stat_card_icon_box icon_theme_blue">
+                            <i class="fas fa-box-archive"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_total_products">248</div>
+                </article>
+
+                <!-- card 2: in stock -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">In Stock</span>
+                        <div class="stat_card_icon_box icon_theme_green">
+                            <i class="fas fa-circle-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_in_stock">201</div>
+                </article>
+
+                <!-- card 3: low stock -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Low Stock</span>
+                        <div class="stat_card_icon_box icon_theme_yellow">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_low_stock">32</div>
+                </article>
+
+                <!-- card 4: out of stock -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Out of Stock</span>
+                        <div class="stat_card_icon_box icon_theme_red">
+                            <i class="fas fa-circle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value" id="stat_out_stock">15</div>
+                </article>
+            </section>
+
+            <!-- inventory data table card -->
+            <article class="admin_card">
+                <div class="table_responsive">
+                    <table class="admin_table" id="inventory_table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>SKU</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory_tbody">
+                            <tr id="inv_row_1">
+                                <td>
+                                    <div class="product_img_placeholder">
+                                        <i class="fas fa-bicycle"></i>
+                                    </div>
+                                </td>
+                                <td class="cell_customer_name prod_name_val">Trek Marlin 6 (2024)</td>
+                                <td class="prod_sku_val">TBR-001</td>
+                                <td class="prod_category_val">Bicycles</td>
+                                <td class="cell_amount prod_stock_val">12</td>
+                                <td class="prod_status_val"><span class="status_pill status_in_stock">In Stock</span></td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_1', 'Trek Marlin 6 (2024)', 'TBR-001', 'Bicycles', '12', '₱28,000')">View</button>
+                                </td>
+                            </tr>
+                            <tr id="inv_row_2">
+                                <td>
+                                    <div class="product_img_placeholder">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                </td>
+                                <td class="cell_customer_name prod_name_val">Shimano Deore Groupset</td>
+                                <td class="prod_sku_val">SHM-002</td>
+                                <td class="prod_category_val">Components</td>
+                                <td class="cell_amount prod_stock_val">3</td>
+                                <td class="prod_status_val"><span class="status_pill status_low_stock">Low Stock</span></td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_2', 'Shimano Deore Groupset', 'SHM-002', 'Components', '3', '₱9,500')">View</button>
+                                </td>
+                            </tr>
+                            <tr id="inv_row_3">
+                                <td>
+                                    <div class="product_img_placeholder">
+                                        <i class="fas fa-circle-notch"></i>
+                                    </div>
+                                </td>
+                                <td class="cell_customer_name prod_name_val">Maxxis 29" Tire</td>
+                                <td class="prod_sku_val">MX-003</td>
+                                <td class="prod_category_val">Tires</td>
+                                <td class="cell_amount prod_stock_val">0</td>
+                                <td class="prod_status_val"><span class="status_pill status_out_of_stock">Out of Stock</span></td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_3', 'Maxxis 29 Tire', 'MX-003', 'Tires', '0', '₱1,450')">View</button>
+                                </td>
+                            </tr>
+                            <tr id="inv_row_4">
+                                <td>
+                                    <div class="product_img_placeholder">
+                                        <i class="fas fa-link"></i>
+                                    </div>
+                                </td>
+                                <td class="cell_customer_name prod_name_val">KMC Chain</td>
+                                <td class="prod_sku_val">KMC-004</td>
+                                <td class="prod_category_val">Components</td>
+                                <td class="cell_amount prod_stock_val">25</td>
+                                <td class="prod_status_val"><span class="status_pill status_in_stock">In Stock</span></td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_4', 'KMC Chain', 'KMC-004', 'Components', '25', '₱850')">View</button>
+                                </td>
+                            </tr>
+                            <tr id="inv_row_5">
+                                <td>
+                                    <div class="product_img_placeholder">
+                                        <i class="fas fa-hard-hat"></i>
+                                    </div>
+                                </td>
+                                <td class="cell_customer_name prod_name_val">Giant Helmet</td>
+                                <td class="prod_sku_val">GNT-005</td>
+                                <td class="prod_category_val">Accessories</td>
+                                <td class="cell_amount prod_stock_val">8</td>
+                                <td class="prod_status_val"><span class="status_pill status_low_stock">Low Stock</span></td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_5', 'Giant Helmet', 'GNT-005', 'Accessories', '8', '₱2,100')">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- pagination controls -->
+                <div class="pagination_wrapper">
+                    <span class="pagination_info" id="inventory_pagination_info">Showing 1-5 of 248 products</span>
+                    <div class="pagination_controls" id="inventory_pagination_controls">
+                        <button type="button" class="pagination_btn" id="inv_prev_btn" aria-label="Previous page" onclick="changeInventoryPage(currentPage - 1)"><i class="fas fa-chevron-left"></i></button>
+                        <button type="button" class="pagination_btn page_active" data-page="1" onclick="changeInventoryPage(1)">1</button>
+                        <button type="button" class="pagination_btn" data-page="2" onclick="changeInventoryPage(2)">2</button>
+                        <button type="button" class="pagination_btn" data-page="3" onclick="changeInventoryPage(3)">3</button>
+                        <span style="padding: 0 4px; color: #94a3b8;">...</span>
+                        <button type="button" class="pagination_btn" data-page="5" onclick="changeInventoryPage(5)">5</button>
+                        <button type="button" class="pagination_btn" id="inv_next_btn" aria-label="Next page" onclick="changeInventoryPage(currentPage + 1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- add product modal dialog -->
+    <div class="modal_backdrop" id="add_inventory_product_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Add New Inventory Product</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleCreateProduct(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="inv_product_name">Product Name</label>
+                        <input type="text" class="form_input" id="inv_product_name" placeholder="e.g. Shimano XT Groupset" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="inv_product_sku">SKU Code</label>
+                        <input type="text" class="form_input" id="inv_product_sku" placeholder="e.g. SHM-010" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="inv_product_category">Category</label>
+                        <select class="form_input admin_select" id="inv_product_category">
+                            <option value="Bicycles">Bicycles</option>
+                            <option value="Components">Components</option>
+                            <option value="Tires">Tires</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="inv_product_price">Unit Price (₱)</label>
+                        <input type="number" class="form_input" id="inv_product_price" placeholder="3500" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="inv_product_stock">Stock Quantity</label>
+                        <input type="number" class="form_input" id="inv_product_stock" value="15" min="0" required>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- product detail modal dialog -->
+    <div class="modal_backdrop" id="product_detail_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Product Details & Stock Level</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body">
+                <input type="hidden" id="detail_row_id">
+                <div style="display: flex; gap: 16px; margin-bottom: 16px; align-items: center;">
+                    <div class="product_img_placeholder" style="width: 64px; height: 64px; font-size: 28px;">
+                        <i class="fas fa-bicycle" id="detail_icon"></i>
+                    </div>
+                    <div>
+                        <h4 id="detail_name" style="font-size: 16px; color: #0f172a;">Trek Marlin 6 (2024)</h4>
+                        <p id="detail_sku" style="font-size: 13px; color: #64748b;">SKU: TBR-001</p>
+                        <p id="detail_price" style="font-size: 14px; font-weight: 700; color: #b91c1c; margin-top: 4px;">₱28,000</p>
+                    </div>
+                </div>
+                <div class="form_group">
+                    <label class="form_label" for="detail_stock_input">Update On-Hand Stock</label>
+                    <input type="number" class="form_input" id="detail_stock_input" value="12" min="0">
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary btn_modal_cancel">Close</button>
+                <button type="button" class="btn_primary" onclick="saveProductStock()">Update Stock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        let totalProductCount = 248;
+        let currentPage = 1;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            filterTableBySearch("inventory_search_input", "inventory_table");
+            filterTableBySelect("inventory_category_filter", "inventory_table", 3);
+            filterTableBySelect("inventory_status_filter", "inventory_table", 5);
+        });
+
+        function openProductDetail(rowId, name, sku, category, stock, price) {
+            document.getElementById("detail_row_id").value = rowId;
+            document.getElementById("detail_name").textContent = name;
+            document.getElementById("detail_sku").textContent = "SKU: " + sku;
+            document.getElementById("detail_price").textContent = price;
+            document.getElementById("detail_stock_input").value = stock;
+
+            const iconEl = document.getElementById("detail_icon");
+            if (category === "Bicycles") iconEl.className = "fas fa-bicycle";
+            else if (category === "Components") iconEl.className = "fas fa-cogs";
+            else if (category === "Tires") iconEl.className = "fas fa-circle-notch";
+            else iconEl.className = "fas fa-hard-hat";
+
+            openModal("product_detail_modal");
+        }
+
+        function saveProductStock() {
+            const rowId = document.getElementById("detail_row_id").value;
+            const newStock = parseInt(document.getElementById("detail_stock_input").value, 10);
+            const row = document.getElementById(rowId);
+
+            if (row && !isNaN(newStock)) {
+                row.querySelector(".prod_stock_val").textContent = newStock;
+                const statusCell = row.querySelector(".prod_status_val");
+
+                if (newStock === 0) {
+                    statusCell.innerHTML = '<span class="status_pill status_out_of_stock">Out of Stock</span>';
+                } else if (newStock <= 3) {
+                    statusCell.innerHTML = '<span class="status_pill status_low_stock">Low Stock</span>';
+                } else {
+                    statusCell.innerHTML = '<span class="status_pill status_in_stock">In Stock</span>';
+                }
+            }
+
+            closeModal("product_detail_modal");
+            showToast("Inventory stock quantity updated!");
+        }
+
+        function handleCreateProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById("inv_product_name").value;
+            const sku = document.getElementById("inv_product_sku").value;
+            const category = document.getElementById("inv_product_category").value;
+            const price = "₱" + parseInt(document.getElementById("inv_product_price").value, 10).toLocaleString();
+            const stock = parseInt(document.getElementById("inv_product_stock").value, 10);
+
+            totalProductCount++;
+            const newRowId = "inv_row_" + totalProductCount;
+            const tbody = document.getElementById("inventory_tbody");
+
+            let statusPill = '<span class="status_pill status_in_stock">In Stock</span>';
+            if (stock === 0) statusPill = '<span class="status_pill status_out_of_stock">Out of Stock</span>';
+            else if (stock <= 3) statusPill = '<span class="status_pill status_low_stock">Low Stock</span>';
+
+            let cat_icon = 'fa-boxes-stacked';
+            if (category === "Bicycles") cat_icon = 'fa-bicycle';
+            else if (category === "Components") cat_icon = 'fa-cogs';
+            else if (category === "Tires") cat_icon = 'fa-circle-notch';
+            else if (category === "Accessories") cat_icon = 'fa-hard-hat';
+
+            const tr = document.createElement("tr");
+            tr.id = newRowId;
+            tr.innerHTML = `
+                <td>
+                    <div class="product_img_placeholder">
+                        <i class="fas ${cat_icon}"></i>
+                    </div>
+                </td>
+                <td class="cell_customer_name prod_name_val">${name}</td>
+                <td class="prod_sku_val">${sku}</td>
+                <td class="prod_category_val">${category}</td>
+                <td class="cell_amount prod_stock_val">${stock}</td>
+                <td class="prod_status_val">${statusPill}</td>
+                <td>
+                    <button type="button" class="table_action_link" onclick="openProductDetail('${newRowId}', '${name}', '${sku}', '${category}', '${stock}', '${price}')">View</button>
+                </td>
+            `;
+
+            tbody.insertBefore(tr, tbody.firstChild);
+            document.getElementById("stat_total_products").textContent = totalProductCount;
+            document.getElementById("inventory_pagination_info").textContent = `Showing 1-5 of ${totalProductCount} products`;
+
+            closeModal("add_inventory_product_modal");
+            showToast(`Product "${name}" added to inventory!`);
+            document.getElementById("inv_product_name").value = "";
+            document.getElementById("inv_product_sku").value = "";
+            document.getElementById("inv_product_price").value = "";
+        }
+
+        function changeInventoryPage(page) {
+            if (page < 1 || page > 5) return;
+            currentPage = page;
+            const pageBtns = document.querySelectorAll("#inventory_pagination_controls .pagination_btn");
+            pageBtns.forEach(btn => {
+                if (btn.getAttribute("data-page") == page) {
+                    btn.classList.add("page_active");
+                } else if (btn.getAttribute("data-page")) {
+                    btn.classList.remove("page_active");
+                }
+            });
+
+            const startIdx = (page - 1) * 5 + 1;
+            const endIdx = Math.min(page * 5, totalProductCount);
+            document.getElementById("inventory_pagination_info").textContent = `Showing ${startIdx}-${endIdx} of ${totalProductCount} products`;
+            showToast("Loaded page " + page);
+        }
+    </script>
+</body>
+</html>

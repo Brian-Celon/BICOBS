@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Repair Queue</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+            <button type="button" class="top_notification_btn" aria-label="Notifications" onclick="showToast('You have 3 unread notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification_badge_dot"></span>
+            </button>
+            <a href="settings.html" class="admin_profile_pill" title="Administrator Profile">
+                <div class="admin_profile_avatar">A</div>
+                <div class="admin_profile_details">
+                    <span class="admin_user_name">Admin</span>
+                    <span class="admin_user_role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Repair Queue</h1>
+                    <p class="page_subtitle">Manage bike repairs, track status, and assign to mechanics.</p>
+                </div>
+                <div class="page_header_actions">
+                    <button type="button" class="btn_primary" onclick="openModal('new_repair_modal')">
+                        <i class="fas fa-plus"></i>
+                        <span>New Repair</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- repair status filter tabs bar -->
+            <div class="filter_tabs_bar" id="repair_tabs_bar">
+                <button type="button" class="filter_tab_btn tab_active" data-status-filter="all" id="tab_all_repairs">All Repairs (8)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="in-progress">In Progress (3)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="waiting">Waiting (2)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="completed">Completed (3)</button>
+            </div>
+
+            <!-- search and toolbar filters -->
+            <div class="filter_toolbar">
+                <div class="toolbar_search_box">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="repair_search_input" placeholder="Search by ticket number, customer name...">
+                </div>
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="repair_status_select">
+                        <option value="all">All Statuses</option>
+                        <option value="In-Progress">In-Progress</option>
+                        <option value="Waiting">Waiting</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    <select class="admin_select" id="repair_mechanic_select">
+                        <option value="all">All Mechanics</option>
+                        <option value="Reynaldo">Reynaldo</option>
+                        <option value="Mark">Mark</option>
+                        <option value="Jun">Jun</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- repairs data table card -->
+            <article class="admin_card">
+                <div class="table_responsive">
+                    <table class="admin_table" id="repairs_table">
+                        <thead>
+                            <tr>
+                                <th>Ticket No.</th>
+                                <th>Customer</th>
+                                <th>Bike / Item</th>
+                                <th>Mechanic</th>
+                                <th>Status</th>
+                                <th>Estimated Finish</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repairs_tbody">
+                            <tr data-status="in-progress" data-mechanic="Reynaldo" id="repair_row_1">
+                                <td class="cell_order_id">#R006</td>
+                                <td class="cell_customer_name rep_customer_val">Daniel Santos</td>
+                                <td class="rep_bike_val">Mountain Bike</td>
+                                <td class="rep_mech_val">Reynaldo</td>
+                                <td class="rep_status_cell"><span class="status_pill status_in_progress">In-Progress</span></td>
+                                <td class="rep_finish_val">1:30 PM</td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openRepairDetail('repair_row_1', '#R006', 'Daniel Santos', 'Mountain Bike', 'Reynaldo', 'In-Progress', '1:30 PM', 'Chain replacement and derailleur tuning.')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-status="waiting" data-mechanic="Mark" id="repair_row_2">
+                                <td class="cell_order_id">#R007</td>
+                                <td class="cell_customer_name rep_customer_val">Carlos Lim</td>
+                                <td class="rep_bike_val">Road Bike</td>
+                                <td class="rep_mech_val">Mark</td>
+                                <td class="rep_status_cell"><span class="status_pill status_waiting">Waiting</span></td>
+                                <td class="rep_finish_val">2:00 PM</td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openRepairDetail('repair_row_2', '#R007', 'Carlos Lim', 'Road Bike', 'Mark', 'Waiting', '2:00 PM', 'Awaiting replacement 700c inner tube.')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-status="in-progress" data-mechanic="Mark" id="repair_row_3">
+                                <td class="cell_order_id">#R008</td>
+                                <td class="cell_customer_name rep_customer_val">Miguel Torres</td>
+                                <td class="rep_bike_val">Hybrid Bike</td>
+                                <td class="rep_mech_val">Mark</td>
+                                <td class="rep_status_cell"><span class="status_pill status_in_progress">In-Progress</span></td>
+                                <td class="rep_finish_val">1:00 PM</td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openRepairDetail('repair_row_3', '#R008', 'Miguel Torres', 'Hybrid Bike', 'Mark', 'In-Progress', '1:00 PM', 'Hydraulic disc brake bleed & pad replacement.')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-status="completed" data-mechanic="Reynaldo" id="repair_row_4">
+                                <td class="cell_order_id">#R009</td>
+                                <td class="cell_customer_name rep_customer_val">Sofia Reyes</td>
+                                <td class="rep_bike_val">MTB</td>
+                                <td class="rep_mech_val">Reynaldo</td>
+                                <td class="rep_status_cell"><span class="status_pill status_completed">Completed</span></td>
+                                <td class="rep_finish_val">11:15 AM</td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openRepairDetail('repair_row_4', '#R009', 'Sofia Reyes', 'MTB', 'Reynaldo', 'Completed', '11:15 AM', 'Wheel truing and bottom bracket overhaul completed.')">View</button>
+                                </td>
+                            </tr>
+                            <tr data-status="completed" data-mechanic="Jun" id="repair_row_5">
+                                <td class="cell_order_id">#R010</td>
+                                <td class="cell_customer_name rep_customer_val">Ethan Cruz</td>
+                                <td class="rep_bike_val">Folding Bike</td>
+                                <td class="rep_mech_val">Jun</td>
+                                <td class="rep_status_cell"><span class="status_pill status_completed">Completed</span></td>
+                                <td class="rep_finish_val">10:45 AM</td>
+                                <td>
+                                    <button type="button" class="table_action_link" onclick="openRepairDetail('repair_row_5', '#R010', 'Ethan Cruz', 'Folding Bike', 'Jun', 'Completed', '10:45 AM', 'Hinge lubrication and brake cable adjustment done.')">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- pagination controls -->
+                <div class="pagination_wrapper">
+                    <span class="pagination_info" id="repairs_pagination_info">Showing 1-5 of 8 repairs</span>
+                    <div class="pagination_controls" id="repairs_pagination_controls">
+                        <button type="button" class="pagination_btn" aria-label="Previous page" onclick="changeRepairPage(currentRepairPage - 1)"><i class="fas fa-chevron-left"></i></button>
+                        <button type="button" class="pagination_btn page_active" data-page="1" onclick="changeRepairPage(1)">1</button>
+                        <button type="button" class="pagination_btn" data-page="2" onclick="changeRepairPage(2)">2</button>
+                        <button type="button" class="pagination_btn" aria-label="Next page" onclick="changeRepairPage(currentRepairPage + 1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- new repair modal dialog -->
+    <div class="modal_backdrop" id="new_repair_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Create New Repair Ticket</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleCreateRepair(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_customer">Customer Name</label>
+                        <input type="text" class="form_input" id="new_repair_customer" placeholder="e.g. Daniel Santos" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_bike">Bike Model / Type</label>
+                        <input type="text" class="form_input" id="new_repair_bike" placeholder="e.g. Mountain Bike (Trinx M100)" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_mechanic">Assigned Mechanic</label>
+                        <select class="form_input admin_select" id="new_repair_mechanic">
+                            <option value="Reynaldo">Reynaldo Santos</option>
+                            <option value="Mark">Mark Javier</option>
+                            <option value="Jun">Jun Dela Rosa</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_notes">Problem Description</label>
+                        <textarea class="form_input" id="new_repair_notes" rows="3" style="height: auto; padding: 10px;" placeholder="Describe issue (e.g. slipping gears, noisy bottom bracket)..."></textarea>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_est">Estimated Finish Time</label>
+                        <input type="text" class="form_input" id="new_repair_est" placeholder="e.g. 3:30 PM" required>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Create Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- repair detail modal dialog -->
+    <div class="modal_backdrop" id="repair_detail_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title" id="repair_modal_title">Repair Ticket</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body">
+                <input type="hidden" id="modal_repair_row_id">
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Customer:</span>
+                        <strong id="modal_repair_customer" style="font-size: 13px; color: #0f172a;"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Bike / Item:</span>
+                        <strong id="modal_repair_bike" style="font-size: 13px; color: #0f172a;"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Mechanic:</span>
+                        <strong id="modal_repair_mech" style="font-size: 13px; color: #0f172a;"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-size: 13px; color: #64748b;">Estimated Finish:</span>
+                        <strong id="modal_repair_finish" style="font-size: 13px; color: #b91c1c;"></strong>
+                    </div>
+                </div>
+                <div class="form_group">
+                    <label class="form_label">Service Notes & Diagnosis</label>
+                    <p id="modal_repair_notes" style="font-size: 13px; color: #334155; padding: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;"></p>
+                </div>
+                <div class="form_group">
+                    <label class="form_label" for="modal_update_repair_status">Change Status</label>
+                    <select class="form_input admin_select" id="modal_update_repair_status">
+                        <option value="In-Progress">In-Progress</option>
+                        <option value="Waiting">Waiting</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary btn_modal_cancel">Close</button>
+                <button type="button" class="btn_primary" onclick="saveRepairStatus()">Update Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        let totalRepairsCount = 8;
+        let currentRepairPage = 1;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            filterTableBySearch("repair_search_input", "repairs_table");
+            filterTableBySelect("repair_status_select", "repairs_table", 4);
+            filterTableBySelect("repair_mechanic_select", "repairs_table", 3);
+
+            const tabButtons = document.querySelectorAll("#repair_tabs_bar .filter_tab_btn");
+            const rows = document.querySelectorAll("#repairs_table tbody tr");
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener("click", function () {
+                    tabButtons.forEach(b => b.classList.remove("tab_active"));
+                    this.classList.add("tab_active");
+
+                    const filter = this.getAttribute("data-status-filter");
+                    const currentRows = document.querySelectorAll("#repairs_table tbody tr");
+                    currentRows.forEach(row => {
+                        const status = row.getAttribute("data-status");
+                        if (filter === "all" || status === filter) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                });
+            });
+        });
+
+        function openRepairDetail(rowId, ticket, customer, bike, mechanic, status, finish, notes) {
+            document.getElementById("modal_repair_row_id").value = rowId;
+            document.getElementById("repair_modal_title").textContent = "Repair Ticket: " + ticket;
+            document.getElementById("modal_repair_customer").textContent = customer;
+            document.getElementById("modal_repair_bike").textContent = bike;
+            document.getElementById("modal_repair_mech").textContent = mechanic;
+            document.getElementById("modal_repair_finish").textContent = finish;
+            document.getElementById("modal_repair_notes").textContent = notes;
+            document.getElementById("modal_update_repair_status").value = status;
+            openModal("repair_detail_modal");
+        }
+
+        function saveRepairStatus() {
+            const rowId = document.getElementById("modal_repair_row_id").value;
+            const newStatus = document.getElementById("modal_update_repair_status").value;
+            const row = document.getElementById(rowId);
+
+            if (row) {
+                row.setAttribute("data-status", newStatus.toLowerCase());
+                const statusCell = row.querySelector(".rep_status_cell");
+
+                if (newStatus === "Completed") {
+                    statusCell.innerHTML = '<span class="status_pill status_completed">Completed</span>';
+                } else if (newStatus === "Waiting") {
+                    statusCell.innerHTML = '<span class="status_pill status_waiting">Waiting</span>';
+                } else {
+                    statusCell.innerHTML = '<span class="status_pill status_in_progress">In-Progress</span>';
+                }
+            }
+
+            closeModal("repair_detail_modal");
+            showToast("Repair ticket status updated!");
+        }
+
+        function handleCreateRepair(event) {
+            event.preventDefault();
+            const customer = document.getElementById("new_repair_customer").value;
+            const bike = document.getElementById("new_repair_bike").value;
+            const mechanic = document.getElementById("new_repair_mechanic").value;
+            const notes = document.getElementById("new_repair_notes").value || "General bike service.";
+            const finish = document.getElementById("new_repair_est").value;
+
+            totalRepairsCount++;
+            const ticketNo = "#R0" + (totalRepairsCount < 10 ? "0" + totalRepairsCount : totalRepairsCount);
+            const newRowId = "repair_row_" + totalRepairsCount;
+            const tbody = document.getElementById("repairs_tbody");
+
+            const tr = document.createElement("tr");
+            tr.id = newRowId;
+            tr.setAttribute("data-status", "in-progress");
+            tr.setAttribute("data-mechanic", mechanic);
+            tr.innerHTML = `
+                <td class="cell_order_id">${ticketNo}</td>
+                <td class="cell_customer_name rep_customer_val">${customer}</td>
+                <td class="rep_bike_val">${bike}</td>
+                <td class="rep_mech_val">${mechanic}</td>
+                <td class="rep_status_cell"><span class="status_pill status_in_progress">In-Progress</span></td>
+                <td class="rep_finish_val">${finish}</td>
+                <td>
+                    <button type="button" class="table_action_link" onclick="openRepairDetail('${newRowId}', '${ticketNo}', '${customer}', '${bike}', '${mechanic}', 'In-Progress', '${finish}', '${notes}')">View</button>
+                </td>
+            `;
+
+            tbody.insertBefore(tr, tbody.firstChild);
+            document.getElementById("tab_all_repairs").textContent = `All Repairs (${totalRepairsCount})`;
+            document.getElementById("repairs_pagination_info").textContent = `Showing 1-5 of ${totalRepairsCount} repairs`;
+
+            closeModal("new_repair_modal");
+            showToast(`Repair ticket ${ticketNo} logged for ${customer}!`);
+            document.getElementById("new_repair_customer").value = "";
+            document.getElementById("new_repair_bike").value = "";
+            document.getElementById("new_repair_notes").value = "";
+            document.getElementById("new_repair_est").value = "";
+        }
+
+        function changeRepairPage(page) {
+            if (page < 1 || page > 2) return;
+            currentRepairPage = page;
+            const pageBtns = document.querySelectorAll("#repairs_pagination_controls .pagination_btn");
+            pageBtns.forEach(btn => {
+                if (btn.getAttribute("data-page") == page) {
+                    btn.classList.add("page_active");
+                } else if (btn.getAttribute("data-page")) {
+                    btn.classList.remove("page_active");
+                }
+            });
+            document.getElementById("repairs_pagination_info").textContent = `Showing ${(page - 1) * 5 + 1}-${Math.min(page * 5, totalRepairsCount)} of ${totalRepairsCount} repairs`;
+            showToast("Loaded repairs page " + page);
+        }
+    </script>
+</body>
+</html>

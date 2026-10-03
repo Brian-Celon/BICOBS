@@ -1,0 +1,2140 @@
+/* css reset and font configuration for taurOS admin panel */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* html and body root properties for full viewport height */
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f1f4f9;
+    color: #1e293b;
+    overflow-x: hidden;
+}
+
+/* layout wrapper spanning full height */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* top navigation bar spanning header */
+.admin_top_navbar {
+    width: 100%;
+    height: 64px;
+    background: linear-gradient(90deg, #841822 0%, #9b1c26 60%, #a8202b 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* left container of top navbar holding brand and mobile menu */
+.top_nav_left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* mobile sidebar drawer toggle button */
+.sidebar_toggle_btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+/* mobile toggle button hover effect */
+.sidebar_toggle_btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* logo container holding taurus bike emblem */
+.top_nav_logo_box {
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ffffff;
+}
+
+/* brand logo image */
+.top_nav_logo_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* fallback icon if logo image is not found */
+.top_nav_logo_fallback {
+    color: #9b1c26;
+    font-size: 18px;
+    display: none;
+}
+
+/* brand logo text title */
+.top_nav_brand_title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+/* right area of top navbar holding search and user pill */
+.top_nav_right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* search input wrapper container */
+.top_search_container {
+    position: relative;
+    width: 280px;
+}
+
+/* search magnifying glass icon */
+.top_search_icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+/* search text input element */
+.top_search_input {
+    width: 100%;
+    height: 38px;
+    padding: 8px 14px 8px 38px;
+    background-color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    font-size: 13px;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* search input focus state */
+.top_search_input:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    width: 320px;
+}
+
+/* top notifications bell button */
+.top_notification_btn {
+    position: relative;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 17px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+/* top notifications bell hover effect */
+.top_notification_btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* notification red indicator badge */
+.notification_badge_dot {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background-color: #ef4444;
+    border: 2px solid #9b1c26;
+    border-radius: 50%;
+}
+
+/* administrator profile pill trigger */
+.admin_profile_pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 24px;
+    background-color: rgba(0, 0, 0, 0.12);
+    transition: background-color 0.2s ease;
+    user-select: none;
+    text-decoration: none;
+}
+
+/* administrator profile hover */
+.admin_profile_pill:hover {
+    background-color: rgba(0, 0, 0, 0.22);
+}
+
+/* user profile circular avatar */
+.admin_profile_avatar {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* text block holding admin name and role */
+.admin_profile_details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
+}
+
+/* administrator username label */
+.admin_user_name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* administrator role subtitle */
+.admin_user_role {
+    font-size: 11px;
+    color: #fecaca;
+}
+
+/* down arrow icon on profile */
+.admin_dropdown_arrow {
+    font-size: 11px;
+    color: #fecaca;
+    margin-left: 2px;
+}
+
+/* main two-column application workspace layout */
+.admin_workspace_layout {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 64px);
+    position: relative;
+}
+
+/* left navigation sidebar container */
+.admin_sidebar {
+    width: 250px;
+    background-color: #121620;
+    color: #94a3b8;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    border-right: 1px solid #1e2433;
+    transition: transform 0.3s ease;
+    z-index: 900;
+}
+
+/* top area of sidebar containing header and links */
+.sidebar_top_section {
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* admin panel category heading */
+.sidebar_section_heading {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #64748b;
+    text-transform: uppercase;
+    padding-left: 12px;
+}
+
+/* sidebar navigation list */
+.sidebar_nav_list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* individual navigation item */
+.sidebar_nav_item {
+    width: 100%;
+}
+
+/* sidebar navigation link anchor */
+.sidebar_nav_link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 16px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* sidebar link icon styling */
+.sidebar_nav_link i {
+    width: 18px;
+    font-size: 16px;
+    text-align: center;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+}
+
+/* sidebar navigation link hover */
+.sidebar_nav_link:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+/* sidebar link hover icon color */
+.sidebar_nav_link:hover i {
+    color: #ffffff;
+}
+
+/* active navigation route link with red pill appearance */
+.sidebar_nav_link.nav_link_active {
+    background-color: #b91c1c;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35);
+}
+
+/* active link icon styling */
+.sidebar_nav_link.nav_link_active i {
+    color: #ffffff;
+}
+
+/* bottom branding footer in sidebar */
+.sidebar_footer {
+    padding: 20px;
+    border-top: 1px solid #1e2433;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* sidebar footer logo icon */
+.sidebar_footer_icon {
+    font-size: 22px;
+    color: #94a3b8;
+}
+
+/* sidebar footer text block */
+.sidebar_footer_info {
+    display: flex;
+    flex-direction: column;
+}
+
+/* store brand label */
+.sidebar_footer_brand {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+/* store version note */
+.sidebar_footer_version {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* backdrop overlay for mobile sidebar */
+.sidebar_backdrop {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 64px);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 850;
+}
+
+/* main page content area */
+.admin_main_content {
+    flex: 1;
+    padding: 28px 32px;
+    background-color: #f1f4f9;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 100%;
+}
+
+/* header bar of current view */
+.page_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* page title and description group */
+.page_title_group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* main page heading */
+.page_title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+}
+
+/* subtitle explanatory text */
+.page_subtitle {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* actions container on right of page header */
+.page_header_actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* standard primary red action button */
+.btn_primary {
+    background-color: #b91c1c;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(185, 28, 28, 0.25);
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+/* primary red button hover */
+.btn_primary:hover {
+    background-color: #991b1b;
+    box-shadow: 0 4px 10px rgba(153, 27, 27, 0.35);
+    transform: translateY(-1px);
+}
+
+/* secondary light button */
+.btn_secondary {
+    background-color: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+/* secondary button hover */
+.btn_secondary:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+/* date filter pill button */
+.btn_date_filter {
+    background-color: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* date filter hover */
+.btn_date_filter:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+}
+
+/* welcome dashboard banner with bike graphic texture */
+.dashboard_banner {
+    position: relative;
+    background: linear-gradient(135deg, #111827 0%, #1f2937 65%, #37181c 100%);
+    border-radius: 12px;
+    padding: 26px 32px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* decorative background glow in banner */
+.dashboard_banner::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: 15%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(185, 28, 28, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+}
+
+/* left text block in banner */
+.banner_content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 1;
+}
+
+/* banner main title */
+.banner_title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+}
+
+/* banner subtitle description */
+.banner_subtitle {
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+/* banner right floating date card */
+.banner_date_card {
+    background-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    z-index: 1;
+    min-width: 140px;
+    text-align: center;
+}
+
+/* small label inside date card */
+.date_card_label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fca5a5;
+    letter-spacing: 0.5px;
+}
+
+/* primary date text */
+.date_card_date {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* weekday name text */
+.date_card_day {
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+/* 4-column summary metric cards grid */
+.stat_cards_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* single metric summary card */
+.stat_card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* stat card hover effect */
+.stat_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* stat card header with icon */
+.stat_card_top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* circular icon wrapper in stat card */
+.stat_card_icon_box {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* red icon theme */
+.icon_theme_red {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* blue icon theme */
+.icon_theme_blue {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+/* green icon theme */
+.icon_theme_green {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+/* yellow icon theme */
+.icon_theme_yellow {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+/* label for metric */
+.stat_card_label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+/* large metric value */
+.stat_card_value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.1;
+}
+
+/* footer area of stat card */
+.stat_card_footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding-top: 4px;
+}
+
+/* positive trend badge */
+.stat_trend_positive {
+    color: #16a34a;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* subtext for metric comparison */
+.stat_trend_label {
+    color: #94a3b8;
+}
+
+/* interactive link inside stat card */
+.stat_card_link {
+    color: #b91c1c;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    transition: color 0.2s ease;
+}
+
+/* stat card link hover */
+.stat_card_link:hover {
+    color: #7f1d1d;
+    text-decoration: underline;
+}
+
+/* two column main content layout */
+.dashboard_two_columns {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: 20px;
+}
+
+/* standard white content card */
+.admin_card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* card header with title and action */
+.card_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* title of white card */
+.card_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* card action text link */
+.card_action_link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #b91c1c;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* card action link hover */
+.card_action_link:hover {
+    text-decoration: underline;
+}
+
+/* responsive table container wrapper */
+.table_responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* standardized tabular data table */
+.admin_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+/* table head styling */
+.admin_table thead {
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* table header cells */
+.admin_table th {
+    padding: 12px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+}
+
+/* table body row separator */
+.admin_table tbody tr {
+    border-bottom: 1px solid #edf2f7;
+    transition: background-color 0.15s ease;
+}
+
+/* table row hover */
+.admin_table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* table body cells */
+.admin_table td {
+    padding: 14px;
+    color: #334155;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* order id bold text */
+.cell_order_id {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* customer name cell */
+.cell_customer_name {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+/* price or amount cell */
+.cell_amount {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* small thumbnail for inventory table */
+.product_table_img {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    object-fit: cover;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+}
+
+/* product thumbnail placeholder icon */
+.product_img_placeholder {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+/* status pill badge container */
+.status_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+    line-height: 1;
+}
+
+/* small circle dot inside status badge */
+.status_pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+/* completed status green pill */
+.status_completed, .status_in_stock, .status_active, .status_paid {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+.status_completed::before, .status_in_stock::before, .status_active::before, .status_paid::before {
+    background-color: #16a34a;
+}
+
+/* pending status amber pill */
+.status_pending, .status_low_stock {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+.status_pending::before, .status_low_stock::before {
+    background-color: #d97706;
+}
+
+/* in progress status blue pill */
+.status_in_progress {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+.status_in_progress::before {
+    background-color: #0284c7;
+}
+
+/* out of stock or inactive status red pill */
+.status_out_of_stock, .status_inactive, .status_cancelled {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+.status_out_of_stock::before, .status_inactive::before, .status_cancelled::before {
+    background-color: #dc2626;
+}
+
+/* waiting status orange pill */
+.status_waiting {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+.status_waiting::before {
+    background-color: #ea580c;
+}
+
+/* table action view text link */
+.table_action_link {
+    color: #b91c1c;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    transition: color 0.15s ease;
+}
+
+/* table action view hover */
+.table_action_link:hover {
+    color: #7f1d1d;
+    text-decoration: underline;
+}
+
+/* solid red view button in order management table */
+.table_btn_view {
+    background-color: #b91c1c;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* table view button hover */
+.table_btn_view:hover {
+    background-color: #991b1b;
+}
+
+/* three dots dropdown action button */
+.table_dots_btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+}
+
+/* three dots hover */
+.table_dots_btn:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+/* timeline activity list */
+.activity_timeline_list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* individual timeline entry */
+.activity_timeline_item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+/* activity circular icon */
+.activity_icon_circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* activity text content block */
+.activity_details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+/* activity description text */
+.activity_text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+/* activity timestamp */
+.activity_time {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* bottom quick actions card */
+.quick_actions_card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* list of quick action buttons */
+.quick_actions_row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* individual quick action button */
+.quick_action_btn {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+/* quick action button icon */
+.quick_action_btn i {
+    color: #b91c1c;
+    font-size: 14px;
+}
+
+/* quick action hover */
+.quick_action_btn:hover {
+    background-color: #f8fafc;
+    border-color: #b91c1c;
+    color: #b91c1c;
+    transform: translateY(-1px);
+}
+
+/* tab navigation header row for categories or statuses */
+.filter_tabs_bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+/* single tab pill */
+.filter_tab_btn {
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* tab button hover */
+.filter_tab_btn:hover {
+    color: #0f172a;
+    background-color: #e2e8f0;
+}
+
+/* active tab style with red highlight */
+.filter_tab_btn.tab_active {
+    background-color: #b91c1c;
+    color: #ffffff;
+}
+
+/* underlined style tab for reports */
+.filter_tab_btn.tab_underline {
+    border-radius: 0;
+    padding: 8px 14px;
+    border-bottom: 3px solid transparent;
+}
+.filter_tab_btn.tab_underline.tab_active {
+    background-color: transparent;
+    color: #b91c1c;
+    border-bottom-color: #b91c1c;
+}
+
+/* filter and search tool row */
+.filter_toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* left search box in toolbar */
+.toolbar_search_box {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+    max-width: 450px;
+}
+
+/* toolbar search icon */
+.toolbar_search_icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* toolbar search input field */
+.toolbar_search_input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 14px 8px 38px;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+/* toolbar search input focus */
+.toolbar_search_input:focus {
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+/* right group of dropdown selects in toolbar */
+.toolbar_filters_group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* standardized dropdown select */
+.admin_select {
+    height: 40px;
+    padding: 8px 32px 8px 14px;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2364748b' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+}
+
+/* select focus state */
+.admin_select:focus {
+    border-color: #b91c1c;
+}
+
+/* pagination bar container */
+.pagination_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 13px;
+    color: #64748b;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* pagination navigation buttons row */
+.pagination_controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* pagination button */
+.pagination_btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/* pagination button hover */
+.pagination_btn:hover:not(:disabled) {
+    border-color: #b91c1c;
+    color: #b91c1c;
+}
+
+/* active page button */
+.pagination_btn.page_active {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+    color: #ffffff;
+}
+
+/* disabled page button */
+.pagination_btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* reports chart visual layout */
+.reports_visual_grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: 20px;
+}
+
+/* chart container */
+.chart_box {
+    width: 100%;
+    min-height: 260px;
+    position: relative;
+}
+
+/* top selling items list */
+.top_products_list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* individual top selling product item */
+.top_product_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    border: 1px solid #edf2f7;
+}
+
+/* product ranking and title */
+.top_product_info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* rank badge */
+.product_rank_badge {
+    font-size: 12px;
+    font-weight: 700;
+    color: #b91c1c;
+    width: 22px;
+}
+
+/* product title name */
+.product_rank_name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* product units sold count */
+.product_rank_count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* system settings two column form layout */
+.settings_grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+}
+
+/* standard form input group */
+.form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+/* form field label */
+.form_label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* form text and number input */
+.form_input {
+    width: 100%;
+    height: 42px;
+    padding: 8px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-color: #ffffff;
+}
+
+/* form input focus */
+.form_input:focus {
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+/* toggle preference item */
+.preference_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf2f7;
+}
+
+/* preference title label */
+.preference_label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* preference toggle switch checkbox */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+/* hide default checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* slider rail */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+/* slider circular knob */
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+/* checked toggle switch background */
+input:checked + .slider {
+    background-color: #b91c1c;
+}
+
+/* move knob on checked */
+input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* modal overlay layer */
+.modal_backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* active open modal */
+.modal_backdrop.modal_active {
+    display: flex;
+}
+
+/* modal white dialog container */
+.modal_card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: modalSlideIn 0.2s ease-out forwards;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* modal dialog animation */
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* modal dialog header */
+.modal_header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* modal title */
+.modal_title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* close modal icon button */
+.modal_close_btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+}
+
+/* close button hover */
+.modal_close_btn:hover {
+    color: #0f172a;
+}
+
+/* modal form content body */
+.modal_body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* modal footer with action buttons */
+.modal_footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    background-color: #f8fafc;
+}
+
+/* toast popup alert */
+.toast_notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    z-index: 3000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+/* toast visible */
+.toast_notification.toast_visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* toast success icon */
+.toast_icon_success {
+    color: #22c55e;
+}
+
+/* responsive media queries for tablet and laptops */
+@media screen and (max-width: 1100px) {
+    .stat_cards_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .dashboard_two_columns {
+        grid-template-columns: 1fr;
+    }
+    .reports_visual_grid {
+        grid-template-columns: 1fr;
+    }
+    .settings_grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* responsive media queries for mobile devices */
+@media screen and (max-width: 768px) {
+    .admin_top_navbar {
+        padding: 0 16px;
+    }
+    .sidebar_toggle_btn {
+        display: block;
+    }
+    .top_search_container {
+        display: none;
+    }
+    .admin_sidebar {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        height: calc(100vh - 64px);
+        transform: translateX(-100%);
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.25);
+    }
+    .admin_sidebar.sidebar_open {
+        transform: translateX(0);
+    }
+    .sidebar_backdrop.sidebar_open {
+        display: block;
+    }
+    .admin_main_content {
+        padding: 20px 16px;
+    }
+    .stat_cards_grid {
+        grid-template-columns: 1fr;
+    }
+    .dashboard_banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .banner_date_card {
+        width: 100%;
+    }
+    .page_header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .page_header_actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* tab content panel switching */
+.tab_panel {
+    display: none;
+    width: 100%;
+}
+
+/* active tab content panel */
+.tab_panel.tab_panel_active {
+    display: block;
+    animation: tabFadeIn 0.2s ease-out;
+}
+
+/* tab panel fade in animation */
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* floating dropdown menu wrapper */
+.dropdown_menu_wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* floating dropdown panel */
+.dropdown_menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    z-index: 1200;
+    overflow: hidden;
+    animation: modalSlideIn 0.15s ease-out;
+}
+
+/* active dropdown state */
+.dropdown_menu.dropdown_active {
+    display: block;
+}
+
+/* dropdown menu item link */
+.dropdown_menu_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* dropdown item hover */
+.dropdown_menu_item:hover {
+    background-color: #f1f5f9;
+    color: #b91c1c;
+}
+
+/* notification dropdown container */
+.notification_dropdown_box {
+    width: 320px;
+    right: -60px;
+}
+
+/* notification dropdown header */
+.notification_box_header {
+    padding: 12px 16px;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* notification list scrollable area */
+.notification_box_list {
+    list-style: none;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+/* single notification box row */
+.notification_box_item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: #334155;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+/* notification box row hover */
+.notification_box_item:hover {
+    background-color: #f8fafc;
+}
+
+/* notification mark all as read link button */
+.notification_clear_btn {
+    background: transparent;
+    border: none;
+    color: #b91c1c;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* category breakdown visual progress bar */
+.metric_progress_track {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+/* category breakdown progress fill */
+.metric_progress_fill {
+    height: 100%;
+    background-color: #b91c1c;
+    border-radius: 4px;
+}
+
+/* payment config card */
+.payment_channel_card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* date range preset button group */
+.date_presets_group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+/* single date preset button */
+.date_preset_btn {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s ease;
+}
+
+/* date preset button hover */
+.date_preset_btn:hover {
+    background-color: #fee2e2;
+    border-color: #b91c1c;
+    color: #b91c1c;
+}
+
+/* products page category tabs bar */
+.products_tabs_bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* single category tab button */
+.products_tab_btn {
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* category tab button hover */
+.products_tab_btn:hover {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+}
+
+/* active category tab with signature red background */
+.products_tab_btn.tab_active {
+    background-color: #b91c1c;
+    color: #ffffff;
+    border-color: #b91c1c;
+    box-shadow: 0 2px 6px rgba(185, 28, 28, 0.25);
+}
+
+/* clean products grid */
+.products_clean_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+}
+
+/* clean product card */
+.product_clean_card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* product card hover */
+.product_clean_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+    border-color: #cbd5e1;
+}
+
+/* product card image container */
+.product_card_img_wrap {
+    height: 160px;
+    background-color: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    border-bottom: 1px solid #f1f5f9;
+    position: relative;
+}
+
+/* product card image */
+.product_card_img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+/* card hover subtle zoom */
+.product_clean_card:hover .product_card_img {
+    transform: scale(1.04);
+}
+
+/* product card details body */
+.product_card_body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* product category label */
+.product_card_category {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+/* product card title */
+.product_card_title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.35;
+    margin: 0 0 6px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 38px;
+}
+
+/* product card sku */
+.product_card_sku {
+    font-size: 11px;
+    color: #64748b;
+    font-family: monospace;
+    margin-bottom: 12px;
+}
+
+/* product card footer row */
+.product_card_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* product card price */
+.product_card_price {
+    font-size: 16px;
+    font-weight: 800;
+    color: #b91c1c;
+}
+
+/* product card action button group */
+.product_card_actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* small icon action button */
+.product_action_btn {
+    border: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+    color: #64748b;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/* edit button hover */
+.product_action_btn:hover {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+/* delete button hover */
+.product_action_btn_danger:hover {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+    color: #ef4444;
+}
+
+/* upload image box inside modal */
+.clean_upload_box {
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+    background-color: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* upload box hover */
+.clean_upload_box:hover {
+    border-color: #b91c1c;
+    background-color: #fef2f2;
+}
+
+/* preset asset row */
+.clean_preset_row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 6px 0;
+}
+
+/* single preset thumbnail */
+.clean_preset_thumb {
+    width: 52px;
+    height: 52px;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+/* preset thumbnail hover */
+.clean_preset_thumb:hover {
+    border-color: #f87171;
+}
+
+/* selected preset thumbnail */
+.clean_preset_thumb.selected {
+    border-color: #b91c1c;
+    background-color: #fef2f2;
+    box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.2);
+}
+
+/* preset thumb img */
+.clean_preset_thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* product card clean grid alias */
+.products_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+/* product clean card alias */
+.product_card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* product clean card hover */
+.product_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+/* layout alias for admin header */
+.admin_header {
+    width: 100%;
+    height: 64px;
+    background: linear-gradient(90deg, #841822 0%, #9b1c26 60%, #a8202b 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* layout alias for admin workspace */
+.admin_layout {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    min-height: calc(100vh - 64px);
+    position: relative;
+}
+
+/* modal overlay alias */
+.modal_overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* modal overlay active */
+.modal_overlay.modal_active {
+    display: flex;
+}
+
+
+

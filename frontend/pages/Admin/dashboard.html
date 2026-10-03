@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Admin Dashboard</title>
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top_nav_logo_box">
+                <img src="/assets/Taurus Logo.jpg" alt="Taurus Bike Logo" class="top_nav_logo_img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-bicycle top_nav_logo_fallback"></i>
+            </div>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+
+            <!-- notifications dropdown -->
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="dash_notification_btn" aria-label="Notifications" onclick="toggleDropdown('dash_notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="dash_notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearDashboardNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="dash_notification_list">
+                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
+                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
+                            <div>
+                                <strong>New Order #ORD-1008</strong>
+                                <p style="color: #64748b; font-size: 11px;">Maria Santos placed an order for ₱3,500</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
+                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Low Stock Alert</strong>
+                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
+                            </div>
+                        </li>
+                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
+                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
+                            <div>
+                                <strong>Repair Completed</strong>
+                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="dash_profile_trigger" onclick="toggleDropdown('dash_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="dash_profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="users.html" class="dropdown_menu_item">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="showToast('Logged out of Admin Panel');">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- welcome dashboard banner -->
+            <section class="dashboard_banner">
+                <div class="banner_content">
+                    <h1 class="banner_title">Good morning, Admin!</h1>
+                    <p class="banner_subtitle">Here's what's happening with your store today.</p>
+                </div>
+                <div class="banner_date_card">
+                    <span class="date_card_label">Today</span>
+                    <span class="date_card_date" id="banner_date_val">Sep 22, 2025</span>
+                    <span class="date_card_day" id="banner_day_val">Monday</span>
+                </div>
+            </section>
+
+            <!-- 4 metric stat cards -->
+            <section class="stat_cards_grid">
+                <!-- card 1: total sales -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Total Sales</span>
+                        <div class="stat_card_icon_box icon_theme_red">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value">₱24,850</div>
+                    <div class="stat_card_footer">
+                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +12%</span>
+                        <span class="stat_trend_label">vs. yesterday</span>
+                    </div>
+                </article>
+
+                <!-- card 2: pending orders -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Pending Orders</span>
+                        <div class="stat_card_icon_box icon_theme_red">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value">5</div>
+                    <div class="stat_card_footer">
+                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +2</span>
+                        <span class="stat_trend_label">vs. yesterday</span>
+                    </div>
+                </article>
+
+                <!-- card 3: low stock alerts -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Low Stock Alerts</span>
+                        <div class="stat_card_icon_box icon_theme_red">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value">3</div>
+                    <div class="stat_card_footer">
+                        <a href="inventory.html" class="stat_card_link">View Items <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <!-- card 4: open repairs -->
+                <article class="stat_card">
+                    <div class="stat_card_top">
+                        <span class="stat_card_label">Open Repairs</span>
+                        <div class="stat_card_icon_box icon_theme_red">
+                            <i class="fas fa-wrench"></i>
+                        </div>
+                    </div>
+                    <div class="stat_card_value">7</div>
+                    <div class="stat_card_footer">
+                        <a href="repairs.html" class="stat_card_link">View Queue <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </section>
+
+            <!-- two column section: recent transactions & system activity -->
+            <section class="dashboard_two_columns">
+                <!-- left column: recent transactions table -->
+                <article class="admin_card">
+                    <div class="card_header">
+                        <h2 class="card_title">Recent Transactions</h2>
+                        <a href="billing.html" class="card_action_link">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="table_responsive">
+                        <table class="admin_table" id="recent_transactions_table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell_order_id">#TBR1045</td>
+                                    <td class="cell_customer_name">Daniel Santos</td>
+                                    <td>Sep 22, 2025 10:24 AM</td>
+                                    <td class="cell_amount">₱1,250</td>
+                                    <td><span class="status_pill status_completed">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_order_id">#TBR1044</td>
+                                    <td class="cell_customer_name">James Reyes</td>
+                                    <td>Sep 22, 2025 09:47 AM</td>
+                                    <td class="cell_amount">₱3,500</td>
+                                    <td><span class="status_pill status_pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_order_id">#TBR1043</td>
+                                    <td class="cell_customer_name">Ana Cruz</td>
+                                    <td>Sep 22, 2025 09:12 AM</td>
+                                    <td class="cell_amount">₱2,750</td>
+                                    <td><span class="status_pill status_in_progress">In-progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_order_id">#TBR1042</td>
+                                    <td class="cell_customer_name">Paolo Dela Cruz</td>
+                                    <td>Sep 22, 2025 08:54 AM</td>
+                                    <td class="cell_amount">₱1,980</td>
+                                    <td><span class="status_pill status_completed">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell_order_id">#TBR1041</td>
+                                    <td class="cell_customer_name">Liza Fernandez</td>
+                                    <td>Sep 22, 2025 08:32 AM</td>
+                                    <td class="cell_amount">₱4,200</td>
+                                    <td><span class="status_pill status_completed">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <!-- right column: system activity timeline -->
+                <article class="admin_card">
+                    <div class="card_header">
+                        <h2 class="card_title">System Activity</h2>
+                    </div>
+                    <ul class="activity_timeline_list">
+                        <li class="activity_timeline_item">
+                            <div class="activity_icon_circle icon_theme_blue">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="activity_details">
+                                <span class="activity_text">New order #TBR1045 received</span>
+                                <span class="activity_time">10m ago</span>
+                            </div>
+                        </li>
+                        <li class="activity_timeline_item">
+                            <div class="activity_icon_circle icon_theme_green">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="activity_details">
+                                <span class="activity_text">Payment confirmed (GCash)</span>
+                                <span class="activity_time">24m ago</span>
+                            </div>
+                        </li>
+                        <li class="activity_timeline_item">
+                            <div class="activity_icon_circle icon_theme_yellow">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div class="activity_details">
+                                <span class="activity_text">Repair status updated</span>
+                                <span class="activity_time">1h ago</span>
+                            </div>
+                        </li>
+                        <li class="activity_timeline_item">
+                            <div class="activity_icon_circle icon_theme_blue">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity_details">
+                                <span class="activity_text">New user registered</span>
+                                <span class="activity_time">2h ago</span>
+                            </div>
+                        </li>
+                        <li class="activity_timeline_item">
+                            <div class="activity_icon_circle icon_theme_red">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="activity_details">
+                                <span class="activity_text">Inventory alert (Shimano Chain)</span>
+                                <span class="activity_time">3h ago</span>
+                            </div>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+
+            <!-- bottom section: quick actions -->
+            <section class="quick_actions_card">
+                <h2 class="card_title">Quick Actions</h2>
+                <div class="quick_actions_row">
+                    <button type="button" class="quick_action_btn" onclick="openModal('add_product_modal')">
+                        <i class="fas fa-plus-square"></i>
+                        <span>Add Product</span>
+                    </button>
+                    <button type="button" class="quick_action_btn" onclick="openModal('create_order_modal')">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Create Order</span>
+                    </button>
+                    <button type="button" class="quick_action_btn" onclick="openModal('record_repair_modal')">
+                        <i class="fas fa-wrench"></i>
+                        <span>Record Repair</span>
+                    </button>
+                    <button type="button" class="quick_action_btn" onclick="openModal('generate_bill_modal')">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Generate Bill</span>
+                    </button>
+                    <a href="reports.html" class="quick_action_btn">
+                        <i class="fas fa-chart-line"></i>
+                        <span>View Reports</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- quick action modal: add product -->
+    <div class="modal_backdrop" id="add_product_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Add New Product</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleDashboardAddProduct(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="dash_product_name">Product Name</label>
+                        <input type="text" class="form_input" id="dash_product_name" placeholder="e.g. Trek Marlin 7" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="dash_product_sku">SKU Code</label>
+                        <input type="text" class="form_input" id="dash_product_sku" placeholder="e.g. TBR-009" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="dash_product_category">Category</label>
+                        <select class="form_input admin_select" id="dash_product_category">
+                            <option value="Bicycles">Bicycles</option>
+                            <option value="Components">Components</option>
+                            <option value="Tires">Tires</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="dash_product_stock">Initial Stock Quantity</label>
+                        <input type="number" class="form_input" id="dash_product_stock" value="10" min="0" required>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- quick action modal: create order -->
+    <div class="modal_backdrop" id="create_order_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Create Walk-in / Phone Order</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleDashboardCreateOrder(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="order_customer_name">Customer Name</label>
+                        <input type="text" class="form_input" id="order_customer_name" placeholder="Customer full name" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="order_item_select">Select Item</label>
+                        <select class="form_input admin_select" id="order_item_select">
+                            <option value="Trek Marlin 6 (2024)">Trek Marlin 6 (2024) - ₱28,000</option>
+                            <option value="Shimano Deore Groupset">Shimano Deore Groupset - ₱9,500</option>
+                            <option value="Maxxis 29 Tire">Maxxis 29" Tire - ₱1,450</option>
+                            <option value="KMC Chain">KMC Chain - ₱850</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="order_payment_type">Payment Method</label>
+                        <select class="form_input admin_select" id="order_payment_type">
+                            <option value="Cash">Cash</option>
+                            <option value="GCash">GCash</option>
+                            <option value="Maya">Maya</option>
+                            <option value="BPI">BPI Bank Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Create Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- quick action modal: record repair -->
+    <div class="modal_backdrop" id="record_repair_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Record New Repair Ticket</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleDashboardRecordRepair(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="repair_customer_name">Customer Name</label>
+                        <input type="text" class="form_input" id="repair_customer_name" placeholder="e.g. Carlos Lim" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="repair_bike_model">Bike / Item</label>
+                        <input type="text" class="form_input" id="repair_bike_model" placeholder="e.g. Road Bike (Trek Domane)" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="repair_assigned_mechanic">Assigned Mechanic</label>
+                        <select class="form_input admin_select" id="repair_assigned_mechanic">
+                            <option value="Reynaldo">Reynaldo Santos</option>
+                            <option value="Mark">Mark Javier</option>
+                            <option value="Jun">Jun Dela Rosa</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="repair_estimated_time">Estimated Completion</label>
+                        <input type="text" class="form_input" id="repair_estimated_time" placeholder="e.g. 2:00 PM" required>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Record Repair</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- quick action modal: generate bill -->
+    <div class="modal_backdrop" id="generate_bill_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Generate Official Billing Receipt</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleDashboardGenerateBill(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="bill_order_number">Reference Order / Ticket ID</label>
+                        <input type="text" class="form_input" id="bill_order_number" placeholder="e.g. #TBR1045" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="bill_tax_type">Invoice Type</label>
+                        <select class="form_input admin_select" id="bill_tax_type">
+                            <option value="Official Receipt">Official Receipt (VAT Registered)</option>
+                            <option value="Sales Invoice">Sales Invoice</option>
+                            <option value="Order Slip">Customer Order Slip</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Generate Bill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/admin.js"></script>
+    <script>
+        function handleDashboardAddProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById("dash_product_name").value;
+            closeModal("add_product_modal");
+            showToast(`Product "${name}" added to inventory catalog!`);
+            document.getElementById("dash_product_name").value = "";
+            document.getElementById("dash_product_sku").value = "";
+        }
+
+        function handleDashboardCreateOrder(e) {
+            e.preventDefault();
+            const customer = document.getElementById("order_customer_name").value;
+            const item = document.getElementById("order_item_select").value;
+            closeModal("create_order_modal");
+            showToast(`Order created for ${customer} (${item})!`);
+            document.getElementById("order_customer_name").value = "";
+        }
+
+        function handleDashboardRecordRepair(e) {
+            e.preventDefault();
+            const customer = document.getElementById("repair_customer_name").value;
+            const bike = document.getElementById("repair_bike_model").value;
+            closeModal("record_repair_modal");
+            showToast(`Repair recorded for ${customer} (${bike})!`);
+            document.getElementById("repair_customer_name").value = "";
+            document.getElementById("repair_bike_model").value = "";
+        }
+
+        function handleDashboardGenerateBill(e) {
+            e.preventDefault();
+            const orderNo = document.getElementById("bill_order_number").value;
+            closeModal("generate_bill_modal");
+            showToast(`Official Receipt generated for ${orderNo}! Redirecting to Billing...`);
+            setTimeout(() => {
+                window.location.href = "billing.html";
+            }, 1200);
+        }
+
+        function clearDashboardNotifications() {
+            const list = document.getElementById("dash_notification_list");
+            if (list) {
+                list.innerHTML = "<li style='padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;'>No unread notifications</li>";
+            }
+            const dot = document.querySelector(".notification_badge_dot");
+            if (dot) dot.style.display = "none";
+            showToast("All notifications marked as read");
+        }
+    </script>
+</body>
+</html>
