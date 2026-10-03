@@ -28,7 +28,6 @@
                 <a href="POS-home.html" class="pos_tab_link">Home</a>
                 <a href="POS-main.html" class="pos_tab_link active">New Sale</a>
                 <a href="POS-history.html" class="pos_tab_link">History</a>
-                <a href="admin/admin-main.html" class="pos_tab_link">Admin</a>
             </nav>
 
             <!-- cashier status and home button right -->
@@ -50,12 +49,161 @@
                 <!-- left column: product catalog -->
                 <div class="catalog_column">
 
-                    <!-- subheader section without view cart button -->
+                    <!-- subheader section with quick maintenance button -->
                     <section class="sub_header_row">
                         <div class="sub_header_left">
                             <span class="sub_label_red">NEW TRANSACTION</span>
-                            <h1 class="page_title_bold">Select Products</h1>
+                            <h1 class="page_title_bold">Select Products &amp; Services</h1>
                         </div>
+                        <div class="sub_header_right_actions">
+                            <button type="button" class="btn_quick_maint_action" id="btn_quick_maint_action">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                </svg>
+                                <span>+ Add Maintenance Service</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- dedicated bike maintenance and service section -->
+                    <section class="pos_maintenance_section" id="pos_maintenance_section">
+                        <!-- section header -->
+                        <div class="maintenance_header_wrap">
+                            <div class="maintenance_title_group">
+                                <div class="maintenance_icon_badge">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="maintenance_section_title">Bike Maintenance &amp; Repair Services</h2>
+                                    <p class="maintenance_section_desc">Log labor fees, assign mechanics/technicians, and attach maintenance items to this order.</p>
+                                </div>
+                            </div>
+                            <button type="button" class="btn_maint_collapse" id="btn_maint_collapse" title="Collapse / Expand">
+                                <span id="maint_collapse_text">Hide Section</span> &utrif;
+                            </button>
+                        </div>
+
+                        <!-- quick service preset buttons -->
+                        <div class="maint_presets_bar" id="maint_presets_bar">
+                            <span class="maint_presets_label">Quick Presets:</span>
+                            <div class="maint_presets_list">
+                                <button type="button" class="maint_preset_pill active" data-service="Full Bike Tune-Up" data-cost="750">
+                                    <span class="preset_name">Full Tune-Up</span>
+                                    <span class="preset_price">&#8369;750.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Hydraulic Brake Bleeding" data-cost="450">
+                                    <span class="preset_name">Brake Bleed</span>
+                                    <span class="preset_price">&#8369;450.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Drivetrain Clean &amp; Tune" data-cost="500">
+                                    <span class="preset_name">Drivetrain Clean</span>
+                                    <span class="preset_price">&#8369;500.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Wheel Truing &amp; Spoke Tension" data-cost="350">
+                                    <span class="preset_name">Wheel Truing</span>
+                                    <span class="preset_price">&#8369;350.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Inner Tube &amp; Flat Tire Repair" data-cost="150">
+                                    <span class="preset_name">Flat Tire Repair</span>
+                                    <span class="preset_price">&#8369;150.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Fork &amp; Suspension Overhaul" data-cost="1200">
+                                    <span class="preset_name">Fork Overhaul</span>
+                                    <span class="preset_price">&#8369;1,200.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Custom Labor / General Repair" data-cost="300">
+                                    <span class="preset_name">Custom Labor</span>
+                                    <span class="preset_price">&#8369;300.00</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- interactive maintenance form -->
+                        <form class="maintenance_form_body" id="pos_maintenance_form" onsubmit="return false;">
+                            <div class="maint_form_row">
+                                <!-- service type / name -->
+                                <div class="maint_field_group flex_2">
+                                    <label for="maint_service_name" class="maint_field_label">
+                                        Service / Maintenance Type <span class="req_star">*</span>
+                                    </label>
+                                    <input type="text" class="maint_text_input" id="maint_service_name" list="preset_services_datalist" placeholder="Select or type service..." value="Full Bike Tune-Up" required>
+                                    <datalist id="preset_services_datalist">
+                                        <option value="Full Bike Tune-Up"></option>
+                                        <option value="Hydraulic Brake Bleeding"></option>
+                                        <option value="Drivetrain Clean & Tune"></option>
+                                        <option value="Wheel Truing & Spoke Tension"></option>
+                                        <option value="Inner Tube & Flat Tire Repair"></option>
+                                        <option value="Fork & Suspension Overhaul"></option>
+                                        <option value="Bottom Bracket & Headset Service"></option>
+                                        <option value="Gear Shifting & Cable Replacement"></option>
+                                        <option value="Brake Pad Replacement & Rotor Alignment"></option>
+                                        <option value="Tubeless Conversion & Sealant Refresh"></option>
+                                        <option value="Custom Labor / General Repair"></option>
+                                    </datalist>
+                                </div>
+
+                                <!-- technician / mechanic in-charge -->
+                                <div class="maint_field_group flex_2">
+                                    <label for="maint_technician_select" class="maint_field_label">
+                                        Mechanic / Technician In-Charge <span class="req_star">*</span>
+                                    </label>
+                                    <div class="technician_select_wrap">
+                                        <select class="maint_select_input" id="maint_technician_select" required>
+                                            <option value="">-- Choose Assigned Mechanic --</option>
+                                            <option value="Reynaldo Santos" selected>Reynaldo Santos (Lead Mechanic)</option>
+                                            <option value="Mark Javier">Mark Javier (Bicycle Tech)</option>
+                                            <option value="Russel Lu Caisido">Russel Lu Caisido (Staff Tech)</option>
+                                            <option value="Jhon Edrian Capisonda">Jhon Edrian Capisonda (Mechanic)</option>
+                                            <option value="Brian Howard Celon">Brian Howard Celon (Specialist)</option>
+                                            <option value="__custom__">+ Enter Custom Mechanic Name...</option>
+                                        </select>
+                                        <input type="text" class="maint_text_input" id="maint_technician_custom" placeholder="Type mechanic's full name..." style="display: none; margin-top: 4px;">
+                                    </div>
+                                </div>
+
+                                <!-- cost / labor fee -->
+                                <div class="maint_field_group flex_1">
+                                    <label for="maint_service_cost" class="maint_field_label">
+                                        Cost / Labor Fee (&#8369;) <span class="req_star">*</span>
+                                    </label>
+                                    <div class="currency_input_box">
+                                        <span class="currency_symbol">&#8369;</span>
+                                        <input type="number" class="maint_text_input currency_input" id="maint_service_cost" placeholder="0.00" value="750" min="0" step="10" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="maint_form_row">
+                                <!-- bike / customer details -->
+                                <div class="maint_field_group flex_3">
+                                    <label for="maint_bike_details" class="maint_field_label">
+                                        Customer &amp; Bike Details <span class="optional_hint">(Optional)</span>
+                                    </label>
+                                    <input type="text" class="maint_text_input" id="maint_bike_details" placeholder="e.g. Juan Dela Cruz &bull; Trek Marlin 7 (Matte Black)">
+                                </div>
+
+                                <!-- service notes -->
+                                <div class="maint_field_group flex_3">
+                                    <label for="maint_service_notes" class="maint_field_label">
+                                        Service Notes / Work Done <span class="optional_hint">(Optional)</span>
+                                    </label>
+                                    <input type="text" class="maint_text_input" id="maint_service_notes" placeholder="e.g. Replaced shift cable, aligned derailleur hanger">
+                                </div>
+
+                                <!-- action buttons -->
+                                <div class="maint_form_buttons flex_2">
+                                    <button type="submit" class="btn_add_maint_to_order" id="btn_add_maint_to_order">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                        <span>Add Service to Order</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </section>
 
                     <!-- search bar -->
@@ -66,12 +214,13 @@
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                         </span>
-                        <input type="text" class="pos_search_input" id="product_search_input" placeholder="Search products by name, SKU, or category...">
+                        <input type="text" class="pos_search_input" id="product_search_input" placeholder="Search products and services by name, SKU, or category...">
                     </section>
 
                     <!-- category filter pills -->
                     <section class="category_filter_bar" id="category_filter_bar">
                         <button class="pill_filter_btn active" data-category="all">All</button>
+                        <button class="pill_filter_btn" data-category="maintenance" style="color: var(--pos_red); font-weight: 700;">🔧 Maintenance</button>
                         <button class="pill_filter_btn" data-category="accessories">Accessories</button>
                         <button class="pill_filter_btn" data-category="bicycle">Bicycle</button>
                         <button class="pill_filter_btn" data-category="brakes">Brakes</button>
@@ -299,6 +448,112 @@
                             <button class="btn_add_to_cart">+ Add to Cart</button>
                         </div>
 
+                        <!-- maintenance service 1 -->
+                        <div class="pos_product_card card_service_item" data-sku="SRV-TUNE-001" data-name="Full Bike Tune-Up" data-price="750" data-category="maintenance" data-is-service="true">
+                            <div class="product_visual_box" style="background-color: #fff7ed;">
+                                <div class="product_category_icon" style="color: #ea580c;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                    </svg>
+                                </div>
+                                <span class="product_category_badge badge_cat_service">SERVICE</span>
+                            </div>
+                            <span class="product_sku_text">SRV-TUNE-001</span>
+                            <h3 class="product_title_text">Full Bike Tune-Up</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;750.00</span>
+                                <span class="product_stock_green">Service Ready</span>
+                            </div>
+                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
+                        </div>
+
+                        <!-- maintenance service 2 -->
+                        <div class="pos_product_card card_service_item" data-sku="SRV-BLEED-002" data-name="Hydraulic Brake Bleeding" data-price="450" data-category="maintenance" data-is-service="true">
+                            <div class="product_visual_box" style="background-color: #fff7ed;">
+                                <div class="product_category_icon" style="color: #ea580c;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                                    </svg>
+                                </div>
+                                <span class="product_category_badge badge_cat_service">SERVICE</span>
+                            </div>
+                            <span class="product_sku_text">SRV-BLEED-002</span>
+                            <h3 class="product_title_text">Hydraulic Brake Bleeding</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;450.00</span>
+                                <span class="product_stock_green">Service Ready</span>
+                            </div>
+                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
+                        </div>
+
+                        <!-- maintenance service 3 -->
+                        <div class="pos_product_card card_service_item" data-sku="SRV-DRIVE-003" data-name="Drivetrain Clean & Tune" data-price="500" data-category="maintenance" data-is-service="true">
+                            <div class="product_visual_box" style="background-color: #fff7ed;">
+                                <div class="product_category_icon" style="color: #ea580c;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                </div>
+                                <span class="product_category_badge badge_cat_service">SERVICE</span>
+                            </div>
+                            <span class="product_sku_text">SRV-DRIVE-003</span>
+                            <h3 class="product_title_text">Drivetrain Clean &amp; Tune</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;500.00</span>
+                                <span class="product_stock_green">Service Ready</span>
+                            </div>
+                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
+                        </div>
+
+                        <!-- maintenance service 4 -->
+                        <div class="pos_product_card card_service_item" data-sku="SRV-WHL-004" data-name="Wheel Truing & Spoke Tension" data-price="350" data-category="maintenance" data-is-service="true">
+                            <div class="product_visual_box" style="background-color: #fff7ed;">
+                                <div class="product_category_icon" style="color: #ea580c;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M3 12h18"></path></svg>
+                                </div>
+                                <span class="product_category_badge badge_cat_service">SERVICE</span>
+                            </div>
+                            <span class="product_sku_text">SRV-WHL-004</span>
+                            <h3 class="product_title_text">Wheel Truing &amp; Spoke Tension</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;350.00</span>
+                                <span class="product_stock_green">Service Ready</span>
+                            </div>
+                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
+                        </div>
+
+                        <!-- maintenance service 5 -->
+                        <div class="pos_product_card card_service_item" data-sku="SRV-FLAT-005" data-name="Inner Tube & Flat Tire Repair" data-price="150" data-category="maintenance" data-is-service="true">
+                            <div class="product_visual_box" style="background-color: #fff7ed;">
+                                <div class="product_category_icon" style="color: #ea580c;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                                </div>
+                                <span class="product_category_badge badge_cat_service">SERVICE</span>
+                            </div>
+                            <span class="product_sku_text">SRV-FLAT-005</span>
+                            <h3 class="product_title_text">Inner Tube &amp; Flat Tire Repair</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;150.00</span>
+                                <span class="product_stock_green">Service Ready</span>
+                            </div>
+                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
+                        </div>
+
+                        <!-- maintenance service 6 -->
+                        <div class="pos_product_card card_service_item" data-sku="SRV-FORK-006" data-name="Fork & Suspension Overhaul" data-price="1200" data-category="maintenance" data-is-service="true">
+                            <div class="product_visual_box" style="background-color: #fff7ed;">
+                                <div class="product_category_icon" style="color: #ea580c;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                                </div>
+                                <span class="product_category_badge badge_cat_service">SERVICE</span>
+                            </div>
+                            <span class="product_sku_text">SRV-FORK-006</span>
+                            <h3 class="product_title_text">Fork &amp; Suspension Overhaul</h3>
+                            <div class="product_price_stock_row">
+                                <span class="product_price_red">&#8369;1,200.00</span>
+                                <span class="product_stock_green">Service Ready</span>
+                            </div>
+                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
+                        </div>
+
                     </section>
 
                 </div>
@@ -352,6 +607,94 @@
 
         </main>
 
+    </div>
+
+    <!-- discount modal -->
+    <div class="pos_modal_overlay" id="discount_modal_overlay">
+        <div class="pos_modal_box" style="max-width: 420px;">
+            <div class="modal_header">
+                <h3 class="modal_title">Apply Order Discount</h3>
+                <button class="btn_close_modal" id="btn_close_discount_modal">&times;</button>
+            </div>
+            <div class="modal_body">
+                <div class="form_group">
+                    <label class="form_label" for="discount_code_input">Discount Promo Code</label>
+                    <input type="text" class="form_input" id="discount_code_input" placeholder="e.g. TAURUS10, VIP50, SAVE100">
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="maint_preset_pill btn_promo_sample" data-code="TAURUS10">TAURUS10 (10% Off)</button>
+                    <button type="button" class="maint_preset_pill btn_promo_sample" data-code="VIP50">VIP50 (&#8369;50 Off)</button>
+                    <button type="button" class="maint_preset_pill btn_promo_sample" data-code="SAVE100">SAVE100 (&#8369;100 Off)</button>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_modal_cancel" id="btn_cancel_discount">Cancel</button>
+                <button type="button" class="btn_modal_submit" id="btn_apply_discount">Apply Discount</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- receipt & checkout success modal -->
+    <div class="pos_modal_overlay" id="receipt_modal_overlay">
+        <div class="receipt_box">
+            <div class="receipt_header">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="receipt_logo">
+                <h2 class="receipt_brand_name">TAURUS BIKE SHOP</h2>
+                <div class="receipt_store_meta">
+                    <span>Main Branch &bull; Sales &amp; Workshop Service</span><br>
+                    <span>Contact: +63 912 345 6789 &bull; POS Terminal #1</span>
+                </div>
+            </div>
+
+            <div class="receipt_divider"></div>
+
+            <div class="receipt_info_grid">
+                <div><strong>Transaction:</strong> <span id="rcpt_txn_id">TXN-20261003-001</span></div>
+                <div><strong>Date:</strong> <span id="rcpt_date_time">Oct 03, 2026</span></div>
+                <div><strong>Cashier:</strong> <span id="rcpt_cashier">Russel Lu Caisido</span></div>
+                <div><strong>Payment:</strong> <span id="rcpt_method_badge">Cash</span></div>
+            </div>
+
+            <div class="receipt_divider"></div>
+
+            <table class="receipt_items_table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Item / Service Description</th>
+                        <th style="width: 15%; text-align: center;">Qty</th>
+                        <th style="width: 35%; text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="rcpt_items_tbody">
+                    <!-- populated dynamically -->
+                </tbody>
+            </table>
+
+            <div class="receipt_divider"></div>
+
+            <div class="receipt_totals_area">
+                <div class="receipt_total_row">
+                    <span style="color: var(--pos_text_muted);">Subtotal:</span>
+                    <strong id="rcpt_subtotal">&#8369;0.00</strong>
+                </div>
+                <div class="receipt_total_row" id="rcpt_discount_row" style="display: none; color: #16a34a;">
+                    <span>Discount:</span>
+                    <strong id="rcpt_discount">-&#8369;0.00</strong>
+                </div>
+                <div class="receipt_total_row receipt_grand_total">
+                    <span>Grand Total:</span>
+                    <span id="rcpt_grand_total">&#8369;0.00</span>
+                </div>
+            </div>
+
+            <div class="receipt_actions_row">
+                <button type="button" class="btn_modal_cancel" id="btn_print_receipt">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right: 4px; vertical-align: -2px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Print Receipt
+                </button>
+                <button type="button" class="btn_modal_submit" id="btn_done_receipt">Done &amp; New Transaction</button>
+            </div>
+        </div>
     </div>
 
     <!-- pos interactive scripts -->
