@@ -12,7 +12,7 @@
         /* custom svg chart enhancements */
         .chart_svg {
             width: 100%;
-            height: 240px;
+            height: 100%;
             overflow: visible;
         }
         .chart_line {
@@ -321,64 +321,70 @@
                             <h2 class="card_title">Sales Overview</h2>
                         </div>
                         <div class="chart_box">
-                            <svg class="chart_svg" viewBox="0 0 600 240" preserveAspectRatio="none">
+                            <svg class="chart_svg" viewBox="0 0 600 200" preserveAspectRatio="none">
                                 <defs>
                                     <linearGradient id="chart_gradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#b91c1c" stop-opacity="0.3" />
+                                        <stop offset="0%" stop-color="#b91c1c" stop-opacity="0.32" />
                                         <stop offset="100%" stop-color="#b91c1c" stop-opacity="0.0" />
                                     </linearGradient>
                                 </defs>
 
                                 <!-- horizontal grid lines and y-axis labels -->
-                                <line x1="40" y1="20" x2="580" y2="20" class="chart_grid_line" />
-                                <text x="5" y="24" class="chart_axis_text">100k</text>
+                                <line x1="42" y1="20" x2="578" y2="20" class="chart_grid_line" />
+                                <text x="10" y="24" class="chart_axis_text">100k</text>
 
-                                <line x1="40" y1="65" x2="580" y2="65" class="chart_grid_line" />
-                                <text x="12" y="69" class="chart_axis_text">75k</text>
+                                <line x1="42" y1="55" x2="578" y2="55" class="chart_grid_line" />
+                                <text x="14" y="59" class="chart_axis_text">75k</text>
 
-                                <line x1="40" y1="110" x2="580" y2="110" class="chart_grid_line" />
-                                <text x="12" y="114" class="chart_axis_text">50k</text>
+                                <line x1="42" y1="90" x2="578" y2="90" class="chart_grid_line" />
+                                <text x="14" y="94" class="chart_axis_text">50k</text>
 
-                                <line x1="40" y1="155" x2="580" y2="155" class="chart_grid_line" />
-                                <text x="12" y="159" class="chart_axis_text">25k</text>
+                                <line x1="42" y1="125" x2="578" y2="125" class="chart_grid_line" />
+                                <text x="14" y="129" class="chart_axis_text">25k</text>
 
-                                <line x1="40" y1="200" x2="580" y2="200" class="chart_grid_line" />
-                                <text x="18" y="204" class="chart_axis_text">0k</text>
+                                <line x1="42" y1="160" x2="578" y2="160" class="chart_grid_line" />
+                                <text x="20" y="164" class="chart_axis_text">0k</text>
 
                                 <!-- x-axis date labels -->
-                                <text x="60" y="224" class="chart_axis_text">Sep 1</text>
-                                <text x="180" y="224" class="chart_axis_text">Sep 8</text>
-                                <text x="300" y="224" class="chart_axis_text">Sep 15</text>
-                                <text x="420" y="224" class="chart_axis_text">Sep 22</text>
-                                <text x="530" y="224" class="chart_axis_text">Sep 29</text>
+                                <text x="68" y="184" class="chart_axis_text">Sep 1</text>
+                                <text x="188" y="184" class="chart_axis_text">Sep 8</text>
+                                <text x="308" y="184" class="chart_axis_text">Sep 15</text>
+                                <text x="428" y="184" class="chart_axis_text">Sep 22</text>
+                                <text x="546" y="184" class="chart_axis_text">Sep 29</text>
 
                                 <!-- area path -->
                                 <path class="chart_area" d="
-                                    M 80,165 
-                                    Q 130,120 180,140 
-                                    T 280,130 
-                                    T 380,95 
-                                    T 480,110 
-                                    T 550,70 
-                                    L 550,200 
-                                    L 80,200 Z" />
+                                    M 68,132 
+                                    C 95,132 108,82 128,82 
+                                    C 148,82 168,112 188,112 
+                                    C 214,112 228,62 248,62 
+                                    C 268,62 288,92 308,92 
+                                    C 334,92 348,46 368,46 
+                                    C 392,46 408,78 428,78 
+                                    C 468,78 508,24 548,24 
+                                    L 548,160 
+                                    L 68,160 Z" />
 
                                 <!-- line path -->
                                 <path class="chart_line" d="
-                                    M 80,165 
-                                    Q 130,120 180,140 
-                                    T 280,130 
-                                    T 380,95 
-                                    T 480,110 
-                                    T 550,70" />
+                                    M 68,132 
+                                    C 95,132 108,82 128,82 
+                                    C 148,82 168,112 188,112 
+                                    C 214,112 228,62 248,62 
+                                    C 268,62 288,92 308,92 
+                                    C 334,92 348,46 368,46 
+                                    C 392,46 408,78 428,78 
+                                    C 468,78 508,24 548,24" />
 
                                 <!-- data interactive dots -->
-                                <circle cx="80" cy="165" r="4.5" class="chart_dot" onclick="showToast('Sep 1 Revenue: ₱22,400')"><title>Sep 1: ₱22,400</title></circle>
-                                <circle cx="180" cy="140" r="4.5" class="chart_dot" onclick="showToast('Sep 8 Revenue: ₱38,150')"><title>Sep 8: ₱38,150</title></circle>
-                                <circle cx="280" cy="130" r="4.5" class="chart_dot" onclick="showToast('Sep 15 Revenue: ₱44,200')"><title>Sep 15: ₱44,200</title></circle>
-                                <circle cx="380" cy="95" r="4.5" class="chart_dot" onclick="showToast('Sep 22 Revenue: ₱61,850')"><title>Sep 22: ₱61,850</title></circle>
-                                <circle cx="480" cy="110" r="4.5" class="chart_dot" onclick="showToast('Sep 26 Revenue: ₱55,320')"><title>Sep 26: ₱55,320</title></circle>
-                                <circle cx="550" cy="70" r="4.5" class="chart_dot" onclick="showToast('Sep 29 Revenue: ₱78,500')"><title>Sep 29: ₱78,500</title></circle>
+                                <circle cx="68" cy="132" r="4.5" class="chart_dot" onclick="showToast('Sep 1 Revenue: ₱22,400')"><title>Sep 1: ₱22,400</title></circle>
+                                <circle cx="128" cy="82" r="4.5" class="chart_dot" onclick="showToast('Sep 5 Revenue: ₱56,200')"><title>Sep 5: ₱56,200</title></circle>
+                                <circle cx="188" cy="112" r="4.5" class="chart_dot" onclick="showToast('Sep 8 Revenue: ₱38,150')"><title>Sep 8: ₱38,150</title></circle>
+                                <circle cx="248" cy="62" r="4.5" class="chart_dot" onclick="showToast('Sep 12 Revenue: ₱72,000')"><title>Sep 12: ₱72,000</title></circle>
+                                <circle cx="308" cy="92" r="4.5" class="chart_dot" onclick="showToast('Sep 15 Revenue: ₱51,800')"><title>Sep 15: ₱51,800</title></circle>
+                                <circle cx="368" cy="46" r="4.5" class="chart_dot" onclick="showToast('Sep 19 Revenue: ₱84,300')"><title>Sep 19: ₱84,300</title></circle>
+                                <circle cx="428" cy="78" r="4.5" class="chart_dot" onclick="showToast('Sep 22 Revenue: ₱61,850')"><title>Sep 22: ₱61,850</title></circle>
+                                <circle cx="548" cy="24" r="5" class="chart_dot" onclick="showToast('Sep 29 Peak Revenue: ₱96,400')"><title>Sep 29 Peak: ₱96,400</title></circle>
                             </svg>
                         </div>
                     </article>
@@ -436,6 +442,48 @@
                         <h2 class="card_title">Monthly Revenue Performance (2025)</h2>
                         <span style="font-size: 13px; color: #16a34a; font-weight: 600;"><i class="fas fa-arrow-trend-up"></i> +26% Year-to-Date Growth</span>
                     </div>
+
+                    <!-- monthly sales bar graph -->
+                    <div class="chart_box" style="margin-bottom: 16px; background: #f8fafc; padding: 12px 14px; border-radius: 8px; border: 1px solid #e2e8f0; height: 180px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 12.5px; font-weight: 700; color: #0f172a;"><i class="fas fa-chart-column" style="color: #b91c1c;"></i> Monthly Revenue Comparison (₱)</span>
+                            <span style="font-size: 11px; color: #64748b;">Click on any bar to inspect monthly volume</span>
+                        </div>
+                        <svg class="chart_svg" viewBox="0 0 600 145" preserveAspectRatio="none" style="height: 135px;">
+                            <!-- grid lines -->
+                            <line x1="42" y1="12" x2="578" y2="12" class="chart_grid_line" />
+                            <text x="6" y="16" class="chart_axis_text">200k</text>
+                            <line x1="42" y1="42" x2="578" y2="42" class="chart_grid_line" />
+                            <text x="6" y="46" class="chart_axis_text">150k</text>
+                            <line x1="42" y1="72" x2="578" y2="72" class="chart_grid_line" />
+                            <text x="6" y="76" class="chart_axis_text">100k</text>
+                            <line x1="42" y1="102" x2="578" y2="102" class="chart_grid_line" />
+                            <text x="12" y="106" class="chart_axis_text">50k</text>
+                            <line x1="42" y1="120" x2="578" y2="120" class="chart_grid_line" />
+                            <text x="18" y="124" class="chart_axis_text">0k</text>
+
+                            <!-- May bar: 124.6k -->
+                            <rect x="70" y="45" width="50" height="75" rx="4" fill="#cbd5e1" style="cursor: pointer; transition: fill 0.2s;" onmouseover="this.setAttribute('fill','#94a3b8')" onmouseout="this.setAttribute('fill','#cbd5e1')" onclick="showToast('May 2025: ₱124,650 (84 orders)')"><title>May: ₱124,650</title></rect>
+                            <text x="82" y="136" class="chart_axis_text">May</text>
+
+                            <!-- June bar: 139k -->
+                            <rect x="175" y="37" width="50" height="83" rx="4" fill="#cbd5e1" style="cursor: pointer; transition: fill 0.2s;" onmouseover="this.setAttribute('fill','#94a3b8')" onmouseout="this.setAttribute('fill','#cbd5e1')" onclick="showToast('June 2025: ₱139,000 (91 orders)')"><title>Jun: ₱139,000</title></rect>
+                            <text x="188" y="136" class="chart_axis_text">Jun</text>
+
+                            <!-- July bar: 148.4k -->
+                            <rect x="280" y="31" width="50" height="89" rx="4" fill="#cbd5e1" style="cursor: pointer; transition: fill 0.2s;" onmouseover="this.setAttribute('fill','#94a3b8')" onmouseout="this.setAttribute('fill','#cbd5e1')" onclick="showToast('July 2025: ₱148,400 (96 orders)')"><title>Jul: ₱148,400</title></rect>
+                            <text x="294" y="136" class="chart_axis_text">Jul</text>
+
+                            <!-- August bar: 162.1k -->
+                            <rect x="385" y="23" width="50" height="97" rx="4" fill="#94a3b8" style="cursor: pointer; transition: fill 0.2s;" onmouseover="this.setAttribute('fill','#64748b')" onmouseout="this.setAttribute('fill','#94a3b8')" onclick="showToast('August 2025: ₱162,100 (108 orders)')"><title>Aug: ₱162,100</title></rect>
+                            <text x="398" y="136" class="chart_axis_text">Aug</text>
+
+                            <!-- September bar: 185.4k (Current) -->
+                            <rect x="490" y="9" width="50" height="111" rx="4" fill="#b91c1c" style="cursor: pointer; transition: fill 0.2s;" onmouseover="this.setAttribute('fill','#991b1b')" onmouseout="this.setAttribute('fill','#b91c1c')" onclick="showToast('September 2025: ₱185,420 (120 orders - Current Peak)')"><title>Sep: ₱185,420</title></rect>
+                            <text x="502" y="136" class="chart_axis_text" style="fill: #b91c1c; font-weight: 700;">Sep*</text>
+                        </svg>
+                    </div>
+
                     <div class="table_responsive">
                         <table class="admin_table">
                             <thead>

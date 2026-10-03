@@ -310,8 +310,8 @@
                         <select class="form_input admin_select" id="new_user_role">
                             <option value="Staff">Staff</option>
                             <option value="Mechanic">Mechanic</option>
-                            <option value="Administrator">Administrator</option>
                         </select>
+                        <span class="role_restriction_hint"><i class="fas fa-lock"></i> Adding new Administrator accounts is disabled for security.</span>
                     </div>
                     <div class="form_group">
                         <label class="form_label" for="new_user_password">Temporary Password</label>
@@ -347,9 +347,9 @@
                     <div class="form_group">
                         <label class="form_label" for="edit_user_role">Role</label>
                         <select class="form_input admin_select" id="edit_user_role">
-                            <option value="Administrator">Administrator</option>
                             <option value="Staff">Staff</option>
                             <option value="Mechanic">Mechanic</option>
+                            <option value="Administrator" id="edit_role_admin_option" disabled>Administrator (Protected)</option>
                         </select>
                     </div>
                     <div class="form_group">
@@ -430,7 +430,19 @@
             document.getElementById("edit_user_row_id").value = rowId;
             document.getElementById("edit_user_name").value = name;
             document.getElementById("edit_user_email").value = email;
-            document.getElementById("edit_user_role").value = role;
+            const roleSelect = document.getElementById("edit_user_role");
+            const adminOpt = document.getElementById("edit_role_admin_option");
+            
+            if (role === "Administrator") {
+                if (adminOpt) adminOpt.disabled = false;
+                roleSelect.value = "Administrator";
+                roleSelect.disabled = true; // Lock administrator account from modification
+            } else {
+                if (adminOpt) adminOpt.disabled = true;
+                roleSelect.disabled = false;
+                roleSelect.value = role;
+            }
+
             document.getElementById("edit_user_status").value = status;
             openModal("edit_user_modal");
         }
@@ -440,11 +452,18 @@
             const rowId = document.getElementById("edit_user_row_id").value;
             const name = document.getElementById("edit_user_name").value;
             const email = document.getElementById("edit_user_email").value;
-            const role = document.getElementById("edit_user_role").value;
+            const roleSelect = document.getElementById("edit_user_role");
+            const role = roleSelect.value;
             const status = document.getElementById("edit_user_status").value;
 
             const row = document.getElementById(rowId);
             if (row) {
+                const oldRole = row.getAttribute("data-role");
+                if (role.toLowerCase() === "administrator" && oldRole !== "administrator") {
+                    showToast("Error: Promoting accounts to Administrator is restricted.");
+                    return;
+                }
+
                 row.setAttribute("data-role", role.toLowerCase());
                 row.querySelector(".user_name_val").textContent = name;
                 row.querySelector(".user_email_val").textContent = email;
@@ -464,9 +483,14 @@
 
         function handleCreateUser(event) {
             event.preventDefault();
-            const name = document.getElementById("new_user_name").value;
-            const email = document.getElementById("new_user_email").value;
+            const name = document.getElementById("new_user_name").value.trim();
+            const email = document.getElementById("new_user_email").value.trim();
             const role = document.getElementById("new_user_role").value;
+
+            if (role.toLowerCase() === "administrator") {
+                showToast("Error: Creating new Administrator accounts is not permitted.");
+                return;
+            }
 
             totalUserCount++;
             const newRowId = "user_row_" + totalUserCount;
@@ -491,7 +515,7 @@
             tbody.appendChild(tr);
             document.getElementById("tab_all_users").textContent = `All Users (${totalUserCount})`;
             closeModal("add_user_modal");
-            showToast(`User ${name} provisioned successfully!`);
+            showToast(`User ${name} provisioned as ${role} successfully!`);
             document.getElementById("new_user_name").value = "";
             document.getElementById("new_user_email").value = "";
             document.getElementById("new_user_password").value = "";
