@@ -190,6 +190,65 @@
                 </div>
             </div>
 
+            <!-- categories horizontal filter navigation bar -->
+            <nav class="products_tabs_bar" id="category_tabs_bar" aria-label="Product categories navigation">
+                <button type="button" class="products_tab_btn tab_active" data-cat="all" onclick="selectCategoryTab('all', this)">
+                    <span>All Products</span>
+                    <span class="category_count_badge" id="count_all">(21)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="bicycles" onclick="selectCategoryTab('bicycles', this)">
+                    <span>All Bikes</span>
+                    <span class="category_count_badge" id="count_bicycles">(7)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="mountain_bikes" onclick="selectCategoryTab('mountain_bikes', this)">
+                    <span>Mountain Bikes</span>
+                    <span class="category_count_badge" id="count_mountain_bikes">(2)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="road_bikes" onclick="selectCategoryTab('road_bikes', this)">
+                    <span>Road Bikes</span>
+                    <span class="category_count_badge" id="count_road_bikes">(2)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="gravel_bikes" onclick="selectCategoryTab('gravel_bikes', this)">
+                    <span>Gravel Bikes</span>
+                    <span class="category_count_badge" id="count_gravel_bikes">(1)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="bmx_urban" onclick="selectCategoryTab('bmx_urban', this)">
+                    <span>BMX & Urban</span>
+                    <span class="category_count_badge" id="count_bmx_urban">(1)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="folding_commuter" onclick="selectCategoryTab('folding_commuter', this)">
+                    <span>Folding Bikes</span>
+                    <span class="category_count_badge" id="count_folding_commuter">(1)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="frames" onclick="selectCategoryTab('frames', this)">
+                    <span>Frames & Forks</span>
+                    <span class="category_count_badge" id="count_frames">(1)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="gears" onclick="selectCategoryTab('gears', this)">
+                    <span>Gears & Drivetrain</span>
+                    <span class="category_count_badge" id="count_gears">(3)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="brakes" onclick="selectCategoryTab('brakes', this)">
+                    <span>Brakes & Rotors</span>
+                    <span class="category_count_badge" id="count_brakes">(2)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="pedals" onclick="selectCategoryTab('pedals', this)">
+                    <span>Pedals & Cleats</span>
+                    <span class="category_count_badge" id="count_pedals">(2)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="rims_tires" onclick="selectCategoryTab('rims_tires', this)">
+                    <span>Rims & Tires</span>
+                    <span class="category_count_badge" id="count_rims_tires">(2)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="handlebars_saddles" onclick="selectCategoryTab('handlebars_saddles', this)">
+                    <span>Handlebars & Saddles</span>
+                    <span class="category_count_badge" id="count_handlebars_saddles">(2)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="apparel" onclick="selectCategoryTab('apparel', this)">
+                    <span>Apparel & Shoes</span>
+                    <span class="category_count_badge" id="count_apparel">(2)</span>
+                </button>
+            </nav>
 
             <!-- search and toolbar filters -->
             <div class="filter_toolbar" style="margin-bottom: 20px;">
@@ -582,7 +641,7 @@
             updateCategoryCounters();
         });
 
-        // update category dropdown counters
+        // update category tab badges and dropdown counters
         function updateCategoryCounters() {
             const counts = {
                 all: storeProducts.length,
@@ -600,6 +659,14 @@
                 handlebars_saddles: storeProducts.filter(p => p.category === "handlebars_saddles").length,
                 apparel: storeProducts.filter(p => p.category === "apparel").length
             };
+
+            // update count badges in top category tabs
+            for (const key in counts) {
+                const badgeEl = document.getElementById("count_" + key);
+                if (badgeEl) {
+                    badgeEl.textContent = `(${counts[key]})`;
+                }
+            }
 
             const selectEl = document.getElementById("product_category_select");
             if (selectEl) {
@@ -672,19 +739,39 @@
             }
         }
 
-        // category dropdown filter
-        function handleCategorySelectChange(val) {
-            selectedCategory = val;
+        // category tab switching
+        function selectCategoryTab(category, btnElement = null) {
+            selectedCategory = category;
+
+            // update active class on tab buttons
+            document.querySelectorAll(".products_tab_btn").forEach(btn => {
+                btn.classList.remove("tab_active");
+            });
+
+            let activeBtn = btnElement;
+            if (!activeBtn) {
+                activeBtn = document.querySelector(`.products_tab_btn[data-cat='${category}']`);
+            }
+            if (activeBtn) {
+                activeBtn.classList.add("tab_active");
+                // Smoothly scroll active button into view within category nav bar without page jump
+                activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            }
+
+            // sync with dropdown select if present
+            const selectEl = document.getElementById("product_category_select");
+            if (selectEl && selectEl.value !== category) {
+                if ([...selectEl.options].some(o => o.value === category)) {
+                    selectEl.value = category;
+                }
+            }
+
             filterProducts();
         }
 
-        function selectCategoryTab(category) {
-            selectedCategory = category;
-            const selectEl = document.getElementById("product_category_select");
-            if (selectEl) {
-                selectEl.value = category;
-            }
-            filterProducts();
+        // category dropdown filter change
+        function handleCategorySelectChange(val) {
+            selectCategoryTab(val);
         }
 
         // search and filtering
@@ -733,7 +820,7 @@
             if (sort) sort.value = "default";
             const selectEl = document.getElementById("product_category_select");
             if (selectEl) selectEl.value = "all";
-            selectCategoryTab("all", document.querySelector(".filter_tab_btn[data-cat='all']"));
+            selectCategoryTab("all");
         }
 
         // image file upload
