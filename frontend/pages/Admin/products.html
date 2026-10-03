@@ -190,36 +190,6 @@
                 </div>
             </div>
 
-            <!-- categories filter tabs bar on top -->
-            <div class="filter_tabs_bar" id="category_tabs_bar">
-                <button type="button" class="filter_tab_btn tab_active" data-cat="all" onclick="selectCategoryTab('all', this)">
-                    All Products <span id="count_all">(21)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="bicycles" onclick="selectCategoryTab('bicycles', this)">
-                    Bicycles <span id="count_bicycles">(7)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="frames" onclick="selectCategoryTab('frames', this)">
-                    Frames & Forks <span id="count_frames">(1)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="gears" onclick="selectCategoryTab('gears', this)">
-                    Gears & Drivetrain <span id="count_gears">(3)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="brakes" onclick="selectCategoryTab('brakes', this)">
-                    Brakes & Rotors <span id="count_brakes">(2)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="pedals" onclick="selectCategoryTab('pedals', this)">
-                    Pedals & Cleats <span id="count_pedals">(2)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="rims_tires" onclick="selectCategoryTab('rims_tires', this)">
-                    Rims & Tires <span id="count_rims_tires">(2)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="handlebars_saddles" onclick="selectCategoryTab('handlebars_saddles', this)">
-                    Handlebars & Saddles <span id="count_handlebars_saddles">(2)</span>
-                </button>
-                <button type="button" class="filter_tab_btn" data-cat="apparel" onclick="selectCategoryTab('apparel', this)">
-                    Apparel & Shoes <span id="count_apparel">(2)</span>
-                </button>
-            </div>
 
             <!-- search and toolbar filters -->
             <div class="filter_toolbar" style="margin-bottom: 20px;">
@@ -228,6 +198,22 @@
                     <input type="text" class="toolbar_search_input" id="product_search_input" placeholder="Search by product name or SKU..." oninput="filterProducts()">
                 </div>
                 <div class="toolbar_filters_group">
+                    <select class="admin_select" id="product_category_select" onchange="handleCategorySelectChange(this.value)">
+                        <option value="all">All Categories</option>
+                        <option value="bicycles">All Bikes</option>
+                        <option value="mountain_bikes">Mountain Bikes</option>
+                        <option value="road_bikes">Road Bikes</option>
+                        <option value="gravel_bikes">Gravel Bikes</option>
+                        <option value="bmx_urban">BMX & Urban</option>
+                        <option value="folding_commuter">Folding Bikes</option>
+                        <option value="frames">Frames & Forks</option>
+                        <option value="gears">Gears & Drivetrain</option>
+                        <option value="brakes">Brakes & Rotors</option>
+                        <option value="pedals">Pedals & Cleats</option>
+                        <option value="rims_tires">Rims & Tires</option>
+                        <option value="handlebars_saddles">Handlebars & Saddles</option>
+                        <option value="apparel">Apparel & Shoes</option>
+                    </select>
                     <select class="admin_select" id="product_sort_select" onchange="filterProducts()">
                         <option value="default">Default Order</option>
                         <option value="price_asc">Price: Low to High</option>
@@ -279,14 +265,22 @@
                             <label for="new_product_category" class="form_label">Category *</label>
                             <select id="new_product_category" class="form_select" required>
                                 <option value="" disabled selected>Select category...</option>
-                                <option value="bicycles">Bicycles</option>
-                                <option value="frames">Frames & Forks</option>
-                                <option value="gears">Gears & Drivetrain</option>
-                                <option value="brakes">Brakes & Rotors</option>
-                                <option value="pedals">Pedals & Cleats</option>
-                                <option value="rims_tires">Rims & Tires</option>
-                                <option value="handlebars_saddles">Handlebars & Saddles</option>
-                                <option value="apparel">Apparel & Shoes</option>
+                                <optgroup label="Bicycles">
+                                    <option value="mountain_bikes">Mountain Bikes</option>
+                                    <option value="road_bikes">Road Bikes</option>
+                                    <option value="gravel_bikes">Gravel Bikes</option>
+                                    <option value="bmx_urban">BMX & Urban</option>
+                                    <option value="folding_commuter">Folding Bikes</option>
+                                </optgroup>
+                                <optgroup label="Components & Gear">
+                                    <option value="frames">Frames & Forks</option>
+                                    <option value="gears">Gears & Drivetrain</option>
+                                    <option value="brakes">Brakes & Rotors</option>
+                                    <option value="pedals">Pedals & Cleats</option>
+                                    <option value="rims_tires">Rims & Tires</option>
+                                    <option value="handlebars_saddles">Handlebars & Saddles</option>
+                                    <option value="apparel">Apparel & Shoes</option>
+                                </optgroup>
                             </select>
                         </div>
                         <div class="form_group">
@@ -410,14 +404,23 @@
                         <div class="form_group">
                             <label for="edit_item_category" class="form_label">Category</label>
                             <select id="edit_item_category" class="form_select" required>
-                                <option value="bicycles">Bicycles</option>
-                                <option value="frames">Frames & Forks</option>
-                                <option value="gears">Gears & Drivetrain</option>
-                                <option value="brakes">Brakes & Rotors</option>
-                                <option value="pedals">Pedals & Cleats</option>
-                                <option value="rims_tires">Rims & Tires</option>
-                                <option value="handlebars_saddles">Handlebars & Saddles</option>
-                                <option value="apparel">Apparel & Shoes</option>
+                                <optgroup label="Bicycles">
+                                    <option value="mountain_bikes">Mountain Bikes</option>
+                                    <option value="road_bikes">Road Bikes</option>
+                                    <option value="gravel_bikes">Gravel Bikes</option>
+                                    <option value="bmx_urban">BMX & Urban</option>
+                                    <option value="folding_commuter">Folding Bikes</option>
+                                    <option value="bicycles">Other Bikes</option>
+                                </optgroup>
+                                <optgroup label="Components & Gear">
+                                    <option value="frames">Frames & Forks</option>
+                                    <option value="gears">Gears & Drivetrain</option>
+                                    <option value="brakes">Brakes & Rotors</option>
+                                    <option value="pedals">Pedals & Cleats</option>
+                                    <option value="rims_tires">Rims & Tires</option>
+                                    <option value="handlebars_saddles">Handlebars & Saddles</option>
+                                    <option value="apparel">Apparel & Shoes</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
@@ -464,13 +467,13 @@
     <script>
         // master products dataset from before-main
         const INITIAL_PRODUCTS = [
-            { id: "p1", sku: "TR-MTB-001", title: "Taurus Stealth Carbon MTB 29\"", category: "bicycles", category_name: "Bicycles", price: 34500, image: "/frontend/Pictures/bike&frames.jpg" },
-            { id: "p2", sku: "TR-ROAD-002", title: "Sagmit Veneno Aero Road Bike 700c", category: "bicycles", category_name: "Bicycles", price: 28900, image: "/frontend/Pictures/bestseller.jpg" },
-            { id: "p3", sku: "TR-GRAV-003", title: "Sunpeed Charisma All-Road Gravel Bike", category: "bicycles", category_name: "Bicycles", price: 26500, image: "/frontend/Pictures/shop-cover.jpg" },
-            { id: "p4", sku: "TR-MTB-004", title: "Taurus Trailblazer Full-Suspension MTB", category: "bicycles", category_name: "Bicycles", price: 48000, image: "/frontend/Pictures/cover.jpg" },
-            { id: "p5", sku: "TR-ROAD-005", title: "Taurus Apex Carbon Disc Road Racer", category: "bicycles", category_name: "Bicycles", price: 52000, image: "/frontend/Pictures/exclusive.jpg" },
-            { id: "p6", sku: "TR-BMX-006", title: "Legion Freestyle Pro BMX 20\"", category: "bicycles", category_name: "Bicycles", price: 14800, image: "/frontend/Pictures/placeholder.png" },
-            { id: "p7", sku: "TR-FOLD-007", title: "Trinx Swift Urban Folding Bike 20\"", category: "bicycles", category_name: "Bicycles", price: 12500, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p1", sku: "TR-MTB-001", title: "Taurus Stealth Carbon MTB 29\"", category: "mountain_bikes", category_name: "Mountain Bikes", price: 34500, image: "/frontend/Pictures/bike&frames.jpg" },
+            { id: "p2", sku: "TR-ROAD-002", title: "Sagmit Veneno Aero Road Bike 700c", category: "road_bikes", category_name: "Road Bikes", price: 28900, image: "/frontend/Pictures/bestseller.jpg" },
+            { id: "p3", sku: "TR-GRAV-003", title: "Sunpeed Charisma All-Road Gravel Bike", category: "gravel_bikes", category_name: "Gravel Bikes", price: 26500, image: "/frontend/Pictures/shop-cover.jpg" },
+            { id: "p4", sku: "TR-MTB-004", title: "Taurus Trailblazer Full-Suspension MTB", category: "mountain_bikes", category_name: "Mountain Bikes", price: 48000, image: "/frontend/Pictures/cover.jpg" },
+            { id: "p5", sku: "TR-ROAD-005", title: "Taurus Apex Carbon Disc Road Racer", category: "road_bikes", category_name: "Road Bikes", price: 52000, image: "/frontend/Pictures/exclusive.jpg" },
+            { id: "p6", sku: "TR-BMX-006", title: "Legion Freestyle Pro BMX 20\"", category: "bmx_urban", category_name: "BMX & Urban", price: 14800, image: "/frontend/Pictures/placeholder.png" },
+            { id: "p7", sku: "TR-FOLD-007", title: "Trinx Swift Urban Folding Bike 20\"", category: "folding_commuter", category_name: "Folding Bikes", price: 12500, image: "/frontend/Pictures/placeholder.png" },
             { id: "p8", sku: "TR-FRM-008", title: "2026 Sagmit Evolution Carbon MTB Frame Boost", category: "frames", category_name: "Frames & Forks", price: 19900, image: "/frontend/Pictures/frame.png" },
             { id: "p9", sku: "TR-GR-009", title: "Shimano Deore M6100 12-Speed Groupset", category: "gears", category_name: "Gears & Drivetrain", price: 16800, image: "/frontend/Pictures/shimano-slx.png" },
             { id: "p10", sku: "TR-GR-010", title: "Shimano SLX M7100 12spd Upgrade Kit", category: "gears", category_name: "Gears & Drivetrain", price: 9500, image: "/frontend/Pictures/shimano-slx.png" },
@@ -487,16 +490,88 @@
             { id: "p21", sku: "TR-APP-021", title: "Taurus Pro Aerodynamic Cycling Jersey", category: "apparel", category_name: "Apparel & Shoes", price: 3200, image: "/frontend/Pictures/placeholder.png" }
         ];
 
+        // canonical category mappings
+        const CATEGORY_NAMES = {
+            all: "All Products",
+            bicycles: "All Bikes",
+            all_bikes: "All Bikes",
+            mountain_bikes: "Mountain Bikes",
+            road_bikes: "Road Bikes",
+            gravel_bikes: "Gravel Bikes",
+            bmx_urban: "BMX & Urban",
+            folding_commuter: "Folding Bikes",
+            frames: "Frames & Forks",
+            gears: "Gears & Drivetrain",
+            brakes: "Brakes & Rotors",
+            pedals: "Pedals & Cleats",
+            rims_tires: "Rims & Tires",
+            handlebars_saddles: "Handlebars & Saddles",
+            apparel: "Apparel & Shoes"
+        };
+
+        const BIKE_CATEGORIES = [
+            "bicycles",
+            "all_bikes",
+            "mountain_bikes",
+            "road_bikes",
+            "gravel_bikes",
+            "bmx_urban",
+            "folding_commuter"
+        ];
+
+        function isBikeCategory(cat) {
+            return BIKE_CATEGORIES.includes(cat);
+        }
+
+        // safe category display resolver
+        function getCategoryDisplayName(item) {
+            if (!item) return "General";
+            if (item.category_name && item.category_name.trim() !== "" && item.category_name !== "undefined" && item.category_name !== "null") {
+                return item.category_name;
+            }
+            if (item.category && CATEGORY_NAMES[item.category]) {
+                return CATEGORY_NAMES[item.category];
+            }
+            if (item.category) {
+                return item.category.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+            }
+            return "General";
+        }
+
         let storeProducts = [];
         const savedData = localStorage.getItem("taurus_store_products");
         if (savedData) {
             try {
                 storeProducts = JSON.parse(savedData);
+                if (!Array.isArray(storeProducts) || storeProducts.length === 0) {
+                    storeProducts = [...INITIAL_PRODUCTS];
+                }
             } catch (err) {
                 storeProducts = [...INITIAL_PRODUCTS];
             }
         } else {
             storeProducts = [...INITIAL_PRODUCTS];
+        }
+
+        // Automatic data migration & backfill for localStorage items
+        let needsSave = false;
+        storeProducts.forEach(item => {
+            const match = INITIAL_PRODUCTS.find(p => p.id === item.id || p.sku === item.sku);
+            if (match && (item.category === "bicycles" || !item.category)) {
+                item.category = match.category;
+                needsSave = true;
+            }
+            if (!item.category) {
+                item.category = "mountain_bikes";
+                needsSave = true;
+            }
+            const expectedName = CATEGORY_NAMES[item.category] || getCategoryDisplayName(item);
+            if (!item.category_name || item.category_name === "undefined" || item.category_name === "null" || (match && item.category_name === "Bicycles" && item.category !== "bicycles")) {
+                item.category_name = expectedName;
+                needsSave = true;
+            }
+        });
+        if (needsSave || !savedData) {
             localStorage.setItem("taurus_store_products", JSON.stringify(storeProducts));
         }
 
@@ -507,11 +582,16 @@
             updateCategoryCounters();
         });
 
-        // update tab counters
+        // update category dropdown counters
         function updateCategoryCounters() {
             const counts = {
                 all: storeProducts.length,
-                bicycles: storeProducts.filter(p => p.category === "bicycles").length,
+                bicycles: storeProducts.filter(p => isBikeCategory(p.category)).length,
+                mountain_bikes: storeProducts.filter(p => p.category === "mountain_bikes").length,
+                road_bikes: storeProducts.filter(p => p.category === "road_bikes").length,
+                gravel_bikes: storeProducts.filter(p => p.category === "gravel_bikes").length,
+                bmx_urban: storeProducts.filter(p => p.category === "bmx_urban").length,
+                folding_commuter: storeProducts.filter(p => p.category === "folding_commuter").length,
                 frames: storeProducts.filter(p => p.category === "frames").length,
                 gears: storeProducts.filter(p => p.category === "gears").length,
                 brakes: storeProducts.filter(p => p.category === "brakes").length,
@@ -521,9 +601,30 @@
                 apparel: storeProducts.filter(p => p.category === "apparel").length
             };
 
-            for (const key in counts) {
-                const el = document.getElementById("count_" + key);
-                if (el) el.textContent = `(${counts[key]})`;
+            const selectEl = document.getElementById("product_category_select");
+            if (selectEl) {
+                const labels = {
+                    all: "All Categories",
+                    bicycles: "All Bikes",
+                    mountain_bikes: "Mountain Bikes",
+                    road_bikes: "Road Bikes",
+                    gravel_bikes: "Gravel Bikes",
+                    bmx_urban: "BMX & Urban",
+                    folding_commuter: "Folding Bikes",
+                    frames: "Frames & Forks",
+                    gears: "Gears & Drivetrain",
+                    brakes: "Brakes & Rotors",
+                    pedals: "Pedals & Cleats",
+                    rims_tires: "Rims & Tires",
+                    handlebars_saddles: "Handlebars & Saddles",
+                    apparel: "Apparel & Shoes"
+                };
+                Array.from(selectEl.options).forEach(opt => {
+                    const base = labels[opt.value];
+                    if (base && counts[opt.value] !== undefined) {
+                        opt.textContent = `${base} (${counts[opt.value]})`;
+                    }
+                });
             }
         }
 
@@ -542,13 +643,15 @@
             if (emptyState) emptyState.style.display = "none";
             if (grid) {
                 grid.style.display = "grid";
-                grid.innerHTML = list.map(item => `
+                grid.innerHTML = list.map(item => {
+                    const catName = getCategoryDisplayName(item);
+                    return `
                     <article class="product_card" data_item="${item.id}">
                         <div class="product_card_img_wrap">
                             <img src="${item.image}" alt="${item.title}" class="product_card_img" onerror="this.onerror=null; this.src='/frontend/Pictures/placeholder.png';">
                         </div>
                         <div class="product_card_body">
-                            <span class="product_card_category">${item.category_name}</span>
+                            <span class="product_card_category">${catName}</span>
                             <h3 class="product_card_title" title="${item.title}">${item.title}</h3>
                             <span class="product_card_sku">${item.sku}</span>
                             <div class="product_card_footer">
@@ -564,15 +667,23 @@
                             </div>
                         </div>
                     </article>
-                `).join("");
+                `;
+                }).join("");
             }
         }
 
-        // tab switching
-        function selectCategoryTab(category, btnElement) {
+        // category dropdown filter
+        function handleCategorySelectChange(val) {
+            selectedCategory = val;
+            filterProducts();
+        }
+
+        function selectCategoryTab(category) {
             selectedCategory = category;
-            document.querySelectorAll(".filter_tab_btn").forEach(btn => btn.classList.remove("tab_active"));
-            if (btnElement) btnElement.classList.add("tab_active");
+            const selectEl = document.getElementById("product_category_select");
+            if (selectEl) {
+                selectEl.value = category;
+            }
             filterProducts();
         }
 
@@ -582,8 +693,21 @@
             const sort = document.getElementById("product_sort_select")?.value || "default";
 
             let result = storeProducts.filter(item => {
-                const matchCategory = selectedCategory === "all" || item.category === selectedCategory;
-                const matchQuery = !query || item.title.toLowerCase().includes(query) || item.sku.toLowerCase().includes(query);
+                let matchCategory = false;
+                if (selectedCategory === "all") {
+                    matchCategory = true;
+                } else if (selectedCategory === "bicycles" || selectedCategory === "all_bikes") {
+                    matchCategory = isBikeCategory(item.category);
+                } else {
+                    matchCategory = item.category === selectedCategory;
+                }
+
+                const catDisplayName = getCategoryDisplayName(item).toLowerCase();
+                const matchQuery = !query || 
+                    (item.title && item.title.toLowerCase().includes(query)) || 
+                    (item.sku && item.sku.toLowerCase().includes(query)) ||
+                    catDisplayName.includes(query);
+
                 return matchCategory && matchQuery;
             });
 
@@ -592,7 +716,7 @@
             } else if (sort === "price_desc") {
                 result.sort((a, b) => b.price - a.price);
             } else if (sort === "name_asc") {
-                result.sort((a, b) => a.title.localeCompare(b.title));
+                result.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
             }
 
             return result;
@@ -607,6 +731,8 @@
             if (search) search.value = "";
             const sort = document.getElementById("product_sort_select");
             if (sort) sort.value = "default";
+            const selectEl = document.getElementById("product_category_select");
+            if (selectEl) selectEl.value = "all";
             selectCategoryTab("all", document.querySelector(".filter_tab_btn[data-cat='all']"));
         }
 
@@ -663,23 +789,12 @@
             const price = parseFloat(document.getElementById("new_product_price").value) || 0;
             const image = document.getElementById("new_product_image_val").value || "/frontend/Pictures/placeholder.png";
 
-            const catMap = {
-                bicycles: "Bicycles",
-                frames: "Frames & Forks",
-                gears: "Gears & Drivetrain",
-                brakes: "Brakes & Rotors",
-                pedals: "Pedals & Cleats",
-                rims_tires: "Rims & Tires",
-                handlebars_saddles: "Handlebars & Saddles",
-                apparel: "Apparel & Shoes"
-            };
-
             const newItem = {
                 id: "p_" + Date.now(),
                 sku: sku,
                 title: title,
                 category: category,
-                category_name: catMap[category] || category,
+                category_name: CATEGORY_NAMES[category] || category,
                 price: price,
                 image: image
             };
@@ -704,7 +819,11 @@
             document.getElementById("edit_item_id").value = item.id;
             document.getElementById("edit_item_title").value = item.title;
             document.getElementById("edit_item_price").value = item.price;
-            document.getElementById("edit_item_category").value = item.category;
+            
+            const editCat = document.getElementById("edit_item_category");
+            if (editCat) {
+                editCat.value = item.category || "mountain_bikes";
+            }
 
             openModal("edit_product_modal");
         }
@@ -719,18 +838,7 @@
             item.title = document.getElementById("edit_item_title").value.trim();
             item.price = parseFloat(document.getElementById("edit_item_price").value) || 0;
             item.category = document.getElementById("edit_item_category").value;
-
-            const catMap = {
-                bicycles: "Bicycles",
-                frames: "Frames & Forks",
-                gears: "Gears & Drivetrain",
-                brakes: "Brakes & Rotors",
-                pedals: "Pedals & Cleats",
-                rims_tires: "Rims & Tires",
-                handlebars_saddles: "Handlebars & Saddles",
-                apparel: "Apparel & Shoes"
-            };
-            item.category_name = catMap[item.category] || item.category;
+            item.category_name = CATEGORY_NAMES[item.category] || getCategoryDisplayName(item);
 
             localStorage.setItem("taurus_store_products", JSON.stringify(storeProducts));
             renderProductGrid();
