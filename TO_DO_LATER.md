@@ -12,6 +12,7 @@ This document outlines the core functional architecture and backend development 
   - [x] 150 verified Taurus Bike Shop products seeded across 13 distinct shop categories.
 - [x] **Catalog & Shopping Cart Engine**
   - [x] Multi-select checkbox category filtering and price sorting (`shop.html` & `shop.js`).
+  - [x] Multi-category duplicate name image alignment (Speedone Pilot pedals vs rims, Speedone Soldier fork vs hubs, LDCNC 3.0 Hub, Weapon Wave, Jalco Wellington Red).
   - [x] Isolated client-side cart storage (`bicobs_cart`) with stock-capped quantity controls.
   - [x] Customer checkout form (`mycart.html`) passing delivery details and item arrays.
 - [x] **Authentication Core**
@@ -59,6 +60,12 @@ This document outlines the core functional architecture and backend development 
   - [ ] Fetch logged-in user profile details (name, email, phone, default delivery address).
   - [ ] Allow customers to update contact number and shipping address in `profile.html`.
   - [ ] Pre-fill checkout form with stored customer profile address and phone.
+
+### 6. Product Catalog Audit & Verification
+- [ ] **Double-Check All Products & Catalog Data**
+  - [ ] Thoroughly review all 150 products in the database against Taurus Bike Shop inventory (names, categories, prices, stock quantities, and descriptions).
+  - [ ] Double-check and verify image accuracy for all items, ensuring no remaining cross-category photo mismatches (e.g., same name like Speedone Pilot matching pedal vs. rim photos).
+  - [ ] Confirm all product cards in `shop.html`, `index.html`, `products.html`, and `dashboard.html` load dynamically from the database without image breakage.
 
 ---
 
