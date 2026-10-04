@@ -1,91 +1,71 @@
-# BICOBS: Project Roadmap & To-Do List
+# BICOBS: Core Functions & Backend Roadmap
 
-This document tracks upcoming tasks, completed features, and backlog items for the **BICOBS (Bike Shop Ordering and Billing System)**.
-
----
-
-## 🎯 Phase 1: Core Ordering & Cart Pipeline (✅ Completed)
-
-- [x] **1. Shopping Cart State Management (`shop.html` & `mycart.html`)**
-  - [x] Implement `Add to Cart` functionality in product cards with stock check.
-  - [x] Store cart items in browser `localStorage` with quantity, product ID, unit price, and image.
-  - [x] Update live cart badge counter in the navigation header across all pages.
-  - [x] Render dynamic cart items inside [mycart.html](file:///d:/BICOBS/frontend/pages/Dashboard/mycart.html).
-  - [x] Quantity controls (+ / -) with maximum stock limits and item removal.
-
-- [x] **2. Checkout & Order Placement (`/api/orders`)**
-  - [x] Order summary breakdown (Subtotal, Estimated Shipping/Delivery, Total).
-  - [x] Customer checkout form (Name, Contact Number, Delivery Address / In-Store Pickup option).
-  - [x] Payment method selection (*GCash, Cash on Delivery / Over-the-counter, Credit/Debit Card*).
-  - [x] API endpoint `POST /api/orders` to save order in PostgreSQL (Supabase) with ACID transactions.
-  - [x] Real-time stock deduction: Automatically decrement stock quantity in database upon order confirmation.
-  - [x] Order confirmation modal / success page with order tracking number.
+This document outlines the core functional architecture and backend development roadmap for the **BICOBS (Bike Shop Ordering and Billing System)**. It focuses strictly on system operations, data integrity, and backend APIs—excluding third-party payment gateways, external verification services, and cosmetic extras.
 
 ---
 
-## 🧾 Phase 2: Digital Billing & Invoicing Engine
+## 🎯 Current Status (Completed Foundations)
 
-- [ ] **3. Automated Digital Invoicing (`/api/billing` & `payments.html`)**
-  - [ ] Auto-generate a `Billing` record linked to each placed `Order` with a unique Invoice ID (e.g. `INV-2026-XXXX`).
-  - [ ] Display digital receipts / transaction history in [payments.html](file:///d:/BICOBS/frontend/pages/Dashboard/payments.html).
-  - [ ] Printable / Downloadable PDF-friendly Billing Slip for customer and store records.
-  - [ ] Payment status management (*Unpaid, Paid, Refunded*).
-
----
-
-## 📦 Phase 3: Order History & Customer Portal
-
-- [ ] **4. Customer Order Tracking (`myorders.html`)**
-  - [ ] Dynamic listing of past and active orders for the customer.
-  - [ ] Status progression tracker (*Pending ➔ Confirmed / Processing ➔ Out for Delivery / Ready for Pickup ➔ Completed ➔ Cancelled*).
-  - [ ] Order details view (ordered items, breakdown, delivery details).
+- [x] **PostgreSQL Database on Supabase**
+  - [x] Relational schema: `users`, `products`, `orders`, `order_items`, `billings`.
+  - [x] ACID transaction support (`BEGIN`, `COMMIT`, `ROLLBACK`) for order placement and stock deduction.
+  - [x] 150 verified Taurus Bike Shop products seeded across 13 distinct shop categories.
+- [x] **Catalog & Shopping Cart Engine**
+  - [x] Multi-select checkbox category filtering and price sorting (`shop.html` & `shop.js`).
+  - [x] Isolated client-side cart storage (`bicobs_cart`) with stock-capped quantity controls.
+  - [x] Customer checkout form (`mycart.html`) passing delivery details and item arrays.
+- [x] **Authentication Core**
+  - [x] User registration & login with `bcryptjs` password hashing and JWT token issuance.
+  - [x] JWT verification middleware (`authMiddleware.js`) with role support (`customer`, `staff`, `admin`).
 
 ---
 
-## 📊 Phase 4: Admin Dashboard & Inventory Management
+## 🛠️ Prioritized Backend & Functional Tasks
 
-- [ ] **5. Admin Order Processing (`dashboard.html`)**
-  - [ ] View incoming customer orders in real time.
-  - [ ] Update order status (Approve, Process, Mark as Completed, Cancel).
-  - [ ] Revenue and sales analytics summary (Daily, Weekly, Monthly sales metrics).
+### 1. Order Lifecycle & Status Management (Backend)
+- [ ] **Order Status Transitions API (`PUT /api/orders/:id/status`)**
+  - [ ] Implement backend endpoint for staff/admin to transition order statuses:
+    - `pending` ➔ `processing` ➔ `ready_for_pickup` / `shipped` ➔ `completed`
+  - [ ] **Stock Rollback on Cancellation:** Automatically restore product `stock_quantity` in PostgreSQL if an order is marked `cancelled`.
+  - [ ] Validate permissible state transitions (e.g. cannot cancel an already `completed` order).
 
-- [ ] **6. Product CRUD & Cloudinary Image Upload**
-  - [ ] Add New Product modal with Cloudinary direct upload.
-  - [ ] Edit existing product details (Price, Stock, Description, Category).
-  - [ ] Delete / Archive product from catalog.
-  - [ ] Low stock alert thresholds in dashboard.
+### 2. Customer Order Tracking & History (Functionality)
+- [ ] **Complete `myorders.html` Data Integration**
+  - [ ] Connect `orders_view.js` to `GET /api/orders/myorders` to render real customer orders.
+  - [ ] Display ordered items breakdown (product name, quantity, unit price, item subtotal).
+  - [ ] Order status tracker pill reflecting real database state (`pending`, `processing`, `shipped`, `delivered`, `cancelled`).
+  - [ ] Link each order to its corresponding billing invoice number.
+
+### 3. Automated Billing & Invoicing Engine (Backend)
+- [ ] **Billing Records & Retrieval (`/api/billing`)**
+  - [ ] Automatic billing record creation upon order submission with unique invoice numbers (`INV-YYYYMMDD-XXXX`).
+  - [ ] Customer invoice retrieval endpoint (`GET /api/billing/mybilling` & `GET /api/billing/order/:orderId`).
+  - [ ] Payment status tracking: record method (*Cash on Delivery*, *GCash OTC*, *Store Pickup Cash*) and flag status as `unpaid` or `paid`.
+  - [ ] Staff endpoint to toggle invoice payment status when cash or OTC payment is received.
+
+### 4. Admin Order Processing & Inventory Controls (Dashboard Backend)
+- [ ] **Admin Orders Queue (`dashboard.html` / `dashboardController.js`)**
+  - [ ] Live incoming orders list with customer contact info, delivery address, and order items.
+  - [ ] Status update action buttons directly in the dashboard table.
+  - [ ] Real-time sales aggregation query (`SUM(total_amount)`, count of completed orders).
+- [ ] **Inventory & Stock Management (`products.html` / `productController.js`)**
+  - [ ] Admin product list with live stock levels and availability toggles (`is_available`).
+  - [ ] Update product price and stock quantity endpoint (`PUT /api/products/:id`).
+  - [ ] Create new product endpoint (`POST /api/products`) with SKU and category assignment.
+  - [ ] Low stock alert query (`stock_quantity <= 3`).
+
+### 5. User Profile & Account Data (Functionality)
+- [ ] **Customer Profile Endpoint (`GET /api/auth/me` & `PUT /api/auth/profile`)**
+  - [ ] Fetch logged-in user profile details (name, email, phone, default delivery address).
+  - [ ] Allow customers to update contact number and shipping address in `profile.html`.
+  - [ ] Pre-fill checkout form with stored customer profile address and phone.
 
 ---
 
-## 🎨 Phase 5: Landing Page & Shop Enhancements
+## 🚫 Out of Scope (Excluded Non-Essential Features)
 
-- [ ] **7. Dynamic Homepage Integration (`index.html`)**
-  - [ ] Connect Featured Products section to live MongoDB product data.
-  - [ ] Connect Categories and promo links to filtered shop views.
-- [ ] **8. Advanced Shop Filtering & Search (`shop.html`)**
-  - [ ] Live search bar by product title and brand.
-  - [ ] Category filtering tabs (Bikes & Frames, Components, Gear, Accessories).
-  - [ ] Price range filter slider and sort dropdown (*Price: Low to High, High to Low, Newest*).
-  - [ ] Pagination controls for 150+ products catalog.
-
----
-
-## 🔐 Phase 6: Authentication & Security
-
-- [ ] **9. User Auth & Session Management (`login.html`)**
-  - [ ] Customer registration and login with JWT tokens.
-  - [ ] Role-based access control (Customer vs Admin/Staff).
-  - [ ] Protected routes for Admin Dashboard.
-  - [ ] Profile management in [profile.html](file:///d:/BICOBS/frontend/pages/Dashboard/profile.html).
-
----
-
-## ✅ Completed Tasks
-
-- [x] Backend Express Server setup on port 5000 with PostgreSQL (Supabase) connection.
-- [x] Relational Database Schema definitions (`users`, `products`, `orders`, `order_items`, `billings`).
-- [x] Cloudinary CDN integration to deliver all product images.
-- [x] Automated matching of all 150 catalog products to exact Cloudinary URLs and 13 categories.
-- [x] PostgreSQL database seeded with updated product catalog via `migrate.js`.
-- [x] Product card layout and responsive image styling on [shop.html](file:///d:/BICOBS/frontend/pages/shop.html) and [dashboard.html](file:///d:/BICOBS/frontend/pages/Dashboard/dashboard.html).
-- [x] Multi-select checkbox category filtering and price sorting.
+The following items are intentionally excluded to keep the project robust, lightweight, and focused on core requirements:
+- ❌ Third-party payment gateway APIs / automated payment verification (GCash webhook, PayPal/Stripe sandbox).
+- ❌ External PDF invoice generator libraries (system uses clean HTML/print CSS instead).
+- ❌ External transactional email services (SMTP/SendGrid).
+- ❌ Social OAuth logins (Google/Facebook third-party auth).
