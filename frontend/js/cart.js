@@ -6,11 +6,31 @@
 const BICOBS_Cart = (() => {
   const STORAGE_KEY = 'bicobs_cart';
 
-  // Get cart from localStorage
+  // Get cart from localStorage and normalize item structure
   function getCart() {
     try {
+      // Purge generic 'cart' key to prevent stale items from other localhost apps
+      if (localStorage.getItem('cart') && !localStorage.getItem(STORAGE_KEY)) {
+        localStorage.removeItem('cart');
+      }
+
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
+      const parsed = data ? JSON.parse(data) : [];
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter(item => item && (item.id || item._id) && item.name)
+          .map(item => ({
+            id: String(item.id || item._id),
+            _id: String(item._id || item.id),
+            name: item.name,
+            price: parseFloat(item.price) || 0,
+            imageUrl: item.imageUrl || item.image || '/frontend/Pictures/placeholder.png',
+            category: item.category || 'Components',
+            stockQuantity: typeof item.stockQuantity === 'number' ? item.stockQuantity : 99,
+            quantity: Math.max(1, parseInt(item.quantity, 10) || 1)
+          }));
+      }
+      return [];
     } catch (e) {
       console.error('Error reading cart from localStorage', e);
       return [];
@@ -20,9 +40,20 @@ const BICOBS_Cart = (() => {
   // Save cart to localStorage
   function saveCart(cart) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      const normalized = cart.map(item => ({
+        id: String(item.id || item._id),
+        _id: String(item._id || item.id),
+        name: item.name,
+        price: parseFloat(item.price) || 0,
+        imageUrl: item.imageUrl || item.image || '/frontend/Pictures/placeholder.png',
+        category: item.category || 'Components',
+        stockQuantity: typeof item.stockQuantity === 'number' ? item.stockQuantity : 99,
+        quantity: Math.max(1, parseInt(item.quantity, 10) || 1)
+      }));
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
       updateBadgeCount();
-      window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart } }));
+      window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart: normalized } }));
     } catch (e) {
       console.error('Error saving cart to localStorage', e);
     }
@@ -30,9 +61,9 @@ const BICOBS_Cart = (() => {
 
   // Add product to cart
   function addToCart(product, quantity = 1) {
-    if (!product || !product._id && !product.id) return false;
-    const productId = product._id || product.id;
-    const maxStock = typeof product.stockQuantity === 'number' ? product.stockQuantity : 999;
+    if (!product || (!product._id && !product.id)) return false;
+    const productId = String(product._id || product.id);
+    const maxStock = typeof product.stockQuantity === 'number' ? product.stockQuantity : 99;
 
     if (maxStock <= 0) {
       showToast('Sorry, this product is currently out of stock.', 'error');
@@ -40,7 +71,7 @@ const BICOBS_Cart = (() => {
     }
 
     const cart = getCart();
-    const existingIndex = cart.findIndex(item => item.id === productId);
+    const existingIndex = cart.findIndex(item => String(item.id || item._id) === productId);
 
     if (existingIndex > -1) {
       const currentQty = cart[existingIndex].quantity;
@@ -56,10 +87,11 @@ const BICOBS_Cart = (() => {
       }
       cart.push({
         id: productId,
+        _id: productId,
         name: product.name,
         price: parseFloat(product.price) || 0,
-        imageUrl: product.imageUrl || '/frontend/Pictures/placeholder.png',
-        category: product.category || '',
+        imageUrl: product.imageUrl || product.image || '/frontend/Pictures/placeholder.png',
+        category: product.category || 'Components',
         stockQuantity: maxStock,
         quantity: quantity
       });
@@ -72,17 +104,18 @@ const BICOBS_Cart = (() => {
 
   // Update quantity for a specific product
   function updateQuantity(productId, newQty) {
+    const pId = String(productId);
     const cart = getCart();
-    const itemIndex = cart.findIndex(item => item.id === productId);
+    const itemIndex = cart.findIndex(item => String(item.id || item._id) === pId);
 
     if (itemIndex === -1) return;
 
     if (newQty <= 0) {
-      removeFromCart(productId);
+      removeFromCart(pId);
       return;
     }
 
-    const maxStock = cart[itemIndex].stockQuantity || 999;
+    const maxStock = cart[itemIndex].stockQuantity || 99;
     if (newQty > maxStock) {
       showToast(`Maximum stock limit reached (${maxStock})`, 'warning');
       cart[itemIndex].quantity = maxStock;
@@ -95,9 +128,10 @@ const BICOBS_Cart = (() => {
 
   // Remove product from cart
   function removeFromCart(productId) {
+    const pId = String(productId);
     let cart = getCart();
-    const item = cart.find(i => i.id === productId);
-    cart = cart.filter(i => i.id !== productId);
+    const item = cart.find(i => String(i.id || i._id) === pId);
+    cart = cart.filter(i => String(i.id || i._id) !== pId);
     saveCart(cart);
     if (item) {
       showToast(`Removed "${item.name}" from cart.`, 'info');
@@ -112,13 +146,13 @@ const BICOBS_Cart = (() => {
   // Calculate total items count
   function getCartCount() {
     const cart = getCart();
-    return cart.reduce((total, item) => total + (item.quantity || 0), 0);
+    return cart.reduce((total, item) => total + (parseInt(item.quantity, 10) || 0), 0);
   }
 
   // Calculate subtotal
   function getCartSubtotal() {
     const cart = getCart();
-    return cart.reduce((total, item) => total + ((item.price || 0) * (item.quantity || 0)), 0);
+    return cart.reduce((total, item) => total + ((parseFloat(item.price) || 0) * (parseInt(item.quantity, 10) || 0)), 0);
   }
 
   // Update badge in navigation and headers
@@ -130,24 +164,28 @@ const BICOBS_Cart = (() => {
       if (count > 0) {
         badge.style.display = 'inline-flex';
       } else {
-        badge.style.display = badge.id === 'cart_badge_counter' ? 'none' : 'inline-flex';
+        badge.style.display = badge.id === 'cart_badge_counter' ? 'none' : 'none';
       }
     });
 
     // Also update header cart link if it has a count container
-    const headerCartBtn = document.querySelector('.btn_header[href*="mycart.html"]');
-    if (headerCartBtn && !headerCartBtn.querySelector('.cart_count_pill')) {
-      const pill = document.createElement('span');
-      pill.className = 'cart_count_pill badge_green';
-      pill.textContent = count;
-      if (count === 0) pill.style.display = 'none';
-      headerCartBtn.appendChild(pill);
-    } else if (headerCartBtn) {
-      const pill = headerCartBtn.querySelector('.cart_count_pill');
-      if (pill) {
-        pill.textContent = count;
-        pill.style.display = count > 0 ? 'inline-block' : 'none';
+    const headerCartBtns = document.querySelectorAll('.btn_header[href*="mycart.html"], .header_actions_group a[href*="mycart.html"]');
+    headerCartBtns.forEach(btn => {
+      let pill = btn.querySelector('.cart_count_pill');
+      if (!pill) {
+        pill = document.createElement('span');
+        pill.className = 'cart_count_pill badge_green';
+        pill.style.marginLeft = '4px';
+        btn.appendChild(pill);
       }
+      pill.textContent = count;
+      pill.style.display = count > 0 ? 'inline-block' : 'none';
+    });
+
+    // Also update dashboard overview stat card
+    const overviewCartCount = document.getElementById('overview_cart_count');
+    if (overviewCartCount) {
+      overviewCartCount.textContent = count;
     }
   }
 
@@ -168,7 +206,7 @@ const BICOBS_Cart = (() => {
         font-size: 14px;
         font-weight: 500;
         box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        z-index: 9999;
+        z-index: 99999;
         display: flex;
         align-items: center;
         gap: 10px;

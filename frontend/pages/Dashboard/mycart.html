@@ -109,7 +109,7 @@
                                 <i class="fas fa-shopping-cart"></i>
                                 <span>My Cart</span>
                             </div>
-                            <span class="badge_green">4</span>
+                            <span class="badge_green" style="display: none;">0</span>
                         </a>
                     </li>
                     <li>
@@ -158,11 +158,14 @@
 
         <!-- floating main content card -->
         <main id="dashboard_main_content" class="main_content">
-            <header class="main_header">
+            <header class="main_header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div>
                     <h1 class="header_title">My Shopping Cart</h1>
                     <p class="header_subtitle">Review your selected items before checkout.</p>
                 </div>
+                <button type="button" id="btn_clear_cart_all" class="action_button" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                    <i class="fas fa-trash-alt"></i> Empty Cart
+                </button>
             </header>
 
             <!-- cart items section -->
@@ -177,11 +180,11 @@
                 <h3 class="summary_title">Order Summary</h3>
                 <div class="summary_row">
                     <span>Total Items Ordered</span>
-                    <span class="summary_value" id="cart_total_items">4 items</span>
+                    <span class="summary_value" id="cart_total_items">0 items</span>
                 </div>
                 <div class="summary_row">
                     <span>Subtotal</span>
-                    <span class="summary_value" id="cart_subtotal">₱46,900</span>
+                    <span class="summary_value" id="cart_subtotal">₱0</span>
                 </div>
                 <div class="summary_row" id="cart_discount_row" style="display: none;">
                     <span>Discount</span>
@@ -189,11 +192,11 @@
                 </div>
                 <div class="summary_row">
                     <span>Shipping Fee</span>
-                    <span class="summary_value" id="cart_shipping">₱150.00</span>
+                    <span class="summary_value" id="cart_shipping">₱0.00</span>
                 </div>
                 <div class="summary_row total_row">
                     <span>Total Amount Ordered</span>
-                    <span class="summary_value total_price" id="cart_total_price">₱47,050</span>
+                    <span class="summary_value total_price" id="cart_total_price">₱0</span>
                 </div>
                 <button type="button" class="checkout_button" id="btn_checkout">Proceed to Checkout</button>
             </section>
@@ -236,11 +239,11 @@
                 <div class="checkout_totals_box">
                     <div class="summary_row">
                         <span>Total Items:</span>
-                        <strong id="modal_total_items">4 items</strong>
+                        <strong id="modal_total_items">0 items</strong>
                     </div>
                     <div class="summary_row">
                         <span>Subtotal:</span>
-                        <strong id="modal_subtotal">₱46,900</strong>
+                        <strong id="modal_subtotal">₱0</strong>
                     </div>
                     <div class="summary_row" id="modal_discount_row" style="display: none;">
                         <span>Discount:</span>
@@ -248,14 +251,15 @@
                     </div>
                     <div class="summary_row">
                         <span>Shipping Fee:</span>
-                        <strong id="modal_shipping">₱150.00</strong>
+                        <strong id="modal_shipping">₱0.00</strong>
                     </div>
                     <div class="summary_row total_row">
                         <span>Total Amount Ordered:</span>
-                        <strong id="modal_total_price" class="total_price">₱47,050</strong>
+                        <strong id="modal_total_price" class="total_price">₱0</strong>
                     </div>
                 </div>
             </div>
+
 
             <div class="modal_actions">
                 <button type="button" class="btn_modal_cancel" id="cancel_checkout_btn">Cancel</button>
@@ -373,9 +377,11 @@
             </div>
         </footer>
 
-    <!-- universal cart and cart view scripts -->
+    <!-- universal auth modal, cart and cart view scripts -->
+    <script src="/frontend/js/auth_modal.js"></script>
     <script src="/frontend/js/cart.js"></script>
     <script src="/frontend/js/cart_view.js"></script>
     <script src="/frontend/js/dashboard.js"></script>
 </body>
 </html>
+

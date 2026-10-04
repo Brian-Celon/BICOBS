@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const db = require('../config/db');
 
 // Protect routes - Verify JWT token
 const protect = async (req, res, next) => {
@@ -17,21 +17,37 @@ const protect = async (req, res, next) => {
         process.env.JWT_SECRET || 'fallback_secret'
       );
 
-      req.user = await User.findById(decoded.id).select('-password');
+      const result = await db.query(
+        'SELECT id, full_name, email, role, phone_number, address FROM users WHERE id = $1',
+        [decoded.id]
+      );
 
-      if (!req.user) {
+      if (result.rows.length === 0) {
         return res.status(401).json({
           status: 'error',
-          message: 'User belonging to this token no longer exists'
+          message: 'Please sign in to your account to continue'
         });
       }
 
-      next();
+      const userRow = result.rows[0];
+      req.user = {
+        _id: userRow.id,
+        id: userRow.id,
+        name: userRow.full_name,
+        full_name: userRow.full_name,
+        email: userRow.email,
+        role: userRow.role,
+        phone: userRow.phone_number,
+        phone_number: userRow.phone_number,
+        address: userRow.address
+      };
+
+      return next();
     } catch (error) {
       console.error('[Auth Error]', error.message);
       return res.status(401).json({
         status: 'error',
-        message: 'Not authorized, token failed or expired'
+        message: 'Your session has expired. Please sign in again.'
       });
     }
   }
@@ -39,7 +55,7 @@ const protect = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       status: 'error',
-      message: 'Not authorized, no token provided'
+      message: 'Please sign in to continue'
     });
   }
 };

@@ -48,11 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (cart.length === 0) {
             cart_list_el.innerHTML = `
-                <li class="empty_cart_message" style="text-align: center; padding: 48px 16px; list-style: none;">
+                <li class="empty_cart_message" style="text-align: center; padding: 48px 16px; list-style: none; background: #ffffff; border-radius: 12px; border: 1px dashed #cbd5e1;">
                     <div style="font-size: 48px; color: #94a3b8; margin-bottom: 16px;"><i class="fas fa-shopping-cart"></i></div>
                     <h3 style="font-size: 20px; color: #1e293b; margin-bottom: 8px;">Your cart is currently empty</h3>
                     <p style="color: #64748b; margin-bottom: 24px;">Discover our bicycles, frames, components, and accessories.</p>
-                    <a href="/frontend/pages/shop.html" class="btn_modal_submit" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px; border-radius: 6px; background-color: #dc2626; color: #ffffff;">
+                    <a href="/frontend/pages/shop.html" class="btn_modal_submit" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px; border-radius: 6px; background-color: #dc2626; color: #ffffff; font-weight: 700;">
                         <i class="fas fa-store"></i> Browse Shop Catalog
                     </a>
                 </li>
@@ -75,40 +75,49 @@ document.addEventListener('DOMContentLoaded', () => {
         cart_list_el.innerHTML = '';
 
         cart.forEach(item => {
+            const itemId = String(item.id || item._id);
+            const itemName = item.name || 'Product';
+            const itemPrice = parseFloat(item.price) || 0;
+            const itemQty = parseInt(item.quantity, 10) || 1;
+            const itemSubtotal = itemPrice * itemQty;
+            const itemImg = item.imageUrl || item.image || '/frontend/Pictures/placeholder.png';
+            const itemCat = (item.category || 'Product').replace(/_/g, ' ');
+
             const li = document.createElement('li');
-            li.className = 'cart_item_row';
+            li.className = 'cart_item_card';
+            li.setAttribute('data-id', itemId);
             li.style.cssText = `
+                background: #fafbfc;
+                border: 1px solid #eef1f5;
+                border-radius: 10px;
+                padding: 16px 20px;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                padding: 16px;
-                border-bottom: 1px solid #e2e8f0;
-                gap: 16px;
+                gap: 20px;
                 flex-wrap: wrap;
+                margin-bottom: 12px;
                 list-style: none;
             `;
 
-            const itemSubtotal = (item.price || 0) * (item.quantity || 1);
-
             li.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 16px; flex: 1; min-width: 240px;">
-                    <img src="${item.imageUrl || '/frontend/Pictures/placeholder.png'}" alt="${item.name}" style="width: 72px; height: 72px; object-fit: contain; background: #f8fafc; border-radius: 8px; padding: 4px; border: 1px solid #e2e8f0;" onerror="this.onerror=null; this.src='/frontend/Pictures/placeholder.png';">
-                    <div>
-                        <h4 style="font-size: 15px; font-weight: 600; color: #0f172a; margin-bottom: 4px;">${item.name}</h4>
-                        <span style="font-size: 12px; color: #64748b; text-transform: uppercase;">${(item.category || 'Product').replace(/_/g, ' ')}</span>
-                        <div style="font-size: 14px; font-weight: 600; color: #dc2626; margin-top: 4px;">₱${(item.price || 0).toLocaleString()}</div>
-                    </div>
+                <div style="width: 70px; height: 70px; border-radius: 10px; background: #ffffff; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; padding: 4px;">
+                    <img src="${itemImg}" alt="${itemName}" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='/frontend/Pictures/placeholder.png';">
                 </div>
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div class="quantity_control_box" style="display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #ffffff;">
-                        <button type="button" class="btn_qty_minus" data-id="${item.id}" style="width: 32px; height: 32px; border: none; background: #f1f5f9; cursor: pointer; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center;">-</button>
-                        <span style="min-width: 36px; text-align: center; font-weight: 600; font-size: 14px;">${item.quantity}</span>
-                        <button type="button" class="btn_qty_plus" data-id="${item.id}" style="width: 32px; height: 32px; border: none; background: #f1f5f9; cursor: pointer; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center;">+</button>
+                <div class="item_details" style="flex: 1; min-width: 200px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">${itemCat}</span>
+                    <h4 class="item_name" style="font-size: 15px; color: #0f172a; margin: 4px 0 6px; font-weight: 600;">${itemName}</h4>
+                    <div class="item_price" style="font-size: 15px; color: #dc2626; font-weight: 700;">₱${itemPrice.toLocaleString()}</div>
+                </div>
+                <div class="item_actions" style="display: flex; align-items: center; gap: 16px;">
+                    <div class="qty_control" style="border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; background: #ffffff; overflow: hidden;">
+                        <button type="button" class="qty_btn btn_qty_minus" data-id="${itemId}" style="background: #f1f5f9; border: none; padding: 6px 12px; cursor: pointer; color: #334155; font-size: 15px; font-weight: bold;">−</button>
+                        <span class="qty_value" style="padding: 0 12px; font-size: 14px; font-weight: 600; min-width: 24px; text-align: center;">${itemQty}</span>
+                        <button type="button" class="qty_btn btn_qty_plus" data-id="${itemId}" style="background: #f1f5f9; border: none; padding: 6px 12px; cursor: pointer; color: #334155; font-size: 15px; font-weight: bold;">+</button>
                     </div>
                     <div style="min-width: 90px; text-align: right; font-weight: 700; color: #0f172a; font-size: 15px;">
                         ₱${itemSubtotal.toLocaleString()}
                     </div>
-                    <button type="button" class="btn_item_delete" data-id="${item.id}" title="Remove item" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 6px;">
+                    <button type="button" class="delete_btn btn_item_delete" data-id="${itemId}" title="Remove item" style="background: #fee2e2; border: none; padding: 8px 12px; border-radius: 6px; color: #dc2626; cursor: pointer; transition: background 0.2s;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -126,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const shipping = subtotal > 0 && fulfillmentType === 'delivery' ? SHIPPING_FEE : 0;
         const total = Math.max(0, subtotal - discount + shipping);
 
-        if (total_items_el) total_items_el.textContent = `${totalItems} items`;
+        if (total_items_el) total_items_el.textContent = `${totalItems} ${totalItems === 1 ? 'item' : 'items'}`;
         if (subtotal_el) subtotal_el.textContent = `₱${subtotal.toLocaleString()}`;
         if (shipping_el) shipping_el.textContent = shipping > 0 ? `₱${shipping.toFixed(2)}` : 'FREE / ₱0.00';
         if (total_price_el) total_price_el.textContent = `₱${total.toLocaleString()}`;
@@ -147,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (minusBtn && window.BICOBS_Cart) {
                 const id = minusBtn.getAttribute('data-id');
                 const cart = window.BICOBS_Cart.getCart();
-                const item = cart.find(i => i.id === id);
+                const item = cart.find(i => String(i.id || i._id) === String(id));
                 if (item) {
                     window.BICOBS_Cart.updateQuantity(id, item.quantity - 1);
                     renderCart();
@@ -155,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (plusBtn && window.BICOBS_Cart) {
                 const id = plusBtn.getAttribute('data-id');
                 const cart = window.BICOBS_Cart.getCart();
-                const item = cart.find(i => i.id === id);
+                const item = cart.find(i => String(i.id || i._id) === String(id));
                 if (item) {
                     window.BICOBS_Cart.updateQuantity(id, item.quantity + 1);
                     renderCart();
@@ -170,6 +179,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Listen for custom cart updates
     window.addEventListener('bicobs_cart_updated', renderCart);
+
+    // Empty Cart Button
+    const btn_clear_cart_all = document.getElementById('btn_clear_cart_all');
+    if (btn_clear_cart_all) {
+        btn_clear_cart_all.addEventListener('click', () => {
+            if (confirm('Are you sure you want to empty your shopping cart?')) {
+                if (window.BICOBS_Cart) {
+                    window.BICOBS_Cart.clearCart();
+                    window.BICOBS_Cart.showToast('Cart has been emptied', 'info');
+                }
+                renderCart();
+            }
+        });
+    }
 
     // Apply discount code
     if (btn_apply_discount) {
@@ -191,49 +214,122 @@ document.addEventListener('DOMContentLoaded', () => {
                     discount_msg.textContent = '✓ TAURUS10 applied (10% OFF discount)!';
                     discount_msg.style.color = '#16a34a';
                 }
+            } else if (code === 'TAURUS20') {
+                discount = Math.round(subtotal * 0.20);
+                if (discount_msg) {
+                    discount_msg.textContent = '✓ TAURUS20 applied (20% OFF discount)!';
+                    discount_msg.style.color = '#16a34a';
+                }
             } else if (code === 'SAVE500') {
                 discount = Math.min(subtotal, 500);
                 if (discount_msg) {
                     discount_msg.textContent = '✓ SAVE500 applied (₱500 OFF discount)!';
                     discount_msg.style.color = '#16a34a';
                 }
+            } else if (code === 'FREE1000') {
+                discount = Math.min(subtotal, 1000);
+                if (discount_msg) {
+                    discount_msg.textContent = '✓ FREE1000 applied (₱1,000 OFF discount)!';
+                    discount_msg.style.color = '#16a34a';
+                }
             } else {
                 discount = 0;
                 if (discount_msg) {
-                    discount_msg.textContent = 'Invalid or expired discount coupon.';
+                    discount_msg.textContent = 'Invalid promo code. Try TAURUS10, TAURUS20, or SAVE500.';
                     discount_msg.style.color = '#dc2626';
                 }
             }
-
             renderCart();
-            populateModalSummary();
+            updateCheckoutModalSummary();
         });
     }
 
-    // Populate checkout modal items & totals
-    function populateModalSummary() {
-        const cart = window.BICOBS_Cart ? window.BICOBS_Cart.getCart() : [];
-        if (!checkout_items_preview) return;
+    // Checkout Modal interactions
+    if (btn_checkout) {
+        btn_checkout.addEventListener('click', () => {
+            const cart = window.BICOBS_Cart ? window.BICOBS_Cart.getCart() : [];
+            if (cart.length === 0) {
+                if (window.BICOBS_Cart) window.BICOBS_Cart.showToast('Your cart is empty', 'warning');
+                return;
+            }
 
+            // Require auth before proceeding to checkout modal
+            if (window.BICOBS_Auth && !window.BICOBS_Auth.isAuthenticated()) {
+                window.BICOBS_Auth.showLoginModal({
+                    message: 'Please sign in to confirm and place your order',
+                    onSuccess: () => {
+                        openCheckoutModal();
+                    }
+                });
+                return;
+            }
+
+            openCheckoutModal();
+        });
+    }
+
+    function openCheckoutModal() {
+        populateCheckoutPreview();
+        updateCheckoutModalSummary();
+        if (checkout_modal) {
+            checkout_modal.classList.add('active');
+            checkout_modal.style.display = 'flex';
+        }
+    }
+
+    function closeCheckoutModal() {
+        if (checkout_modal) {
+            checkout_modal.classList.remove('active');
+            checkout_modal.style.display = 'none';
+        }
+    }
+
+    if (close_checkout_modal) close_checkout_modal.addEventListener('click', closeCheckoutModal);
+    if (cancel_checkout_btn) cancel_checkout_btn.addEventListener('click', closeCheckoutModal);
+
+    if (checkout_modal) {
+        checkout_modal.addEventListener('click', (e) => {
+            if (e.target === checkout_modal) closeCheckoutModal();
+        });
+    }
+
+    function populateCheckoutPreview() {
+        if (!checkout_items_preview) return;
+        const cart = window.BICOBS_Cart ? window.BICOBS_Cart.getCart() : [];
         checkout_items_preview.innerHTML = '';
+
         cart.forEach(item => {
             const li = document.createElement('li');
-            li.style.cssText = 'display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; border-bottom: 1px dashed #e2e8f0;';
+            li.className = 'checkout_item_row';
+            li.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 14px;
+            `;
+            const itemSubtotal = (parseFloat(item.price) || 0) * (parseInt(item.quantity, 10) || 1);
             li.innerHTML = `
-                <span>${item.name} <strong style="color: #64748b;">x${item.quantity}</strong></span>
-                <span style="font-weight: 600;">₱${((item.price || 0) * item.quantity).toLocaleString()}</span>
+                <div>
+                    <span style="font-weight: 600; color: #0f172a;">${item.name}</span>
+                    <span style="color: #64748b; font-size: 13px; margin-left: 6px;">(x${item.quantity})</span>
+                </div>
+                <strong style="color: #0f172a;">₱${itemSubtotal.toLocaleString()}</strong>
             `;
             checkout_items_preview.appendChild(li);
         });
+    }
 
+    function updateCheckoutModalSummary() {
         const subtotal = window.BICOBS_Cart ? window.BICOBS_Cart.getCartSubtotal() : 0;
         const totalItems = window.BICOBS_Cart ? window.BICOBS_Cart.getCartCount() : 0;
         const shipping = subtotal > 0 && fulfillmentType === 'delivery' ? SHIPPING_FEE : 0;
         const total = Math.max(0, subtotal - discount + shipping);
 
-        if (modal_total_items) modal_total_items.textContent = `${totalItems} items`;
+        if (modal_total_items) modal_total_items.textContent = `${totalItems} ${totalItems === 1 ? 'item' : 'items'}`;
         if (modal_subtotal) modal_subtotal.textContent = `₱${subtotal.toLocaleString()}`;
-        if (modal_shipping) modal_shipping.textContent = shipping > 0 ? `₱${shipping.toFixed(2)}` : 'FREE';
+        if (modal_shipping) modal_shipping.textContent = shipping > 0 ? `₱${shipping.toFixed(2)}` : 'FREE / ₱0.00';
         if (modal_total_price) modal_total_price.textContent = `₱${total.toLocaleString()}`;
 
         if (modal_discount_row) {
@@ -242,49 +338,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Open Checkout Modal
-    if (btn_checkout) {
-        btn_checkout.addEventListener('click', () => {
-            const cart = window.BICOBS_Cart ? window.BICOBS_Cart.getCart() : [];
-            if (cart.length === 0) {
-                if (window.BICOBS_Cart) window.BICOBS_Cart.showToast('Your cart is empty!', 'warning');
-                return;
-            }
-            populateModalSummary();
-            if (checkout_modal) {
-                checkout_modal.classList.add('active');
-                checkout_modal.style.display = 'flex';
-            }
-        });
-    }
-
-    // Close Checkout Modal
-    function closeModal() {
-        if (checkout_modal) {
-            checkout_modal.classList.remove('active');
-            checkout_modal.style.display = 'none';
-        }
-    }
-
-    if (close_checkout_modal) close_checkout_modal.addEventListener('click', closeModal);
-    if (cancel_checkout_btn) cancel_checkout_btn.addEventListener('click', closeModal);
-
-    // Close Success Modal
-    if (close_success_modal) {
-        close_success_modal.addEventListener('click', () => {
-            if (order_success_modal) {
-                order_success_modal.classList.remove('active');
-                order_success_modal.style.display = 'none';
-            }
-            renderCart();
-        });
-    }
-
     // Process Checkout Transaction (POST /api/orders)
     if (confirm_checkout_btn) {
         confirm_checkout_btn.addEventListener('click', async () => {
             const cart = window.BICOBS_Cart ? window.BICOBS_Cart.getCart() : [];
             if (cart.length === 0) return;
+
+            const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+
+            if (!token && window.BICOBS_Auth) {
+                window.BICOBS_Auth.showLoginModal({
+                    message: 'Please sign in to confirm and place your order',
+                    onSuccess: () => {
+                        confirm_checkout_btn.click();
+                    }
+                });
+                return;
+            }
 
             confirm_checkout_btn.disabled = true;
             confirm_checkout_btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Order...';
@@ -293,15 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const shipping = subtotal > 0 && fulfillmentType === 'delivery' ? SHIPPING_FEE : 0;
             const finalTotal = Math.max(0, subtotal - discount + shipping);
 
-            const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
-
-            // If no token exists, redirect to login page with cart redirect
-            if (!token) {
-                alert('Please sign in or create an account before completing your checkout.');
-                window.location.href = '/frontend/pages/login.html?redirect=cart';
-                return;
-            }
-
             // Read user info for delivery details
             let userObj = {};
             try {
@@ -309,12 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (userStr) userObj = JSON.parse(userStr);
             } catch (e) {}
 
-            const customerPhone = userObj.phone || localStorage.getItem('tb_user_phone') || '+63 912 345 6789';
-            const customerAddress = userObj.address || localStorage.getItem('tb_user_shipping') || 'Sandico St, Marilao, Bulacan';
+            const customerPhone = userObj.phone || localStorage.getItem('tb_user_phone') || '09171234567';
+            const customerAddress = userObj.address || localStorage.getItem('tb_user_shipping') || 'Sandico St, Abangan Sur, Marilao, Bulacan';
 
             const orderPayload = {
                 orderItems: cart.map(item => ({
-                    product: item.id,
+                    product: item.id || item._id,
                     quantity: item.quantity
                 })),
                 shippingAddress: {
@@ -340,9 +401,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await res.json();
 
+                if (res.status === 401 && window.BICOBS_Auth) {
+                    window.BICOBS_Auth.clearAuth();
+                    window.BICOBS_Auth.showLoginModal({
+                        message: 'Your session expired. Please sign in to confirm your order',
+                        onSuccess: () => {
+                            confirm_checkout_btn.click();
+                        }
+                    });
+                    return;
+                }
+
                 if (res.ok && data.status === 'success') {
                     // Order confirmed!
-                    closeModal();
+                    closeCheckoutModal();
 
                     if (success_txn_id) success_txn_id.textContent = `#${data.data._id.slice(-8).toUpperCase()}`;
                     if (success_total_paid) success_total_paid.textContent = `₱${finalTotal.toLocaleString()}`;
@@ -354,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Clear Cart
                     window.BICOBS_Cart.clearCart();
-                    window.BICOBS_Cart.showToast('Transaction confirmed! Stock updated.', 'success');
+                    if (window.BICOBS_Cart) window.BICOBS_Cart.showToast('Transaction confirmed! Stock updated.', 'success');
                 } else {
                     alert(data.message || 'Failed to place order. Please try again.');
                 }
@@ -365,6 +437,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirm_checkout_btn.disabled = false;
                 confirm_checkout_btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Transaction';
             }
+        });
+    }
+
+    if (close_success_modal) {
+        close_success_modal.addEventListener('click', () => {
+            if (order_success_modal) {
+                order_success_modal.classList.remove('active');
+                order_success_modal.style.display = 'none';
+            }
+            window.location.href = '/frontend/pages/Dashboard/myorders.html';
         });
     }
 

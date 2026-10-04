@@ -1,18 +1,52 @@
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const Billing = require('../models/Billing');
+const { pool } = require('../config/db');
+
+// Helper to format an order row and its items
+const formatOrder = (orderRow, items = []) => ({
+  _id: orderRow.id.toString(),
+  id: orderRow.id,
+  orderNumber: orderRow.order_number,
+  order_number: orderRow.order_number,
+  user: orderRow.user_id,
+  customerName: orderRow.customer_name,
+  customerEmail: orderRow.customer_email,
+  customerPhone: orderRow.customer_phone,
+  deliveryType: orderRow.delivery_type,
+  deliveryAddress: orderRow.delivery_address,
+  notes: orderRow.notes,
+  paymentMethod: orderRow.payment_method,
+  subtotal: parseFloat(orderRow.subtotal || 0),
+  shippingFee: parseFloat(orderRow.shipping_fee || 0),
+  totalPrice: parseFloat(orderRow.total_amount),
+  total_amount: parseFloat(orderRow.total_amount),
+  orderStatus: orderRow.order_status,
+  order_status: orderRow.order_status,
+  paymentStatus: orderRow.payment_status,
+  payment_status: orderRow.payment_status,
+  orderItems: items.map(i => ({
+    id: i.id,
+    product: i.product_id,
+    name: i.product_name,
+    quantity: i.quantity,
+    price: parseFloat(i.unit_price),
+    subtotal: parseFloat(i.subtotal)
+  })),
+  createdAt: orderRow.created_at,
+  updatedAt: orderRow.updated_at
+});
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private (Authenticated Customers)
 const createOrder = async (req, res, next) => {
+  const client = await pool.connect();
   try {
     const {
       orderItems,
       shippingAddress,
       fulfillmentType,
       paymentMethod,
-      deliveryFee
+      deliveryFee,
+      notes
     } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
@@ -22,96 +56,153 @@ const createOrder = async (req, res, next) => {
       });
     }
 
-    if (!shippingAddress || !shippingAddress.phone) {
+    const customerPhone = shippingAddress && shippingAddress.phone ? shippingAddress.phone : (req.user.phone || '');
+    const customerAddress = shippingAddress && shippingAddress.street ? 
+      `${shippingAddress.street}, ${shippingAddress.barangay || ''}, ${shippingAddress.city || ''}` : 
+      (req.user.address || '');
+
+    if (!customerPhone) {
       return res.status(400).json({
         status: 'error',
-        message: 'Please provide contact phone number in shipping address'
+        message: 'Please provide a contact phone number'
       });
     }
+
+    await client.query('BEGIN');
 
     // 1. Validate items & check stock
     let itemsPrice = 0;
     const processedItems = [];
 
     for (const item of orderItems) {
-      const product = await Product.findById(item.product);
-      if (!product) {
+      const prodId = item.product || item._id || item.id;
+      const prodRes = await client.query(
+        'SELECT id, name, price, stock_quantity FROM products WHERE id = $1 FOR UPDATE',
+        [prodId]
+      );
+
+      if (prodRes.rows.length === 0) {
+        await client.query('ROLLBACK');
         return res.status(404).json({
           status: 'error',
-          message: `Product not found: ID ${item.product}`
+          message: `Product not found: ID ${prodId}`
         });
       }
 
-      if (product.stockQuantity < item.quantity) {
+      const product = prodRes.rows[0];
+      const reqQty = parseInt(item.quantity, 10);
+
+      if (product.stock_quantity < reqQty) {
+        await client.query('ROLLBACK');
         return res.status(400).json({
           status: 'error',
-          message: `Insufficient stock for product '${product.name}'. Available: ${product.stockQuantity}, Requested: ${item.quantity}`
+          message: `Insufficient stock for product '${product.name}'. Available: ${product.stock_quantity}, Requested: ${reqQty}`
         });
       }
 
-      // Calculate price and add to processed items
-      const itemTotalPrice = product.price * item.quantity;
-      itemsPrice += itemTotalPrice;
+      const unitPrice = parseFloat(product.price);
+      const subtotal = unitPrice * reqQty;
+      itemsPrice += subtotal;
 
       processedItems.push({
-        product: product._id,
+        productId: product.id,
         name: product.name,
-        quantity: item.quantity,
-        price: product.price
+        quantity: reqQty,
+        price: unitPrice,
+        subtotal
       });
 
-      // 2. Deduct product stock
-      product.stockQuantity -= item.quantity;
-      await product.save();
+      // 2. Deduct product stock in PostgreSQL
+      await client.query(
+        'UPDATE products SET stock_quantity = stock_quantity - $1 WHERE id = $2',
+        [reqQty, product.id]
+      );
     }
 
-    const calculatedDeliveryFee = fulfillmentType === 'delivery' ? (deliveryFee || 100) : 0;
+    const deliveryType = fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
+    const calculatedDeliveryFee = deliveryType === 'delivery' ? parseFloat(deliveryFee || 100) : 0;
     const totalPrice = itemsPrice + calculatedDeliveryFee;
 
-    // 3. Create Order
-    const order = await Order.create({
-      user: req.user._id,
-      orderItems: processedItems,
-      shippingAddress,
-      fulfillmentType: fulfillmentType || 'pickup',
-      paymentMethod: paymentMethod || 'cash',
-      itemsPrice,
-      deliveryFee: calculatedDeliveryFee,
-      totalPrice
-    });
-
-    // 4. Auto-generate billing invoice for the order
+    // Generate unique order number
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const invoiceNumber = `INV-${dateStr}-${randomNum}`;
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const orderNumber = `ORD-${dateStr}-${randomSuffix}`;
 
-    await Billing.create({
-      order: order._id,
-      invoiceNumber,
-      customerName: req.user.name,
-      customerEmail: req.user.email,
-      customerPhone: shippingAddress.phone,
-      items: processedItems.map(i => ({
-        name: i.name,
-        quantity: i.quantity,
-        price: i.price,
-        total: i.price * i.quantity
-      })),
-      subtotal: itemsPrice,
-      deliveryFee: calculatedDeliveryFee,
-      totalAmount: totalPrice,
-      paymentMethod: order.paymentMethod,
-      paymentStatus: 'unpaid',
-      issuedBy: req.user._id
-    });
+    // 3. Insert Order
+    const insertOrderSql = `
+      INSERT INTO orders (
+        order_number, user_id, customer_name, customer_email, customer_phone,
+        delivery_type, delivery_address, notes, payment_method,
+        subtotal, shipping_fee, total_amount, order_status, payment_status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'pending', 'pending')
+      RETURNING *;
+    `;
+
+    const orderRes = await client.query(insertOrderSql, [
+      orderNumber,
+      req.user.id,
+      req.user.name,
+      req.user.email,
+      customerPhone,
+      deliveryType,
+      customerAddress,
+      notes || '',
+      paymentMethod || 'cash',
+      itemsPrice,
+      calculatedDeliveryFee,
+      totalPrice
+    ]);
+
+    const createdOrder = orderRes.rows[0];
+
+    // 4. Insert Order Items
+    for (const p of processedItems) {
+      await client.query(
+        `INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_price, subtotal)
+         VALUES ($1, $2, $3, $4, $5, $6);`,
+        [createdOrder.id, p.productId, p.name, p.quantity, p.price, p.subtotal]
+      );
+    }
+
+    // 5. Generate Billing Record
+    const invoiceNumber = `INV-${dateStr}-${randomSuffix}`;
+    await client.query(
+      `INSERT INTO billings (
+        order_id, invoice_number, customer_name, customer_email, customer_phone,
+        subtotal, shipping_fee, total_amount, payment_method, payment_status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'pending');`,
+      [
+        createdOrder.id,
+        invoiceNumber,
+        req.user.name,
+        req.user.email,
+        customerPhone,
+        itemsPrice,
+        calculatedDeliveryFee,
+        totalPrice,
+        paymentMethod || 'cash'
+      ]
+    );
+
+    await client.query('COMMIT');
 
     res.status(201).json({
       status: 'success',
       message: 'Order placed successfully',
-      data: order
+      data: formatOrder(createdOrder, processedItems.map(p => ({
+        id: p.productId,
+        product_id: p.productId,
+        product_name: p.name,
+        quantity: p.quantity,
+        unit_price: p.price,
+        subtotal: p.subtotal
+      })))
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     next(error);
+  } finally {
+    client.release();
   }
 };
 
@@ -120,31 +211,25 @@ const createOrder = async (req, res, next) => {
 // @access  Private
 const getOrderById = async (req, res, next) => {
   try {
-    const order = await Order.findById(req.params.id)
-      .populate('user', 'name email phone')
-      .populate('orderItems.product', 'name category imageUrl');
+    const { id } = req.params;
 
-    if (!order) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Order not found'
-      });
+    const orderRes = await pool.query('SELECT * FROM orders WHERE id = $1', [id]);
+    if (orderRes.rows.length === 0) {
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
-    // Ensure customer can only view their own order (unless admin/staff)
-    if (
-      req.user.role === 'customer' &&
-      order.user._id.toString() !== req.user._id.toString()
-    ) {
-      return res.status(403).json({
-        status: 'error',
-        message: 'Not authorized to view this order'
-      });
+    const order = orderRes.rows[0];
+
+    // Authorization check
+    if (req.user.role === 'customer' && order.user_id !== req.user.id) {
+      return res.status(403).json({ status: 'error', message: 'Not authorized to view this order' });
     }
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [order.id]);
 
     res.status(200).json({
       status: 'success',
-      data: order
+      data: formatOrder(order, itemsRes.rows)
     });
   } catch (error) {
     next(error);
@@ -156,7 +241,17 @@ const getOrderById = async (req, res, next) => {
 // @access  Private (Customer)
 const getMyOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const ordersRes = await pool.query(
+      'SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
+      [req.user.id]
+    );
+
+    const orders = [];
+    for (const ord of ordersRes.rows) {
+      const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [ord.id]);
+      orders.push(formatOrder(ord, itemsRes.rows));
+    }
+
     res.status(200).json({
       status: 'success',
       count: orders.length,
@@ -173,19 +268,28 @@ const getMyOrders = async (req, res, next) => {
 const getAllOrders = async (req, res, next) => {
   try {
     const { status, paymentStatus } = req.query;
-    let query = {};
+    let sql = 'SELECT * FROM orders WHERE 1=1';
+    const params = [];
 
     if (status) {
-      query.orderStatus = status;
+      params.push(status);
+      sql += ` AND order_status = $${params.length}`;
     }
 
     if (paymentStatus) {
-      query.paymentStatus = paymentStatus;
+      params.push(paymentStatus);
+      sql += ` AND payment_status = $${params.length}`;
     }
 
-    const orders = await Order.find(query)
-      .populate('user', 'name email phone')
-      .sort({ createdAt: -1 });
+    sql += ' ORDER BY created_at DESC';
+
+    const ordersRes = await pool.query(sql, params);
+    const orders = [];
+
+    for (const ord of ordersRes.rows) {
+      const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [ord.id]);
+      orders.push(formatOrder(ord, itemsRes.rows));
+    }
 
     res.status(200).json({
       status: 'success',
@@ -202,44 +306,43 @@ const getAllOrders = async (req, res, next) => {
 // @access  Private (Admin / Staff)
 const updateOrderStatus = async (req, res, next) => {
   try {
+    const { id } = req.params;
     const { orderStatus, paymentStatus } = req.body;
-    const order = await Order.findById(req.params.id);
 
-    if (!order) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Order not found'
-      });
+    const existing = await pool.query('SELECT * FROM orders WHERE id = $1', [id]);
+    if (existing.rows.length === 0) {
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
-    if (orderStatus) {
-      order.orderStatus = orderStatus;
-      if (orderStatus === 'completed') {
-        order.isCompleted = true;
-        order.completedAt = Date.now();
-      }
-    }
+    const current = existing.rows[0];
+    const newOrderStatus = orderStatus || current.order_status;
+    const newPaymentStatus = paymentStatus || current.payment_status;
 
+    const updateSql = `
+      UPDATE orders
+      SET order_status = $1, payment_status = $2, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $3
+      RETURNING *;
+    `;
+
+    const updatedRes = await pool.query(updateSql, [newOrderStatus, newPaymentStatus, id]);
+
+    // Also sync billings table if payment status was updated
     if (paymentStatus) {
-      order.paymentStatus = paymentStatus;
-      if (paymentStatus === 'paid') {
-        order.isPaid = true;
-        order.paidAt = Date.now();
-
-        // Also update associated billing invoice
-        await Billing.findOneAndUpdate(
-          { order: order._id },
-          { paymentStatus: 'paid' }
-        );
-      }
+      await pool.query(
+        `UPDATE billings
+         SET payment_status = $1, payment_date = (CASE WHEN $1 = 'paid' THEN CURRENT_TIMESTAMP ELSE payment_date END)
+         WHERE order_id = $2;`,
+        [newPaymentStatus, id]
+      );
     }
 
-    await order.save();
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
 
     res.status(200).json({
       status: 'success',
       message: 'Order status updated successfully',
-      data: order
+      data: formatOrder(updatedRes.rows[0], itemsRes.rows)
     });
   } catch (error) {
     next(error);

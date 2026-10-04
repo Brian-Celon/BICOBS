@@ -572,12 +572,21 @@
           </div>
 
           <div class="location_map_col">
-            <div class="interactive_map_placeholder" id="interactive_map_placeholder">
-              <div class="map_pin_card">
+            <div class="interactive_map_wrapper" id="interactive_map_placeholder" style="position: relative; border-radius: 16px; overflow: hidden; height: 380px; box-shadow: 0 12px 30px rgba(0,0,0,0.25);">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.749774619747!2d120.9497!3d14.7262!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b399222c608f%3A0x6b44dd91f7d5c58a!2sSandico%2C%20Marilao%2C%20Bulacan!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph"
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+              <div class="map_pin_card" style="position: absolute; bottom: 16px; left: 16px; right: 16px; margin: 0 auto; max-width: 360px; z-index: 10;">
                 <div class="pin_icon_wrap"><i class="fa-solid fa-bicycle"></i></div>
                 <div class="pin_details">
                   <strong>Taurus Bike Shop</strong>
-                  <small>Abangan Sur, Marilao, Bulacan</small>
+                  <small>Sandico St., Abangan Sur, Marilao, Bulacan</small>
                   <span class="pin_status"><i class="fa-solid fa-circle"></i> Service Bays Open (Mon-Sat 8AM-6PM)</span>
                 </div>
               </div>
@@ -675,7 +684,10 @@
 
   </div>
 
-  <!-- Script for Dynamic Interactivity -->
+  <!-- Scripts for Universal Auth, Cart, and Dynamic Interactivity -->
+  <script src="/frontend/js/auth_modal.js"></script>
+  <script src="/frontend/js/cart.js"></script>
   <script src="/frontend/js/service.js"></script>
 </body>
 </html>
+

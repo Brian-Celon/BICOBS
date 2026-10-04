@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadMyOrders() {
         const token = localStorage.getItem('bicobs_token') || localStorage.getItem('token');
         if (!token) {
-            console.log('No auth token found, showing demo orders.');
+            if (no_orders_found) no_orders_found.style.display = 'block';
             return;
         }
 
@@ -31,10 +31,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            if (res.status === 401 && window.BICOBS_Auth) {
+                window.BICOBS_Auth.clearAuth();
+                window.BICOBS_Auth.showLoginModal({
+                    message: 'Your session has expired. Please sign in to view your orders',
+                    onSuccess: () => {
+                        loadMyOrders();
+                    }
+                });
+                return;
+            }
+
             if (!res.ok) return;
             const data = await res.json();
 
-            if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+            if (data.status === 'success' && Array.isArray(data.data)) {
                 customerOrders = data.data;
                 renderOrdersTable(customerOrders);
             }
@@ -42,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('Could not load orders from API:', e);
         }
     }
+
 
     function renderOrdersTable(orders) {
         if (!table_body) return;

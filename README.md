@@ -37,7 +37,7 @@ This project is developed as part of the requirements for the Bachelor of Scienc
 
 ### Database
 
-- **MongoDB** – Database management system for storing and managing application data, including products, customers, orders, and transaction records.
+- **PostgreSQL (Supabase)** – Relational database management system for storing and managing normalized application data, including users, products, orders, order items, and billing transaction records.
 
 ---
 

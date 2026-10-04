@@ -21,7 +21,38 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_products_catalog();
     load_dashboard_summary_from_backend();
     load_user_orders_from_backend();
+    load_user_payments_from_backend();
+
+    // Check if on a protected customer dashboard page without auth
+    check_page_auth_guard();
 });
+
+/* Page level auth guard for dashboard pages */
+function check_page_auth_guard() {
+    const isDashboardPage = window.location.pathname.includes('/Dashboard/') || 
+        window.location.pathname.includes('profile.html') || 
+        window.location.pathname.includes('myorders.html') || 
+        window.location.pathname.includes('payments.html') || 
+        window.location.pathname.includes('support.html');
+
+    if (isDashboardPage && window.BICOBS_Auth && !window.BICOBS_Auth.isAuthenticated()) {
+        const path = window.location.pathname;
+        let msg = 'Please sign in to access your customer account';
+        if (path.includes('profile.html')) msg = 'Please sign in to view and edit your profile settings';
+        if (path.includes('myorders.html')) msg = 'Please sign in to view your order history and tracking';
+        if (path.includes('payments.html')) msg = 'Please sign in to view your billing and payment history';
+        if (path.includes('support.html')) msg = 'Please sign in to manage your support tickets';
+
+        window.BICOBS_Auth.showLoginModal({
+            message: msg,
+            onSuccess: () => {
+                load_user_orders_from_backend();
+                load_user_payments_from_backend();
+                setup_profile_sync();
+            }
+        });
+    }
+}
 
 /* Fetch user orders from backend API for dashboard overview and order history */
 async function load_user_orders_from_backend() {
@@ -32,7 +63,11 @@ async function load_user_orders_from_backend() {
     const noOrdersFound = document.getElementById('no_orders_found');
 
     const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
-    if (!token) return;
+    if (!token) {
+        if (overviewNoOrders) overviewNoOrders.style.display = 'block';
+        if (noOrdersFound) noOrdersFound.style.display = 'block';
+        return;
+    }
 
     try {
         const response = await fetch('/api/orders/myorders', {
@@ -74,6 +109,59 @@ async function load_user_orders_from_backend() {
         console.log('Orders table backend sync offline:', err);
     }
 }
+
+/* Fetch customer billing transactions from backend API for payments.html */
+async function load_user_payments_from_backend() {
+    const tableBody = document.getElementById('payment_transactions_body');
+    const noPayments = document.getElementById('no_payments_found');
+    if (!tableBody) return;
+
+    const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+    if (!token) {
+        if (noPayments) noPayments.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/billing/mybilling', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (result.status === 'success' && Array.isArray(result.data)) {
+            const billings = result.data;
+
+            if (billings.length > 0) {
+                if (noPayments) noPayments.style.display = 'none';
+                tableBody.innerHTML = '';
+
+                billings.forEach(item => {
+                    const tr = document.createElement('tr');
+                    const invDate = new Date(item.createdAt).toISOString().slice(0, 10);
+                    const isPaid = item.paymentStatus === 'paid';
+                    const statusPill = isPaid 
+                        ? '<span class="status_pill status_delivered"><i class="fas fa-check-circle"></i> Paid</span>'
+                        : '<span class="status_pill status_processing"><i class="fas fa-clock"></i> Pending (COD)</span>';
+
+                    tr.innerHTML = `
+                        <td><strong>${item.invoiceNumber || '#' + item._id.slice(-6).toUpperCase()}</strong></td>
+                        <td>${invDate}</td>
+                        <td style="text-transform: capitalize;"><i class="fas fa-money-bill-wave" style="color: #10b981; margin-right: 6px;"></i> ${item.paymentMethod || 'Cash'}</td>
+                        <td><strong>₱${(item.totalAmount || 0).toLocaleString()}</strong></td>
+                        <td>${statusPill}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            } else {
+                if (noPayments) noPayments.style.display = 'block';
+            }
+        }
+    } catch (err) {
+        console.log('Payments backend sync offline:', err);
+    }
+}
+
 
 /* Fetch live summary metrics from backend API */
 async function load_dashboard_summary_from_backend() {
@@ -191,17 +279,17 @@ function setup_profile_sync() {
                 name: (storedUser ? storedUser.name : localStorage.getItem('tb_user_name')) || 'Customer Rider',
                 email: (storedUser ? storedUser.email : localStorage.getItem('tb_user_email')) || '',
                 phone: (storedUser ? storedUser.phone : localStorage.getItem('tb_user_phone')) || '',
-                shippingAddress: (storedUser ? storedUser.address : localStorage.getItem('tb_user_shipping')) || 'Marilao, Bulacan',
+                shippingAddress: (storedUser ? storedUser.address : localStorage.getItem('tb_user_shipping')) || '',
                 billingAddress: localStorage.getItem('tb_user_billing') || '',
                 isLoggedIn: true
             };
         }
 
         return {
-            name: 'Guest Rider',
+            name: '',
             email: '',
             phone: '',
-            shippingAddress: 'Marilao, Bulacan',
+            shippingAddress: '',
             billingAddress: '',
             isLoggedIn: false
         };
@@ -209,7 +297,7 @@ function setup_profile_sync() {
 
     // Helper to compute initials from full name
     const getInitials = (fullName, isLoggedIn) => {
-        if (!isLoggedIn) return 'TB';
+        if (!isLoggedIn || !fullName) return 'TB';
         const parts = fullName.trim().split(/\s+/);
         if (parts.length === 0 || !parts[0]) return 'TB';
         if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
@@ -229,49 +317,36 @@ function setup_profile_sync() {
 
         // Overview page text displays
         const overviewName = document.getElementById('overview_user_name');
-        if (overviewName) overviewName.textContent = profile.name;
+        if (overviewName) overviewName.textContent = profile.name || 'Customer Rider';
 
         const welcomeName = document.getElementById('overview_welcome_name');
-        if (welcomeName) welcomeName.textContent = profile.name;
+        if (welcomeName) welcomeName.textContent = profile.name || 'Customer Rider';
 
         const welcomeLoc = document.getElementById('overview_welcome_location');
-        if (welcomeLoc) welcomeLoc.textContent = profile.shippingAddress;
+        if (welcomeLoc) welcomeLoc.textContent = profile.shippingAddress || 'Marilao, Bulacan';
 
         const overviewShipping = document.getElementById('overview_shipping_address');
-        if (overviewShipping) overviewShipping.textContent = profile.shippingAddress;
+        if (overviewShipping) overviewShipping.textContent = profile.shippingAddress || 'No address set yet';
 
         const overviewBilling = document.getElementById('overview_billing_address');
-        if (overviewBilling) overviewBilling.textContent = profile.billingAddress || profile.shippingAddress;
+        if (overviewBilling) overviewBilling.textContent = profile.billingAddress || profile.shippingAddress || 'No billing address set yet';
 
         // Profile page input fields initialization (only populate if user is logged in)
         if (profile.isLoggedIn) {
             const nameInput = document.getElementById('full_name_input');
-            if (nameInput && !nameInput.dataset.initialized) {
-                nameInput.value = profile.name;
-                nameInput.dataset.initialized = 'true';
-            }
+            if (nameInput) nameInput.value = profile.name;
 
             const emailInput = document.getElementById('email_address_input');
-            if (emailInput && !emailInput.dataset.initialized) {
-                emailInput.value = profile.email;
-                emailInput.dataset.initialized = 'true';
-            }
+            if (emailInput) emailInput.value = profile.email;
 
             const phoneInput = document.getElementById('phone_number_input');
-            if (phoneInput && !phoneInput.dataset.initialized) {
-                phoneInput.value = profile.phone;
-                phoneInput.dataset.initialized = 'true';
-            }
+            if (phoneInput) phoneInput.value = profile.phone;
 
             const shippingInput = document.getElementById('shipping_address_input');
-            if (shippingInput && !shippingInput.dataset.initialized) {
-                shippingInput.value = profile.shippingAddress;
-                shippingInput.dataset.initialized = 'true';
-            }
+            if (shippingInput) shippingInput.value = profile.shippingAddress;
 
             const billingInput = document.getElementById('billing_address_input');
-            if (billingInput && !billingInput.dataset.initialized) {
-                billingInput.value = profile.billingAddress;
+            if (billingInput) billingInput.value = profile.billingAddress;
         }
     };
 
@@ -281,8 +356,19 @@ function setup_profile_sync() {
     // Attach form submit handler on profile page
     const profileForm = document.getElementById('profile_form');
     if (profileForm) {
-        profileForm.addEventListener('submit', (e) => {
+        profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+            if (!token && window.BICOBS_Auth) {
+                window.BICOBS_Auth.showLoginModal({
+                    message: 'Please sign in to save your profile changes',
+                    onSuccess: () => {
+                        profileForm.dispatchEvent(new Event('submit'));
+                    }
+                });
+                return;
+            }
 
             const newName = document.getElementById('full_name_input')?.value.trim();
             const newEmail = document.getElementById('email_address_input')?.value.trim();
@@ -290,26 +376,81 @@ function setup_profile_sync() {
             const newShipping = document.getElementById('shipping_address_input')?.value.trim();
             const newBilling = document.getElementById('billing_address_input')?.value.trim();
 
-            if (newName) localStorage.setItem('tb_user_name', newName);
-            if (newEmail) localStorage.setItem('tb_user_email', newEmail);
-            if (newPhone) localStorage.setItem('tb_user_phone', newPhone);
-            if (newShipping) localStorage.setItem('tb_user_shipping', newShipping);
-            if (newBilling) localStorage.setItem('tb_user_billing', newBilling);
+            const newPassword = document.getElementById('new_password_input')?.value;
+            const confirmPassword = document.getElementById('confirm_password_input')?.value;
+            const pwdError = document.getElementById('password_match_error');
 
-            updateUI();
+            if (newPassword && newPassword !== confirmPassword) {
+                if (pwdError) pwdError.style.display = 'block';
+                return;
+            } else if (pwdError) {
+                pwdError.style.display = 'none';
+            }
 
-            const toast = document.getElementById('profile_save_toast');
-            if (toast) {
-                toast.style.display = 'inline-flex';
-                toast.style.alignItems = 'center';
-                toast.style.gap = '6px';
-                setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 3500);
+            const payload = {
+                name: newName,
+                email: newEmail,
+                phone: newPhone,
+                address: newShipping
+            };
+
+            if (newPassword && newPassword.trim() !== '') {
+                payload.password = newPassword;
+            }
+
+            try {
+                const res = await fetch('/api/auth/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+
+                if (res.ok && result.status === 'success') {
+                    if (newName) localStorage.setItem('tb_user_name', newName);
+                    if (newEmail) localStorage.setItem('tb_user_email', newEmail);
+                    if (newPhone) localStorage.setItem('tb_user_phone', newPhone);
+                    if (newShipping) localStorage.setItem('tb_user_shipping', newShipping);
+                    if (newBilling) localStorage.setItem('tb_user_billing', newBilling);
+
+                    if (result.data) {
+                        localStorage.setItem('user', JSON.stringify(result.data));
+                    }
+
+                    updateUI();
+
+                    const toast = document.getElementById('profile_save_toast');
+                    if (toast) {
+                        toast.style.display = 'inline-flex';
+                        toast.style.alignItems = 'center';
+                        toast.style.gap = '6px';
+                        setTimeout(() => {
+                            toast.style.display = 'none';
+                        }, 3500);
+                    }
+
+                    if (document.getElementById('new_password_input')) document.getElementById('new_password_input').value = '';
+                    if (document.getElementById('confirm_password_input')) document.getElementById('confirm_password_input').value = '';
+                } else {
+                    alert(result.message || 'Could not update profile. Please try again.');
+                }
+            } catch (err) {
+                console.error('Profile update error:', err);
+                if (newName) localStorage.setItem('tb_user_name', newName);
+                if (newEmail) localStorage.setItem('tb_user_email', newEmail);
+                if (newPhone) localStorage.setItem('tb_user_phone', newPhone);
+                if (newShipping) localStorage.setItem('tb_user_shipping', newShipping);
+                if (newBilling) localStorage.setItem('tb_user_billing', newBilling);
+                updateUI();
             }
         });
     }
 }
+
 
 /* setup payment method modal popup and provider selection */
 function setup_payment_modal() {
@@ -321,11 +462,17 @@ function setup_payment_modal() {
     
     if (!modal) return;
 
-    // Open Modal
+    // Open Modal with Auth Guard
     if (open_btn) {
         open_btn.addEventListener('click', (e) => {
             e.preventDefault();
-            modal.classList.add('active');
+            if (window.BICOBS_Auth) {
+                window.BICOBS_Auth.requireAuth(() => {
+                    modal.classList.add('active');
+                }, 'Please sign in to add a payment method');
+            } else {
+                modal.classList.add('active');
+            }
         });
     }
 
@@ -380,15 +527,15 @@ function setup_payment_modal() {
             const isPrimary = document.getElementById('is_primary_payment')?.checked || false;
 
             const cardsGrid = document.querySelector('.payment_cards_grid');
+            const noCards = document.getElementById('no_payment_methods');
             if (cardsGrid) {
                 const newCard = document.createElement('article');
-                
                 const currentUserName = localStorage.getItem('tb_user_name') || 'Account Holder';
 
                 if (provider === 'card') {
-                    const cardNum = document.getElementById('card_number').value || '•••• •••• •••• 1234';
-                    const expDate = document.getElementById('exp_date').value || '12/30';
-                    const holderName = document.getElementById('cardholder_name').value.trim() || currentUserName;
+                    const cardNum = document.getElementById('card_number')?.value || '•••• •••• •••• 1234';
+                    const expDate = document.getElementById('exp_date')?.value || '12/30';
+                    const holderName = document.getElementById('cardholder_name')?.value.trim() || currentUserName;
                     const last4 = cardNum.replace(/\s+/g, '').slice(-4) || '1234';
 
                     newCard.className = 'payment_card_item card_taurus';
@@ -413,13 +560,13 @@ function setup_payment_modal() {
                         </div>
                     `;
                 } else if (provider === 'gcash') {
-                    const mobileNum = document.getElementById('gcash_number').value || '+63 917 ••• 0000';
-                    const holderName = document.getElementById('gcash_name').value.trim() || currentUserName;
+                    const mobileNum = document.getElementById('gcash_number')?.value || '+63 917 ••• 0000';
+                    const holderName = document.getElementById('gcash_name')?.value.trim() || currentUserName;
 
                     newCard.className = 'payment_card_item card_gcash';
                     newCard.innerHTML = `
                         <div class="card_top_row">
-                            <span>GCash / Wallet</span>
+                            <span>GCash Wallet</span>
                             <i class="fas fa-wallet" style="font-size: 20px;"></i>
                         </div>
                         <div>
@@ -437,8 +584,8 @@ function setup_payment_modal() {
                         </div>
                     `;
                 } else if (provider === 'paymaya') {
-                    const mobileNum = document.getElementById('paymaya_number').value || '+63 918 ••• 0000';
-                    const holderName = document.getElementById('paymaya_name').value.trim() || currentUserName;
+                    const mobileNum = document.getElementById('paymaya_number')?.value || '+63 918 ••• 0000';
+                    const holderName = document.getElementById('paymaya_name')?.value.trim() || currentUserName;
 
                     newCard.className = 'payment_card_item card_taurus';
                     newCard.style.backgroundColor = '#00a859';
@@ -463,6 +610,7 @@ function setup_payment_modal() {
                     `;
                 }
 
+                if (noCards) noCards.style.display = 'none';
                 cardsGrid.appendChild(newCard);
             }
 
@@ -482,11 +630,17 @@ function setup_ticket_modal() {
 
     if (!modal) return;
 
-    // Open Modal
+    // Open Modal with Auth Guard
     if (open_btn) {
         open_btn.addEventListener('click', (e) => {
             e.preventDefault();
-            modal.classList.add('active');
+            if (window.BICOBS_Auth) {
+                window.BICOBS_Auth.requireAuth(() => {
+                    modal.classList.add('active');
+                }, 'Please sign in to create a support ticket');
+            } else {
+                modal.classList.add('active');
+            }
         });
     }
 
@@ -510,9 +664,10 @@ function setup_ticket_modal() {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const subject = document.getElementById('ticket_subject').value || 'General Inquiry';
-            const category = document.getElementById('ticket_category').value || 'Support';
-            const ticketList = document.querySelector('.ticket_list');
+            const subject = document.getElementById('ticket_subject')?.value || 'General Inquiry';
+            const category = document.getElementById('ticket_category')?.value || 'Support';
+            const ticketList = document.getElementById('tickets_list') || document.querySelector('.ticket_list');
+            const noTickets = document.getElementById('no_tickets_found');
 
             if (ticketList) {
                 const randomId = Math.floor(1000 + Math.random() * 9000);
@@ -531,6 +686,7 @@ function setup_ticket_modal() {
                     <a href="#" class="btn_open_chat">Open Chat</a>
                 `;
 
+                if (noTickets) noTickets.style.display = 'none';
                 ticketList.prepend(newTicket);
             }
 
@@ -539,6 +695,7 @@ function setup_ticket_modal() {
         });
     }
 }
+
 
 /* Close active modals on Escape key press */
 function setup_global_keyboard() {
@@ -563,12 +720,45 @@ function setup_profile_navigation() {
     });
 }
 
+/* Toggle password visibility */
+function setup_password_visibility() {
+    document.querySelectorAll('.btn_toggle_pwd').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            if (!input) return;
+            const isPwd = input.type === 'password';
+            input.type = isPwd ? 'text' : 'password';
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = isPwd ? 'fas fa-eye-slash' : 'fas fa-eye';
+            }
+        });
+    });
+}
+
+/* Global search and table filters */
+function setup_search_and_filters() {
+    const searchInputs = document.querySelectorAll('.search_wrapper input, .search_input');
+    searchInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.orders_table tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(q) ? '' : 'none';
+            });
+        });
+    });
+}
+
 /* Shopping Cart Interactivity, Quantity Updates, Delete Handling, Totals & Checkout Modal */
 function setup_shopping_cart() {
     // If BICOBS_Cart and cart_view.js are active, delegate cart rendering to cart_view.js
     if (window.BICOBS_Cart && document.getElementById('cart_item_list')) {
         return;
     }
+
     const cartList = document.getElementById('cart_item_list') || document.querySelector('.cart_item_list');
     const orderSummary = document.querySelector('.order_summary_section');
 
@@ -657,11 +847,13 @@ function setup_shopping_cart() {
         if (shippingEl) shippingEl.textContent = `₱${data.shippingFee.toFixed(2)}`;
         if (totalPriceEl) totalPriceEl.textContent = `₱${data.total.toLocaleString('en-US')}`;
 
-        // Update Top Nav and Sidebar badges
+        // Update Top Nav, Sidebar, and Overview card badges
         const badges = document.querySelectorAll('.cart_badge_top, .badge_green');
         badges.forEach(badge => {
             badge.textContent = data.totalQty;
         });
+        const overviewCartEl = document.getElementById('overview_cart_count');
+        if (overviewCartEl) overviewCartEl.textContent = data.totalQty;
 
         // Handle Empty Cart View
         const cartSection = document.querySelector('.cart_items_section');
@@ -853,12 +1045,18 @@ function setup_shopping_cart() {
     // Confirm Order Handler
     if (confirmCheckoutBtn) {
         confirmCheckoutBtn.addEventListener('click', async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
             const userStr = localStorage.getItem('user');
 
             if (!token) {
-                alert('Please log in or register an account before placing an order.');
-                window.location.href = '/frontend/pages/login.html';
+                if (window.BICOBS_Auth) {
+                    window.BICOBS_Auth.showLoginModal({
+                        message: 'Please sign in to confirm and place your order',
+                        onSuccess: () => {
+                            confirmCheckoutBtn.click();
+                        }
+                    });
+                }
                 return;
             }
 
@@ -866,7 +1064,7 @@ function setup_shopping_cart() {
             const data = calculateTotals();
 
             if (!data.items || data.items.length === 0) {
-                alert('Your cart is empty.');
+                if (window.BICOBS_Cart) window.BICOBS_Cart.showToast('Your cart is empty', 'warning');
                 return;
             }
 
@@ -878,8 +1076,8 @@ function setup_shopping_cart() {
                     price: i.unitPrice
                 })),
                 shippingAddress: {
-                    phone: user.phone || '09171234567',
-                    street: user.address || 'Abangan Sur',
+                    phone: user.phone || localStorage.getItem('tb_user_phone') || '09171234567',
+                    street: user.address || localStorage.getItem('tb_user_shipping') || 'Abangan Sur',
                     city: 'Marilao',
                     province: 'Bulacan'
                 },
@@ -906,6 +1104,17 @@ function setup_shopping_cart() {
                 confirmCheckoutBtn.disabled = false;
                 confirmCheckoutBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Transaction';
 
+                if (response.status === 401 && window.BICOBS_Auth) {
+                    window.BICOBS_Auth.clearAuth();
+                    window.BICOBS_Auth.showLoginModal({
+                        message: 'Your session has expired. Please sign in to place your order',
+                        onSuccess: () => {
+                            confirmCheckoutBtn.click();
+                        }
+                    });
+                    return;
+                }
+
                 if (response.ok && result.status === 'success') {
                     closeCheckout();
 
@@ -926,16 +1135,18 @@ function setup_shopping_cart() {
                         updateCartUI();
                     }
                 } else {
-                    alert(result.message || 'Failed to place order. Please try again.');
+                    if (window.BICOBS_Cart) {
+                        window.BICOBS_Cart.showToast(result.message || 'Failed to place order. Please try again.', 'error');
+                    }
                 }
             } catch (err) {
                 console.error('Order submission error:', err);
                 confirmCheckoutBtn.disabled = false;
                 confirmCheckoutBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Transaction';
-                alert('Server connection error. Please ensure the backend is running.');
             }
         });
     }
+
 
     if (closeSuccessBtn) {
         closeSuccessBtn.addEventListener('click', () => {
@@ -1405,8 +1616,25 @@ async function setup_products_catalog() {
         let visibleCount = 0;
 
         cards.forEach(card => {
-            const cat = card.getAttribute('data-category') || '';
-            const matches = (activeCategory === 'all' || cat === activeCategory);
+            const cat = (card.getAttribute('data-category') || '').toLowerCase();
+            const name = (card.getAttribute('data-name') || '').toLowerCase();
+            const text = `${cat} ${name}`;
+
+            let matches = false;
+            if (activeCategory === 'all') {
+                matches = true;
+            } else if (activeCategory === 'bikes') {
+                matches = (cat === 'bicycles') || text.includes('bike') || text.includes('frame');
+            } else if (activeCategory === 'parts') {
+                matches = (cat === 'spare_parts') && !text.includes('tire') && !text.includes('wheel');
+            } else if (activeCategory === 'tires') {
+                matches = text.includes('tire') || text.includes('rim') || text.includes('wheel') || text.includes('tube') || text.includes('tanwall');
+            } else if (activeCategory === 'apparel') {
+                matches = (cat === 'accessories') || text.includes('shoe') || text.includes('helmet') || text.includes('pedal') || text.includes('cleat');
+            } else {
+                matches = (cat === activeCategory) || text.includes(activeCategory);
+            }
+
             card.style.display = matches ? 'flex' : 'none';
             if (matches) visibleCount++;
         });
@@ -1434,4 +1662,44 @@ async function setup_products_catalog() {
 
     filterAndSortProducts();
 }
+
+/* Universal Add to Cart Delegated Listener for Dashboard Products Catalog */
+function setup_add_to_cart_buttons() {
+    document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn_add_to_cart_action');
+        if (!btn || btn.disabled) return;
+
+        const id = btn.getAttribute('data-id');
+        const card = btn.closest('.product_card_item') || btn.closest('article');
+        const name = btn.getAttribute('data-name') || card?.getAttribute('data-name') || card?.querySelector('.product_name')?.textContent?.trim() || 'Product';
+        const price = parseFloat(btn.getAttribute('data-price') || card?.getAttribute('data-price') || card?.querySelector('.product_price')?.textContent?.replace(/[^0-9.]/g, '')) || 0;
+        const img = card?.querySelector('img')?.src || '/frontend/Pictures/placeholder.png';
+        const category = card?.getAttribute('data-category') || '';
+
+        if (window.BICOBS_Cart && id) {
+            const added = window.BICOBS_Cart.addToCart({
+                id: id,
+                _id: id,
+                name: name,
+                price: price,
+                imageUrl: img,
+                category: category,
+                stockQuantity: 99
+            }, 1);
+
+            if (added) {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                btn.style.backgroundColor = '#16a34a';
+                btn.style.color = '#ffffff';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                }, 1200);
+            }
+        }
+    });
+}
+
 

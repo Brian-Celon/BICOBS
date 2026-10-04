@@ -1,32 +1,58 @@
-const Product = require('../models/Product');
+const db = require('../config/db');
 
-// @desc    Get all products (supports category filter & search)
+// Helper to format database row into API product object (supports both camelCase and snake_case)
+const formatProduct = (row) => ({
+  _id: row.id.toString(),
+  id: row.id,
+  name: row.name,
+  description: row.description || '',
+  category: row.category,
+  price: parseFloat(row.price),
+  stockQuantity: row.stock_quantity,
+  stock_quantity: row.stock_quantity,
+  sku: row.sku || '',
+  imageUrl: row.image_url || '',
+  image_url: row.image_url || '',
+  isAvailable: row.is_available,
+  is_available: row.is_available,
+  isFeatured: row.is_featured,
+  is_featured: row.is_featured,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at
+});
+
+// @desc    Get all products (supports category filter, search, availability)
 // @route   GET /api/products
 // @access  Public
 const getProducts = async (req, res, next) => {
   try {
     const { category, search, availableOnly } = req.query;
-    let query = {};
+    let sql = 'SELECT * FROM products WHERE 1=1';
+    const params = [];
 
-    if (category) {
-      query.category = category.toLowerCase();
+    if (category && category !== 'all') {
+      params.push(category.toLowerCase());
+      sql += ` AND LOWER(category) = $${params.length}`;
     }
 
-    if (search) {
-      query.name = { $regex: search, $options: 'i' };
+    if (search && search.trim() !== '') {
+      params.push(`%${search.trim()}%`);
+      sql += ` AND (name ILIKE $${params.length} OR description ILIKE $${params.length})`;
     }
 
     if (availableOnly === 'true') {
-      query.isAvailable = true;
-      query.stockQuantity = { $gt: 0 };
+      sql += ` AND is_available = true AND stock_quantity > 0`;
     }
 
-    const products = await Product.find(query).sort({ createdAt: -1 });
+    sql += ' ORDER BY id ASC';
+
+    const result = await db.query(sql, params);
+    const formatted = result.rows.map(formatProduct);
 
     res.status(200).json({
       status: 'success',
-      count: products.length,
-      data: products
+      count: formatted.length,
+      data: formatted
     });
   } catch (error) {
     next(error);
@@ -38,9 +64,18 @@ const getProducts = async (req, res, next) => {
 // @access  Public
 const getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!product) {
+    if (isNaN(id)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Invalid product ID'
+      });
+    }
+
+    const result = await db.query('SELECT * FROM products WHERE id = $1', [id]);
+
+    if (result.rows.length === 0) {
       return res.status(404).json({
         status: 'error',
         message: 'Product not found'
@@ -49,7 +84,7 @@ const getProductById = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: product
+      data: formatProduct(result.rows[0])
     });
   } catch (error) {
     next(error);
@@ -61,29 +96,58 @@ const getProductById = async (req, res, next) => {
 // @access  Private (Admin / Staff)
 const createProduct = async (req, res, next) => {
   try {
-    const { name, description, category, price, stockQuantity, sku, imageUrl } = req.body;
-
-    if (!name || !category || price === undefined || stockQuantity === undefined) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'Please provide product name, category, price, and stock quantity'
-      });
-    }
-
-    const product = await Product.create({
+    const {
       name,
-      description: description || '',
+      description,
       category,
       price,
       stockQuantity,
-      sku: sku || undefined,
-      imageUrl: imageUrl || undefined
-    });
+      stock_quantity,
+      sku,
+      imageUrl,
+      image_url,
+      isAvailable,
+      is_available,
+      isFeatured,
+      is_featured
+    } = req.body;
+
+    const finalStock = stockQuantity !== undefined ? stockQuantity : (stock_quantity !== undefined ? stock_quantity : 0);
+    const finalImage = imageUrl || image_url || '';
+    const finalAvailable = isAvailable !== undefined ? isAvailable : (is_available !== undefined ? is_available : true);
+    const finalFeatured = isFeatured !== undefined ? isFeatured : (is_featured !== undefined ? is_featured : false);
+
+    if (!name || !category || price === undefined) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Please provide product name, category, and price'
+      });
+    }
+
+    const sql = `
+      INSERT INTO products (name, description, category, price, stock_quantity, sku, image_url, is_available, is_featured)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *;
+    `;
+
+    const values = [
+      name,
+      description || '',
+      category.toLowerCase(),
+      parseFloat(price),
+      parseInt(finalStock, 10),
+      sku || null,
+      finalImage,
+      finalAvailable,
+      finalFeatured
+    ];
+
+    const result = await db.query(sql, values);
 
     res.status(201).json({
       status: 'success',
       message: 'Product created successfully',
-      data: product
+      data: formatProduct(result.rows[0])
     });
   } catch (error) {
     next(error);
@@ -95,23 +159,46 @@ const createProduct = async (req, res, next) => {
 // @access  Private (Admin / Staff)
 const updateProduct = async (req, res, next) => {
   try {
-    let product = await Product.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!product) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Product not found'
-      });
+    if (isNaN(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid product ID' });
     }
 
-    // Merge updates and save to trigger pre-save middleware (auto update availability)
-    Object.assign(product, req.body);
-    await product.save();
+    const existing = await db.query('SELECT * FROM products WHERE id = $1', [id]);
+    if (existing.rows.length === 0) {
+      return res.status(404).json({ status: 'error', message: 'Product not found' });
+    }
+
+    const current = existing.rows[0];
+    const b = req.body;
+
+    const name = b.name !== undefined ? b.name : current.name;
+    const description = b.description !== undefined ? b.description : current.description;
+    const category = b.category !== undefined ? b.category.toLowerCase() : current.category;
+    const price = b.price !== undefined ? parseFloat(b.price) : current.price;
+    const stockQuantity = b.stockQuantity !== undefined ? parseInt(b.stockQuantity, 10) : (b.stock_quantity !== undefined ? parseInt(b.stock_quantity, 10) : current.stock_quantity);
+    const sku = b.sku !== undefined ? b.sku : current.sku;
+    const imageUrl = b.imageUrl !== undefined ? b.imageUrl : (b.image_url !== undefined ? b.image_url : current.image_url);
+    const isAvailable = b.isAvailable !== undefined ? b.isAvailable : (b.is_available !== undefined ? b.is_available : (stockQuantity > 0));
+    const isFeatured = b.isFeatured !== undefined ? b.isFeatured : (b.is_featured !== undefined ? b.is_featured : current.is_featured);
+
+    const updateSql = `
+      UPDATE products
+      SET name = $1, description = $2, category = $3, price = $4, stock_quantity = $5,
+          sku = $6, image_url = $7, is_available = $8, is_featured = $9, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $10
+      RETURNING *;
+    `;
+
+    const result = await db.query(updateSql, [
+      name, description, category, price, stockQuantity, sku, imageUrl, isAvailable, isFeatured, id
+    ]);
 
     res.status(200).json({
       status: 'success',
       message: 'Product updated successfully',
-      data: product
+      data: formatProduct(result.rows[0])
     });
   } catch (error) {
     next(error);
@@ -123,16 +210,20 @@ const updateProduct = async (req, res, next) => {
 // @access  Private (Admin only)
 const deleteProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!product) {
+    if (isNaN(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid product ID' });
+    }
+
+    const result = await db.query('DELETE FROM products WHERE id = $1 RETURNING id;', [id]);
+
+    if (result.rows.length === 0) {
       return res.status(404).json({
         status: 'error',
         message: 'Product not found'
       });
     }
-
-    await product.deleteOne();
 
     res.status(200).json({
       status: 'success',

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "migrate": "node migrate.js",
     "data:import": "node seeder.js -i",
     "data:destroy": "node seeder.js -d",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +21,7 @@
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.10.2"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
