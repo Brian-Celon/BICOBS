@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     load_dashboard_summary_from_backend();
     load_user_orders_from_backend();
     load_user_payments_from_backend();
+    load_recommended_products_from_backend();
 
     // Check if on a protected customer dashboard page without auth
     check_page_auth_guard();
@@ -1455,6 +1456,7 @@ function setup_ticket_chat_modal() {
             const text = replyInput.value.trim();
             if (!text) return;
 
+            if (chatBox) {
                 const userMsg = document.createElement('div');
                 userMsg.className = 'chat_message message_user';
                 const authorName = localStorage.getItem('tb_user_name') || 'You';
@@ -1543,7 +1545,6 @@ function setup_logout_modal() {
 }
 
 /* Products Catalog Filtering & Sorting (products.html) */
-/* Products Catalog Filtering & Sorting (products.html) */
 async function setup_products_catalog() {
     const categoryBtns = document.querySelectorAll('.category_btn');
     const sortSelect = document.getElementById('product_sort_select');
@@ -1558,12 +1559,13 @@ async function setup_products_catalog() {
         const res = await fetch('/api/products');
         if (res.ok) {
             const result = await res.json();
-            if (result.status === 'success' && result.data && result.data.length > 0) {
-                renderDashboardProductsGrid(result.data);
+            const productsList = result.data || result.products || [];
+            if (Array.isArray(productsList) && productsList.length > 0) {
+                renderDashboardProductsGrid(productsList);
             }
         }
     } catch (err) {
-        console.log('Using HTML template products fallback');
+        console.warn('Could not load products from API:', err);
     }
 
     function renderDashboardProductsGrid(products) {
@@ -1571,22 +1573,31 @@ async function setup_products_catalog() {
         products.forEach(item => {
             const article = document.createElement('article');
             article.className = 'product_card_item';
-            article.setAttribute('data-category', item.category || 'all');
-            article.setAttribute('data-price', item.price);
+            const cat = (item.category || 'general').toLowerCase();
+            const price = parseFloat(item.price) || 0;
+            const stock = typeof item.stockQuantity === 'number' ? item.stockQuantity : (typeof item.stock_quantity === 'number' ? item.stock_quantity : 10);
+            const isOutOfStock = stock <= 0;
+            const imgUrl = item.imageUrl || item.image_url || '/frontend/Pictures/logo.png';
+            const prodId = item._id || item.id;
+
+            article.setAttribute('data-id', prodId);
+            article.setAttribute('data-category', cat);
+            article.setAttribute('data-price', price);
             article.setAttribute('data-name', item.name);
 
             article.innerHTML = `
-                <div class="product_img_box">
-                    <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';">
+                <div class="product_img_box" style="position: relative;">
+                    <img src="${imgUrl}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.src='/frontend/Pictures/logo.png';">
+                    ${isOutOfStock ? '<span style="position: absolute; top: 8px; right: 8px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">OUT OF STOCK</span>' : ''}
                 </div>
                 <div class="product_card_body">
-                    <span class="product_category_tag">${(item.category || '').toUpperCase()}</span>
-                    <h4 class="product_name">${item.name}</h4>
+                    <span class="product_category_tag">${cat.replace(/_/g, ' ').toUpperCase()}</span>
+                    <h4 class="product_name" title="${item.name}">${item.name}</h4>
                     <p class="product_description">${item.description || ''}</p>
                     <div class="product_card_footer">
-                        <span class="product_price">₱${item.price.toLocaleString()}</span>
-                        <button type="button" class="btn_add_to_cart_action" data-id="${item._id}" data-name="${item.name}" data-price="${item.price}">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        <span class="product_price">₱${price.toLocaleString()}</span>
+                        <button type="button" class="btn_add_to_cart_action" data-id="${prodId}" data-name="${item.name}" data-price="${price}" ${isOutOfStock ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                            <i class="fas fa-cart-plus"></i> ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
                         </button>
                     </div>
                 </div>
@@ -1624,13 +1635,13 @@ async function setup_products_catalog() {
             if (activeCategory === 'all') {
                 matches = true;
             } else if (activeCategory === 'bikes') {
-                matches = (cat === 'bicycles') || text.includes('bike') || text.includes('frame');
+                matches = ['bicycles', 'built_bikes', 'frame'].includes(cat) || text.includes('bike') || text.includes('frame');
             } else if (activeCategory === 'parts') {
-                matches = (cat === 'spare_parts') && !text.includes('tire') && !text.includes('wheel');
+                matches = ['chain', 'upgrade_kit', 'pedals', 'fork', 'stem', 'handle_bar', 'hubs'].includes(cat) || text.includes('gear') || text.includes('speed') || text.includes('brake');
             } else if (activeCategory === 'tires') {
-                matches = text.includes('tire') || text.includes('rim') || text.includes('wheel') || text.includes('tube') || text.includes('tanwall');
+                matches = ['tires', 'rims'].includes(cat) || text.includes('tire') || text.includes('rim') || text.includes('wheel');
             } else if (activeCategory === 'apparel') {
-                matches = (cat === 'accessories') || text.includes('shoe') || text.includes('helmet') || text.includes('pedal') || text.includes('cleat');
+                matches = ['saddle', 'handle_grip'].includes(cat) || text.includes('shoe') || text.includes('grip') || text.includes('saddle');
             } else {
                 matches = (cat === activeCategory) || text.includes(activeCategory);
             }
@@ -1662,6 +1673,68 @@ async function setup_products_catalog() {
 
     filterAndSortProducts();
 }
+
+/* Load Recommended Products Dynamically from Database (dashboard.html Overview) */
+async function load_recommended_products_from_backend() {
+    const listEl = document.getElementById('overview_recommended_products');
+    if (!listEl) return;
+
+    try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('API fetch failed');
+        const result = await res.json();
+        const products = result.data || result.products || [];
+
+        if (products.length === 0) {
+            listEl.innerHTML = '<li style="text-align: center; width: 100%; padding: 16px; color: #64748b;">No recommendations available.</li>';
+            return;
+        }
+
+        // Pick 4 diverse products from database
+        const recommended = products.slice(0, 4);
+
+        listEl.innerHTML = '';
+        recommended.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'product_card';
+            const price = parseFloat(item.price) || 0;
+            const imgUrl = item.imageUrl || item.image_url || '/frontend/Pictures/logo.png';
+            const prodId = item._id || item.id;
+
+            li.innerHTML = `
+                <div class="product_image_placeholder" style="overflow: hidden; padding: 4px;">
+                    <img src="${imgUrl}" alt="${item.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='/frontend/Pictures/logo.png';">
+                </div>
+                <h4 class="product_name" title="${item.name}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;">${item.name}</h4>
+                <p class="product_price">₱${price.toLocaleString()}</p>
+                <button type="button" class="action_button btn_add_recommended_cart" data-id="${prodId}" data-name="${item.name}" data-price="${price}">Add to Cart</button>
+            `;
+
+            const addBtn = li.querySelector('.btn_add_recommended_cart');
+            if (addBtn) {
+                addBtn.addEventListener('click', () => {
+                    if (window.BICOBS_Cart) {
+                        window.BICOBS_Cart.addToCart({
+                            id: prodId,
+                            _id: prodId,
+                            name: item.name,
+                            price: price,
+                            imageUrl: imgUrl,
+                            category: item.category,
+                            stockQuantity: item.stockQuantity ?? item.stock_quantity ?? 10
+                        }, 1);
+                    }
+                });
+            }
+
+            listEl.appendChild(li);
+        });
+    } catch (e) {
+        console.warn('Could not load recommended products:', e);
+        listEl.innerHTML = '<li style="text-align: center; width: 100%; padding: 16px; color: #64748b;">Recommendations temporarily unavailable.</li>';
+    }
+}
+
 
 /* Universal Add to Cart Delegated Listener for Dashboard Products Catalog */
 function setup_add_to_cart_buttons() {
