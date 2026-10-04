@@ -7,7 +7,7 @@ const { connectDB } = require('./config/db');
 // 1. Load environment variables
 dotenv.config();
 
-// 2. Connect to MongoDB
+// 2. Connect to PostgreSQL (Supabase)
 connectDB();
 
 // 3. Initialize Express app

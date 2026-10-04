@@ -17,8 +17,8 @@ This document tracks upcoming tasks, completed features, and backlog items for t
   - [x] Order summary breakdown (Subtotal, Estimated Shipping/Delivery, Total).
   - [x] Customer checkout form (Name, Contact Number, Delivery Address / In-Store Pickup option).
   - [x] Payment method selection (*GCash, Cash on Delivery / Over-the-counter, Credit/Debit Card*).
-  - [x] API endpoint `POST /api/orders` to save order in MongoDB.
-  - [x] Real-time stock deduction: Automatically decrement `stockQuantity` in [Product.js](file:///d:/BICOBS/back-end/models/Product.js) upon order confirmation.
+  - [x] API endpoint `POST /api/orders` to save order in PostgreSQL (Supabase) with ACID transactions.
+  - [x] Real-time stock deduction: Automatically decrement stock quantity in database upon order confirmation.
   - [x] Order confirmation modal / success page with order tracking number.
 
 ---
@@ -82,9 +82,10 @@ This document tracks upcoming tasks, completed features, and backlog items for t
 
 ## ✅ Completed Tasks
 
-- [x] Backend Express Server setup on port 5000 with MongoDB connection.
-- [x] Database Schema definitions for `User`, `Product`, `Order`, and `Billing`.
-- [x] Cloudinary Admin API integration to fetch and index all 144 product images.
-- [x] Automated matching of all 150 catalog products to Cloudinary URLs.
-- [x] MongoDB database seeded with updated product catalog.
+- [x] Backend Express Server setup on port 5000 with PostgreSQL (Supabase) connection.
+- [x] Relational Database Schema definitions (`users`, `products`, `orders`, `order_items`, `billings`).
+- [x] Cloudinary CDN integration to deliver all product images.
+- [x] Automated matching of all 150 catalog products to exact Cloudinary URLs and 13 categories.
+- [x] PostgreSQL database seeded with updated product catalog via `migrate.js`.
 - [x] Product card layout and responsive image styling on [shop.html](file:///d:/BICOBS/frontend/pages/shop.html) and [dashboard.html](file:///d:/BICOBS/frontend/pages/Dashboard/dashboard.html).
+- [x] Multi-select checkbox category filtering and price sorting.
