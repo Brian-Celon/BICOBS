@@ -1,47 +1,49 @@
-# 🚀 BICOBS: How to Run the System (Team Setup Guide)
+# 🚀 BICOBS: How to Run the System
 
-> **For All Team Members:** Follow this guide step-by-step whenever you clone or pull the latest project updates from GitHub.
-
----
-
-## ⚠️ Important: Why Product Images Didn't Appear Last Time
-
-If you or a teammate ran the system before and products/images were missing, it was caused by one of these **three common mistakes**:
-
-| Mistake | Why It Breaks Images | How to Fix It |
-|---|---|---|
-| **1. Double-clicking HTML files** (`file:///...`) or using VS Code **Live Server** (port 5500) | The browser cannot fetch `/api/products` from the backend without running the Node server. Fallback paths break under `file:///`. | **Always** open the site through `http://localhost:5000/` with the backend running. |
-| **2. Missing `.env` file** | Git automatically ignores `.env` for security. When you pull the project, there is no `.env` in `back-end/`, so the server cannot connect to the database. | Create `back-end/.env` and paste the connection string (see Step 2 below). |
-| **3. Not running `npm install`** | Missing required backend packages like Express and PostgreSQL driver (`pg`). | Run `npm install` inside the `back-end` folder. |
-
-All 150 product images are hosted on a fast Cloudinary CDN. Once the backend server is running and connected, **every product image loads instantly!**
+A step-by-step guide for running the Taurus Bike Shop Ordering and Billing System (BICOBS) locally.
 
 ---
 
-## ⚡ Quick Start (4 Easy Steps)
+## 📋 Prerequisites
 
-### Step 1: Open Terminal in the `back-end` Folder
-Open your terminal (PowerShell, Command Prompt, or VS Code Terminal) and navigate to `back-end`:
+Ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/) (version 18 or higher recommended)
+- A modern web browser (Google Chrome, Microsoft Edge, Firefox, Brave)
+
+---
+
+## 🛠️ Step-by-Step Guide
+
+### Step 1: Open Terminal in the `back-end` Directory
+Open your terminal (PowerShell, Command Prompt, or VS Code Terminal) and navigate to the `back-end` folder:
+
 ```bash
 cd back-end
 ```
 
-Install the required dependencies:
+Install all project dependencies:
+
 ```bash
 npm install
 ```
 
 ---
 
-### Step 2: Create Your Local `.env` File
-In the `back-end` folder, create a file named `.env` (or copy `.env.example`):
+### Step 2: Configure Environment Variables (`.env`)
+Inside the `back-end` directory, create a `.env` file by copying the example template:
 
 ```bash
 # In Windows PowerShell:
 Copy-Item .env.example .env
+
+# In Command Prompt:
+copy .env.example .env
+
+# In macOS / Linux:
+cp .env.example .env
 ```
 
-Open `back-end/.env` in your text editor and ensure it has the following configuration:
+Open `back-end/.env` and ensure the values match the following configuration:
 
 ```env
 PORT=5000
@@ -52,77 +54,59 @@ JWT_EXPIRE=30d
 CLOUDINARY_CLOUD_NAME=q3ywfemm
 ```
 
-> [!NOTE]
-> The database is hosted on Supabase (PostgreSQL). The connection string above connects directly to the shared cloud database, so all team members see the exact same 150 products, prices, and images!
-
 ---
 
 ### Step 3: Start the Backend Server
-In the `back-end` folder, start the development server:
+Run the development server inside the `back-end` folder:
+
 ```bash
 npm run dev
 ```
-*(Alternatively, you can run `npm start`)*
 
-You should see this in your terminal:
+*(Or use `npm start` for standard mode)*
+
+Verify that the terminal displays:
 ```text
 [Server] Running in development mode on port 5000
-[PostgreSQL] Connected to Supabase DB: postgres at ...
+[PostgreSQL] Connected to Supabase DB: postgres
 ```
 
 ---
 
-### Step 4: Open Your Browser
-Do **NOT** open HTML files directly from your folder! Open your web browser (Chrome, Edge, Firefox, Brave) and go to:
+### Step 4: Open the Website in Your Browser
+Open your browser and navigate to:
 
 👉 **[http://localhost:5000/](http://localhost:5000/)**
 
-To browse the shop catalog directly with all images and multi-select category checkboxes:
+To go directly to the product catalog:
 
 👉 **[http://localhost:5000/frontend/pages/shop.html](http://localhost:5000/frontend/pages/shop.html)**
 
 ---
 
-## 🧭 Direct URLs to System Pages
+## 🧭 Page Links Reference
 
-When the backend is running on port 5000, you can access every page through these URLs:
-
-| Page | URL | Description |
+| Page Name | Direct URL | Description |
 |---|---|---|
 | **Landing Page / Home** | `http://localhost:5000/` | Main Taurus Bike Shop homepage |
-| **Shop Catalog** | `http://localhost:5000/frontend/pages/shop.html` | All 150 products with images & category filters |
-| **Services & Maintenance** | `http://localhost:5000/frontend/pages/service.html` | Bike repair packages & troubleshooter |
-| **About Us** | `http://localhost:5000/frontend/pages/about.html` | Shop story, vision, and team info |
-| **Shopping Cart** | `http://localhost:5000/frontend/pages/Dashboard/mycart.html` | Live cart & checkout form |
-| **My Orders** | `http://localhost:5000/frontend/pages/Dashboard/myorders.html` | Order tracking & order history |
-| **Customer Dashboard** | `http://localhost:5000/frontend/pages/Dashboard/dashboard.html` | Account overview & recent orders |
-| **Login / Sign Up** | `http://localhost:5000/frontend/pages/login.html` | Customer and staff authentication |
-| **API Health Check** | `http://localhost:5000/api/health` | Confirms backend server is running |
-| **Products API** | `http://localhost:5000/api/products` | JSON feed of all 150 catalog products |
+| **Shop Catalog** | `http://localhost:5000/frontend/pages/shop.html` | All 150 products with category filters and images |
+| **Services & Maintenance** | `http://localhost:5000/frontend/pages/service.html` | Bike repair and tune-up services |
+| **About Us** | `http://localhost:5000/frontend/pages/about.html` | Taurus Bike Shop history and team info |
+| **Shopping Cart** | `http://localhost:5000/frontend/pages/Dashboard/mycart.html` | Active shopping cart and checkout |
+| **My Orders** | `http://localhost:5000/frontend/pages/Dashboard/myorders.html` | Customer order history and tracking |
+| **Customer Dashboard** | `http://localhost:5000/frontend/pages/Dashboard/dashboard.html` | Account overview |
+| **Login / Sign Up** | `http://localhost:5000/frontend/pages/login.html` | Authentication portal |
+| **API Health Check** | `http://localhost:5000/api/health` | Backend status verification |
+| **Products API** | `http://localhost:5000/api/products` | Live products JSON endpoint |
 
 ---
 
-## 🔄 Optional: Database Re-seeding / Migration
+## 🔄 Optional: Database Migration & Seeding
 
-If you ever need to reset or re-seed the Supabase database with all 150 Taurus Bike Shop products:
+To initialize or re-sync all 150 Taurus Bike Shop products in the database:
 
 ```bash
 cd back-end
 npm run migrate
 ```
 *(Or `npm run seed`)*
-
-This applies [database/schema.sql](file:///d:/BICOBS/database/schema.sql) and seeds all products across the 13 categories into PostgreSQL.
-
----
-
-## ❓ Troubleshooting FAQ
-
-### Q: Why do I see a blank page or "Cannot GET /api/products"?
-- **Answer:** Make sure your backend terminal says `[Server] Running ... on port 5000`. If you closed the terminal, restart it with `npm run dev`.
-
-### Q: Why do product images show broken icons or placeholders?
-- **Answer:** You opened the page using `file:///C:/...` or VS Code Live Server (`localhost:5500`). Close that tab and open **`http://localhost:5000/frontend/pages/shop.html`** instead.
-
-### Q: Why does the terminal show `ECONNREFUSED` or connection error?
-- **Answer:** Check your `back-end/.env` file. Ensure `DATABASE_URL` is set to the Supabase pooler connection string provided in Step 2.
