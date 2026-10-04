@@ -11,6 +11,12 @@ This project is developed as part of the requirements for the Bachelor of Scienc
 
 ---
 
+## ⚡ Quick Start: How to Run the System
+> **Important:** To ensure all product images and database features load properly without broken links, follow our step-by-step team guide:
+> 👉 **[HOW_TO_RUN.md](HOW_TO_RUN.md)**
+
+---
+
 ## 🎯 Project Objectives
 
 - Develop a web-based platform for online ordering and billing.
