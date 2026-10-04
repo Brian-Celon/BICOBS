@@ -180,6 +180,7 @@
                         <thead>
                             <tr>
                                 <th>Order ID</th>
+                                <th>Invoice #</th>
                                 <th>Date</th>
                                 <th>Items</th>
                                 <th>Status</th>
@@ -206,11 +207,17 @@
 
     <!-- Order Details Modal -->
     <div id="order_details_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="order_details_title">
-        <div class="modal_container checkout_modal_container">
+        <div class="modal_container checkout_modal_container" style="max-width: 640px;">
             <div class="modal_header_row space_between">
                 <div class="modal_header_text">
-                    <h3 id="order_details_title" class="modal_title">Order Details <span id="modal_order_id_head">#TBR1045</span></h3>
-                    <p class="modal_subtitle">Placed on <span id="modal_order_date">2026-05-15</span></p>
+                    <h3 id="order_details_title" class="modal_title" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span>Order Details</span>
+                        <span id="modal_order_id_head" style="color: #8b1e28; font-size: 16px;">#ORD-0000</span>
+                    </h3>
+                    <p class="modal_subtitle">
+                        Placed on <span id="modal_order_date">--</span> &bull; 
+                        Invoice: <strong id="modal_invoice_num" style="color: #0f172a;">--</strong>
+                    </p>
                 </div>
                 <button type="button" class="modal_close_btn" id="close_order_details_modal" aria-label="Close modal">
                     <i class="fas fa-times"></i>
@@ -218,35 +225,56 @@
             </div>
 
             <div class="modal_card_box">
+                <!-- Visual Order Status Progression Timeline -->
                 <div class="order_detail_group">
-                    <span class="form_label">ORDER STATUS</span>
+                    <span class="form_label">TRACKING & STATUS TIMELINE</span>
+                    <div id="order_timeline_container" style="margin-top: 10px; margin-bottom: 12px;">
+                        <!-- Injected dynamically: 4-step progress tracker -->
+                    </div>
                     <div id="modal_order_status_badge" style="margin-top: 4px;">
                         <span class="status_pill status_processing"><i class="fas fa-circle" style="font-size: 7px;"></i> Processing</span>
                     </div>
                 </div>
 
-                <div class="order_detail_group" style="margin-top: 14px;">
-                    <span class="form_label">ORDERED ITEMS</span>
-                    <ul class="checkout_items_list" id="modal_order_items_list" style="margin-top: 6px;">
+                <!-- Delivery Details & Payment Info -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <div>
+                        <span class="form_label" style="font-size: 11px;">FULFILLMENT & ADDRESS</span>
+                        <p class="order_detail_text" id="modal_order_address" style="margin: 4px 0 0 0; font-size: 13px; color: #1e293b;">--</p>
+                    </div>
+                    <div>
+                        <span class="form_label" style="font-size: 11px;">PAYMENT METHOD</span>
+                        <p class="order_detail_text" id="modal_payment_method" style="margin: 4px 0 0 0; font-size: 13px; font-weight: 600; color: #1e293b;">--</p>
+                    </div>
+                </div>
+
+                <!-- Ordered Items Breakdown -->
+                <div class="order_detail_group" style="margin-top: 16px;">
+                    <span class="form_label">ORDERED ITEMS BREAKDOWN</span>
+                    <ul class="checkout_items_list" id="modal_order_items_list" style="margin-top: 6px; max-height: 200px; overflow-y: auto; padding-right: 4px;">
                         <!-- Items list -->
                     </ul>
                 </div>
 
-                <div class="order_detail_group" style="margin-top: 14px;">
-                    <span class="form_label">SHIPPING ADDRESS</span>
-                    <p class="order_detail_text" id="modal_order_address">1991 Roat State, Sector 4, Metro Manila, 19491</p>
-                </div>
-
-                <div class="checkout_totals_box" style="margin-top: 14px;">
-                    <div class="summary_row total_row">
-                        <span>Total Paid:</span>
-                        <strong id="modal_order_total" class="total_price">₱11,000</strong>
+                <!-- Financial Totals Breakdown -->
+                <div class="checkout_totals_box" style="margin-top: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                    <div class="summary_row" style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: #64748b;">
+                        <span>Items Subtotal:</span>
+                        <span id="modal_subtotal_amt">₱0</span>
+                    </div>
+                    <div class="summary_row" style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: #64748b;">
+                        <span>Shipping / Delivery Fee:</span>
+                        <span id="modal_shipping_amt">₱0</span>
+                    </div>
+                    <div class="summary_row total_row" style="display: flex; justify-content: space-between; border-top: 1px dashed #cbd5e1; padding-top: 8px; font-size: 15px; font-weight: 700; color: #0f172a;">
+                        <span>Total Paid / Payable:</span>
+                        <strong id="modal_order_total" class="total_price" style="color: #8b1e28;">₱0</strong>
                     </div>
                 </div>
             </div>
 
             <div class="modal_actions">
-                <button type="button" class="btn_modal_cancel" id="close_order_details_btn">Close</button>
+                <button type="button" class="btn_modal_cancel" id="close_order_details_btn">Close Details</button>
             </div>
         </div>
     </div>

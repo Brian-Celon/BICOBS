@@ -6,6 +6,8 @@ const formatOrder = (orderRow, items = []) => ({
   id: orderRow.id,
   orderNumber: orderRow.order_number,
   order_number: orderRow.order_number,
+  invoiceNumber: orderRow.invoice_number || null,
+  invoice_number: orderRow.invoice_number || null,
   user: orderRow.user_id,
   customerName: orderRow.customer_name,
   customerEmail: orderRow.customer_email,
@@ -23,6 +25,14 @@ const formatOrder = (orderRow, items = []) => ({
   paymentStatus: orderRow.payment_status,
   payment_status: orderRow.payment_status,
   orderItems: items.map(i => ({
+    id: i.id,
+    product: i.product_id,
+    name: i.product_name,
+    quantity: i.quantity,
+    price: parseFloat(i.unit_price),
+    subtotal: parseFloat(i.subtotal)
+  })),
+  items: items.map(i => ({
     id: i.id,
     product: i.product_id,
     name: i.product_name,
@@ -75,7 +85,7 @@ const createOrder = async (req, res, next) => {
     const processedItems = [];
 
     for (const item of orderItems) {
-      const prodId = item.product || item._id || item.id;
+      const prodId = item.product || item.productId || item._id || item.id;
       const prodRes = await client.query(
         'SELECT id, name, price, stock_quantity FROM products WHERE id = $1 FOR UPDATE',
         [prodId]
@@ -186,6 +196,8 @@ const createOrder = async (req, res, next) => {
 
     await client.query('COMMIT');
 
+    createdOrder.invoice_number = invoiceNumber;
+
     res.status(201).json({
       status: 'success',
       message: 'Order placed successfully',
@@ -213,7 +225,14 @@ const getOrderById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const orderRes = await pool.query('SELECT * FROM orders WHERE id = $1', [id]);
+    const orderRes = await pool.query(
+      `SELECT o.*, b.invoice_number 
+       FROM orders o 
+       LEFT JOIN billings b ON b.order_id = o.id 
+       WHERE o.id = $1`,
+      [id]
+    );
+
     if (orderRes.rows.length === 0) {
       return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
@@ -242,7 +261,11 @@ const getOrderById = async (req, res, next) => {
 const getMyOrders = async (req, res, next) => {
   try {
     const ordersRes = await pool.query(
-      'SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
+      `SELECT o.*, b.invoice_number 
+       FROM orders o 
+       LEFT JOIN billings b ON b.order_id = o.id 
+       WHERE o.user_id = $1 
+       ORDER BY o.created_at DESC`,
       [req.user.id]
     );
 
@@ -268,20 +291,26 @@ const getMyOrders = async (req, res, next) => {
 const getAllOrders = async (req, res, next) => {
   try {
     const { status, paymentStatus } = req.query;
-    let sql = 'SELECT * FROM orders WHERE 1=1';
+    let sql = `
+      SELECT o.*, b.invoice_number, u.full_name as user_name, u.email as user_email
+      FROM orders o
+      LEFT JOIN billings b ON b.order_id = o.id
+      LEFT JOIN users u ON o.user_id = u.id
+      WHERE 1=1
+    `;
     const params = [];
 
     if (status) {
-      params.push(status);
-      sql += ` AND order_status = $${params.length}`;
+      params.push(status.toLowerCase());
+      sql += ` AND LOWER(o.order_status) = $${params.length}`;
     }
 
     if (paymentStatus) {
-      params.push(paymentStatus);
-      sql += ` AND payment_status = $${params.length}`;
+      params.push(paymentStatus.toLowerCase());
+      sql += ` AND LOWER(o.payment_status) = $${params.length}`;
     }
 
-    sql += ' ORDER BY created_at DESC';
+    sql += ' ORDER BY o.created_at DESC';
 
     const ordersRes = await pool.query(sql, params);
     const orders = [];
@@ -301,22 +330,56 @@ const getAllOrders = async (req, res, next) => {
   }
 };
 
-// @desc    Update order status & payment status
+// @desc    Update order status & payment status with validation and automatic stock rollback
 // @route   PUT /api/orders/:id/status
 // @access  Private (Admin / Staff)
 const updateOrderStatus = async (req, res, next) => {
+  const client = await pool.connect();
   try {
     const { id } = req.params;
-    const { orderStatus, paymentStatus } = req.body;
+    const rawOrderStatus = req.body.orderStatus || req.body.status || req.body.order_status;
+    const rawPaymentStatus = req.body.paymentStatus || req.body.payment_status;
 
-    const existing = await pool.query('SELECT * FROM orders WHERE id = $1', [id]);
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
     if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
       return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
     const current = existing.rows[0];
-    const newOrderStatus = orderStatus || current.order_status;
-    const newPaymentStatus = paymentStatus || current.payment_status;
+    const currentStatus = (current.order_status || 'pending').toLowerCase();
+    const targetStatus = rawOrderStatus ? rawOrderStatus.toLowerCase() : currentStatus;
+    const newPaymentStatus = rawPaymentStatus ? rawPaymentStatus.toLowerCase() : current.payment_status;
+
+    // Transition Validation
+    if (currentStatus === 'completed' && targetStatus === 'cancelled') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Cannot cancel an order that has already been completed'
+      });
+    }
+
+    if (currentStatus === 'cancelled' && targetStatus !== 'cancelled') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Cannot change status of an already cancelled order'
+      });
+    }
+
+    // Automatic Stock Rollback if cancelling
+    if (targetStatus === 'cancelled' && currentStatus !== 'cancelled') {
+      const itemsRes = await client.query('SELECT product_id, quantity FROM order_items WHERE order_id = $1', [id]);
+      for (const item of itemsRes.rows) {
+        await client.query(
+          'UPDATE products SET stock_quantity = stock_quantity + $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+          [item.quantity, item.product_id]
+        );
+      }
+    }
 
     const updateSql = `
       UPDATE orders
@@ -324,12 +387,11 @@ const updateOrderStatus = async (req, res, next) => {
       WHERE id = $3
       RETURNING *;
     `;
+    const updatedRes = await client.query(updateSql, [targetStatus, newPaymentStatus, id]);
 
-    const updatedRes = await pool.query(updateSql, [newOrderStatus, newPaymentStatus, id]);
-
-    // Also sync billings table if payment status was updated
-    if (paymentStatus) {
-      await pool.query(
+    // Sync billing record if payment status was updated
+    if (rawPaymentStatus) {
+      await client.query(
         `UPDATE billings
          SET payment_status = $1, payment_date = (CASE WHEN $1 = 'paid' THEN CURRENT_TIMESTAMP ELSE payment_date END)
          WHERE order_id = $2;`,
@@ -337,15 +399,25 @@ const updateOrderStatus = async (req, res, next) => {
       );
     }
 
+    await client.query('COMMIT');
+
     const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updatedRes.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
 
     res.status(200).json({
       status: 'success',
-      message: 'Order status updated successfully',
-      data: formatOrder(updatedRes.rows[0], itemsRes.rows)
+      message: `Order status updated to ${targetStatus}`,
+      data: formatOrder(orderData, itemsRes.rows)
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     next(error);
+  } finally {
+    client.release();
   }
 };
 

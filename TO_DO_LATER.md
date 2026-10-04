@@ -23,25 +23,25 @@ This document outlines the core functional architecture and backend development 
 ## 🛠️ Prioritized Backend & Functional Tasks
 
 ### 1. Order Lifecycle & Status Management (Backend)
-- [ ] **Order Status Transitions API (`PUT /api/orders/:id/status`)**
-  - [ ] Implement backend endpoint for staff/admin to transition order statuses:
+- [x] **Order Status Transitions API (`PUT /api/orders/:id/status`)**
+  - [x] Implement backend endpoint for staff/admin to transition order statuses:
     - `pending` ➔ `processing` ➔ `ready_for_pickup` / `shipped` ➔ `completed`
-  - [ ] **Stock Rollback on Cancellation:** Automatically restore product `stock_quantity` in PostgreSQL if an order is marked `cancelled`.
-  - [ ] Validate permissible state transitions (e.g. cannot cancel an already `completed` order).
+  - [x] **Stock Rollback on Cancellation:** Automatically restore product `stock_quantity` in PostgreSQL if an order is marked `cancelled`.
+  - [x] Validate permissible state transitions (cannot cancel `completed` orders; cannot modify already `cancelled` orders).
 
 ### 2. Customer Order Tracking & History (Functionality)
-- [ ] **Complete `myorders.html` Data Integration**
-  - [ ] Connect `orders_view.js` to `GET /api/orders/myorders` to render real customer orders.
-  - [ ] Display ordered items breakdown (product name, quantity, unit price, item subtotal).
-  - [ ] Order status tracker pill reflecting real database state (`pending`, `processing`, `shipped`, `delivered`, `cancelled`).
-  - [ ] Link each order to its corresponding billing invoice number.
+- [x] **Complete `myorders.html` Data Integration**
+  - [x] Connect `orders_view.js` to `GET /api/orders/myorders` to render real customer orders.
+  - [x] Display ordered items breakdown (product name, quantity, unit price, item subtotal).
+  - [x] 4-step visual progress timeline (`Placed` ➔ `Processing` ➔ `Shipped / Ready` ➔ `Completed` or `Cancelled`).
+  - [x] Link each order to its corresponding billing invoice number (`INV-...`).
 
 ### 3. Automated Billing & Invoicing Engine (Backend)
-- [ ] **Billing Records & Retrieval (`/api/billing`)**
-  - [ ] Automatic billing record creation upon order submission with unique invoice numbers (`INV-YYYYMMDD-XXXX`).
-  - [ ] Customer invoice retrieval endpoint (`GET /api/billing/mybilling` & `GET /api/billing/order/:orderId`).
-  - [ ] Payment status tracking: record method (*Cash on Delivery*, *GCash OTC*, *Store Pickup Cash*) and flag status as `unpaid` or `paid`.
-  - [ ] Staff endpoint to toggle invoice payment status when cash or OTC payment is received.
+- [x] **Billing Records & Retrieval (`/api/billing`)**
+  - [x] Automatic billing record creation upon order submission with unique invoice numbers (`INV-YYYYMMDD-XXXX`).
+  - [x] Customer invoice retrieval endpoints (`GET /api/billing/mybilling` & `GET /api/billing/order/:orderId`).
+  - [x] Payment status tracking: record method (*Cash on Delivery*, *GCash OTC*, *Store Pickup Cash*) and flag status as `pending` or `paid`.
+  - [x] Staff endpoint to toggle invoice payment status when cash or OTC payment is received (`PUT /api/billing/:id/payment`).
 
 ### 4. Admin Order Processing & Inventory Controls (Dashboard Backend)
 - [ ] **Admin Orders Queue (`dashboard.html` / `dashboardController.js`)**

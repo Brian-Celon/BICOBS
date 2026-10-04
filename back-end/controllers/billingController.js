@@ -131,9 +131,84 @@ const getAllBillings = async (req, res, next) => {
   }
 };
 
+// @desc    Update billing payment status (Staff/Admin cash or OTC verification)
+// @route   PUT /api/billing/:id/payment
+// @access  Private (Admin / Staff)
+const updatePaymentStatus = async (req, res, next) => {
+  const client = await db.pool.connect();
+  try {
+    const { id } = req.params;
+    const rawStatus = req.body.paymentStatus || req.body.status;
+
+    if (!rawStatus) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Please provide paymentStatus (pending, paid, failed, refunded)'
+      });
+    }
+
+    const validStatuses = ['pending', 'paid', 'failed', 'refunded'];
+    const newStatus = rawStatus.toLowerCase();
+    if (!validStatuses.includes(newStatus)) {
+      return res.status(400).json({
+        status: 'error',
+        message: `Invalid payment status. Allowed: ${validStatuses.join(', ')}`
+      });
+    }
+
+    await client.query('BEGIN');
+
+    // Find billing record
+    const billRes = await client.query('SELECT * FROM billings WHERE id = $1 FOR UPDATE', [id]);
+    if (billRes.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({
+        status: 'error',
+        message: 'Billing invoice not found'
+      });
+    }
+
+    const billing = billRes.rows[0];
+    const paymentDate = newStatus === 'paid' ? new Date() : null;
+
+    // Update billing
+    const updateBillSql = `
+      UPDATE billings
+      SET payment_status = $1,
+          payment_date = $2
+      WHERE id = $3
+      RETURNING *;
+    `;
+    const updatedBillRes = await client.query(updateBillSql, [newStatus, paymentDate, id]);
+
+    // Sync corresponding order's payment_status
+    if (billing.order_id) {
+      await client.query(
+        'UPDATE orders SET payment_status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        [newStatus, billing.order_id]
+      );
+    }
+
+    await client.query('COMMIT');
+
+    res.status(200).json({
+      status: 'success',
+      message: `Payment status updated to ${newStatus}`,
+      data: formatBilling(updatedBillRes.rows[0])
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   getBillingByOrder,
   getBillingByInvoiceNumber,
   getMyBillings,
-  getAllBillings
+  getAllBillings,
+  updatePaymentStatus
 };
+
