@@ -271,12 +271,12 @@
   },
   {
     "name": "Speedone Soldier BOOST",
-    "description": "Speedone Soldier BOOST (Fork Suspension) available at Taurus Bike Shop.",
+    "description": "Speedone Soldier BOOST (Fork) available at Taurus Bike Shop.",
     "category": "fork",
     "price": 12000,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-028",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584483/Speedone_Soldier_BOOST.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584507/Speedone_Soldier.jpg",
     "isAvailable": true
   },
   {
@@ -340,13 +340,13 @@
     "isAvailable": true
   },
   {
-    "name": "Fork Weapon Tower",
-    "description": "Fork Weapon Tower (Hubs) available at Taurus Bike Shop.",
+    "name": "LDCNC 3.0 Hub",
+    "description": "LDCNC 3.0 Hub (Hubs) available at Taurus Bike Shop.",
     "category": "hubs",
     "price": 3400,
     "stockQuantity": 10,
     "sku": "TBS-SPA-FORKWEAP-035",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584505/Weapon_Tower.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/Hub_LDNC_3.0.jpg",
     "isAvailable": true
   },
   {
@@ -406,7 +406,7 @@
     "price": 3450,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-041",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584507/Speedone_Soldier.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/Speedone_Soldier_Hub.jpg",
     "isAvailable": true
   },
   {
@@ -930,13 +930,13 @@
     "isAvailable": true
   },
   {
-    "name": "Ragusa R100",
-    "description": "Ragusa R100 (Handle Grip) available at Taurus Bike Shop.",
+    "name": "Weapon Wave",
+    "description": "Weapon Wave (Handle Grip) available at Taurus Bike Shop.",
     "category": "handle_grip",
     "price": 1200,
     "stockQuantity": 10,
     "sku": "TBS-ACC-RAGUSAR1-094",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584484/Ragusa_R100.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584477/Weapon_Wave.jpg",
     "isAvailable": true
   },
   {
@@ -946,7 +946,7 @@
     "price": 1200,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-095",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584473/Speedone_Pilot.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584473/Speedone_Pilot_Pedal.jpg",
     "isAvailable": true
   },
   {
@@ -956,7 +956,7 @@
     "price": 800,
     "stockQuantity": 10,
     "sku": "TBS-SPA-SPEEDONE-096",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584473/Speedone_Pilot.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584473/Speedone_Pilot_Pedal.jpg",
     "isAvailable": true
   },
   {
@@ -1140,13 +1140,13 @@
     "isAvailable": true
   },
   {
-    "name": "Ragusa R100",
-    "description": "Ragusa R100 (Rims) available at Taurus Bike Shop.",
+    "name": "Jalco Wellington Red",
+    "description": "Jalco Wellington Red (Rims) available at Taurus Bike Shop.",
     "category": "rims",
     "price": 1900,
     "stockQuantity": 10,
     "sku": "TBS-SPA-RAGUSAR1-115",
-    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/v1790584484/Ragusa_R100.jpg",
+    "imageUrl": "https://res.cloudinary.com/q3ywfemm/image/upload/Jalco_Wellington_Red.jpg",
     "isAvailable": true
   },
   {
