@@ -47,6 +47,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/billing', require('./routes/billingRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/repairs', require('./routes/repairRoutes'));
 
 // 7. 404 Route Handler
 app.use((req, res, next) => {

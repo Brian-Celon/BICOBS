@@ -133,10 +133,11 @@ This roadmap outlines the complete status, backend integration requirements, and
 ---
 
 ### Phase 6: Service & Repairs Tracking (`repairs.html`)
-- [ ] **Repairs Ticket Management**
-  - [ ] Table of repair jobs (Customer, Bike Model, Service Type, Mechanic, Status, Estimated Cost).
-  - [ ] Modal to create new walk-in repair ticket.
-  - [ ] Update repair status: `Pending Inspection` ➔ `In Progress` ➔ `Waiting for Parts` ➔ `Completed / Ready for Pickup`.
+- [x] **Repairs Ticket Management**
+  - [x] Table of repair jobs (Customer, Bike Model, Service Type, Mechanic, Status, Estimated Cost).
+  - [x] Modal to create new walk-in repair ticket.
+  - [x] Update repair status: `Pending Inspection` ➔ `In Progress` ➔ `Waiting for Parts` ➔ `Completed / Ready for Pickup`.
+  - [x] Delete repair ticket with confirmation.
 
 ---
 
@@ -167,5 +168,6 @@ The following endpoints built in the backend are ready for the admin pages to co
 | **Products** | `POST` | `/api/products` | Create new product in catalog |
 | **Products** | `PUT` | `/api/products/:id` | Update product details or stock |
 | **Products** | `DELETE` | `/api/products/:id` | Remove product from catalog |
+| **Repairs** | `GET/POST/PUT/DELETE` | `/api/repairs` | List, create, update status/mechanic, and remove repair tickets |
 | **Users** | `GET/POST/PUT/DELETE` | `/api/users` | List, create staff, update roles, delete accounts |
 | **Categories** | `GET` | `/api/categories` | Reference list of 16 bike shop categories |

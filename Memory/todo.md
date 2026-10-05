@@ -41,7 +41,7 @@
   - [x] Connect KPI metric cards to `GET /api/dashboard/summary`.
   - [x] Render recent transactions from live database.
   - [x] Dynamic system activity timeline.
-- [ ] **Phase 6: Service & Repairs Tracking (`repairs.html`)**
+- [x] **Phase 6: Service & Repairs Tracking (`repairs.html`)**
 - [x] **Phase 7: Users & Roles Administration (`users.html`)**
   - [x] Fetch registered users from `GET /api/users`.
   - [x] Create staff accounts (`POST /api/users`).
