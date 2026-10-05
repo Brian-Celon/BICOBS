@@ -167,4 +167,5 @@ The following endpoints built in the backend are ready for the admin pages to co
 | **Products** | `POST` | `/api/products` | Create new product in catalog |
 | **Products** | `PUT` | `/api/products/:id` | Update product details or stock |
 | **Products** | `DELETE` | `/api/products/:id` | Remove product from catalog |
+| **Users** | `GET/POST/PUT/DELETE` | `/api/users` | List, create staff, update roles, delete accounts |
 | **Categories** | `GET` | `/api/categories` | Reference list of 16 bike shop categories |
