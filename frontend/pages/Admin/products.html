@@ -32,7 +32,7 @@
             <div class="dropdown_menu_wrapper">
                 <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
                     <i class="fas fa-bell"></i>
-                    <span class="notification_badge_dot"></span>
+                    <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
                 <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
                     <div class="notification_box_header">
@@ -40,28 +40,8 @@
                         <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
                     </div>
                     <ul class="notification_box_list" id="notification_list">
-                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
-                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
-                            <div>
-                                <strong>New Order #ORD-1008</strong>
-                                <p style="color: #64748b; font-size: 11px;">2 mins ago &bull; ₱12,500</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
-                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Low Stock Alert</strong>
-                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
-                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Repair Completed</strong>
-                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
-                            </div>
-                        </li>
-                    </ul>
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
                 </div>
             </div>
 
@@ -194,59 +174,59 @@
             <nav class="products_tabs_bar" id="category_tabs_bar" aria-label="Product categories navigation">
                 <button type="button" class="products_tab_btn tab_active" data-cat="all" onclick="selectCategoryTab('all', this)">
                     <span>All Products</span>
-                    <span class="category_count_badge" id="count_all">(21)</span>
+                    <span class="category_count_badge" id="count_all">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="bicycles" onclick="selectCategoryTab('bicycles', this)">
                     <span>All Bikes</span>
-                    <span class="category_count_badge" id="count_bicycles">(7)</span>
+                    <span class="category_count_badge" id="count_bicycles">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="mountain_bikes" onclick="selectCategoryTab('mountain_bikes', this)">
                     <span>Mountain Bikes</span>
-                    <span class="category_count_badge" id="count_mountain_bikes">(2)</span>
+                    <span class="category_count_badge" id="count_mountain_bikes">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="road_bikes" onclick="selectCategoryTab('road_bikes', this)">
                     <span>Road Bikes</span>
-                    <span class="category_count_badge" id="count_road_bikes">(2)</span>
+                    <span class="category_count_badge" id="count_road_bikes">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="gravel_bikes" onclick="selectCategoryTab('gravel_bikes', this)">
                     <span>Gravel Bikes</span>
-                    <span class="category_count_badge" id="count_gravel_bikes">(1)</span>
+                    <span class="category_count_badge" id="count_gravel_bikes">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="bmx_urban" onclick="selectCategoryTab('bmx_urban', this)">
                     <span>BMX & Urban</span>
-                    <span class="category_count_badge" id="count_bmx_urban">(1)</span>
+                    <span class="category_count_badge" id="count_bmx_urban">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="folding_commuter" onclick="selectCategoryTab('folding_commuter', this)">
                     <span>Folding Bikes</span>
-                    <span class="category_count_badge" id="count_folding_commuter">(1)</span>
+                    <span class="category_count_badge" id="count_folding_commuter">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="frames" onclick="selectCategoryTab('frames', this)">
                     <span>Frames & Forks</span>
-                    <span class="category_count_badge" id="count_frames">(1)</span>
+                    <span class="category_count_badge" id="count_frames">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="gears" onclick="selectCategoryTab('gears', this)">
                     <span>Gears & Drivetrain</span>
-                    <span class="category_count_badge" id="count_gears">(3)</span>
+                    <span class="category_count_badge" id="count_gears">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="brakes" onclick="selectCategoryTab('brakes', this)">
                     <span>Brakes & Rotors</span>
-                    <span class="category_count_badge" id="count_brakes">(2)</span>
+                    <span class="category_count_badge" id="count_brakes">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="pedals" onclick="selectCategoryTab('pedals', this)">
                     <span>Pedals & Cleats</span>
-                    <span class="category_count_badge" id="count_pedals">(2)</span>
+                    <span class="category_count_badge" id="count_pedals">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="rims_tires" onclick="selectCategoryTab('rims_tires', this)">
                     <span>Rims & Tires</span>
-                    <span class="category_count_badge" id="count_rims_tires">(2)</span>
+                    <span class="category_count_badge" id="count_rims_tires">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="handlebars_saddles" onclick="selectCategoryTab('handlebars_saddles', this)">
                     <span>Handlebars & Saddles</span>
-                    <span class="category_count_badge" id="count_handlebars_saddles">(2)</span>
+                    <span class="category_count_badge" id="count_handlebars_saddles">(...)</span>
                 </button>
                 <button type="button" class="products_tab_btn" data-cat="apparel" onclick="selectCategoryTab('apparel', this)">
                     <span>Apparel & Shoes</span>
-                    <span class="category_count_badge" id="count_apparel">(2)</span>
+                    <span class="category_count_badge" id="count_apparel">(...)</span>
                 </button>
             </nav>
 

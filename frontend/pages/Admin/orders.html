@@ -32,7 +32,7 @@
             <div class="dropdown_menu_wrapper">
                 <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
                     <i class="fas fa-bell"></i>
-                    <span class="notification_badge_dot"></span>
+                    <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
                 <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
                     <div class="notification_box_header">
@@ -40,28 +40,8 @@
                         <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
                     </div>
                     <ul class="notification_box_list" id="notification_list">
-                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
-                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
-                            <div>
-                                <strong>New Order #ORD-1008</strong>
-                                <p style="color: #64748b; font-size: 11px;">2 mins ago &bull; ₱12,500</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
-                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Low Stock Alert</strong>
-                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
-                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Repair Completed</strong>
-                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
-                            </div>
-                        </li>
-                    </ul>
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
                 </div>
             </div>
 
@@ -186,10 +166,10 @@
 
             <!-- order categories filter tabs bar -->
             <div class="filter_tabs_bar" id="order_tabs_bar">
-                <button type="button" class="filter_tab_btn tab_active" data-filter="all">All Orders (12)</button>
-                <button type="button" class="filter_tab_btn" data-filter="online">Online Orders (7)</button>
-                <button type="button" class="filter_tab_btn" data-filter="walk-in">In-Store (3)</button>
-                <button type="button" class="filter_tab_btn" data-filter="pending">Pending Payment (2)</button>
+                <button type="button" class="filter_tab_btn tab_active" data-filter="all">All Orders (0)</button>
+                <button type="button" class="filter_tab_btn" data-filter="online">Online Orders (0)</button>
+                <button type="button" class="filter_tab_btn" data-filter="walk-in">In-Store (0)</button>
+                <button type="button" class="filter_tab_btn" data-filter="pending">Pending Payment (0)</button>
             </div>
 
             <!-- search and toolbar filters -->
@@ -231,59 +211,10 @@
                             </tr>
                         </thead>
                         <tbody id="orders_tbody">
-                            <tr data-type="online" data-status="paid" id="order_row_1">
-                                <td class="cell_order_id">ORD-1008</td>
-                                <td class="cell_customer_name">Maria Santos</td>
-                                <td>Online</td>
-                                <td>GCash</td>
-                                <td class="order_status_cell"><span class="status_pill status_paid">Paid</span></td>
-                                <td class="cell_amount">₱3,500</td>
-                                <td>
-                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_1', 'ORD-1008', 'Maria Santos', 'Online', 'GCash', 'Paid', '₱3,500', '1x Shimano Deore Groupset')">View</button>
-                                </td>
-                            </tr>
-                            <tr data-type="online" data-status="paid" id="order_row_2">
-                                <td class="cell_order_id">ORD-1007</td>
-                                <td class="cell_customer_name">James Reyes</td>
-                                <td>Online</td>
-                                <td>BPI</td>
-                                <td class="order_status_cell"><span class="status_pill status_paid">Paid</span></td>
-                                <td class="cell_amount">₱2,750</td>
-                                <td>
-                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_2', 'ORD-1007', 'James Reyes', 'Online', 'BPI', 'Paid', '₱2,750', '2x Maxxis Tires + 1x KMC Chain')">View</button>
-                                </td>
-                            </tr>
-                            <tr data-type="online" data-status="paid" id="order_row_3">
-                                <td class="cell_order_id">ORD-1006</td>
-                                <td class="cell_customer_name">Ana Cruz</td>
-                                <td>Online</td>
-                                <td>GCash</td>
-                                <td class="order_status_cell"><span class="status_pill status_paid">Paid</span></td>
-                                <td class="cell_amount">₱1,980</td>
-                                <td>
-                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_3', 'ORD-1006', 'Ana Cruz', 'Online', 'GCash', 'Paid', '₱1,980', '1x Giant Helmet + 1x Bottle Cage')">View</button>
-                                </td>
-                            </tr>
-                            <tr data-type="walk-in" data-status="completed" id="order_row_4">
-                                <td class="cell_order_id">ORD-1005</td>
-                                <td class="cell_customer_name">Paolo Dela Cruz</td>
-                                <td>Walk-in</td>
-                                <td>Cash</td>
-                                <td class="order_status_cell"><span class="status_pill status_completed">Completed</span></td>
-                                <td class="cell_amount">₱1,250</td>
-                                <td>
-                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_4', 'ORD-1005', 'Paolo Dela Cruz', 'Walk-in', 'Cash', 'Completed', '₱1,250', '1x Tune-up Service + Brake Pads')">View</button>
-                                </td>
-                            </tr>
-                            <tr data-type="online" data-status="pending" id="order_row_5">
-                                <td class="cell_order_id">ORD-1004</td>
-                                <td class="cell_customer_name">Liza Fernandez</td>
-                                <td>Online</td>
-                                <td>Maya</td>
-                                <td class="order_status_cell"><span class="status_pill status_pending">Pending</span></td>
-                                <td class="cell_amount">₱4,200</td>
-                                <td>
-                                    <button type="button" class="table_btn_view" onclick="viewOrderDetails('order_row_5', 'ORD-1004', 'Liza Fernandez', 'Online', 'Maya', 'Pending', '₱4,200', '1x Hydraulic Brakeset + Grips')">View</button>
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading live orders from database...
                                 </td>
                             </tr>
                         </tbody>
@@ -292,13 +223,8 @@
 
                 <!-- pagination controls -->
                 <div class="pagination_wrapper">
-                    <span class="pagination_info" id="orders_pagination_info">Showing 1-5 of 12 orders</span>
+                    <span class="pagination_info" id="orders_pagination_info">Showing 0 of 0 orders</span>
                     <div class="pagination_controls" id="orders_pagination_controls">
-                        <button type="button" class="pagination_btn" aria-label="Previous page" onclick="changeOrderPage(currentOrderPage - 1)"><i class="fas fa-chevron-left"></i></button>
-                        <button type="button" class="pagination_btn page_active" data-page="1" onclick="changeOrderPage(1)">1</button>
-                        <button type="button" class="pagination_btn" data-page="2" onclick="changeOrderPage(2)">2</button>
-                        <button type="button" class="pagination_btn" data-page="3" onclick="changeOrderPage(3)">3</button>
-                        <button type="button" class="pagination_btn" aria-label="Next page" onclick="changeOrderPage(currentOrderPage + 1)"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </article>
@@ -317,7 +243,7 @@
                 <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="font-size: 13px; color: #64748b;">Customer:</span>
-                        <strong id="modal_order_customer" style="font-size: 13px; color: #0f172a;">Maria Santos</strong>
+                        <strong id="modal_order_customer" style="font-size: 13px; color: #0f172a;">...</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="font-size: 13px; color: #64748b;">Order Type:</span>
@@ -329,7 +255,7 @@
                     </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="font-size: 13px; color: #64748b;">Total Amount:</span>
-                        <strong id="modal_order_total" style="font-size: 15px; color: #b91c1c;">₱3,500</strong>
+                        <strong id="modal_order_total" style="font-size: 15px; color: #b91c1c;">₱0.00</strong>
                     </div>
                 </div>
                 <div class="form_group">

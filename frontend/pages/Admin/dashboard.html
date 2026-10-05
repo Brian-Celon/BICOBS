@@ -32,7 +32,7 @@
             <div class="dropdown_menu_wrapper">
                 <button type="button" class="top_notification_btn" id="dash_notification_btn" aria-label="Notifications" onclick="toggleDropdown('dash_notification_menu')">
                     <i class="fas fa-bell"></i>
-                    <span class="notification_badge_dot"></span>
+                    <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
                 <div class="dropdown_menu notification_dropdown_box" id="dash_notification_menu">
                     <div class="notification_box_header">
@@ -40,28 +40,8 @@
                         <button type="button" class="notification_clear_btn" onclick="clearDashboardNotifications()">Mark all as read</button>
                     </div>
                     <ul class="notification_box_list" id="dash_notification_list">
-                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
-                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
-                            <div>
-                                <strong>New Order #ORD-1008</strong>
-                                <p style="color: #64748b; font-size: 11px;">Maria Santos placed an order for ₱3,500</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
-                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Low Stock Alert</strong>
-                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
-                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Repair Completed</strong>
-                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
-                            </div>
-                        </li>
-                    </ul>
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
                 </div>
             </div>
 
@@ -269,39 +249,9 @@
                             </thead>
                             <tbody id="dash_recent_transactions_tbody">
                                 <tr>
-                                    <td class="cell_order_id">#TBR1045</td>
-                                    <td class="cell_customer_name">Daniel Santos</td>
-                                    <td>Sep 22, 2025 10:24 AM</td>
-                                    <td class="cell_amount">₱1,250</td>
-                                    <td><span class="status_pill status_completed">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="cell_order_id">#TBR1044</td>
-                                    <td class="cell_customer_name">James Reyes</td>
-                                    <td>Sep 22, 2025 09:47 AM</td>
-                                    <td class="cell_amount">₱3,500</td>
-                                    <td><span class="status_pill status_pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="cell_order_id">#TBR1043</td>
-                                    <td class="cell_customer_name">Ana Cruz</td>
-                                    <td>Sep 22, 2025 09:12 AM</td>
-                                    <td class="cell_amount">₱2,750</td>
-                                    <td><span class="status_pill status_in_progress">In-progress</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="cell_order_id">#TBR1042</td>
-                                    <td class="cell_customer_name">Paolo Dela Cruz</td>
-                                    <td>Sep 22, 2025 08:54 AM</td>
-                                    <td class="cell_amount">₱1,980</td>
-                                    <td><span class="status_pill status_completed">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="cell_order_id">#TBR1041</td>
-                                    <td class="cell_customer_name">Liza Fernandez</td>
-                                    <td>Sep 22, 2025 08:32 AM</td>
-                                    <td class="cell_amount">₱4,200</td>
-                                    <td><span class="status_pill status_completed">Completed</span></td>
+                                    <td colspan="5" style="text-align: center; padding: 32px; color: #94a3b8;">
+                                        <i class="fas fa-spinner fa-spin" style="color: #b91c1c; margin-right: 6px;"></i> Loading recent orders from database...
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -314,50 +264,8 @@
                         <h2 class="card_title">System Activity</h2>
                     </div>
                     <ul class="activity_timeline_list" id="dash_activity_list">
-                        <li class="activity_timeline_item">
-                            <div class="activity_icon_circle icon_theme_blue">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <div class="activity_details">
-                                <span class="activity_text">New order #TBR1045 received</span>
-                                <span class="activity_time">10m ago</span>
-                            </div>
-                        </li>
-                        <li class="activity_timeline_item">
-                            <div class="activity_icon_circle icon_theme_green">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="activity_details">
-                                <span class="activity_text">Payment confirmed (GCash)</span>
-                                <span class="activity_time">24m ago</span>
-                            </div>
-                        </li>
-                        <li class="activity_timeline_item">
-                            <div class="activity_icon_circle icon_theme_yellow">
-                                <i class="fas fa-wrench"></i>
-                            </div>
-                            <div class="activity_details">
-                                <span class="activity_text">Repair status updated</span>
-                                <span class="activity_time">1h ago</span>
-                            </div>
-                        </li>
-                        <li class="activity_timeline_item">
-                            <div class="activity_icon_circle icon_theme_blue">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="activity_details">
-                                <span class="activity_text">New user registered</span>
-                                <span class="activity_time">2h ago</span>
-                            </div>
-                        </li>
-                        <li class="activity_timeline_item">
-                            <div class="activity_icon_circle icon_theme_red">
-                                <i class="fas fa-exclamation"></i>
-                            </div>
-                            <div class="activity_details">
-                                <span class="activity_text">Inventory alert (Shimano Chain)</span>
-                                <span class="activity_time">3h ago</span>
-                            </div>
+                        <li class="activity_timeline_item" style="padding: 24px 16px; text-align: center; color: #94a3b8; font-size: 13px;">
+                            <i class="fas fa-spinner fa-spin" style="color: #b91c1c; margin-right: 6px;"></i> Loading system activity from database...
                         </li>
                     </ul>
                 </article>

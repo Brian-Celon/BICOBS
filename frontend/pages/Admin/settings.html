@@ -30,7 +30,7 @@
             <div class="dropdown_menu_wrapper">
                 <button type="button" class="top_notification_btn" id="notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
                     <i class="fas fa-bell"></i>
-                    <span class="notification_badge_dot"></span>
+                    <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
                 <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
                     <div class="notification_box_header">
@@ -38,28 +38,8 @@
                         <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
                     </div>
                     <ul class="notification_box_list" id="notification_list">
-                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
-                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
-                            <div>
-                                <strong>New Order #ORD-1008</strong>
-                                <p style="color: #64748b; font-size: 11px;">Maria Santos placed an order for ₱3,500</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
-                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Low Stock Alert</strong>
-                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
-                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Repair Completed</strong>
-                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) finished</p>
-                            </div>
-                        </li>
-                    </ul>
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
                 </div>
             </div>
 
@@ -518,41 +498,12 @@
                                     <th>IP Address</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="settings_audit_log_tbody">
                                 <tr>
-                                    <td>Sep 22, 2025 10:15 AM</td>
-                                    <td class="cell_customer_name">Admin User</td>
-                                    <td><span class="status_pill status_active">Login</span> Successful login</td>
-                                    <td>Session #AU-883</td>
-                                    <td>192.168.1.10</td>
-                                </tr>
-                                <tr>
-                                    <td>Sep 22, 2025 09:50 AM</td>
-                                    <td class="cell_customer_name">Juan Dela Cruz</td>
-                                    <td><span class="status_pill status_paid">Status Update</span> Order marked Paid</td>
-                                    <td>Order #ORD-1008</td>
-                                    <td>192.168.1.15</td>
-                                </tr>
-                                <tr>
-                                    <td>Sep 22, 2025 09:30 AM</td>
-                                    <td class="cell_customer_name">Reynaldo Santos</td>
-                                    <td><span class="status_pill status_completed">Repair Finish</span> Ticket closed</td>
-                                    <td>Ticket #R009 (MTB)</td>
-                                    <td>192.168.1.18</td>
-                                </tr>
-                                <tr>
-                                    <td>Sep 22, 2025 08:45 AM</td>
-                                    <td class="cell_customer_name">Admin User</td>
-                                    <td><span class="status_pill status_low_stock">Stock Edit</span> Stock adjusted to 12</td>
-                                    <td>TBR-001 (Trek Marlin 6)</td>
-                                    <td>192.168.1.10</td>
-                                </tr>
-                                <tr>
-                                    <td>Sep 21, 2025 05:15 PM</td>
-                                    <td class="cell_customer_name">Maria Lopez</td>
-                                    <td><span class="status_pill status_active">User Create</span> Account provisioned</td>
-                                    <td>staff3@tauros.com</td>
-                                    <td>192.168.1.12</td>
+                                    <td colspan="5" style="text-align: center; padding: 36px; color: #94a3b8;">
+                                        <i class="fas fa-shield-alt" style="font-size: 24px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
+                                        System audit initialized. All administrative actions are verified.
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

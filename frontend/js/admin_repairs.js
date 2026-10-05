@@ -256,9 +256,12 @@ function renderRepairsPagination() {
     const startIdx = total === 0 ? 0 : (currentRepairPage - 1) * REPAIR_PAGE_SIZE + 1;
     const endIdx = Math.min(currentRepairPage * REPAIR_PAGE_SIZE, total);
 
-    const infoEl = document.getElementById("repairs_pagination_info");
     if (infoEl) {
-        infoEl.textContent = `Showing ${startIdx}-${endIdx} of ${total} repairs`;
+        if (total === 0) {
+            infoEl.textContent = "Showing 0 of 0 repairs";
+        } else {
+            infoEl.textContent = `Showing ${startIdx}-${endIdx} of ${total} repairs`;
+        }
     }
 
     const controls = document.getElementById("repairs_pagination_controls");

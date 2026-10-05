@@ -32,7 +32,7 @@
             <div class="dropdown_menu_wrapper">
                 <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
                     <i class="fas fa-bell"></i>
-                    <span class="notification_badge_dot"></span>
+                    <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
                 <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
                     <div class="notification_box_header">
@@ -40,28 +40,8 @@
                         <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
                     </div>
                     <ul class="notification_box_list" id="notification_list">
-                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
-                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
-                            <div>
-                                <strong>New Order #ORD-1008</strong>
-                                <p style="color: #64748b; font-size: 11px;">2 mins ago &bull; ₱12,500</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
-                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Low Stock Alert</strong>
-                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
-                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Repair Completed</strong>
-                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
-                            </div>
-                        </li>
-                    </ul>
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
                 </div>
             </div>
 
@@ -192,10 +172,10 @@
 
             <!-- role filter tabs bar -->
             <div class="filter_tabs_bar" id="user_tabs_bar">
-                <button type="button" class="filter_tab_btn tab_active" data-role="all" id="tab_all_users">All Users (5)</button>
-                <button type="button" class="filter_tab_btn" data-role="administrator">Administrators (1)</button>
-                <button type="button" class="filter_tab_btn" data-role="staff">Staff (3)</button>
-                <button type="button" class="filter_tab_btn" data-role="mechanic">Mechanic (1)</button>
+                <button type="button" class="filter_tab_btn tab_active" data-role="all" id="tab_all_users">All Users (0)</button>
+                <button type="button" class="filter_tab_btn" data-role="admin" id="tab_admins">Administrators (0)</button>
+                <button type="button" class="filter_tab_btn" data-role="staff" id="tab_staff">Staff (0)</button>
+                <button type="button" class="filter_tab_btn" data-role="customer" id="tab_customers">Customers (0)</button>
             </div>
 
             <!-- search box toolbar -->

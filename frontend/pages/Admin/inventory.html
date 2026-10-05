@@ -32,7 +32,7 @@
             <div class="dropdown_menu_wrapper">
                 <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
                     <i class="fas fa-bell"></i>
-                    <span class="notification_badge_dot"></span>
+                    <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
                 <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
                     <div class="notification_box_header">
@@ -40,28 +40,8 @@
                         <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
                     </div>
                     <ul class="notification_box_list" id="notification_list">
-                        <li class="notification_box_item" onclick="window.location.href='orders.html'">
-                            <i class="fas fa-shopping-bag" style="color: #0284c7; margin-top: 2px;"></i>
-                            <div>
-                                <strong>New Order #ORD-1008</strong>
-                                <p style="color: #64748b; font-size: 11px;">2 mins ago &bull; ₱12,500</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='inventory.html'">
-                            <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Low Stock Alert</strong>
-                                <p style="color: #64748b; font-size: 11px;">Shimano Deore Groupset is down to 3 units</p>
-                            </div>
-                        </li>
-                        <li class="notification_box_item" onclick="window.location.href='repairs.html'">
-                            <i class="fas fa-wrench" style="color: #16a34a; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Repair Completed</strong>
-                                <p style="color: #64748b; font-size: 11px;">Sofia Reyes MTB (#R009) is ready</p>
-                            </div>
-                        </li>
-                    </ul>
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
                 </div>
             </div>
 
@@ -236,7 +216,7 @@
                             <i class="fas fa-box-archive"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value" id="stat_total_products">248</div>
+                    <div class="stat_card_value" id="stat_total_products">...</div>
                 </article>
 
                 <!-- card 2: in stock -->
@@ -247,7 +227,7 @@
                             <i class="fas fa-circle-check"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value" id="stat_in_stock">201</div>
+                    <div class="stat_card_value" id="stat_in_stock">...</div>
                 </article>
 
                 <!-- card 3: low stock -->
@@ -258,7 +238,7 @@
                             <i class="fas fa-triangle-exclamation"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value" id="stat_low_stock">32</div>
+                    <div class="stat_card_value" id="stat_low_stock">...</div>
                 </article>
 
                 <!-- card 4: out of stock -->
@@ -269,7 +249,7 @@
                             <i class="fas fa-circle-exclamation"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value" id="stat_out_stock">15</div>
+                    <div class="stat_card_value" id="stat_out_stock">...</div>
                 </article>
             </section>
 
@@ -301,7 +281,7 @@
 
                 <!-- pagination controls -->
                 <div class="pagination_wrapper">
-                    <span class="pagination_info" id="inventory_pagination_info">Showing 1-5 of 248 products</span>
+                    <span class="pagination_info" id="inventory_pagination_info">Showing 0 of 0 products</span>
                     <div class="pagination_controls" id="inventory_pagination_controls">
                         <button type="button" class="pagination_btn" id="inv_prev_btn" aria-label="Previous page" onclick="changeInventoryPage(currentPage - 1)"><i class="fas fa-chevron-left"></i></button>
                         <button type="button" class="pagination_btn page_active" data-page="1" onclick="changeInventoryPage(1)">1</button>

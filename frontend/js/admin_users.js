@@ -7,10 +7,12 @@
 let systemUsers = [];
 let filteredUsers = [];
 let currentSearch = "";
+let currentRoleFilter = "all";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadUsers();
     setupUserSearch();
+    setupUserRoleTabs();
 });
 
 // Load live users from backend
@@ -67,7 +69,7 @@ async function loadUsers() {
     }
 }
 
-// Compute & update User KPI Cards
+// Compute & update User KPI Cards & Filter Tabs
 function updateUserStats() {
     const total = systemUsers.length;
     let adminCount = 0;
@@ -81,6 +83,17 @@ function updateUserStats() {
         else customerCount++;
     });
 
+    // Update filter tab badges
+    const tabAll = document.getElementById("tab_all_users");
+    const tabAdmins = document.getElementById("tab_admins");
+    const tabStaff = document.getElementById("tab_staff");
+    const tabCust = document.getElementById("tab_customers");
+
+    if (tabAll) tabAll.textContent = `All Users (${total})`;
+    if (tabAdmins) tabAdmins.textContent = `Administrators (${adminCount})`;
+    if (tabStaff) tabStaff.textContent = `Staff (${staffCount})`;
+    if (tabCust) tabCust.textContent = `Customers (${customerCount})`;
+
     // Support metric elements if present
     const elTotal = document.getElementById("stat_total_users");
     const elStaff = document.getElementById("stat_staff_count");
@@ -88,6 +101,18 @@ function updateUserStats() {
     if (elTotal) elTotal.textContent = total;
     if (elStaff) elStaff.textContent = staffCount;
     if (elCust) elCust.textContent = customerCount;
+}
+
+// Role filter tabs setup
+function setupUserRoleTabs() {
+    document.querySelectorAll("#user_tabs_bar .filter_tab_btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            document.querySelectorAll("#user_tabs_bar .filter_tab_btn").forEach(b => b.classList.remove("tab_active"));
+            this.classList.add("tab_active");
+            currentRoleFilter = this.getAttribute("data-role") || "all";
+            applyUserFilters();
+        });
+    });
 }
 
 // Search listener
@@ -114,11 +139,25 @@ function setupUserSearch() {
 // Filter users list
 function applyUserFilters() {
     filteredUsers = systemUsers.filter(u => {
-        if (!currentSearch) return true;
-        const name = (u.name || u.fullName || "").toLowerCase();
-        const email = (u.email || "").toLowerCase();
-        const role = (u.role || "").toLowerCase();
-        return name.includes(currentSearch) || email.includes(currentSearch) || role.includes(currentSearch);
+        const role = (u.role || "customer").toLowerCase();
+
+        // Role filter
+        if (currentRoleFilter !== "all") {
+            if (currentRoleFilter === "admin" && role !== "admin") return false;
+            if (currentRoleFilter === "staff" && role !== "staff") return false;
+            if (currentRoleFilter === "customer" && role !== "customer") return false;
+        }
+
+        // Search text
+        if (currentSearch) {
+            const name = (u.name || u.fullName || "").toLowerCase();
+            const email = (u.email || "").toLowerCase();
+            if (!name.includes(currentSearch) && !email.includes(currentSearch) && !role.includes(currentSearch)) {
+                return false;
+            }
+        }
+
+        return true;
     });
 
     renderUsersTable();

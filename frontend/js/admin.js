@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initGlobalSearch();
     initToast();
     initClickOutsideDropdowns();
+    loadGlobalNotifications();
 });
 
 // initialize mobile sidebar navigation drawer
@@ -231,9 +232,45 @@ function initClickOutsideDropdowns() {
     });
 }
 
+// load database notifications dynamically
+async function loadGlobalNotifications() {
+    const list = document.getElementById("notification_list") || document.getElementById("dash_notification_list");
+    const dot = document.querySelector(".notification_badge_dot");
+    if (!list) return;
+
+    try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        const products = (data.status === "success" && data.data) ? data.data : [];
+
+        const lowStock = products.filter(p => {
+            const stock = Number(p.stock_quantity ?? p.stockQuantity ?? 0);
+            return stock <= 5;
+        });
+
+        if (lowStock.length > 0) {
+            list.innerHTML = lowStock.slice(0, 5).map(p => `
+                <li class="notification_box_item" onclick="window.location.href='inventory.html'" style="cursor: pointer;">
+                    <i class="fas fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
+                    <div>
+                        <strong>Low Stock Alert</strong>
+                        <p style="color: #64748b; font-size: 11px;">${p.name || 'Product'} is down to ${p.stock_quantity ?? p.stockQuantity ?? 0} units</p>
+                    </div>
+                </li>
+            `).join("");
+            if (dot) dot.style.display = "inline-block";
+        } else {
+            list.innerHTML = "<li style='padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;'>No unread notifications</li>";
+            if (dot) dot.style.display = "none";
+        }
+    } catch (e) {
+        // Fallback silently
+    }
+}
+
 // clear notifications from dropdown box
 function clearNotifications() {
-    const list = document.getElementById("notification_list");
+    const list = document.getElementById("notification_list") || document.getElementById("dash_notification_list");
     if (list) {
         list.innerHTML = "<li style='padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;'>No unread notifications</li>";
     }
@@ -243,6 +280,8 @@ function clearNotifications() {
     }
     showToast("All notifications marked as read");
 }
+window.clearNotifications = clearNotifications;
+window.clearDashboardNotifications = clearNotifications;
 
 // open logout confirmation modal
 function openLogoutModal() {
@@ -279,5 +318,16 @@ function handleSaveSettings(event, sectionName = "Store settings") {
 // placeholder action triggers for quick actions
 function handleQuickAction(actionName) {
     showToast(`${actionName} modal opened`);
+}
+
+// Global safe HTML escaping
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 

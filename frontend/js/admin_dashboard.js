@@ -91,25 +91,34 @@ async function loadDashboardSummary() {
 
             // 3. Activity Timeline
             const activityList = document.getElementById("dash_activity_list");
-            if (activityList && summary.recentOrders && summary.recentOrders.length > 0) {
-                activityList.innerHTML = summary.recentOrders.map(o => {
-                    const num = o.orderNumber || `ORD-${o.id}`;
-                    const name = o.customerName || 'Customer';
-                    const isPaid = (o.paymentStatus || '').toLowerCase() === 'paid';
-                    const timeAgo = formatTimeAgo(o.createdAt);
-
-                    return `
-                        <li class="activity_timeline_item">
-                            <div class="activity_icon_circle ${isPaid ? 'icon_theme_green' : 'icon_theme_blue'}">
-                                <i class="fas ${isPaid ? 'fa-circle-check' : 'fa-shopping-cart'}"></i>
-                            </div>
-                            <div class="activity_details">
-                                <span class="activity_text">Order <strong>${num}</strong> by ${name} (${o.orderStatus})</span>
-                                <span class="activity_time">${timeAgo}</span>
-                            </div>
+            if (activityList) {
+                if (!summary.recentOrders || summary.recentOrders.length === 0) {
+                    activityList.innerHTML = `
+                        <li class="activity_timeline_item" style="padding: 24px 16px; text-align: center; color: #94a3b8; font-size: 13px; list-style: none;">
+                            <i class="fas fa-history" style="font-size: 24px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
+                            No store orders or activity recorded in database yet
                         </li>
                     `;
-                }).join('');
+                } else {
+                    activityList.innerHTML = summary.recentOrders.map(o => {
+                        const num = o.orderNumber || `ORD-${o.id}`;
+                        const name = o.customerName || 'Customer';
+                        const isPaid = (o.paymentStatus || '').toLowerCase() === 'paid';
+                        const timeAgo = formatTimeAgo(o.createdAt);
+
+                        return `
+                            <li class="activity_timeline_item">
+                                <div class="activity_icon_circle ${isPaid ? 'icon_theme_green' : 'icon_theme_blue'}">
+                                    <i class="fas ${isPaid ? 'fa-circle-check' : 'fa-shopping-cart'}"></i>
+                                </div>
+                                <div class="activity_details">
+                                    <span class="activity_text">Order <strong>${num}</strong> by ${name} (${o.orderStatus})</span>
+                                    <span class="activity_time">${timeAgo}</span>
+                                </div>
+                            </li>
+                        `;
+                    }).join('');
+                }
             }
         }
     } catch (err) {
