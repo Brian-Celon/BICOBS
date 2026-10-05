@@ -1349,7 +1349,88 @@
             if (tabParam) {
                 switchReportTab(tabParam);
             }
+            loadLiveReportsMetrics();
         });
+
+        // Load live metric calculations from real backend endpoints
+        async function loadLiveReportsMetrics() {
+            const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+            if (!token) return;
+
+            try {
+                // Fetch summary KPI
+                const summaryRes = await fetch("/api/dashboard/summary", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const summaryData = await summaryRes.json();
+                if (summaryRes.ok && summaryData.status === "success" && summaryData.data) {
+                    const statSales = document.getElementById("stat_total_sales");
+                    if (statSales && summaryData.data.total_sales) {
+                        statSales.textContent = summaryData.data.total_sales;
+                    }
+                }
+
+                // Fetch orders for units sold and online orders count
+                const ordersRes = await fetch("/api/orders", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const ordersData = await ordersRes.json();
+                if (ordersRes.ok && ordersData.status === "success") {
+                    const orders = ordersData.data || [];
+                    let totalUnits = 0;
+                    let onlineCount = 0;
+                    orders.forEach(o => {
+                        const type = (o.order_type || o.orderType || '').toLowerCase();
+                        if (type.includes('online')) {
+                            onlineCount++;
+                        }
+                        const items = o.items || [];
+                        items.forEach(it => {
+                            totalUnits += Number(it.quantity || 1);
+                        });
+                    });
+
+                    const statUnits = document.getElementById("stat_units_sold");
+                    if (statUnits && totalUnits > 0) statUnits.textContent = totalUnits;
+
+                    const statOnline = document.getElementById("stat_online_orders");
+                    if (statOnline && onlineCount > 0) statOnline.textContent = onlineCount;
+                }
+
+                // Fetch repairs for completed count
+                const repairsRes = await fetch("/api/repairs", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const repairsData = await repairsRes.json();
+                if (repairsRes.ok && repairsData.status === "success") {
+                    const repairs = repairsData.data || [];
+                    const completedCount = repairs.filter(r => (r.status || '').toLowerCase() === 'completed').length;
+                    const statRepairs = document.getElementById("stat_repairs");
+                    if (statRepairs && completedCount > 0) statRepairs.textContent = completedCount;
+                }
+
+                // Fetch products for inventory valuation
+                const productsRes = await fetch("/api/products", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const productsData = await productsRes.json();
+                if (productsRes.ok && productsData.status === "success") {
+                    const products = productsData.data || [];
+                    let totalVal = 0;
+                    products.forEach(p => {
+                        const stock = Number(p.stock || 0);
+                        const price = Number(p.price || 0);
+                        totalVal += (stock * price);
+                    });
+                    const invValEl = document.querySelector("#report_panel_inventory .stat_card_value");
+                    if (invValEl && totalVal > 0) {
+                        invValEl.textContent = '₱' + Math.round(totalVal).toLocaleString('en-US');
+                    }
+                }
+            } catch (e) {
+                console.warn("Could not load live report metrics:", e);
+            }
+        }
 
         // SUB-TAB SWITCHING
         function switchReportTab(tabKey) {
