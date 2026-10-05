@@ -14,6 +14,17 @@ function getAdminUser() {
     }
 }
 
+// Resolve backend API URL (supports port 5000 directly, as well as Live Server on port 5500 or file:///)
+function getApiUrl(endpoint) {
+    if (!endpoint) return '';
+    const clean = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '5000')) {
+        return `http://localhost:5000${clean}`;
+    }
+    return clean;
+}
+window.getApiUrl = getApiUrl;
+
 function checkAdminAuth() {
     const isLoginPage = window.location.pathname.endsWith("login.html") || window.location.pathname.includes("login.html");
     const token = getAdminToken();
@@ -239,7 +250,7 @@ async function loadGlobalNotifications() {
     if (!list) return;
 
     try {
-        const res = await fetch("/api/products");
+        const res = await fetch(getApiUrl("/api/products"));
         const data = await res.json();
         const products = (data.status === "success" && data.data) ? data.data : [];
 

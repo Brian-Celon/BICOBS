@@ -46,11 +46,19 @@ async function loadBillingRecords() {
     }
 
     try {
-        const res = await fetch("/api/billing", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/billing") : "/api/billing";
+        const res = await fetch(apiUrl, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            if (typeof handleAdminSessionExpired === 'function') handleAdminSessionExpired();
+            else window.location.href = "login.html?session_expired=true";
+            return;
+        }
+
         const data = await res.json();
 
         if (res.ok && data.status === "success") {
@@ -304,7 +312,8 @@ async function verifyInvoicePayment(billingId, invoiceNo) {
     if (!token) return;
 
     try {
-        const res = await fetch(`/api/billing/${billingId}/payment`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/billing/${billingId}/payment`) : `/api/billing/${billingId}/payment`;
+        const res = await fetch(apiUrl, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

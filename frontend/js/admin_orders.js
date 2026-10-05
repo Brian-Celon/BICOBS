@@ -70,7 +70,8 @@ async function loadAdminOrders() {
     }
 
     try {
-        const res = await fetch("/api/orders", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/orders") : "/api/orders";
+        const res = await fetch(apiUrl, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -422,7 +423,8 @@ async function saveFulfillmentStatus() {
     }
 
     try {
-        const res = await fetch(`/api/orders/${orderId}/status`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/orders/${orderId}/status`) : `/api/orders/${orderId}/status`;
+        const res = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

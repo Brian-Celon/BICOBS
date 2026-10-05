@@ -70,7 +70,8 @@ async function loadAdminProducts() {
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
 
     try {
-        const res = await fetch("/api/products");
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+        const res = await fetch(apiUrl);
         const data = await res.json();
 
         if (res.ok && data.status === "success") {
@@ -365,7 +366,8 @@ async function handleAddProductSubmit(e) {
     }
 
     try {
-        const res = await fetch("/api/products", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+        const res = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -450,7 +452,8 @@ async function handleEditProductSubmit(e) {
     }
 
     try {
-        const res = await fetch(`/api/products/${id}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${id}`) : `/api/products/${id}`;
+        const res = await fetch(apiUrl, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -496,7 +499,8 @@ async function deleteProductItem(productId) {
     if (!token) return;
 
     try {
-        const res = await fetch(`/api/products/${productId}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${productId}`) : `/api/products/${productId}`;
+        const res = await fetch(apiUrl, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`

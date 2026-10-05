@@ -30,14 +30,45 @@ async function loadUsers() {
     }
 
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
-    if (!token) return;
+    if (!token) {
+        if (typeof handleAdminSessionExpired === 'function') {
+            handleAdminSessionExpired();
+        } else {
+            window.location.href = "login.html?session_expired=true";
+        }
+        return;
+    }
 
     try {
-        const res = await fetch("/api/users", {
-            headers: {
-                "Authorization": `Bearer ${token}`
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/users") : "/api/users";
+        let res;
+        try {
+            res = await fetch(apiUrl, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+        } catch (fetchErr) {
+            // Secondary fallback attempt directly to localhost:5000 if running from Live Server or file
+            if (!apiUrl.includes("http://localhost:5000")) {
+                res = await fetch("http://localhost:5000/api/users", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+            } else {
+                throw fetchErr;
             }
-        });
+        }
+
+        if (res.status === 401 || res.status === 403) {
+            if (typeof handleAdminSessionExpired === 'function') {
+                handleAdminSessionExpired();
+            } else {
+                window.location.href = "login.html?session_expired=true";
+            }
+            return;
+        }
 
         const data = await res.json();
         if (res.ok && data.status === "success") {
@@ -49,6 +80,7 @@ async function loadUsers() {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="6" style="text-align: center; padding: 36px; color: #ef4444;">
+                            <i class="fas fa-triangle-exclamation" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>
                             Failed to load users: ${data.message || 'Unknown error'}
                         </td>
                     </tr>
@@ -61,7 +93,19 @@ async function loadUsers() {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="6" style="text-align: center; padding: 36px; color: #ef4444;">
-                        Unable to connect to backend server.
+                        <i class="fas fa-plug-circle-xmark" style="font-size: 28px; margin-bottom: 8px; display: block; color: #dc2626;"></i>
+                        <strong style="font-size: 15px; color: #0f172a; display: block; margin-bottom: 4px;">Unable to connect to backend server.</strong>
+                        <p style="font-size: 13px; color: #64748b; margin: 4px 0 14px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                            Please verify that your TaurOS backend server is running on <strong>http://localhost:5000</strong> (<code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">cd back-end &amp;&amp; npm run dev</code>).
+                        </p>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <button type="button" onclick="loadUsers()" class="btn_primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; cursor: pointer;">
+                                <i class="fas fa-rotate-right"></i> Retry Connection
+                            </button>
+                            <a href="login.html" class="btn_secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; text-decoration: none;">
+                                <i class="fas fa-sign-in-alt"></i> Re-login
+                            </a>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -253,7 +297,8 @@ async function handleCreateUser(e) {
     if (!token) return;
 
     try {
-        const res = await fetch("/api/users", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/users") : "/api/users";
+        const res = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -321,7 +366,8 @@ async function handleSaveEditedUser(e) {
     if (!token) return;
 
     try {
-        const res = await fetch(`/api/users/${id}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/users/${id}`) : `/api/users/${id}`;
+        const res = await fetch(apiUrl, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -357,7 +403,8 @@ async function deleteUserAccount(userId, userName) {
     if (!token) return;
 
     try {
-        const res = await fetch(`/api/users/${userId}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/users/${userId}`) : `/api/users/${userId}`;
+        const res = await fetch(apiUrl, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`

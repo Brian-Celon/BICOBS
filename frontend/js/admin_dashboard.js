@@ -12,7 +12,8 @@ async function loadDashboardSummary() {
     if (!token) return;
 
     try {
-        const res = await fetch('/api/dashboard/summary', {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl('/api/dashboard/summary') : '/api/dashboard/summary';
+        const res = await fetch(apiUrl, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

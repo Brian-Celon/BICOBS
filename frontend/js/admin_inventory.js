@@ -55,7 +55,8 @@ async function loadInventory() {
     }
 
     try {
-        const res = await fetch("/api/products");
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+        const res = await fetch(apiUrl);
         const data = await res.json();
 
         if (res.ok && data.status === "success") {
@@ -370,7 +371,8 @@ async function quickAdjustStock(productId, delta) {
     }
 
     try {
-        const res = await fetch(`/api/products/${productId}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${productId}`) : `/api/products/${productId}`;
+        const res = await fetch(apiUrl, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -461,7 +463,8 @@ async function saveProductStock() {
     }
 
     try {
-        const res = await fetch(`/api/products/${productId}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${productId}`) : `/api/products/${productId}`;
+        const res = await fetch(apiUrl, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -523,7 +526,8 @@ async function handleCreateProduct(event) {
     }
 
     try {
-        const res = await fetch("/api/products", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+        const res = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

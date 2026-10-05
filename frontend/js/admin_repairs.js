@@ -37,11 +37,18 @@ async function loadRepairs() {
     if (!token) return;
 
     try {
-        const res = await fetch("/api/repairs", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/repairs") : "/api/repairs";
+        const res = await fetch(apiUrl, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            if (typeof handleAdminSessionExpired === 'function') handleAdminSessionExpired();
+            else window.location.href = "login.html?session_expired=true";
+            return;
+        }
 
         const data = await res.json();
         if (res.ok && data.status === "success") {
@@ -53,6 +60,7 @@ async function loadRepairs() {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="7" style="text-align: center; padding: 36px; color: #ef4444;">
+                            <i class="fas fa-triangle-exclamation" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>
                             Failed to load repairs: ${data.message || 'Unknown error'}
                         </td>
                     </tr>
@@ -65,7 +73,14 @@ async function loadRepairs() {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="7" style="text-align: center; padding: 36px; color: #ef4444;">
-                        Unable to connect to backend server.
+                        <i class="fas fa-plug-circle-xmark" style="font-size: 28px; margin-bottom: 8px; display: block; color: #dc2626;"></i>
+                        <strong style="font-size: 15px; color: #0f172a; display: block; margin-bottom: 4px;">Unable to connect to backend server.</strong>
+                        <p style="font-size: 13px; color: #64748b; margin: 4px 0 14px; line-height: 1.5;">
+                            Please verify that your TaurOS backend server is running on <strong>http://localhost:5000</strong>.
+                        </p>
+                        <button type="button" onclick="loadRepairs()" class="btn_primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; cursor: pointer;">
+                            <i class="fas fa-rotate-right"></i> Retry Connection
+                        </button>
                     </td>
                 </tr>
             `;
@@ -361,7 +376,8 @@ async function saveRepairStatus() {
     }
 
     try {
-        const res = await fetch(`/api/repairs/${id}`, {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/repairs/${id}`) : `/api/repairs/${id}`;
+        const res = await fetch(apiUrl, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -420,7 +436,8 @@ async function handleCreateRepair(event) {
     }
 
     try {
-        const res = await fetch("/api/repairs", {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/repairs") : "/api/repairs";
+        const res = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
