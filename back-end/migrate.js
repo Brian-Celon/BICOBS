@@ -53,11 +53,20 @@ async function runMigration() {
         );
       }
       console.log(`[Migration] Successfully seeded ${products.length} products!`);
+
+      // Update categories table item_count from actual product rows
+      await client.query(`
+        UPDATE categories c
+        SET item_count = sub.cnt
+        FROM (SELECT category, COUNT(*) as cnt FROM products GROUP BY category) sub
+        WHERE c.slug = sub.category;
+      `);
     }
 
-    // 3. Count rows in products table
+    // 3. Count rows in products and categories tables
     const countRes = await client.query('SELECT COUNT(*) FROM products;');
-    console.log(`[Migration] Verified total products in database: ${countRes.rows[0].count}`);
+    const catCountRes = await client.query('SELECT COUNT(*) FROM categories;');
+    console.log(`[Migration] Verified total products: ${countRes.rows[0].count}, categories: ${catCountRes.rows[0].count}`);
 
     // 4. List all tables in public schema
     const tablesRes = await client.query(`

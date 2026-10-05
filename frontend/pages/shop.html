@@ -140,7 +140,7 @@
                         </ul>
                     </div>
 
-                    <!-- filter group 1: built bikes -->
+                    <!-- filter group 1: complete bicycles & bike types -->
                     <div class="filter_group">
                         <h3 class="filter_group_title">
                             <span>Complete Bicycles</span>
@@ -152,8 +152,35 @@
                                     <span class="category_check_box">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                     </span>
-                                    <span class="category_name">Built Bikes</span>
+                                    <span class="category_name">All Complete Bikes</span>
                                     <span class="category_item_count">10</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="mountain_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Mountain Bikes (MTB)</span>
+                                    <span class="category_item_count">7</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="road_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Road Bikes</span>
+                                    <span class="category_item_count">1</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="category_item_btn" data-category="gravel_bikes">
+                                    <span class="category_check_box">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span class="category_name">Gravel Bikes</span>
+                                    <span class="category_item_count">2</span>
                                 </button>
                             </li>
                         </ul>
@@ -209,7 +236,7 @@
                     <div class="filter_group">
                         <h3 class="filter_group_title">
                             <span>Drivetrain & Components</span>
-                            <span class="filter_badge_count" id="badge_drivetrain_group">33</span>
+                            <span class="filter_badge_count" id="badge_drivetrain_group">32</span>
                         </h3>
                         <ul class="category_list">
                             <li>
@@ -218,7 +245,7 @@
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                     </span>
                                     <span class="category_name">Chains</span>
-                                    <span class="category_item_count">17</span>
+                                    <span class="category_item_count">16</span>
                                 </button>
                             </li>
                             <li>
@@ -405,17 +432,24 @@
                 </div>
 
                 <!-- quick category horizontal pills -->
-                <div class="category_pills_bar">
-                    <button class="pill_btn active" data-category="all">All</button>
+                <div class="category_pills_bar" id="category_pills_bar">
+                    <button class="pill_btn active" data-category="all">All Products</button>
+                    <button class="pill_btn" data-category="built_bikes">All Bicycles</button>
                     <button class="pill_btn" data-category="mountain_bikes">Mountain Bikes</button>
                     <button class="pill_btn" data-category="road_bikes">Road Bikes</button>
                     <button class="pill_btn" data-category="gravel_bikes">Gravel Bikes</button>
-                    <button class="pill_btn" data-category="bmx_urban">BMX & Urban</button>
-                    <button class="pill_btn" data-category="pedals">Pedals</button>
-                    <button class="pill_btn" data-category="gears">Gears & Drivetrain</button>
-                    <button class="pill_btn" data-category="brakes">Brakes</button>
-                    <button class="pill_btn" data-category="frames">Frames</button>
-                    <button class="pill_btn" data-category="rims_tires">Rims & Tires</button>
+                    <button class="pill_btn" data-category="frame">Framesets</button>
+                    <button class="pill_btn" data-category="fork">Forks & Suspension</button>
+                    <button class="pill_btn" data-category="handle_bar">Handlebars</button>
+                    <button class="pill_btn" data-category="stem">Stems</button>
+                    <button class="pill_btn" data-category="chain">Chains</button>
+                    <button class="pill_btn" data-category="upgrade_kit">Upgrade Kits</button>
+                    <button class="pill_btn" data-category="pedals">Pedals & Cleats</button>
+                    <button class="pill_btn" data-category="tires">Tires</button>
+                    <button class="pill_btn" data-category="rims">Rims & Wheelsets</button>
+                    <button class="pill_btn" data-category="hubs">Sealed Hubs</button>
+                    <button class="pill_btn" data-category="saddle">Saddles</button>
+                    <button class="pill_btn" data-category="handle_grip">Grips & Bartapes</button>
                 </div>
 
                 <!-- products grid -->

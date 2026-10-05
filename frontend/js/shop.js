@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const active_heading_el = document.getElementById('active_filter_heading');
     const empty_state_el = document.getElementById('empty_catalog_state');
     const search_input = document.getElementById('catalog_search_input');
+    const header_search_input = document.querySelector('.search_wrapper .search_input');
+    const header_search_btn = document.querySelector('.search_wrapper .search_btn');
     const sort_select = document.getElementById('catalog_sort_select');
     const mobile_sort_select = document.getElementById('mobile_sort_select');
     const price_slider = document.getElementById('price_slider');
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sale_checkbox = document.getElementById('filter_sale');
     const btn_reset_filters = document.getElementById('btn_reset_filters');
     const category_item_btns = document.querySelectorAll('.category_item_btn');
+    const pill_btns = document.querySelectorAll('.pill_btn');
     const mobile_active_cat_el = document.getElementById('mobile_btn_active_cat');
     const mobile_filter_badge = document.getElementById('mobile_filter_badge');
     const mobile_apply_badge = document.getElementById('mobile_apply_badge');
@@ -60,7 +63,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = catKey.toLowerCase().trim();
 
         if (cat === target) return true;
-        if (target === 'built_bikes' && (cat === 'bicycles' || cat === 'built bikes')) return true;
+
+        // Normalize aliases & variations
+        if (target === 'mountain_bikes' && (cat === 'mountain_bikes' || cat === 'mtb' || cat === 'mountain' || cat === 'mountain_bike')) return true;
+        if (target === 'road_bikes' && (cat === 'road_bikes' || cat === 'road' || cat === 'road_bike')) return true;
+        if (target === 'gravel_bikes' && (cat === 'gravel_bikes' || cat === 'gravel' || cat === 'gravel_bike' || cat === 'cyclocross')) return true;
+        if (target === 'built_bikes' && (cat === 'bicycles' || cat === 'built bikes' || cat === 'built_bikes' || cat === 'bikes' || cat === 'mountain_bikes' || cat === 'road_bikes' || cat === 'gravel_bikes' || cat === 'bmx_urban')) return true;
+        if (target === 'frame' && (cat === 'frame' || cat === 'frames' || cat === 'framesets')) return true;
+        if (target === 'fork' && (cat === 'fork' || cat === 'forks')) return true;
+        if (target === 'handle_bar' && (cat === 'handle_bar' || cat === 'handlebars' || cat === 'handlebar' || cat === 'handle_bars')) return true;
+        if (target === 'stem' && (cat === 'stem' || cat === 'stems')) return true;
+        if (target === 'chain' && (cat === 'chain' || cat === 'chains')) return true;
+        if (target === 'upgrade_kit' && (cat === 'upgrade_kit' || cat === 'upgrade_kits' || cat === 'groupset' || cat === 'groupsets' || cat === 'gears')) return true;
+        if (target === 'pedals' && (cat === 'pedals' || cat === 'pedal')) return true;
+        if (target === 'tires' && (cat === 'tires' || cat === 'tire')) return true;
+        if (target === 'rims' && (cat === 'rims' || cat === 'rim')) return true;
+        if (target === 'rims_tires' && (cat === 'rims' || cat === 'tires')) return true;
+        if (target === 'hubs' && (cat === 'hubs' || cat === 'hub')) return true;
+        if (target === 'saddle' && (cat === 'saddle' || cat === 'saddles')) return true;
+        if (target === 'handle_grip' && (cat === 'handle_grip' || cat === 'grips' || cat === 'grip' || cat === 'handle_grips')) return true;
+
         return false;
     }
 
@@ -139,6 +161,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Fallback to pill buttons if sidebar hasn't matched
+        if (names.length === 0 && pill_btns) {
+            pill_btns.forEach(pill => {
+                const cat = pill.getAttribute('data-category');
+                if (selected_categories.has(cat)) {
+                    names.push(pill.textContent.trim());
+                }
+            });
+        }
+
         let headingText = '';
         if (names.length === 1) {
             headingText = names[0];
@@ -154,22 +186,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch Products dynamically from Backend API
+    // Bidirectionally synchronize horizontal quick pills and sidebar checkboxes
+    function syncPillsWithSelectedCategories() {
+        if (!pill_btns) return;
+        pill_btns.forEach(p => p.classList.remove('active'));
+
+        if (selected_categories.size === 0) {
+            const allPill = document.querySelector('.pill_btn[data-category="all"]');
+            if (allPill) allPill.classList.add('active');
+        } else if (selected_categories.size === 1) {
+            const singleCat = Array.from(selected_categories)[0];
+            const matchingPill = document.querySelector(`.pill_btn[data-category="${singleCat}"]`);
+            if (matchingPill) matchingPill.classList.add('active');
+        }
+    }
+
+    // Fetch Products dynamically from Backend API (with static fallback)
     async function loadProductsFromBackend() {
         if (results_count_el) results_count_el.textContent = 'Loading products...';
 
         try {
             const res = await fetch('/api/products');
-            if (!res.ok) throw new Error('API response was not ok');
+            if (!res.ok) throw new Error(`API error HTTP ${res.status}`);
             const result = await res.json();
             if (result.status === 'success' && Array.isArray(result.data) && result.data.length > 0) {
                 all_products = result.data;
                 updateSidebarCategoryCounts(all_products);
                 renderProductsGrid(all_products);
+                checkUrlParams();
                 return;
             }
         } catch (err) {
-            console.warn('Backend fetch failed, falling back to static cards:', err);
+            console.warn('Backend API fetch failed, attempting local data fallback:', err);
+            try {
+                // Fallback for static servers (e.g. Live Server on port 5500)
+                const fallbackRes = await fetch('/back-end/data/products.json').catch(() => fetch('../../back-end/data/products.json'));
+                if (fallbackRes && fallbackRes.ok) {
+                    const fallbackData = await fallbackRes.json();
+                    if (Array.isArray(fallbackData) && fallbackData.length > 0) {
+                        all_products = fallbackData.map((p, idx) => ({
+                            _id: String(idx + 1),
+                            id: idx + 1,
+                            name: p.name,
+                            category: p.category,
+                            price: p.price,
+                            stockQuantity: p.stockQuantity || 10,
+                            imageUrl: p.imageUrl || '',
+                            description: p.description || '',
+                            isFeatured: p.isFeatured || false,
+                            isAvailable: p.isAvailable !== false
+                        }));
+                        updateSidebarCategoryCounts(all_products);
+                        renderProductsGrid(all_products);
+                        checkUrlParams();
+                        return;
+                    }
+                }
+            } catch (fallbackErr) {
+                console.warn('Fallback products.json fetch also failed:', fallbackErr);
+            }
+
             product_cards = Array.from(document.querySelectorAll('.product_card_item'));
             apply_filters();
         }
@@ -177,13 +253,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderProductsGrid(products) {
         if (!products_grid) return;
-        products_grid.innerHTML = '';
+
+        // Clean up previous cards and loading indicator, preserve empty state element
+        products_grid.querySelectorAll('.product_card_item, #catalog_loading_indicator').forEach(el => el.remove());
+
+        // Ensure empty state element is present in products_grid
+        if (empty_state_el && !products_grid.contains(empty_state_el)) {
+            products_grid.appendChild(empty_state_el);
+        }
+
+        const fragment = document.createDocumentFragment();
 
         products.forEach((item, index) => {
             const card = document.createElement('article');
             card.className = 'product_card_item';
             const prodId = item._id || item.id || String(index);
-            const prodCategory = item.category || 'general';
+            const prodCategory = (item.category || 'general').toLowerCase();
             const prodPrice = parseFloat(item.price) || 0;
             const prodName = item.name || 'Bicycle Product';
             const prodStock = typeof item.stockQuantity === 'number' ? item.stockQuantity : (typeof item.stock_quantity === 'number' ? item.stock_quantity : 10);
@@ -224,8 +309,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
-            products_grid.appendChild(card);
+            fragment.appendChild(card);
         });
+
+        if (empty_state_el && empty_state_el.parentNode === products_grid) {
+            products_grid.insertBefore(fragment, empty_state_el);
+        } else {
+            products_grid.appendChild(fragment);
+        }
 
         product_cards = Array.from(products_grid.querySelectorAll('.product_card_item'));
         apply_filters();
@@ -281,12 +372,15 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             const matches_cat = matchesSelectedCategories(prodObj);
-            const matches_search = !search_query || card_title.includes(search_query);
+            const matches_search = !search_query || 
+                card_title.includes(search_query) || 
+                (prodObj.category && prodObj.category.toLowerCase().includes(search_query)) ||
+                (prodObj.description && prodObj.description.toLowerCase().includes(search_query));
             const matches_price = card_price <= max_price;
             const matches_sale = !only_sale || Boolean(prodObj.isSale || prodObj.is_sale || (prodObj.stock_quantity <= 3 && prodObj.stock_quantity > 0));
 
             if (matches_cat && matches_search && matches_price && matches_sale) {
-                card.style.display = 'block';
+                card.style.display = 'flex';
                 visible_count++;
                 visible_cards.push(card);
             } else {
@@ -307,7 +401,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return 0; // featured/default
         });
 
-        visible_cards.forEach(card => products_grid.appendChild(card));
+        // Re-append cards in sorted order before empty state
+        if (empty_state_el && empty_state_el.parentNode === products_grid) {
+            visible_cards.forEach(card => products_grid.insertBefore(card, empty_state_el));
+        } else {
+            visible_cards.forEach(card => products_grid.appendChild(card));
+        }
 
         // Update counters in UI
         const totalCount = all_products.length || product_cards.length;
@@ -316,10 +415,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mobile_filter_badge) mobile_filter_badge.textContent = visible_count;
         if (mobile_apply_badge) mobile_apply_badge.textContent = visible_count;
-        if (empty_state_el) empty_state_el.style.display = visible_count === 0 ? 'block' : 'none';
+        if (empty_state_el) {
+            empty_state_el.style.display = visible_count === 0 ? 'block' : 'none';
+            if (visible_count === 0) {
+                empty_state_el.classList.add('show');
+            } else {
+                empty_state_el.classList.remove('show');
+            }
+        }
     }
 
-    // Category button filters (Checkboxes behavior: multi-select support)
+    // 1. Horizontal Quick Category Pill Buttons Filter
+    if (pill_btns) {
+        pill_btns.forEach(pill => {
+            pill.addEventListener('click', () => {
+                const catKey = pill.getAttribute('data-category');
+
+                pill_btns.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+
+                if (catKey === 'all') {
+                    selected_categories.clear();
+                    category_item_btns.forEach(b => b.classList.remove('active'));
+                    const allBtn = document.querySelector('.category_item_btn[data-category="all"]');
+                    if (allBtn) allBtn.classList.add('active');
+                } else {
+                    selected_categories.clear();
+                    selected_categories.add(catKey);
+
+                    // Sync sidebar category buttons
+                    category_item_btns.forEach(b => {
+                        const target = b.getAttribute('data-category');
+                        if (target === catKey) {
+                            b.classList.add('active');
+                        } else {
+                            b.classList.remove('active');
+                        }
+                    });
+                }
+
+                updateHeadingText();
+                apply_filters();
+            });
+        });
+    }
+
+    // 2. Sidebar Category Button Filters (Multi-select checkbox behavior)
     if (category_item_btns) {
         const allBtn = document.querySelector('.category_item_btn[data-category="all"]');
 
@@ -328,12 +469,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const catKey = btn.getAttribute('data-category');
 
                 if (catKey === 'all') {
-                    // Clicking 'All Products' clears all category filters and activates 'All'
                     selected_categories.clear();
                     category_item_btns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                 } else {
-                    // Clicking any specific category toggles its checkbox
                     if (allBtn) allBtn.classList.remove('active');
 
                     if (selected_categories.has(catKey)) {
@@ -344,27 +483,40 @@ document.addEventListener('DOMContentLoaded', () => {
                         btn.classList.add('active');
                     }
 
-                    // If user unchecks all specific categories, default back to 'All Products'
                     if (selected_categories.size === 0) {
                         if (allBtn) allBtn.classList.add('active');
                     }
                 }
 
+                syncPillsWithSelectedCategories();
                 updateHeadingText();
                 apply_filters();
             });
         });
     }
 
-    // Live search input
+    // 3. Search Inputs (Synchronized between header and catalog toolbar)
+    function handleSearchInput(query) {
+        search_query = (query || '').toLowerCase().trim();
+        if (search_input && search_input.value !== query) search_input.value = query;
+        if (header_search_input && header_search_input.value !== query) header_search_input.value = query;
+        apply_filters();
+    }
+
     if (search_input) {
-        search_input.addEventListener('input', (e) => {
-            search_query = e.target.value.toLowerCase().trim();
-            apply_filters();
+        search_input.addEventListener('input', (e) => handleSearchInput(e.target.value));
+    }
+    if (header_search_input) {
+        header_search_input.addEventListener('input', (e) => handleSearchInput(e.target.value));
+    }
+    if (header_search_btn) {
+        header_search_btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleSearchInput(header_search_input?.value || '');
         });
     }
 
-    // Sort select (Desktop)
+    // 4. Sort select (Desktop & Mobile Synchronized)
     if (sort_select) {
         sort_select.addEventListener('change', (e) => {
             sort_mode = e.target.value;
@@ -373,7 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Sort select (Mobile)
     if (mobile_sort_select) {
         mobile_sort_select.addEventListener('change', (e) => {
             sort_mode = e.target.value;
@@ -382,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Price slider
+    // 5. Price slider
     if (price_slider) {
         price_slider.max = 100000;
         price_slider.value = 100000;
@@ -396,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Sale checkbox
+    // 6. Sale checkbox
     if (sale_checkbox) {
         sale_checkbox.addEventListener('change', (e) => {
             only_sale = e.target.checked;
@@ -404,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Reset filters
+    // 7. Reset all filters
     if (btn_reset_filters) {
         btn_reset_filters.addEventListener('click', () => {
             selected_categories.clear();
@@ -413,6 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sort_mode = 'featured';
             only_sale = false;
             if (search_input) search_input.value = '';
+            if (header_search_input) header_search_input.value = '';
             if (price_slider) price_slider.value = 100000;
             if (max_price_display) max_price_display.textContent = '₱100,000';
             if (sort_select) sort_select.value = 'featured';
@@ -420,13 +572,40 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sale_checkbox) sale_checkbox.checked = false;
 
             category_item_btns.forEach(b => b.classList.remove('active'));
-            const allBtn = document.querySelector('.category_item_btn[data-category="all"]');
-            if (allBtn) allBtn.classList.add('active');
+            const allSidebarBtn = document.querySelector('.category_item_btn[data-category="all"]');
+            if (allSidebarBtn) allSidebarBtn.classList.add('active');
+
+            if (pill_btns) {
+                pill_btns.forEach(p => p.classList.remove('active'));
+                const allPill = document.querySelector('.pill_btn[data-category="all"]');
+                if (allPill) allPill.classList.add('active');
+            }
+
             updateHeadingText();
             apply_filters();
         });
     }
 
-    // Initial load
+    // 8. URL Parameter initialization
+    function checkUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const catParam = urlParams.get('category');
+        const searchParam = urlParams.get('search') || urlParams.get('q');
+
+        if (searchParam) {
+            handleSearchInput(searchParam);
+        }
+        if (catParam && catParam !== 'all') {
+            const pill = document.querySelector(`.pill_btn[data-category="${catParam}"]`);
+            if (pill) {
+                pill.click();
+            } else {
+                const btn = document.querySelector(`.category_item_btn[data-category="${catParam}"]`);
+                if (btn) btn.click();
+            }
+        }
+    }
+
+    // Initial catalog load
     loadProductsFromBackend();
 });

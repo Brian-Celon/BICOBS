@@ -31,8 +31,33 @@ const getProducts = async (req, res, next) => {
     const params = [];
 
     if (category && category !== 'all') {
-      params.push(category.toLowerCase());
-      sql += ` AND LOWER(category) = $${params.length}`;
+      const catLower = category.toLowerCase().trim();
+      if (catLower === 'built_bikes' || catLower === 'bikes' || catLower === 'bicycles') {
+        sql += ` AND LOWER(category) IN ('mountain_bikes', 'road_bikes', 'gravel_bikes', 'built_bikes')`;
+      } else {
+        const aliasMap = {
+          'mtb': 'mountain_bikes',
+          'mountain': 'mountain_bikes',
+          'mountain_bike': 'mountain_bikes',
+          'road': 'road_bikes',
+          'road_bike': 'road_bikes',
+          'gravel': 'gravel_bikes',
+          'gravel_bike': 'gravel_bikes',
+          'frames': 'frame',
+          'forks': 'fork',
+          'handlebars': 'handle_bar',
+          'handlebar': 'handle_bar',
+          'stems': 'stem',
+          'chains': 'chain',
+          'upgrade_kits': 'upgrade_kit',
+          'gears': 'upgrade_kit',
+          'saddles': 'saddle',
+          'grips': 'handle_grip',
+          'handle_grips': 'handle_grip'
+        };
+        params.push(aliasMap[catLower] || catLower);
+        sql += ` AND LOWER(category) = $${params.length}`;
+      }
     }
 
     if (search && search.trim() !== '') {
@@ -234,10 +259,28 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+// @desc    Get all product categories
+// @route   GET /api/products/categories
+// @access  Public
+const getCategories = async (req, res, next) => {
+  try {
+    const result = await db.query('SELECT * FROM categories ORDER BY id ASC');
+    res.status(200).json({
+      status: 'success',
+      count: result.rows.length,
+      data: result.rows
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
+  getCategories,
   createProduct,
   updateProduct,
   deleteProduct
 };
+

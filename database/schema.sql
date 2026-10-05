@@ -11,7 +11,43 @@ DROP TABLE IF EXISTS billings CASCADE;
 DROP TABLE IF EXISTS order_items CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+
+-- =============================================================================
+-- 3. CATEGORIES TABLE
+-- Stores standardized bike shop product categories
+-- =============================================================================
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT DEFAULT '',
+    group_name VARCHAR(100) DEFAULT '',
+    item_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_categories_slug ON categories(slug);
+
+INSERT INTO categories (name, slug, description, group_name, item_count) VALUES
+('Complete Bicycles', 'built_bikes', 'All complete prebuilt bicycles (MTB, Road, Gravel)', 'Complete Bicycles', 10),
+('Mountain Bikes', 'mountain_bikes', 'Cross-country, trail, and hardtail mountain bikes', 'Complete Bicycles', 7),
+('Road Bikes', 'road_bikes', 'Aerodynamic 700c performance drop-bar road bikes', 'Complete Bicycles', 1),
+('Gravel Bikes', 'gravel_bikes', 'Versatile all-terrain gravel and cyclocross bikes', 'Complete Bicycles', 2),
+('Framesets', 'frame', 'Carbon fiber and aluminum alloy bike frames', 'Frames & Steering', 12),
+('Forks & Suspension', 'fork', 'Air suspension and rigid mountain/road bike forks', 'Frames & Steering', 12),
+('Handlebars', 'handle_bar', 'Aero drop bars, flat handlebars, and risers', 'Frames & Steering', 10),
+('Stems', 'stem', 'Precision alloy and CNC handlebar stems', 'Frames & Steering', 10),
+('Chains', 'chain', 'Durable multi-speed bike chains (8-12 speed)', 'Drivetrain & Components', 16),
+('Upgrade Kits & Groupsets', 'upgrade_kit', 'Full transmission upgrade groupsets and conversion kits', 'Drivetrain & Components', 5),
+('Pedals & Cleats', 'pedals', 'Platform alloy pedals, sealed bearing pedals, and SPD cleats', 'Drivetrain & Components', 11),
+('Tires', 'tires', 'Tubeless ready MTB, road, and gravel tires', 'Wheels & Tires', 15),
+('Rims & Wheelsets', 'rims', 'Double-wall alloy rims and complete aero wheelsets', 'Wheels & Tires', 14),
+('Sealed Hubs', 'hubs', 'High engagement sound sealed bearing front & rear hubs', 'Wheels & Tires', 10),
+('Saddles', 'saddle', 'Ergonomic comfort saddles and racing bicycle seats', 'Saddles & Grips', 14),
+('Grips & Bartapes', 'handle_grip', 'Silicone lock-on grips and shock-absorbing bartapes', 'Saddles & Grips', 11)
+ON CONFLICT (slug) DO NOTHING;
 
 -- =============================================================================
 -- 3. USERS TABLE
