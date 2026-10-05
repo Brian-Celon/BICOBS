@@ -201,9 +201,12 @@
                 <div class="toolbar_filters_group">
                     <select class="admin_select" id="order_status_filter">
                         <option value="all">All Statuses</option>
-                        <option value="Paid">Paid</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="ready_for_pickup">Ready for Pickup</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                     <button type="button" class="btn_date_filter" onclick="openModal('order_date_modal')">
                         <i class="fas fa-calendar-alt"></i>
@@ -336,9 +339,12 @@
                 <div class="form_group">
                     <label class="form_label" for="modal_fulfillment_status">Update Fulfillment Status</label>
                     <select class="form_input admin_select" id="modal_fulfillment_status">
-                        <option value="Paid">Paid (Processing)</option>
-                        <option value="Completed">Completed & Delivered</option>
-                        <option value="Pending">Pending Payment</option>
+                        <option value="pending">Pending (Awaiting Verification)</option>
+                        <option value="processing">Processing & Preparing</option>
+                        <option value="ready_for_pickup">Ready for In-Store Pickup</option>
+                        <option value="shipped">Shipped / Out for Delivery</option>
+                        <option value="completed">Completed & Delivered</option>
+                        <option value="cancelled">Cancelled (Auto-Restore Stock)</option>
                     </select>
                 </div>
             </div>
@@ -403,96 +409,6 @@
 
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
-    <script>
-        let currentOrderPage = 1;
-
-        document.addEventListener("DOMContentLoaded", function () {
-            filterTableBySearch("order_search_input", "orders_table");
-            filterTableBySelect("order_status_filter", "orders_table", 4);
-
-            const tabButtons = document.querySelectorAll("#order_tabs_bar .filter_tab_btn");
-            const rows = document.querySelectorAll("#orders_table tbody tr");
-
-            tabButtons.forEach(btn => {
-                btn.addEventListener("click", function () {
-                    tabButtons.forEach(b => b.classList.remove("tab_active"));
-                    this.classList.add("tab_active");
-
-                    const filter = this.getAttribute("data-filter");
-                    rows.forEach(row => {
-                        const type = row.getAttribute("data-type");
-                        const status = row.getAttribute("data-status");
-
-                        if (filter === "all") {
-                            row.style.display = "";
-                        } else if (filter === "online" && type === "online") {
-                            row.style.display = "";
-                        } else if (filter === "walk-in" && type === "walk-in") {
-                            row.style.display = "";
-                        } else if (filter === "pending" && status === "pending") {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
-                });
-            });
-        });
-
-        function viewOrderDetails(rowId, orderId, customer, type, payment, status, total, items) {
-            document.getElementById("modal_order_row_id").value = rowId;
-            document.getElementById("order_modal_title").textContent = "Order Details: " + orderId;
-            document.getElementById("modal_order_customer").textContent = customer;
-            document.getElementById("modal_order_type").textContent = type;
-            document.getElementById("modal_order_payment").textContent = payment;
-            document.getElementById("modal_order_total").textContent = total;
-            document.getElementById("modal_order_items").textContent = items;
-            document.getElementById("modal_fulfillment_status").value = status;
-            openModal("order_detail_modal");
-        }
-
-        function saveFulfillmentStatus() {
-            const rowId = document.getElementById("modal_order_row_id").value;
-            const newStatus = document.getElementById("modal_fulfillment_status").value;
-            const row = document.getElementById(rowId);
-
-            if (row) {
-                row.setAttribute("data-status", newStatus.toLowerCase());
-                const statusCell = row.querySelector(".order_status_cell");
-                if (newStatus === "Completed") {
-                    statusCell.innerHTML = '<span class="status_pill status_completed">Completed</span>';
-                } else if (newStatus === "Paid") {
-                    statusCell.innerHTML = '<span class="status_pill status_paid">Paid</span>';
-                } else {
-                    statusCell.innerHTML = '<span class="status_pill status_pending">Pending</span>';
-                }
-            }
-
-            closeModal("order_detail_modal");
-            showToast("Order status updated successfully!");
-        }
-
-        function applyOrderDate(label, count) {
-            document.getElementById("order_date_label").textContent = label;
-            document.getElementById("orders_pagination_info").textContent = `Showing 1-5 of ${count} orders`;
-            closeModal("order_date_modal");
-            showToast("Filtered orders for: " + label);
-        }
-
-        function changeOrderPage(page) {
-            if (page < 1 || page > 3) return;
-            currentOrderPage = page;
-            const pageBtns = document.querySelectorAll("#orders_pagination_controls .pagination_btn");
-            pageBtns.forEach(btn => {
-                if (btn.getAttribute("data-page") == page) {
-                    btn.classList.add("page_active");
-                } else if (btn.getAttribute("data-page")) {
-                    btn.classList.remove("page_active");
-                }
-            });
-            document.getElementById("orders_pagination_info").textContent = `Showing ${(page - 1) * 5 + 1}-${Math.min(page * 5, 12)} of 12 orders`;
-            showToast("Loaded orders page " + page);
-        }
-    </script>
+    <script src="/frontend/js/admin_orders.js"></script>
 </body>
 </html>

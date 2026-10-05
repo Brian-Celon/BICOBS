@@ -199,10 +199,9 @@
                             <i class="fas fa-shopping-bag"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value">₱24,850</div>
+                    <div class="stat_card_value" id="dash_total_sales">₱0</div>
                     <div class="stat_card_footer">
-                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +12%</span>
-                        <span class="stat_trend_label">vs. yesterday</span>
+                        <a href="billing.html" class="stat_card_link">View Billing <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
@@ -214,10 +213,9 @@
                             <i class="fas fa-file-invoice"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value">5</div>
+                    <div class="stat_card_value" id="dash_pending_orders">0</div>
                     <div class="stat_card_footer">
-                        <span class="stat_trend_positive"><i class="fas fa-arrow-up"></i> +2</span>
-                        <span class="stat_trend_label">vs. yesterday</span>
+                        <a href="orders.html" class="stat_card_link">View Orders <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
@@ -229,23 +227,23 @@
                             <i class="fas fa-triangle-exclamation"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value">3</div>
+                    <div class="stat_card_value" id="dash_low_stock">0</div>
                     <div class="stat_card_footer">
                         <a href="inventory.html" class="stat_card_link">View Items <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
-                <!-- card 4: open repairs -->
+                <!-- card 4: registered customers -->
                 <article class="stat_card">
                     <div class="stat_card_top">
-                        <span class="stat_card_label">Open Repairs</span>
+                        <span class="stat_card_label">Registered Customers</span>
                         <div class="stat_card_icon_box icon_theme_red">
-                            <i class="fas fa-wrench"></i>
+                            <i class="fas fa-users"></i>
                         </div>
                     </div>
-                    <div class="stat_card_value">7</div>
+                    <div class="stat_card_value" id="dash_total_customers">0</div>
                     <div class="stat_card_footer">
-                        <a href="repairs.html" class="stat_card_link">View Queue <i class="fas fa-arrow-right"></i></a>
+                        <a href="users.html" class="stat_card_link">View Users <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
             </section>
@@ -269,7 +267,7 @@
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="dash_recent_transactions_tbody">
                                 <tr>
                                     <td class="cell_order_id">#TBR1045</td>
                                     <td class="cell_customer_name">Daniel Santos</td>
@@ -566,6 +564,7 @@
 
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
+    <script src="/frontend/js/admin_dashboard.js"></script>
     <script>
         function handleDashboardAddProduct(e) {
             e.preventDefault();

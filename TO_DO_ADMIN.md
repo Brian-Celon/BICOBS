@@ -41,46 +41,46 @@ This roadmap outlines the complete status, backend integration requirements, and
 ---
 
 ### Phase 1: Backend Connection & Admin Authentication Guard
-- [ ] **Backend Runtime Synchronization**
-  - [ ] Merge or sync backend server infrastructure from `maula-backend` (Express app, PostgreSQL connection, models, controllers, and routes).
-  - [ ] Ensure backend runs smoothly on port 5000 with CORS and JSON body parsers configured.
-- [ ] **Admin Login Authentication (`login.html`)**
-  - [ ] Connect admin login form to `POST /api/auth/login`.
-  - [ ] Verify user role: grant access only if `user.role === 'admin'` or `user.role === 'staff'`.
-  - [ ] Store admin token (`taurus_admin_token`) and user object (`taurus_admin_session`) in `localStorage`.
-  - [ ] Display clear inline error messages for invalid credentials or insufficient permissions.
-- [ ] **Global Route Guard (`admin.js`)**
-  - [ ] Add an authentication check at the top of all admin pages: redirect to `login.html` if `taurus_admin_token` is missing or expired.
-  - [ ] Display logged-in admin name and avatar initials dynamically in the top navigation bar.
-  - [ ] Wire the Sign Out button to purge session tokens and redirect to `login.html?logged_out=true`.
+- [x] **Backend Runtime Synchronization**
+  - [x] Merge or sync backend server infrastructure from `maula-backend` (Express app, PostgreSQL connection, models, controllers, and routes).
+  - [x] Ensure backend runs smoothly on port 5000 with CORS and JSON body parsers configured.
+- [x] **Admin Login Authentication (`login.html`)**
+  - [x] Connect admin login form to `POST /api/auth/login`.
+  - [x] Verify user role: grant access only if `user.role === 'admin'` or `user.role === 'staff'`.
+  - [x] Store admin token (`taurus_admin_token`) and user object (`taurus_admin_session`) in `localStorage`.
+  - [x] Display clear inline error messages for invalid credentials or insufficient permissions.
+- [x] **Global Route Guard (`admin.js`)**
+  - [x] Add an authentication check at the top of all admin pages: redirect to `login.html` if `taurus_admin_token` is missing or expired.
+  - [x] Display logged-in admin name and avatar initials dynamically in the top navigation bar.
+  - [x] Wire the Sign Out button to purge session tokens and redirect to `login.html?logged_out=true`.
 
 ---
 
 ### Phase 2: Live Order Management (`orders.html`) — TOP PRIORITY
-- [ ] **Dynamic Order Queue Fetching**
-  - [ ] Fetch live customer orders from `GET /api/orders` (JWT Bearer token authenticated).
-  - [ ] Replace hardcoded mock table rows with dynamic rows generated from database records:
+- [x] **Dynamic Order Queue Fetching**
+  - [x] Fetch live customer orders from `GET /api/orders` (JWT Bearer token authenticated).
+  - [x] Replace hardcoded mock table rows with dynamic rows generated from database records:
     - Order Number (`ORD-XXXX` or short ID)
     - Customer Name & Phone Number
     - Order Type (`Online Delivery` vs `In-Store Pickup`)
     - Payment Method (`Cash`, `GCash OTC`)
     - Order Status badge (`pending`, `processing`, `shipped`, `ready_for_pickup`, `completed`, `cancelled`)
     - Order Total (formatted in Philippine Peso: `₱XX,XXX`)
-- [ ] **Order Filter & Search Engine**
-  - [ ] Dynamic counter badges on tabs: `All Orders (X)`, `Online (Y)`, `In-Store (Z)`, `Pending Payment (W)`.
-  - [ ] Real-time client-side search filtering by customer name, order ID, or product name.
-  - [ ] Status dropdown filtering (`All`, `Pending`, `Processing`, `Completed`, `Cancelled`).
-- [ ] **Order Inspection & Fulfillment Modal (`#order_detail_modal`)**
-  - [ ] Click "View" to open modal populated with full order details:
+- [x] **Order Filter & Search Engine**
+  - [x] Dynamic counter badges on tabs: `All Orders (X)`, `Online (Y)`, `In-Store (Z)`, `Pending Payment (W)`.
+  - [x] Real-time client-side search filtering by customer name, order ID, or product name.
+  - [x] Status dropdown filtering (`All`, `Pending`, `Processing`, `Completed`, `Cancelled`).
+- [x] **Order Inspection & Fulfillment Modal (`#order_detail_modal`)**
+  - [x] Click "View" to open modal populated with full order details:
     - Customer full name, verified email, and contact phone number.
     - Full shipping/delivery address (or pickup tag).
     - Itemized breakdown table: product images, names, quantities, unit prices, and line subtotals.
     - Associated invoice reference (`INV-...`).
-- [ ] **Live Status Advance & Stock Protection**
-  - [ ] Connect status selector to `PUT /api/orders/:id/status`.
-  - [ ] Allow admin to advance order: `Pending` ➔ `Processing` ➔ `Shipped / Ready for Pickup` ➔ `Completed`.
-  - [ ] Support `Cancelled` status with confirmation: backend automatically triggers database transaction rolling back deducted stock to product inventory.
-  - [ ] Show real-time toast notification on status update and re-render row status badge instantly.
+- [x] **Live Status Advance & Stock Protection**
+  - [x] Connect status selector to `PUT /api/orders/:id/status`.
+  - [x] Allow admin to advance order: `Pending` ➔ `Processing` ➔ `Shipped / Ready for Pickup` ➔ `Completed`.
+  - [x] Support `Cancelled` status with confirmation: backend automatically triggers database transaction rolling back deducted stock to product inventory.
+  - [x] Show real-time toast notification on status update and re-render row status badge instantly.
 
 ---
 

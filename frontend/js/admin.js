@@ -1,7 +1,48 @@
 // taurOS admin panel interactive logic and event listeners
 
+// Global Admin Authentication Helpers
+function getAdminToken() {
+    return localStorage.getItem("taurus_admin_token");
+}
+
+function getAdminUser() {
+    try {
+        const u = localStorage.getItem("taurus_admin_user");
+        return u ? JSON.parse(u) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function checkAdminAuth() {
+    const isLoginPage = window.location.pathname.endsWith("login.html") || window.location.pathname.includes("login.html");
+    const token = getAdminToken();
+    const user = getAdminUser();
+
+    if (!isLoginPage) {
+        if (!token || !user || (user.role !== 'admin' && user.role !== 'staff')) {
+            window.location.href = "login.html";
+            return false;
+        }
+
+        // Populate top navigation profile elements if present
+        const nameEl = document.querySelector(".admin_user_name");
+        const roleEl = document.querySelector(".admin_user_role");
+        const avatarEl = document.querySelector(".admin_profile_avatar");
+
+        if (nameEl) nameEl.textContent = user.full_name || user.name || "Administrator";
+        if (roleEl) roleEl.textContent = (user.role || "admin").toUpperCase();
+        if (avatarEl) {
+            const initial = (user.full_name || user.name || "A").trim().charAt(0).toUpperCase();
+            avatarEl.textContent = initial;
+        }
+    }
+    return true;
+}
+
 // wait for DOM to fully load
 document.addEventListener("DOMContentLoaded", function () {
+    checkAdminAuth();
     initSidebarToggle();
     initModals();
     initGlobalSearch();
@@ -216,6 +257,8 @@ function openLogoutModal() {
 function executeAdminLogout() {
     closeModal("logout_confirm_modal");
     try {
+        localStorage.removeItem("taurus_admin_token");
+        localStorage.removeItem("taurus_admin_user");
         localStorage.removeItem("taurus_admin_session");
         sessionStorage.removeItem("taurus_admin_session");
     } catch (e) {
@@ -224,7 +267,7 @@ function executeAdminLogout() {
     showToast("Signed out successfully. Redirecting to login...", true);
     setTimeout(() => {
         window.location.href = "login.html?logged_out=true";
-    }, 1200);
+    }, 800);
 }
 
 // handle save settings action with feedback

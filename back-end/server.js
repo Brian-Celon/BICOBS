@@ -18,14 +18,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve frontend static files at both /frontend and /
+// Serve frontend and assets static files
 const frontendPath = path.join(__dirname, '../frontend');
+const assetsPath = path.join(__dirname, '../assets');
 app.use('/frontend', express.static(frontendPath));
+app.use('/assets', express.static(assetsPath));
 app.use(express.static(frontendPath));
 
 // Root redirect to landing page
 app.get('/', (req, res) => {
   res.sendFile(path.join(frontendPath, 'pages/index.html'));
+});
+
+// Admin shortcut redirect
+app.get('/admin', (req, res) => {
+  res.redirect('/frontend/pages/Admin/dashboard.html');
 });
 
 // 5. Health Check Route

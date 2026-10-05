@@ -1,0 +1,105 @@
+/**
+ * TaurOS Admin Panel - Dashboard Overview Controller
+ * Loads real-time KPI metrics, pending order counts, recent transactions, and store summaries from GET /api/dashboard/summary.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadDashboardSummary();
+});
+
+async function loadDashboardSummary() {
+    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    if (!token) return;
+
+    try {
+        const res = await fetch('/api/dashboard/summary', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (res.status === 401) {
+            if (typeof executeAdminLogout === 'function') executeAdminLogout();
+            return;
+        }
+
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+            const summary = data.data;
+
+            // 1. Metric Cards
+            const salesEl = document.getElementById("dash_total_sales");
+            const pendingEl = document.getElementById("dash_pending_orders");
+            const lowStockEl = document.getElementById("dash_low_stock");
+            const customersEl = document.getElementById("dash_total_customers");
+
+            if (salesEl) {
+                const totalRev = parseFloat(summary.revenue?.totalRevenue || 0);
+                salesEl.textContent = `₱${totalRev.toLocaleString()}`;
+            }
+
+            if (pendingEl) {
+                pendingEl.textContent = summary.orders?.pendingOrders ?? 0;
+            }
+
+            if (lowStockEl) {
+                lowStockEl.textContent = summary.inventory?.lowStockProducts ?? 0;
+            }
+
+            if (customersEl) {
+                customersEl.textContent = summary.users?.totalCustomers ?? 0;
+            }
+
+            // 2. Recent Transactions Table
+            const recentTbody = document.getElementById("dash_recent_transactions_tbody");
+            if (recentTbody && summary.recentOrders) {
+                if (summary.recentOrders.length === 0) {
+                    recentTbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 24px; color: #94a3b8;">
+                                No recent orders recorded
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    recentTbody.innerHTML = summary.recentOrders.map(order => {
+                        const num = order.orderNumber || `ORD-${order.id}`;
+                        const name = order.customerName || 'Customer';
+                        const total = parseFloat(order.totalPrice || 0);
+                        const status = order.orderStatus || 'pending';
+                        const dateFormatted = formatDate(order.createdAt);
+
+                        let pillClass = 'status_pending';
+                        if (status === 'completed') pillClass = 'status_completed';
+                        else if (status === 'processing') pillClass = 'status_paid';
+                        else if (status === 'shipped') pillClass = 'status_in_progress';
+
+                        return `
+                            <tr>
+                                <td class="cell_order_id">
+                                    <a href="orders.html" style="color: inherit; text-decoration: none; font-weight: 700;">${num}</a>
+                                </td>
+                                <td class="cell_customer_name">${name}</td>
+                                <td style="font-size: 12px; color: #64748b;">${dateFormatted}</td>
+                                <td class="cell_amount" style="font-weight: 700; color: #0f172a;">₱${total.toLocaleString()}</td>
+                                <td><span class="status_pill ${pillClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Dashboard summary load error:", err);
+    }
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (e) {
+        return dateStr;
+    }
+}

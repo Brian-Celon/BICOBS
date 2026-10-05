@@ -17,16 +17,16 @@
 ---
 
 ## Active Backend Integration Roadmap (See TO_DO_ADMIN.md)
-- [ ] **Phase 1: Backend Connection & Admin Authentication Guard**
-  - [ ] Connect `login.html` to `POST /api/auth/login` (admin & staff role check).
-  - [ ] Store admin token (`taurus_admin_token`) and guard all admin pages.
-  - [ ] Display dynamic admin user details in top navbar & wire logout.
-- [ ] **Phase 2: Live Orders Management (`orders.html`) — TOP PRIORITY**
-  - [ ] Fetch live customer orders from `GET /api/orders`.
-  - [ ] Render dynamic order rows, status pills, and filter counters.
-  - [ ] Populate `#order_detail_modal` with real customer data & itemized breakdown.
-  - [ ] Advance order status (`pending` ➔ `processing` ➔ `shipped` ➔ `completed`) via `PUT /api/orders/:id/status`.
-  - [ ] Stock auto-rollback in PostgreSQL when an order is cancelled.
+- [x] **Phase 1: Backend Connection & Admin Authentication Guard**
+  - [x] Connect `login.html` to `POST /api/auth/login` (admin & staff role check).
+  - [x] Store admin token (`taurus_admin_token`) and guard all admin pages.
+  - [x] Display dynamic admin user details in top navbar & wire logout.
+- [x] **Phase 2: Live Orders Management (`orders.html`) — TOP PRIORITY**
+  - [x] Fetch live customer orders from `GET /api/orders`.
+  - [x] Render dynamic order rows, status pills, and filter counters.
+  - [x] Populate `#order_detail_modal` with real customer data & itemized breakdown.
+  - [x] Advance order status (`pending` ➔ `processing` ➔ `shipped` ➔ `completed`) via `PUT /api/orders/:id/status`.
+  - [x] Stock auto-rollback in PostgreSQL when an order is cancelled.
 - [ ] **Phase 3: Inventory & Products Management (`products.html` & `inventory.html`)**
   - [ ] Dynamic catalog from `GET /api/products` (150 Taurus items).
   - [ ] Add New Product (`POST /api/products`).

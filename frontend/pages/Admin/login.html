@@ -98,25 +98,90 @@
             }
         }
 
-        // authenticate and redirect
-        function handleAdminLogin(e) {
+        // authenticate and redirect via real API
+        async function handleAdminLogin(e) {
             e.preventDefault();
             const btn = document.getElementById("btn_admin_login");
+            const emailInput = document.getElementById("admin_username");
+            const passwordInput = document.getElementById("admin_password");
+            const alertEl = document.getElementById("login_status_alert");
+            const alertText = document.getElementById("login_status_text");
+
+            const email = (emailInput?.value || "").trim();
+            const password = passwordInput?.value || "";
+
+            if (!email || !password) {
+                showToast("Please enter your admin credentials.", false);
+                return;
+            }
+
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Authenticating...</span>';
             }
 
             try {
-                localStorage.setItem("taurus_admin_session", "active");
-            } catch (err) {
-                console.error(err);
-            }
+                const res = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
 
-            showToast("Welcome back, Administrator!", true);
-            setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 1000);
+                const data = await res.json();
+
+                if (res.ok && data.status === "success") {
+                    const user = data.data;
+
+                    if (user.role !== "admin" && user.role !== "staff") {
+                        showToast("Access denied: Administrator permissions required.", false);
+                        if (alertEl && alertText) {
+                            alertEl.style.display = "flex";
+                            alertEl.style.backgroundColor = "#fee2e2";
+                            alertEl.style.borderColor = "#fca5a5";
+                            const icon = alertEl.querySelector("i");
+                            if (icon) {
+                                icon.className = "fas fa-exclamation-circle";
+                                icon.style.color = "#dc2626";
+                            }
+                            alertText.style.color = "#991b1b";
+                            alertText.textContent = "Access denied: This account does not have staff or admin privileges.";
+                        }
+                        return;
+                    }
+
+                    // Store authenticated admin session
+                    localStorage.setItem("taurus_admin_token", data.token);
+                    localStorage.setItem("taurus_admin_user", JSON.stringify(user));
+                    localStorage.setItem("taurus_admin_session", "active");
+
+                    showToast(`Welcome back, ${user.full_name || user.name || 'Admin'}!`, true);
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 800);
+                } else {
+                    showToast(data.message || "Invalid email or password", false);
+                    if (alertEl && alertText) {
+                        alertEl.style.display = "flex";
+                        alertEl.style.backgroundColor = "#fee2e2";
+                        alertEl.style.borderColor = "#fca5a5";
+                        const icon = alertEl.querySelector("i");
+                        if (icon) {
+                            icon.className = "fas fa-exclamation-circle";
+                            icon.style.color = "#dc2626";
+                        }
+                        alertText.style.color = "#991b1b";
+                        alertText.textContent = data.message || "Invalid administrative credentials.";
+                    }
+                }
+            } catch (err) {
+                console.error("Admin login error:", err);
+                showToast("Connection error: Unable to reach backend server.", false);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Sign In to Admin Panel</span>';
+                }
+            }
         }
     </script>
 </body>
