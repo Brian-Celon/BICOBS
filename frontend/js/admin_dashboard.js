@@ -19,7 +19,7 @@ async function loadDashboardSummary() {
         });
 
         if (res.status === 401) {
-            if (typeof executeAdminLogout === 'function') executeAdminLogout();
+            if (typeof handleAdminSessionExpired === 'function') handleAdminSessionExpired();
             return;
         }
 

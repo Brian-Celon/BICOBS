@@ -292,9 +292,8 @@ function openLogoutModal() {
     openModal("logout_confirm_modal");
 }
 
-// execute admin sign out
-function executeAdminLogout() {
-    closeModal("logout_confirm_modal");
+// clear all stored admin session data
+function clearAdminSession() {
     try {
         localStorage.removeItem("taurus_admin_token");
         localStorage.removeItem("taurus_admin_user");
@@ -303,10 +302,22 @@ function executeAdminLogout() {
     } catch (e) {
         console.error(e);
     }
+}
+
+// execute admin sign out (user-initiated only)
+function executeAdminLogout() {
+    closeModal("logout_confirm_modal");
+    clearAdminSession();
     showToast("Signed out successfully. Redirecting to login...", true);
     setTimeout(() => {
         window.location.href = "login.html?logged_out=true";
     }, 800);
+}
+
+// stale/invalid token (e.g. account removed or token expired) - not a user sign out
+function handleAdminSessionExpired() {
+    clearAdminSession();
+    window.location.href = "login.html?session_expired=true";
 }
 
 // handle save settings action with feedback

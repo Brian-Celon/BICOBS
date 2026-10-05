@@ -77,9 +77,8 @@ async function loadAdminOrders() {
         });
 
         if (res.status === 401) {
-            if (typeof showToast === 'function') showToast("Session expired. Please sign in again.", false);
-            if (typeof executeAdminLogout === 'function') executeAdminLogout();
-            else window.location.href = "login.html";
+            if (typeof handleAdminSessionExpired === 'function') handleAdminSessionExpired();
+            else window.location.href = "login.html?session_expired=true";
             return;
         }
 

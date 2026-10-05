@@ -75,11 +75,27 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get("logged_out") === "true") {
-                const alertEl = document.getElementById("login_status_alert");
-                if (alertEl) {
-                    alertEl.style.display = "flex";
+            const alertEl = document.getElementById("login_status_alert");
+            const alertText = document.getElementById("login_status_text");
+
+            if (urlParams.get("logged_out") === "true" && alertEl) {
+                alertEl.style.display = "flex";
+            } else if (urlParams.get("session_expired") === "true" && alertEl && alertText) {
+                alertEl.style.display = "flex";
+                alertEl.style.backgroundColor = "#fef3c7";
+                alertEl.style.borderColor = "#fcd34d";
+                const icon = alertEl.querySelector("i");
+                if (icon) {
+                    icon.className = "fas fa-info-circle";
+                    icon.style.color = "#d97706";
                 }
+                alertText.style.color = "#92400e";
+                alertText.textContent = "Please sign in to continue.";
+            }
+
+            // remove query params so a refresh doesn't re-show the notice
+            if (window.location.search) {
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
 
