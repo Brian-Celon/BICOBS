@@ -25,13 +25,8 @@ app.use('/frontend', express.static(frontendPath));
 app.use('/assets', express.static(assetsPath));
 app.use(express.static(frontendPath));
 
-// Root redirect to landing page
+// Root redirect to Admin dashboard
 app.get('/', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'pages/index.html'));
-});
-
-// Admin shortcut redirect
-app.get('/admin', (req, res) => {
   res.redirect('/frontend/pages/Admin/dashboard.html');
 });
 
