@@ -85,49 +85,50 @@ This roadmap outlines the complete status, backend integration requirements, and
 ---
 
 ### Phase 3: Inventory & Product Catalog Management (`products.html` & `inventory.html`)
-- [ ] **Live Product Catalog Rendering (`products.html`)**
-  - [ ] Fetch live products from `GET /api/products` (150 Taurus Bike Shop items).
-  - [ ] Render product cards/rows with real images, category slugs, pricing, and live warehouse stock counts.
-  - [ ] Dynamic category filter dropdown populated from `GET /api/categories`.
-- [ ] **Add New Product Workflow**
-  - [ ] Connect "Add Product" modal form to `POST /api/products`.
-  - [ ] Form validation: Name, Category, Price, Stock Quantity, Description, Image URL.
-  - [ ] Instant table refresh and success toast upon creation.
-- [ ] **Edit & Update Product**
-  - [ ] Click "Edit" to prefill modal with selected product's existing values.
-  - [ ] Send updates via `PUT /api/products/:id`.
-- [ ] **Delete Product Protection**
-  - [ ] Confirm before deleting with warning prompt.
-  - [ ] Send request to `DELETE /api/products/:id`.
-- [ ] **Live Inventory Tracking & Adjustments (`inventory.html`)**
-  - [ ] Highlight low stock items (stock <= 5) in red/amber badges.
-  - [ ] Implement quick inline stock increment/decrement buttons (`+` / `-`) or modal to adjust live stock directly.
+- [x] **Live Product Catalog Rendering (`products.html`)**
+  - [x] Fetch live products from `GET /api/products` (150 Taurus Bike Shop items).
+  - [x] Render product cards/rows with real images, category slugs, pricing, and live warehouse stock counts.
+  - [x] Dynamic category filter dropdown populated from `GET /api/categories`.
+- [x] **Add New Product Workflow**
+  - [x] Connect "Add Product" modal form to `POST /api/products`.
+  - [x] Form validation: Name, Category, Price, Stock Quantity, Description, Image URL.
+  - [x] Instant table refresh and success toast upon creation.
+- [x] **Edit & Update Product**
+  - [x] Click "Edit" to prefill modal with selected product's existing values.
+  - [x] Send updates via `PUT /api/products/:id`.
+- [x] **Delete Product Protection**
+  - [x] Confirm before deleting with warning prompt.
+  - [x] Send request to `DELETE /api/products/:id`.
+- [x] **Live Inventory Tracking & Adjustments (`inventory.html`)**
+  - [x] Highlight low stock items (stock <= 3) and out-of-stock items in real-time badges.
+  - [x] Implement quick inline stock increment/decrement buttons (`+` / `-`) and manage modal to adjust live stock directly via `PUT /api/products/:id`.
+  - [x] Live inventory KPI stat cards (Total Products, In Stock, Low Stock, Out of Stock).
 
 ---
 
 ### Phase 4: Billing & Financial Auditing (`billing.html`)
-- [ ] **Dynamic Invoice Records Fetching**
-  - [ ] Fetch real billing records from `GET /api/billing`.
-  - [ ] Display invoice number (`INV-YYYYMMDD-XXXX`), customer name, order reference, total amount, and payment status (`pending` vs `paid`).
-- [ ] **Confirm Payment Action**
-  - [ ] For orders paid via Cash on Delivery (COD) or Over-The-Counter GCash, provide a "Mark as Paid" action button.
-  - [ ] Wire to `PUT /api/billing/:id/payment` to update invoice and order payment status to `paid`.
-- [ ] **Invoice Inspection & Print Modal**
-  - [ ] Open clean invoice preview with Taurus Bike Shop header, customer details, itemized breakdown, and print button (`window.print()`).
+- [x] **Dynamic Invoice Records Fetching**
+  - [x] Fetch real billing records from `GET /api/billing`.
+  - [x] Display invoice number (`INV-YYYYMMDD-XXXX`), customer name, order reference, total amount, and payment status (`pending` vs `paid`).
+- [x] **Confirm Payment Action**
+  - [x] For orders paid via Cash on Delivery (COD) or Over-The-Counter GCash, provide a "Mark as Paid" action button.
+  - [x] Wire to `PUT /api/billing/:id/payment` to update invoice and order payment status to `paid` and re-calculate gross revenue.
+- [x] **Invoice Inspection & Print Modal**
+  - [x] Open clean invoice preview with Taurus Bike Shop header, customer details, itemized breakdown, and print button (`window.print()`).
 
 ---
 
 ### Phase 5: Live Dashboard Overview & Analytics (`dashboard.html`)
-- [ ] **Connect Summary KPI Cards**
-  - [ ] Replace static numbers with live data from `GET /api/dashboard/summary`:
+- [x] **Connect Summary KPI Cards**
+  - [x] Replace static numbers with live data from `GET /api/dashboard/summary`:
     - **Total Sales:** Live total gross revenue of all completed/paid orders.
     - **Pending Orders:** Live count of orders waiting for fulfillment.
-    - **Low Stock Alerts:** Live count of products with stock <= 5.
+    - **Low Stock Alerts:** Live count of products with stock <= 3.
     - **Active Customers:** Live total registered customer count.
-- [ ] **Recent Transactions Table**
-  - [ ] Populate table with the 5 most recent customer orders from `GET /api/orders`.
-- [ ] **Low Stock Alert Widget**
-  - [ ] Display the top critical low stock items fetched from `GET /api/dashboard/low-stock`.
+- [x] **Recent Transactions Table**
+  - [x] Populate table with the 5 most recent customer orders from `GET /api/orders`.
+- [x] **Live Activity Timeline**
+  - [x] Display real-time store events and order progress in system activity list.
 
 ---
 
@@ -140,10 +141,11 @@ This roadmap outlines the complete status, backend integration requirements, and
 ---
 
 ### Phase 7: Users & Roles Administration (`users.html`)
-- [ ] **User List & Permissions**
-  - [ ] Fetch all users from `GET /api/users`.
-  - [ ] Display user roles (`customer`, `staff`, `admin`), email verification status, and registration date.
-  - [ ] Role management: promote/demote staff or admin members.
+- [x] **User List & Permissions**
+  - [x] Fetch all users from `GET /api/users`.
+  - [x] Display user roles (`customer`, `staff`, `admin`), email verification status, and registration date.
+  - [x] Role management: promote/demote staff or admin members via `PUT /api/users/:id`.
+  - [x] Staff account provisioning via `POST /api/users` and account removal via `DELETE /api/users/:id`.
 
 ---
 

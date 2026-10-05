@@ -88,9 +88,48 @@ async function loadDashboardSummary() {
                     }).join('');
                 }
             }
+
+            // 3. Activity Timeline
+            const activityList = document.getElementById("dash_activity_list");
+            if (activityList && summary.recentOrders && summary.recentOrders.length > 0) {
+                activityList.innerHTML = summary.recentOrders.map(o => {
+                    const num = o.orderNumber || `ORD-${o.id}`;
+                    const name = o.customerName || 'Customer';
+                    const isPaid = (o.paymentStatus || '').toLowerCase() === 'paid';
+                    const timeAgo = formatTimeAgo(o.createdAt);
+
+                    return `
+                        <li class="activity_timeline_item">
+                            <div class="activity_icon_circle ${isPaid ? 'icon_theme_green' : 'icon_theme_blue'}">
+                                <i class="fas ${isPaid ? 'fa-circle-check' : 'fa-shopping-cart'}"></i>
+                            </div>
+                            <div class="activity_details">
+                                <span class="activity_text">Order <strong>${num}</strong> by ${name} (${o.orderStatus})</span>
+                                <span class="activity_time">${timeAgo}</span>
+                            </div>
+                        </li>
+                    `;
+                }).join('');
+            }
         }
     } catch (err) {
         console.error("Dashboard summary load error:", err);
+    }
+}
+
+function formatTimeAgo(dateStr) {
+    if (!dateStr) return 'Recently';
+    try {
+        const d = new Date(dateStr);
+        const diffMs = Date.now() - d.getTime();
+        const mins = Math.floor(diffMs / 60000);
+        if (mins < 1) return 'Just now';
+        if (mins < 60) return `${mins}m ago`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours}h ago`;
+        return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+    } catch (e) {
+        return 'Recently';
     }
 }
 

@@ -207,16 +207,21 @@
                 <div class="toolbar_filters_group">
                     <select class="admin_select" id="inventory_category_filter">
                         <option value="all">All Categories</option>
-                        <option value="Bicycles">Bicycles</option>
-                        <option value="Components">Components</option>
-                        <option value="Tires">Tires</option>
-                        <option value="Accessories">Accessories</option>
+                        <option value="bicycles">All Bikes (MTB, Road, Gravel, etc.)</option>
+                        <option value="mountain_bikes">Mountain Bikes</option>
+                        <option value="road_bikes">Road Bikes</option>
+                        <option value="gravel_bikes">Gravel Bikes</option>
+                        <option value="bmx_urban">BMX & Urban</option>
+                        <option value="folding_commuter">Folding Bikes</option>
+                        <option value="components">Components & Drivetrain</option>
+                        <option value="tires">Tires & Wheelsets</option>
+                        <option value="accessories">Saddles, Grips & Accessories</option>
                     </select>
                     <select class="admin_select" id="inventory_status_filter">
                         <option value="all">All Status</option>
-                        <option value="In Stock">In Stock</option>
-                        <option value="Low Stock">Low Stock</option>
-                        <option value="Out of Stock">Out of Stock</option>
+                        <option value="in_stock">In Stock (> 3)</option>
+                        <option value="low_stock">Low Stock (1 - 3)</option>
+                        <option value="out_of_stock">Out of Stock (0)</option>
                     </select>
                 </div>
             </div>
@@ -284,79 +289,10 @@
                             </tr>
                         </thead>
                         <tbody id="inventory_tbody">
-                            <tr id="inv_row_1">
-                                <td>
-                                    <div class="product_img_placeholder">
-                                        <i class="fas fa-bicycle"></i>
-                                    </div>
-                                </td>
-                                <td class="cell_customer_name prod_name_val">Trek Marlin 6 (2024)</td>
-                                <td class="prod_sku_val">TBR-001</td>
-                                <td class="prod_category_val">Bicycles</td>
-                                <td class="cell_amount prod_stock_val">12</td>
-                                <td class="prod_status_val"><span class="status_pill status_in_stock">In Stock</span></td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_1', 'Trek Marlin 6 (2024)', 'TBR-001', 'Bicycles', '12', '₱28,000')">View</button>
-                                </td>
-                            </tr>
-                            <tr id="inv_row_2">
-                                <td>
-                                    <div class="product_img_placeholder">
-                                        <i class="fas fa-cogs"></i>
-                                    </div>
-                                </td>
-                                <td class="cell_customer_name prod_name_val">Shimano Deore Groupset</td>
-                                <td class="prod_sku_val">SHM-002</td>
-                                <td class="prod_category_val">Components</td>
-                                <td class="cell_amount prod_stock_val">3</td>
-                                <td class="prod_status_val"><span class="status_pill status_low_stock">Low Stock</span></td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_2', 'Shimano Deore Groupset', 'SHM-002', 'Components', '3', '₱9,500')">View</button>
-                                </td>
-                            </tr>
-                            <tr id="inv_row_3">
-                                <td>
-                                    <div class="product_img_placeholder">
-                                        <i class="fas fa-circle-notch"></i>
-                                    </div>
-                                </td>
-                                <td class="cell_customer_name prod_name_val">Maxxis 29" Tire</td>
-                                <td class="prod_sku_val">MX-003</td>
-                                <td class="prod_category_val">Tires</td>
-                                <td class="cell_amount prod_stock_val">0</td>
-                                <td class="prod_status_val"><span class="status_pill status_out_of_stock">Out of Stock</span></td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_3', 'Maxxis 29 Tire', 'MX-003', 'Tires', '0', '₱1,450')">View</button>
-                                </td>
-                            </tr>
-                            <tr id="inv_row_4">
-                                <td>
-                                    <div class="product_img_placeholder">
-                                        <i class="fas fa-link"></i>
-                                    </div>
-                                </td>
-                                <td class="cell_customer_name prod_name_val">KMC Chain</td>
-                                <td class="prod_sku_val">KMC-004</td>
-                                <td class="prod_category_val">Components</td>
-                                <td class="cell_amount prod_stock_val">25</td>
-                                <td class="prod_status_val"><span class="status_pill status_in_stock">In Stock</span></td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_4', 'KMC Chain', 'KMC-004', 'Components', '25', '₱850')">View</button>
-                                </td>
-                            </tr>
-                            <tr id="inv_row_5">
-                                <td>
-                                    <div class="product_img_placeholder">
-                                        <i class="fas fa-hard-hat"></i>
-                                    </div>
-                                </td>
-                                <td class="cell_customer_name prod_name_val">Giant Helmet</td>
-                                <td class="prod_sku_val">GNT-005</td>
-                                <td class="prod_category_val">Accessories</td>
-                                <td class="cell_amount prod_stock_val">8</td>
-                                <td class="prod_status_val"><span class="status_pill status_low_stock">Low Stock</span></td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openProductDetail('inv_row_5', 'Giant Helmet', 'GNT-005', 'Accessories', '8', '₱2,100')">View</button>
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading live inventory from database...
                                 </td>
                             </tr>
                         </tbody>
@@ -400,10 +336,33 @@
                     <div class="form_group">
                         <label class="form_label" for="inv_product_category">Category</label>
                         <select class="form_input admin_select" id="inv_product_category">
-                            <option value="Bicycles">Bicycles</option>
-                            <option value="Components">Components</option>
-                            <option value="Tires">Tires</option>
-                            <option value="Accessories">Accessories</option>
+                            <optgroup label="Bicycles">
+                                <option value="mountain_bikes">Mountain Bikes</option>
+                                <option value="road_bikes">Road Bikes</option>
+                                <option value="gravel_bikes">Gravel Bikes</option>
+                                <option value="bmx_urban">BMX & Urban</option>
+                                <option value="folding_commuter">Folding Bikes</option>
+                            </optgroup>
+                            <optgroup label="Frames & Steering">
+                                <option value="frame">Framesets</option>
+                                <option value="fork">Forks & Suspension</option>
+                                <option value="handle_bar">Handlebars</option>
+                                <option value="stem">Stems</option>
+                            </optgroup>
+                            <optgroup label="Drivetrain & Components">
+                                <option value="chain">Chains</option>
+                                <option value="upgrade_kit">Upgrade Kits & Groupsets</option>
+                                <option value="pedals">Pedals & Cleats</option>
+                            </optgroup>
+                            <optgroup label="Wheels & Tires">
+                                <option value="tires">Tires</option>
+                                <option value="rims">Rims & Wheelsets</option>
+                                <option value="hubs">Sealed Hubs</option>
+                            </optgroup>
+                            <optgroup label="Saddles & Grips">
+                                <option value="saddle">Saddles</option>
+                                <option value="handle_grip">Grips & Bartapes</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div class="form_group">
@@ -479,122 +438,6 @@
 
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
-    <script>
-        let totalProductCount = 248;
-        let currentPage = 1;
-
-        document.addEventListener("DOMContentLoaded", function () {
-            filterTableBySearch("inventory_search_input", "inventory_table");
-            filterTableBySelect("inventory_category_filter", "inventory_table", 3);
-            filterTableBySelect("inventory_status_filter", "inventory_table", 5);
-        });
-
-        function openProductDetail(rowId, name, sku, category, stock, price) {
-            document.getElementById("detail_row_id").value = rowId;
-            document.getElementById("detail_name").textContent = name;
-            document.getElementById("detail_sku").textContent = "SKU: " + sku;
-            document.getElementById("detail_price").textContent = price;
-            document.getElementById("detail_stock_input").value = stock;
-
-            const iconEl = document.getElementById("detail_icon");
-            if (category === "Bicycles") iconEl.className = "fas fa-bicycle";
-            else if (category === "Components") iconEl.className = "fas fa-cogs";
-            else if (category === "Tires") iconEl.className = "fas fa-circle-notch";
-            else iconEl.className = "fas fa-hard-hat";
-
-            openModal("product_detail_modal");
-        }
-
-        function saveProductStock() {
-            const rowId = document.getElementById("detail_row_id").value;
-            const newStock = parseInt(document.getElementById("detail_stock_input").value, 10);
-            const row = document.getElementById(rowId);
-
-            if (row && !isNaN(newStock)) {
-                row.querySelector(".prod_stock_val").textContent = newStock;
-                const statusCell = row.querySelector(".prod_status_val");
-
-                if (newStock === 0) {
-                    statusCell.innerHTML = '<span class="status_pill status_out_of_stock">Out of Stock</span>';
-                } else if (newStock <= 3) {
-                    statusCell.innerHTML = '<span class="status_pill status_low_stock">Low Stock</span>';
-                } else {
-                    statusCell.innerHTML = '<span class="status_pill status_in_stock">In Stock</span>';
-                }
-            }
-
-            closeModal("product_detail_modal");
-            showToast("Inventory stock quantity updated!");
-        }
-
-        function handleCreateProduct(event) {
-            event.preventDefault();
-            const name = document.getElementById("inv_product_name").value;
-            const sku = document.getElementById("inv_product_sku").value;
-            const category = document.getElementById("inv_product_category").value;
-            const price = "₱" + parseInt(document.getElementById("inv_product_price").value, 10).toLocaleString();
-            const stock = parseInt(document.getElementById("inv_product_stock").value, 10);
-
-            totalProductCount++;
-            const newRowId = "inv_row_" + totalProductCount;
-            const tbody = document.getElementById("inventory_tbody");
-
-            let statusPill = '<span class="status_pill status_in_stock">In Stock</span>';
-            if (stock === 0) statusPill = '<span class="status_pill status_out_of_stock">Out of Stock</span>';
-            else if (stock <= 3) statusPill = '<span class="status_pill status_low_stock">Low Stock</span>';
-
-            let cat_icon = 'fa-boxes-stacked';
-            if (category === "Bicycles") cat_icon = 'fa-bicycle';
-            else if (category === "Components") cat_icon = 'fa-cogs';
-            else if (category === "Tires") cat_icon = 'fa-circle-notch';
-            else if (category === "Accessories") cat_icon = 'fa-hard-hat';
-
-            const tr = document.createElement("tr");
-            tr.id = newRowId;
-            tr.innerHTML = `
-                <td>
-                    <div class="product_img_placeholder">
-                        <i class="fas ${cat_icon}"></i>
-                    </div>
-                </td>
-                <td class="cell_customer_name prod_name_val">${name}</td>
-                <td class="prod_sku_val">${sku}</td>
-                <td class="prod_category_val">${category}</td>
-                <td class="cell_amount prod_stock_val">${stock}</td>
-                <td class="prod_status_val">${statusPill}</td>
-                <td>
-                    <button type="button" class="table_action_link" onclick="openProductDetail('${newRowId}', '${name}', '${sku}', '${category}', '${stock}', '${price}')">View</button>
-                </td>
-            `;
-
-            tbody.insertBefore(tr, tbody.firstChild);
-            document.getElementById("stat_total_products").textContent = totalProductCount;
-            document.getElementById("inventory_pagination_info").textContent = `Showing 1-5 of ${totalProductCount} products`;
-
-            closeModal("add_inventory_product_modal");
-            showToast(`Product "${name}" added to inventory!`);
-            document.getElementById("inv_product_name").value = "";
-            document.getElementById("inv_product_sku").value = "";
-            document.getElementById("inv_product_price").value = "";
-        }
-
-        function changeInventoryPage(page) {
-            if (page < 1 || page > 5) return;
-            currentPage = page;
-            const pageBtns = document.querySelectorAll("#inventory_pagination_controls .pagination_btn");
-            pageBtns.forEach(btn => {
-                if (btn.getAttribute("data-page") == page) {
-                    btn.classList.add("page_active");
-                } else if (btn.getAttribute("data-page")) {
-                    btn.classList.remove("page_active");
-                }
-            });
-
-            const startIdx = (page - 1) * 5 + 1;
-            const endIdx = Math.min(page * 5, totalProductCount);
-            document.getElementById("inventory_pagination_info").textContent = `Showing ${startIdx}-${endIdx} of ${totalProductCount} products`;
-            showToast("Loaded page " + page);
-        }
-    </script>
+    <script src="/frontend/js/admin_inventory.js"></script>
 </body>
 </html>

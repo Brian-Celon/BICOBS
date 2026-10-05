@@ -221,64 +221,10 @@
                             </tr>
                         </thead>
                         <tbody id="users_tbody">
-                            <tr data-role="administrator" id="user_row_1">
-                                <td class="cell_customer_name user_name_val">Admin User</td>
-                                <td class="user_email_val">admin@tauros.com</td>
-                                <td class="user_role_val">Administrator</td>
-                                <td class="user_status_val"><span class="status_pill status_active">Active</span></td>
-                                <td>Sep 22, 2025 10:15 AM</td>
-                                <td>
-                                    <button type="button" class="table_dots_btn" aria-label="User actions" onclick="openEditUserModal('user_row_1', 'Admin User', 'admin@tauros.com', 'Administrator', 'Active')">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-role="staff" id="user_row_2">
-                                <td class="cell_customer_name user_name_val">Juan Dela Cruz</td>
-                                <td class="user_email_val">staff1@tauros.com</td>
-                                <td class="user_role_val">Staff</td>
-                                <td class="user_status_val"><span class="status_pill status_active">Active</span></td>
-                                <td>Sep 22, 2025 09:42 AM</td>
-                                <td>
-                                    <button type="button" class="table_dots_btn" aria-label="User actions" onclick="openEditUserModal('user_row_2', 'Juan Dela Cruz', 'staff1@tauros.com', 'Staff', 'Active')">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-role="mechanic" id="user_row_3">
-                                <td class="cell_customer_name user_name_val">Reynaldo Santos</td>
-                                <td class="user_email_val">mech1@tauros.com</td>
-                                <td class="user_role_val">Mechanic</td>
-                                <td class="user_status_val"><span class="status_pill status_active">Active</span></td>
-                                <td>Sep 21, 2025 05:20 PM</td>
-                                <td>
-                                    <button type="button" class="table_dots_btn" aria-label="User actions" onclick="openEditUserModal('user_row_3', 'Reynaldo Santos', 'mech1@tauros.com', 'Mechanic', 'Active')">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-role="staff" id="user_row_4">
-                                <td class="cell_customer_name user_name_val">Maria Lopez</td>
-                                <td class="user_email_val">staff2@tauros.com</td>
-                                <td class="user_role_val">Staff</td>
-                                <td class="user_status_val"><span class="status_pill status_active">Active</span></td>
-                                <td>Sep 21, 2025 03:12 PM</td>
-                                <td>
-                                    <button type="button" class="table_dots_btn" aria-label="User actions" onclick="openEditUserModal('user_row_4', 'Maria Lopez', 'staff2@tauros.com', 'Staff', 'Active')">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-role="staff" id="user_row_5">
-                                <td class="cell_customer_name user_name_val">Carlos Reyes</td>
-                                <td class="user_email_val">staff3@tauros.com</td>
-                                <td class="user_role_val">Staff</td>
-                                <td class="user_status_val"><span class="status_pill status_inactive">Inactive</span></td>
-                                <td>Sep 19, 2025 11:03 AM</td>
-                                <td>
-                                    <button type="button" class="table_dots_btn" aria-label="User actions" onclick="openEditUserModal('user_row_5', 'Carlos Reyes', 'staff3@tauros.com', 'Staff', 'Inactive')">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading registered system accounts...
                                 </td>
                             </tr>
                         </tbody>
@@ -308,8 +254,9 @@
                     <div class="form_group">
                         <label class="form_label" for="new_user_role">Designated Role</label>
                         <select class="form_input admin_select" id="new_user_role">
-                            <option value="Staff">Staff</option>
-                            <option value="Mechanic">Mechanic</option>
+                            <option value="staff">Staff Member</option>
+                            <option value="admin">Administrator</option>
+                            <option value="customer">Customer</option>
                         </select>
                         <span class="role_restriction_hint"><i class="fas fa-lock"></i> Adding new Administrator accounts is disabled for security.</span>
                     </div>
@@ -347,9 +294,9 @@
                     <div class="form_group">
                         <label class="form_label" for="edit_user_role">Role</label>
                         <select class="form_input admin_select" id="edit_user_role">
-                            <option value="Staff">Staff</option>
-                            <option value="Mechanic">Mechanic</option>
-                            <option value="Administrator" id="edit_role_admin_option" disabled>Administrator (Protected)</option>
+                            <option value="staff">Staff Member</option>
+                            <option value="admin">Administrator</option>
+                            <option value="customer">Customer</option>
                         </select>
                     </div>
                     <div class="form_group">
@@ -398,128 +345,6 @@
 
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
-    <script>
-        let totalUserCount = 5;
-
-        document.addEventListener("DOMContentLoaded", function () {
-            filterTableBySearch("user_search_input", "users_table");
-
-            const tabButtons = document.querySelectorAll("#user_tabs_bar .filter_tab_btn");
-            const rows = document.querySelectorAll("#users_table tbody tr");
-
-            tabButtons.forEach(btn => {
-                btn.addEventListener("click", function () {
-                    tabButtons.forEach(b => b.classList.remove("tab_active"));
-                    this.classList.add("tab_active");
-
-                    const role = this.getAttribute("data-role");
-                    const currentRows = document.querySelectorAll("#users_table tbody tr");
-                    currentRows.forEach(row => {
-                        const rowRole = row.getAttribute("data-role");
-                        if (role === "all" || rowRole === role) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
-                });
-            });
-        });
-
-        function openEditUserModal(rowId, name, email, role, status) {
-            document.getElementById("edit_user_row_id").value = rowId;
-            document.getElementById("edit_user_name").value = name;
-            document.getElementById("edit_user_email").value = email;
-            const roleSelect = document.getElementById("edit_user_role");
-            const adminOpt = document.getElementById("edit_role_admin_option");
-            
-            if (role === "Administrator") {
-                if (adminOpt) adminOpt.disabled = false;
-                roleSelect.value = "Administrator";
-                roleSelect.disabled = true; // Lock administrator account from modification
-            } else {
-                if (adminOpt) adminOpt.disabled = true;
-                roleSelect.disabled = false;
-                roleSelect.value = role;
-            }
-
-            document.getElementById("edit_user_status").value = status;
-            openModal("edit_user_modal");
-        }
-
-        function handleSaveEditedUser(event) {
-            event.preventDefault();
-            const rowId = document.getElementById("edit_user_row_id").value;
-            const name = document.getElementById("edit_user_name").value;
-            const email = document.getElementById("edit_user_email").value;
-            const roleSelect = document.getElementById("edit_user_role");
-            const role = roleSelect.value;
-            const status = document.getElementById("edit_user_status").value;
-
-            const row = document.getElementById(rowId);
-            if (row) {
-                const oldRole = row.getAttribute("data-role");
-                if (role.toLowerCase() === "administrator" && oldRole !== "administrator") {
-                    showToast("Error: Promoting accounts to Administrator is restricted.");
-                    return;
-                }
-
-                row.setAttribute("data-role", role.toLowerCase());
-                row.querySelector(".user_name_val").textContent = name;
-                row.querySelector(".user_email_val").textContent = email;
-                row.querySelector(".user_role_val").textContent = role;
-                
-                const statusCell = row.querySelector(".user_status_val");
-                if (status === "Active") {
-                    statusCell.innerHTML = '<span class="status_pill status_active">Active</span>';
-                } else {
-                    statusCell.innerHTML = '<span class="status_pill status_inactive">Inactive</span>';
-                }
-            }
-
-            closeModal("edit_user_modal");
-            showToast("User account details updated successfully!");
-        }
-
-        function handleCreateUser(event) {
-            event.preventDefault();
-            const name = document.getElementById("new_user_name").value.trim();
-            const email = document.getElementById("new_user_email").value.trim();
-            const role = document.getElementById("new_user_role").value;
-
-            if (role.toLowerCase() === "administrator") {
-                showToast("Error: Creating new Administrator accounts is not permitted.");
-                return;
-            }
-
-            totalUserCount++;
-            const newRowId = "user_row_" + totalUserCount;
-            const tbody = document.getElementById("users_tbody");
-
-            const tr = document.createElement("tr");
-            tr.id = newRowId;
-            tr.setAttribute("data-role", role.toLowerCase());
-            tr.innerHTML = `
-                <td class="cell_customer_name user_name_val">${name}</td>
-                <td class="user_email_val">${email}</td>
-                <td class="user_role_val">${role}</td>
-                <td class="user_status_val"><span class="status_pill status_active">Active</span></td>
-                <td>Just now</td>
-                <td>
-                    <button type="button" class="table_dots_btn" aria-label="User actions" onclick="openEditUserModal('${newRowId}', '${name}', '${email}', '${role}', 'Active')">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </td>
-            `;
-
-            tbody.appendChild(tr);
-            document.getElementById("tab_all_users").textContent = `All Users (${totalUserCount})`;
-            closeModal("add_user_modal");
-            showToast(`User ${name} provisioned as ${role} successfully!`);
-            document.getElementById("new_user_name").value = "";
-            document.getElementById("new_user_email").value = "";
-            document.getElementById("new_user_password").value = "";
-        }
-    </script>
+    <script src="/frontend/js/admin_users.js"></script>
 </body>
 </html>

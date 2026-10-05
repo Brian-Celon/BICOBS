@@ -27,17 +27,23 @@
   - [x] Populate `#order_detail_modal` with real customer data & itemized breakdown.
   - [x] Advance order status (`pending` ➔ `processing` ➔ `shipped` ➔ `completed`) via `PUT /api/orders/:id/status`.
   - [x] Stock auto-rollback in PostgreSQL when an order is cancelled.
-- [ ] **Phase 3: Inventory & Products Management (`products.html` & `inventory.html`)**
-  - [ ] Dynamic catalog from `GET /api/products` (150 Taurus items).
-  - [ ] Add New Product (`POST /api/products`).
-  - [ ] Edit Product (`PUT /api/products/:id`).
-  - [ ] Delete Product (`DELETE /api/products/:id`).
-  - [ ] Real-time stock adjustment and low-stock alert badges.
-- [ ] **Phase 4: Billing & Financial Auditing (`billing.html`)**
-  - [ ] Fetch invoices from `GET /api/billing` (`INV-...`).
-  - [ ] "Mark as Paid" action button (`PUT /api/billing/:id/payment`).
-  - [ ] Printable invoice preview modal.
-- [ ] **Phase 5: Real Dashboard Analytics (`dashboard.html`)**
-  - [ ] Connect KPI metric cards to `GET /api/dashboard/summary`.
-  - [ ] Render recent 5 transactions from live database.
-  - [ ] Real-time low-stock widget from `GET /api/dashboard/low-stock`.
+- [x] **Phase 3: Inventory & Products Management (`products.html` & `inventory.html`)**
+  - [x] Dynamic catalog from `GET /api/products` (150 Taurus items).
+  - [x] Add New Product (`POST /api/products`).
+  - [x] Edit Product (`PUT /api/products/:id`).
+  - [x] Delete Product (`DELETE /api/products/:id`).
+  - [x] Real-time stock adjustment (+1/-1, modal) and low-stock alert badges.
+- [x] **Phase 4: Billing & Financial Auditing (`billing.html`)**
+  - [x] Fetch invoices from `GET /api/billing` (`INV-...`).
+  - [x] "Mark as Paid" action button (`PUT /api/billing/:id/payment`).
+  - [x] Printable invoice preview modal (`window.print()`).
+- [x] **Phase 5: Real Dashboard Analytics (`dashboard.html`)**
+  - [x] Connect KPI metric cards to `GET /api/dashboard/summary`.
+  - [x] Render recent transactions from live database.
+  - [x] Dynamic system activity timeline.
+- [ ] **Phase 6: Service & Repairs Tracking (`repairs.html`)**
+- [x] **Phase 7: Users & Roles Administration (`users.html`)**
+  - [x] Fetch registered users from `GET /api/users`.
+  - [x] Create staff accounts (`POST /api/users`).
+  - [x] Update user roles & permissions (`PUT /api/users/:id`).
+  - [x] Delete user accounts (`DELETE /api/users/:id`).

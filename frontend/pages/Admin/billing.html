@@ -210,7 +210,7 @@
                 <!-- card 2: units sold -->
                 <article class="stat_card">
                     <div class="stat_card_top">
-                        <span class="stat_card_label">Units Sold</span>
+                        <span class="stat_card_label">Total Invoices</span>
                         <div class="stat_card_icon_box icon_theme_blue">
                             <i class="fas fa-box-open"></i>
                         </div>
@@ -225,7 +225,7 @@
                 <!-- card 3: online orders -->
                 <article class="stat_card">
                     <div class="stat_card_top">
-                        <span class="stat_card_label">Online Orders</span>
+                        <span class="stat_card_label">Paid Invoices</span>
                         <div class="stat_card_icon_box icon_theme_green">
                             <i class="fas fa-globe"></i>
                         </div>
@@ -240,7 +240,7 @@
                 <!-- card 4: repairs completed -->
                 <article class="stat_card">
                     <div class="stat_card_top">
-                        <span class="stat_card_label">Repairs Completed</span>
+                        <span class="stat_card_label">Pending Payment</span>
                         <div class="stat_card_icon_box icon_theme_yellow">
                             <i class="fas fa-wrench"></i>
                         </div>
@@ -271,63 +271,19 @@
                                 <th>Transaction No.</th>
                                 <th>Customer</th>
                                 <th>Payment Method</th>
+                                <th>Status</th>
                                 <th>Amount</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Sep 22, 2025 10:24 AM</td>
-                                <td class="cell_order_id">TBR001</td>
-                                <td class="cell_customer_name">Maria Santos</td>
-                                <td><i class="fas fa-mobile-alt" style="color: #0284c7; margin-right: 6px;"></i> GCash</td>
-                                <td class="cell_amount">₱1,250</td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openReceiptModal('TBR001', 'Maria Santos', 'Sep 22, 2025 10:24 AM', 'GCash', '₱1,250', 'Trek Water Bottle + Saddle Bag')">View</button>
+                                <td colspan="7" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading financial transaction records...
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Sep 22, 2025 09:47 AM</td>
-                                <td class="cell_order_id">TBR002</td>
-                                <td class="cell_customer_name">James Reyes</td>
-                                <td><i class="fas fa-university" style="color: #b91c1c; margin-right: 6px;"></i> BPI</td>
-                                <td class="cell_amount">₱3,500</td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openReceiptModal('TBR002', 'James Reyes', 'Sep 22, 2025 09:47 AM', 'BPI', '₱3,500', 'Shimano Deore Shifter + Cable Set')">View</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Sep 22, 2025 09:12 AM</td>
-                                <td class="cell_order_id">TBR003</td>
-                                <td class="cell_customer_name">Ana Cruz</td>
-                                <td><i class="fas fa-mobile-alt" style="color: #0284c7; margin-right: 6px;"></i> GCash</td>
-                                <td class="cell_amount">₱2,750</td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openReceiptModal('TBR003', 'Ana Cruz', 'Sep 22, 2025 09:12 AM', 'GCash', '₱2,750', 'Maxxis 29 High Roller Tire (x2)')">View</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Sep 22, 2025 08:54 AM</td>
-                                <td class="cell_order_id">TBR004</td>
-                                <td class="cell_customer_name">Paolo Dela Cruz</td>
-                                <td><i class="fas fa-mobile-alt" style="color: #0284c7; margin-right: 6px;"></i> GCash</td>
-                                <td class="cell_amount">₱1,980</td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openReceiptModal('TBR004', 'Paolo Dela Cruz', 'Sep 22, 2025 08:54 AM', 'GCash', '₱1,980', 'Full Safety Service Overhaul')">View</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Sep 22, 2025 08:32 AM</td>
-                                <td class="cell_order_id">TBR005</td>
-                                <td class="cell_customer_name">Liza Fernandez</td>
-                                <td><i class="fas fa-mobile-alt" style="color: #0284c7; margin-right: 6px;"></i> GCash</td>
-                                <td class="cell_amount">₱4,200</td>
-                                <td>
-                                    <button type="button" class="table_action_link" onclick="openReceiptModal('TBR005', 'Liza Fernandez', 'Sep 22, 2025 08:32 AM', 'GCash', '₱4,200', 'Shimano Hydraulic Disc Brakeset')">View</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        </tbody></table>
                 </div>
 
                 <!-- pagination controls -->
@@ -449,47 +405,6 @@
 
     <!-- script logic -->
     <script src="/frontend/js/admin.js"></script>
-    <script>
-        let currentBillingPage = 1;
-
-        document.addEventListener("DOMContentLoaded", function () {
-            filterTableBySearch("billing_search_input", "billing_table");
-        });
-
-        function openReceiptModal(txnNo, customer, date, payment, amount, items) {
-            document.getElementById("receipt_txn_no").textContent = txnNo;
-            document.getElementById("receipt_customer").textContent = customer;
-            document.getElementById("receipt_date").textContent = date;
-            document.getElementById("receipt_payment").textContent = payment;
-            document.getElementById("receipt_amount").textContent = amount;
-            document.getElementById("receipt_items").textContent = items;
-            openModal("receipt_modal");
-        }
-
-        function applyBillingDate(label, sales, units, orders, repairs) {
-            document.getElementById("billing_date_label").textContent = label;
-            document.getElementById("billing_stat_sales").textContent = sales;
-            document.getElementById("billing_stat_units").textContent = units;
-            document.getElementById("billing_stat_orders").textContent = orders;
-            document.getElementById("billing_stat_repairs").textContent = repairs;
-            closeModal("billing_date_modal");
-            showToast("Filtered transactions for: " + label);
-        }
-
-        function changeBillingPage(page) {
-            if (page < 1 || page > 5) return;
-            currentBillingPage = page;
-            const pageBtns = document.querySelectorAll("#billing_pagination_controls .pagination_btn");
-            pageBtns.forEach(btn => {
-                if (btn.getAttribute("data-page") == page) {
-                    btn.classList.add("page_active");
-                } else if (btn.getAttribute("data-page")) {
-                    btn.classList.remove("page_active");
-                }
-            });
-            document.getElementById("billing_pagination_info").textContent = `Showing ${(page - 1) * 5 + 1}-${Math.min(page * 5, 120)} of 120 transactions`;
-            showToast("Loaded transactions page " + page);
-        }
-    </script>
+    <script src="/frontend/js/admin_billing.js"></script>
 </body>
 </html>
