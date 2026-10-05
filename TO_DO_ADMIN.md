@@ -150,6 +150,25 @@ This roadmap outlines the complete status, backend integration requirements, and
 
 ---
 
+### Phase 8: Reports & Business Analytics (`reports.html`)
+- [x] **Performance Metrics & Reporting Engine**
+  - [x] Connect KPI summary cards to live backend data (Total Revenue, Units Sold, Online Orders, Completed Repairs).
+  - [x] Real-time warehouse inventory valuation and stock health audit.
+  - [x] Multi-tab reporting suite (Sales Summary, Monthly Sales, Units Sold, Online Orders, Repairs, Inventory, Generator).
+  - [x] Official management report generation with print/PDF preview and CSV spreadsheet exports.
+
+---
+
+### Phase 9: System Settings & Store Configuration (`settings.html`)
+- [x] **Store Profile & Operations**
+  - [x] Store profile, business registration, contact number, and email configuration.
+  - [x] Operating hours schedule table and public holiday announcements.
+  - [x] Payment channel toggles (GCash, Maya, BPI Bank Transfer, Cash on Delivery).
+  - [x] Delivery fees, free delivery order thresholds, and serviceable coverage areas.
+  - [x] Timestamped system audit log table and CSV export.
+
+---
+
 ## 🔌 API Endpoint Reference for Admin Integration
 
 The following endpoints built in the backend are ready for the admin pages to consume:

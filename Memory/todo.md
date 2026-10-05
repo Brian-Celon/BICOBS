@@ -47,3 +47,11 @@
   - [x] Create staff accounts (`POST /api/users`).
   - [x] Update user roles & permissions (`PUT /api/users/:id`).
   - [x] Delete user accounts (`DELETE /api/users/:id`).
+- [x] **Phase 8: Reports & Business Analytics (`reports.html`)**
+  - [x] Live metrics sync for revenue, units sold, online orders, and repairs.
+  - [x] Inventory valuation and stock health audit.
+  - [x] Multi-tab reporting suite and CSV/print report generator.
+- [x] **Phase 9: System Settings & Store Configuration (`settings.html`)**
+  - [x] Store profile, registration, and business hours management.
+  - [x] Payment channels and delivery fulfillment configurations.
+  - [x] System audit log and export.
