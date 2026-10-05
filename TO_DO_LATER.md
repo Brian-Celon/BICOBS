@@ -19,10 +19,13 @@ This roadmap focuses primarily on the **Customer Journey (`Login ➔ Browse ➔ 
   - [x] Dynamic category filtering sidebar with group expand/collapse, item count badges, and live search (`shop.html` & `shop.js`).
   - [x] Multi-category alias mapper in backend (`built_bikes`, `mountain_bikes`, `road_bikes`, `gravel_bikes`, `frame`, `fork`, `handle_bar`, `stem`, `chain`, `upgrade_kit`, `pedals`, `tires`, `rims`, `hubs`, `saddle`, `handle_grip`).
   - [x] Dynamic product loading via `GET /api/products`.
-- [x] **Authentication & Security Core**
+- [x] **Authentication, Security & Email Verification**
   - [x] Registration and login endpoints (`POST /api/auth/register`, `POST /api/auth/login`) with `bcryptjs` password hashing and JWT token issuance.
   - [x] Role-based authentication middleware (`authMiddleware.js`) supporting `customer`, `staff`, and `admin`.
   - [x] User profile endpoints (`GET /api/auth/me`, `PUT /api/auth/profile`).
+  - [x] Live Gmail SMTP integration (`nodemailer`) with verified delivery from `Taurusbikeshop457@gmail.com`.
+  - [x] 6-digit verification OTP codes with 10-minute expiry, database columns (`is_verified`, `verification_otp`, `otp_expires_at`), and unverified login interceptor.
+  - [x] Interactive 6-digit OTP modal (`login.html`) with auto-jump, paste support, and 60s resend timer.
 - [x] **Billing & Invoicing Engine**
   - [x] Automatic invoice creation upon order placement (`INV-YYYYMMDD-XXXX`).
   - [x] Customer invoice endpoints (`GET /api/billing/mybilling`, `GET /api/billing/order/:orderId`).
@@ -141,7 +144,6 @@ The following backend endpoints and data structures are fully built and ready to
 
 ## 🚫 Out of Scope (Excluded Non-Essential Features)
 
-- ❌ Automated third-party payment gateway webhooks (PayPal/Stripe/automated GCash API).
+- ❌ Automated third-party payment gateway webhooks (PayPal/Stripe/automated GCash API - manual OTC instructions used instead).
 - ❌ External PDF invoice generator libraries (system uses clean HTML/print CSS).
-- ❌ External transactional email services (SMTP/SendGrid).
 - ❌ Social OAuth logins (Google/Facebook third-party auth).
