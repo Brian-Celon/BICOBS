@@ -982,3 +982,272 @@ html, body {
     padding: 14px 14px 22px 14px;
   }
 }
+
+/* ==========================================================================
+   Interactive Auth Feedback Banners & Password Eye Toggle
+   ========================================================================== */
+
+.auth_alert_banner {
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  text-align: left;
+  line-height: 1.4;
+  box-sizing: border-box;
+  animation: banner_fade_in 0.2s ease-in-out;
+}
+
+@keyframes banner_fade_in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth_alert_banner.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.auth_alert_banner.success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.password_input_group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password_input_group .form_input {
+  padding-right: 46px;
+}
+
+.password_toggle_btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.password_toggle_btn:hover {
+  color: #18181b;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   Email Verification 6-Digit OTP Modal & Inputs
+   ========================================================================== */
+
+.otp_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: otp_overlay_fade 0.25s ease-out;
+}
+
+@keyframes otp_overlay_fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.otp_modal_card {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  padding: 38px 32px 30px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  animation: otp_card_enter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+@keyframes otp_card_enter {
+  from { transform: translateY(24px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.otp_icon_circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fdf2f2;
+  border: 1px solid #fecaca;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.otp_title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.otp_subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.otp_inputs_group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0 26px;
+}
+
+.otp_digit_input {
+  width: 52px;
+  height: 60px;
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fafbfc;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.18s ease;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.otp_digit_input:focus {
+  border-color: #8b1e1e;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(139, 30, 30, 0.15);
+  transform: translateY(-2px);
+}
+
+.otp_digit_input.filled {
+  border-color: #8b1e1e;
+  background: #fffafa;
+}
+
+.otp_submit_btn {
+  width: 100%;
+  margin-top: 4px;
+  height: 52px;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.otp_dev_hint {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  color: #b45309;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+  text-align: left;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.otp_footer {
+  margin-top: 24px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 18px;
+}
+
+.resend_text {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.btn_resend_link {
+  background: none;
+  border: none;
+  color: #8b1e1e;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  padding: 0 4px;
+  font-family: inherit;
+}
+
+.btn_resend_link:disabled {
+  color: #94a3b8;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.resend_timer {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.btn_change_email {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+  font-family: inherit;
+}
+
+.btn_change_email:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+@media (max-width: 480px) {
+  .otp_digit_input {
+    width: 42px;
+    height: 52px;
+    font-size: 22px;
+    border-radius: 8px;
+  }
+  .otp_inputs_group {
+    gap: 6px;
+  }
+  .otp_modal_card {
+    padding: 28px 20px 22px;
+  }
+}
+
+

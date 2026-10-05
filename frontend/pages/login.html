@@ -32,6 +32,8 @@
           <form class="auth_form detailed_auth_form" id="sign_up_form" action="#" method="post">
             <h1 class="form_title">Create Account</h1>
 
+            <div id="sign_up_alert" class="auth_alert_banner" style="display: none;"></div>
+
             <div class="social_container">
               <a href="#" class="social_btn google_btn" id="google_sign_up_btn" aria_label="Sign up with Google">
                 <svg class="google_icon" viewBox="0 0 24 24" width="20" height="20">
@@ -53,25 +55,40 @@
 
             <div class="form_grid_two_col">
               <div class="input_field_wrapper">
-                <label for="sign_up_username" class="field_label">Username</label>
-                <input type="text" class="form_input" id="sign_up_username" name="sign_up_username" placeholder="e.g. biker_rider99" required autocomplete="username">
+                <label for="sign_up_username" class="field_label">Full Name / Username</label>
+                <input type="text" class="form_input" id="sign_up_username" name="sign_up_username" placeholder="e.g. Juan dela Cruz" required autocomplete="name">
               </div>
 
               <div class="input_field_wrapper">
-                <label for="sign_up_phone" class="field_label">Phone Number (for OTP)</label>
+                <label for="sign_up_phone" class="field_label">Phone Number (11 digits)</label>
                 <input type="tel" class="form_input" id="sign_up_phone" name="sign_up_phone" placeholder="09XXXXXXXXX" pattern="[0-9]{11}" required autocomplete="tel">
               </div>
             </div>
 
+            <div class="input_field_wrapper">
+              <label for="sign_up_email" class="field_label">Email Address</label>
+              <input type="email" class="form_input" id="sign_up_email" name="sign_up_email" placeholder="name@email.com" required autocomplete="email">
+            </div>
+
             <div class="form_grid_two_col">
               <div class="input_field_wrapper">
-                <label for="sign_up_email" class="field_label">Email Address</label>
-                <input type="email" class="form_input" id="sign_up_email" name="sign_up_email" placeholder="name@email.com" required autocomplete="email">
+                <label for="sign_up_password" class="field_label">Password</label>
+                <div class="password_input_group">
+                  <input type="password" class="form_input" id="sign_up_password" name="sign_up_password" placeholder="Min. 6 characters" minlength="6" required autocomplete="new-password">
+                  <button type="button" class="password_toggle_btn" data-target="sign_up_password" aria-label="Toggle password visibility">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
               </div>
 
               <div class="input_field_wrapper">
-                <label for="sign_up_password" class="field_label">Password</label>
-                <input type="password" class="form_input" id="sign_up_password" name="sign_up_password" placeholder="Min. 8 characters" required autocomplete="new-password">
+                <label for="sign_up_confirm_password" class="field_label">Confirm Password</label>
+                <div class="password_input_group">
+                  <input type="password" class="form_input" id="sign_up_confirm_password" name="sign_up_confirm_password" placeholder="Re-enter password" minlength="6" required autocomplete="new-password">
+                  <button type="button" class="password_toggle_btn" data-target="sign_up_confirm_password" aria-label="Toggle password visibility">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -142,6 +159,8 @@
         <form class="auth_form" id="sign_in_form" action="#" method="post">
           <h1 class="form_title">Sign In</h1>
 
+          <div id="sign_in_alert" class="auth_alert_banner" style="display: none;"></div>
+
           <div class="social_container">
             <a href="#" class="social_btn google_btn" id="google_sign_in_btn" aria_label="Sign in with Google">
               <svg class="google_icon" viewBox="0 0 24 24" width="20" height="20">
@@ -162,7 +181,12 @@
 
           <div class="input_field_wrapper">
             <label for="sign_in_password" class="field_label">Password</label>
-            <input type="password" class="form_input" id="sign_in_password" name="sign_in_password" placeholder="Enter Password" required autocomplete="current-password">
+            <div class="password_input_group">
+              <input type="password" class="form_input" id="sign_in_password" name="sign_in_password" placeholder="Enter Password" required autocomplete="current-password">
+              <button type="button" class="password_toggle_btn" data-target="sign_in_password" aria-label="Toggle password visibility">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
           </div>
 
           <a href="#" class="forgot_link" id="forgot_password_link">Forget Password?</a>
@@ -200,6 +224,52 @@
 
     </div>
   </main>
+
+  <!-- 6-Digit Email OTP Verification Modal -->
+  <div id="email_otp_modal" class="modal_overlay otp_modal_overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="otp_modal_title">
+    <div class="modal_container otp_modal_card">
+      <div class="otp_modal_header">
+        <div class="otp_icon_circle">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </div>
+        <h2 id="otp_modal_title" class="otp_title">Verify Your Email</h2>
+        <p class="otp_subtitle">We sent a 6-digit verification code to <br><strong id="otp_target_email" style="color: #0f172a;">name@example.com</strong></p>
+      </div>
+
+      <div id="otp_modal_alert" class="auth_alert_banner" style="display: none;"></div>
+      <div id="otp_dev_hint" class="otp_dev_hint" style="display: none;"></div>
+
+      <form id="otp_verification_form" class="otp_form" autocomplete="off">
+        <div class="otp_inputs_group" id="otp_inputs_container">
+          <input type="text" class="otp_digit_input" maxlength="1" pattern="[0-9]" inputmode="numeric" required data-index="0" autofocus>
+          <input type="text" class="otp_digit_input" maxlength="1" pattern="[0-9]" inputmode="numeric" required data-index="1">
+          <input type="text" class="otp_digit_input" maxlength="1" pattern="[0-9]" inputmode="numeric" required data-index="2">
+          <input type="text" class="otp_digit_input" maxlength="1" pattern="[0-9]" inputmode="numeric" required data-index="3">
+          <input type="text" class="otp_digit_input" maxlength="1" pattern="[0-9]" inputmode="numeric" required data-index="4">
+          <input type="text" class="otp_digit_input" maxlength="1" pattern="[0-9]" inputmode="numeric" required data-index="5">
+        </div>
+
+        <button type="submit" id="btn_verify_otp" class="submit_btn otp_submit_btn">
+          <span>VERIFY CODE & CONTINUE</span>
+        </button>
+      </form>
+
+      <div class="otp_footer">
+        <p class="resend_text">
+          Didn't receive the email?
+          <button type="button" id="btn_resend_otp" class="btn_resend_link">Resend Code</button>
+          <span id="resend_timer" class="resend_timer" style="display: none;">(in <span id="timer_countdown">60</span>s)</span>
+        </p>
+        <button type="button" id="btn_close_otp_modal" class="btn_change_email">
+          &larr; Change email or edit details
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <script src="../js/login.js"></script>
 </body>

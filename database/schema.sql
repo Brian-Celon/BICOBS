@@ -61,6 +61,9 @@ CREATE TABLE users (
     role VARCHAR(20) DEFAULT 'customer' CHECK (role IN ('customer', 'staff', 'admin')),
     phone_number VARCHAR(30) DEFAULT '',
     address TEXT DEFAULT '',
+    is_verified BOOLEAN DEFAULT false,
+    verification_otp VARCHAR(10),
+    otp_expires_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

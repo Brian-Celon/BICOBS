@@ -340,6 +340,11 @@ const BICOBS_Auth = (() => {
 
           const data = await res.json();
 
+          if (res.status === 403 && data.requiresVerification) {
+            window.location.href = `/frontend/pages/login.html?verify=${encodeURIComponent(data.email)}&redirect=cart`;
+            return;
+          }
+
           if (res.ok && data.status === 'success') {
             saveSession(data.token, data.data);
             hideLoginModal();
@@ -388,6 +393,11 @@ const BICOBS_Auth = (() => {
           const data = await res.json();
 
           if (res.ok && data.status === 'success') {
+            if (data.requiresVerification) {
+              window.location.href = `/frontend/pages/login.html?verify=${encodeURIComponent(data.email)}&redirect=cart`;
+              return;
+            }
+
             saveSession(data.token, data.data);
             hideLoginModal();
 
