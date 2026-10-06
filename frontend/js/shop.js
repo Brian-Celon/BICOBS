@@ -29,6 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobile_filter_badge = document.getElementById('mobile_filter_badge');
     const mobile_apply_badge = document.getElementById('mobile_apply_badge');
 
+    // Catalog Pagination State (9 items per page fits Categories & Filters sidebar height)
+    let current_page = 1;
+    const items_per_page = 9;
+
+    // Pagination DOM Elements
+    const pagination_container = document.getElementById('shop_pagination');
+    const pagination_info_el = document.getElementById('pagination_info');
+    const pagination_current_page_el = document.getElementById('pagination_current_page');
+    const pagination_total_pages_el = document.getElementById('pagination_total_pages');
+    const pagination_prev_btn = document.getElementById('pagination_prev_btn');
+    const pagination_next_btn = document.getElementById('pagination_next_btn');
+    const pagination_pages_list = document.getElementById('pagination_pages_list');
+
     // Mobile sidebar elements
     const shop_sidebar = document.getElementById('shop_sidebar');
     const sidebar_overlay = document.getElementById('sidebar_mobile_overlay');
@@ -354,9 +367,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Filter and sort execution
-    function apply_filters() {
-        let visible_count = 0;
+    // Filter and sort execution with category-scoped pagination
+    function apply_filters(resetPage = true) {
+        if (resetPage) {
+            current_page = 1;
+        }
+
         const visible_cards = [];
 
         product_cards.forEach(card => {
@@ -380,8 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const matches_sale = !only_sale || Boolean(prodObj.isSale || prodObj.is_sale || (prodObj.stock_quantity <= 3 && prodObj.stock_quantity > 0));
 
             if (matches_cat && matches_search && matches_price && matches_sale) {
-                card.style.display = 'flex';
-                visible_count++;
                 visible_cards.push(card);
             } else {
                 card.style.display = 'none';
@@ -408,21 +422,149 @@ document.addEventListener('DOMContentLoaded', () => {
             visible_cards.forEach(card => products_grid.appendChild(card));
         }
 
+        // Pagination calculation (items per page ensures cards fit Categories & Filters field)
+        const total_matching = visible_cards.length;
+        const total_pages = Math.max(1, Math.ceil(total_matching / items_per_page));
+
+        if (current_page > total_pages) {
+            current_page = total_pages;
+        }
+
+        const start_index = (current_page - 1) * items_per_page;
+        const end_index = start_index + items_per_page;
+
+        // Display only cards corresponding to the active page
+        visible_cards.forEach((card, index) => {
+            if (index >= start_index && index < end_index) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
         // Update counters in UI
         const totalCount = all_products.length || product_cards.length;
         if (results_count_el) {
-            results_count_el.textContent = `Showing ${visible_count} of ${totalCount} items`;
+            if (total_matching === 0) {
+                results_count_el.textContent = `Showing 0 of ${totalCount} items`;
+            } else if (total_pages > 1) {
+                const pageStart = start_index + 1;
+                const pageEnd = Math.min(total_matching, end_index);
+                results_count_el.textContent = `Showing ${pageStart}–${pageEnd} of ${total_matching} items (Page ${current_page} of ${total_pages})`;
+            } else {
+                results_count_el.textContent = `Showing ${total_matching} of ${totalCount} items`;
+            }
         }
-        if (mobile_filter_badge) mobile_filter_badge.textContent = visible_count;
-        if (mobile_apply_badge) mobile_apply_badge.textContent = visible_count;
+
+        if (mobile_filter_badge) mobile_filter_badge.textContent = total_matching;
+        if (mobile_apply_badge) mobile_apply_badge.textContent = total_matching;
+
         if (empty_state_el) {
-            empty_state_el.style.display = visible_count === 0 ? 'block' : 'none';
-            if (visible_count === 0) {
+            empty_state_el.style.display = total_matching === 0 ? 'block' : 'none';
+            if (total_matching === 0) {
                 empty_state_el.classList.add('show');
             } else {
                 empty_state_el.classList.remove('show');
             }
         }
+
+        // Render dynamic pagination controls
+        renderPagination(total_matching, total_pages);
+    }
+
+    // Dynamic Pagination Renderer
+    function renderPagination(total_matching, total_pages) {
+        if (!pagination_container) return;
+
+        // If products fit within the Categories & Filters field (1 page or fewer), hide pagination
+        if (total_pages <= 1) {
+            pagination_container.style.display = 'none';
+            return;
+        }
+
+        // If products go past the Categories & Filters field, show pagination
+        pagination_container.style.display = 'flex';
+
+        if (pagination_current_page_el) pagination_current_page_el.textContent = current_page;
+        if (pagination_total_pages_el) pagination_total_pages_el.textContent = total_pages;
+
+        if (pagination_prev_btn) {
+            pagination_prev_btn.disabled = current_page <= 1;
+        }
+        if (pagination_next_btn) {
+            pagination_next_btn.disabled = current_page >= total_pages;
+        }
+
+        if (!pagination_pages_list) return;
+        pagination_pages_list.innerHTML = '';
+
+        // Generate page numbers list with smart window
+        const pages = [];
+        if (total_pages <= 7) {
+            for (let i = 1; i <= total_pages; i++) pages.push(i);
+        } else {
+            if (current_page <= 4) {
+                pages.push(1, 2, 3, 4, 5, '...', total_pages);
+            } else if (current_page >= total_pages - 3) {
+                pages.push(1, '...', total_pages - 4, total_pages - 3, total_pages - 2, total_pages - 1, total_pages);
+            } else {
+                pages.push(1, '...', current_page - 1, current_page, current_page + 1, '...', total_pages);
+            }
+        }
+
+        pages.forEach(p => {
+            if (p === '...') {
+                const ellipsis = document.createElement('span');
+                ellipsis.className = 'pagination_ellipsis';
+                ellipsis.textContent = '...';
+                pagination_pages_list.appendChild(ellipsis);
+            } else {
+                const pageBtn = document.createElement('button');
+                pageBtn.type = 'button';
+                pageBtn.className = `pagination_btn page_num_btn ${p === current_page ? 'active' : ''}`;
+                pageBtn.setAttribute('data-page', p);
+                pageBtn.setAttribute('aria-label', `Page ${p}`);
+                if (p === current_page) {
+                    pageBtn.setAttribute('aria-current', 'page');
+                }
+                pageBtn.textContent = p;
+
+                pageBtn.addEventListener('click', () => {
+                    if (current_page === p) return;
+                    goToPage(p);
+                });
+
+                pagination_pages_list.appendChild(pageBtn);
+            }
+        });
+    }
+
+    function goToPage(page) {
+        current_page = page;
+        apply_filters(false);
+        // Smooth scroll to top of product grid
+        const targetScroll = document.querySelector('.shop_toolbar') || products_grid;
+        if (targetScroll) {
+            targetScroll.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // Prev & Next Button Click Handlers
+    if (pagination_prev_btn) {
+        pagination_prev_btn.addEventListener('click', () => {
+            if (current_page > 1) {
+                goToPage(current_page - 1);
+            }
+        });
+    }
+
+    if (pagination_next_btn) {
+        pagination_next_btn.addEventListener('click', () => {
+            const maxPages = parseInt(pagination_total_pages_el?.textContent || '1', 10);
+            if (current_page < maxPages) {
+                goToPage(current_page + 1);
+            }
+        });
     }
 
     // 1. Horizontal Quick Category Pill Buttons Filter

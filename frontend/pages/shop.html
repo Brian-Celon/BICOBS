@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/frontend/css/landing_page.css">
     <!-- scoped shop catalog stylesheet -->
     <link rel="stylesheet" href="/frontend/css/shop.css">
+    <!-- external fontawesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -468,6 +470,24 @@
                         <button class="btn_card_add_cart" style="margin: 0 auto;" onclick="document.getElementById('btn_reset_filters').click()">Clear All Filters</button>
                     </div>
 
+                </div>
+
+                <!-- dynamic catalog pagination (appears when category products exceed page limit) -->
+                <div class="shop_pagination" id="shop_pagination" style="display: none;">
+                    <div class="pagination_info" id="pagination_info">
+                        Showing page <span id="pagination_current_page">1</span> of <span id="pagination_total_pages">1</span>
+                    </div>
+                    <nav class="pagination_controls" aria-label="Catalog pages">
+                        <button type="button" class="pagination_btn prev_btn" id="pagination_prev_btn" aria-label="Previous Page">
+                            <i class="fas fa-chevron-left"></i> <span>Prev</span>
+                        </button>
+                        <div class="pagination_pages_list" id="pagination_pages_list">
+                            <!-- Page numbers dynamically generated (Page 1, Page 2, Page 3, etc.) -->
+                        </div>
+                        <button type="button" class="pagination_btn next_btn" id="pagination_next_btn" aria-label="Next Page">
+                            <span>Next</span> <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </nav>
                 </div>
             </section>
         </main>
