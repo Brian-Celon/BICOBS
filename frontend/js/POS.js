@@ -326,6 +326,8 @@ function initPosMain(session) {
     let activeCategory = 'all';
     let searchQuery = '';
     let currentDiscount = loadPersistedDiscount();
+    let currentPage = 1;
+    const itemsPerPage = 8;
 
     // Maintenance Service Presets (Workshop services sold at counter)
     const maintenancePresets = [
@@ -417,6 +419,7 @@ function initPosMain(session) {
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
             const data = await res.json();
             allProducts = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+            updateCategoryFilterCounts();
             renderCatalogGrid();
         } catch (err) {
             console.error('[POS] Failed to fetch live products:', err);
@@ -432,11 +435,37 @@ function initPosMain(session) {
         }
     }
 
+    /* --- Calculate and Update Product Counts on Category Filter Pills --- */
+    function updateCategoryFilterCounts() {
+        filterBtns.forEach(btn => {
+            const cat = btn.getAttribute('data-category');
+            let count = 0;
+            if (cat === 'all') {
+                count = allProducts.length;
+            } else if (cat === 'built_bikes') {
+                count = allProducts.filter(p => ['built_bikes', 'mountain_bikes', 'road_bikes', 'gravel_bikes'].includes((p.category || '').toLowerCase())).length;
+            } else if (cat === 'cockpit') {
+                count = allProducts.filter(p => ['cockpit', 'handle_bar', 'stem'].includes((p.category || '').toLowerCase())).length;
+            } else if (cat === 'saddle') {
+                count = allProducts.filter(p => ['saddle', 'handle_grip'].includes((p.category || '').toLowerCase())).length;
+            } else {
+                count = allProducts.filter(p => (p.category || '').toLowerCase() === cat.toLowerCase()).length;
+            }
+
+            const badge = btn.querySelector('.filter_count_badge');
+            if (badge) {
+                badge.textContent = count;
+            }
+        });
+    }
+
     /* --- Render Product Catalog Grid --- */
     function renderCatalogGrid() {
         productGrid.innerHTML = '';
+        const paginationWrapper = document.getElementById('pos_pagination_wrapper');
 
         if (activeCategory === 'maintenance') {
+            if (paginationWrapper) paginationWrapper.style.display = 'none';
             renderMaintenanceServiceCards();
             return;
         }
@@ -458,8 +487,14 @@ function initPosMain(session) {
                    (p.category || '').toLowerCase().includes(q);
         });
 
+        const totalItems = filtered.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
         if (countLabel) {
-            countLabel.textContent = `${activeCategory.toUpperCase().replace('_', ' ')} — ${filtered.length} ITEMS`;
+            countLabel.textContent = `${activeCategory.toUpperCase().replace('_', ' ')} — ${totalItems} ITEMS (PAGE ${currentPage} OF ${totalPages})`;
         }
 
         if (filtered.length === 0) {
@@ -470,10 +505,16 @@ function initPosMain(session) {
                     <div style="font-size: 13px; margin-top: 4px;">Try searching for another keyword or change category filter</div>
                 </div>
             `;
+            if (paginationWrapper) paginationWrapper.style.display = 'none';
             return;
         }
 
-        filtered.forEach(p => {
+        // Slice products for current page
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+        const pagedProducts = filtered.slice(startIndex, endIndex);
+
+        pagedProducts.forEach(p => {
             const card = document.createElement('div');
             card.className = 'pos_product_card';
             card.setAttribute('data-id', p.id);
@@ -500,7 +541,7 @@ function initPosMain(session) {
             if (p.image_url && p.image_url.trim()) {
                 visualBoxHtml = `
                     <div class="product_visual_box">
-                        <img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.name)}" class="product_visual_img" onerror="this.onerror=null; this.src='/frontend/Pictures/logo.png';" style="max-height: 80px; width: auto; object-fit: contain;">
+                        <img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.name)}" class="product_visual_img" onerror="this.onerror=null; this.src='/frontend/Pictures/logo.png';" style="max-height: 110px; width: auto; object-fit: contain;">
                         <span class="product_category_badge">${escapeHtml((p.category || 'GEAR').toUpperCase().replace('_', ' '))}</span>
                     </div>
                 `;
@@ -508,7 +549,7 @@ function initPosMain(session) {
                 visualBoxHtml = `
                     <div class="product_visual_box">
                         <div class="product_category_icon" style="color: var(--pos_red);">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                         </div>
                         <span class="product_category_badge">${escapeHtml((p.category || 'PART').toUpperCase().replace('_', ' '))}</span>
                     </div>
@@ -534,6 +575,100 @@ function initPosMain(session) {
 
             productGrid.appendChild(card);
         });
+
+        // Render Pagination Controls
+        renderPagination(totalItems, totalPages, startIndex, endIndex);
+    }
+
+    /* --- Render Pagination Controls --- */
+    function renderPagination(totalItems, totalPages, startIndex, endIndex) {
+        const paginationWrapper = document.getElementById('pos_pagination_wrapper');
+        if (!paginationWrapper) return;
+
+        if (totalItems <= itemsPerPage) {
+            paginationWrapper.style.display = 'none';
+            return;
+        }
+
+        paginationWrapper.style.display = 'flex';
+
+        let pagesHtml = '';
+        const maxVisible = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+        if (endPage - startPage + 1 < maxVisible) {
+            startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        if (startPage > 1) {
+            pagesHtml += `<button type="button" class="pos_page_btn" data-page="1">1</button>`;
+            if (startPage > 2) {
+                pagesHtml += `<span class="pos_page_ellipsis">&hellip;</span>`;
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pagesHtml += `<button type="button" class="pos_page_btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                pagesHtml += `<span class="pos_page_ellipsis">&hellip;</span>`;
+            }
+            pagesHtml += `<button type="button" class="pos_page_btn" data-page="${totalPages}">${totalPages}</button>`;
+        }
+
+        paginationWrapper.innerHTML = `
+            <div class="pos_pagination_info">
+                Showing <strong>${startIndex + 1}&ndash;${endIndex}</strong> of <strong>${totalItems}</strong> items (Page ${currentPage} of ${totalPages})
+            </div>
+            <div class="pos_pagination_controls">
+                <button type="button" class="pos_page_btn pos_btn_prev" ${currentPage <= 1 ? 'disabled' : ''} title="Previous Page">&larr; Prev</button>
+                <div class="pos_page_numbers" style="display: flex; align-items: center; gap: 6px;">
+                    ${pagesHtml}
+                </div>
+                <button type="button" class="pos_page_btn pos_btn_next" ${currentPage >= totalPages ? 'disabled' : ''} title="Next Page">Next &rarr;</button>
+            </div>
+        `;
+
+        const prevBtn = paginationWrapper.querySelector('.pos_btn_prev');
+        if (prevBtn && currentPage > 1) {
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentPage--;
+                renderCatalogGrid();
+                scrollToGrid();
+            });
+        }
+
+        const nextBtn = paginationWrapper.querySelector('.pos_btn_next');
+        if (nextBtn && currentPage < totalPages) {
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentPage++;
+                renderCatalogGrid();
+                scrollToGrid();
+            });
+        }
+
+        paginationWrapper.querySelectorAll('.pos_page_numbers .pos_page_btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const pageNum = parseInt(btn.getAttribute('data-page'), 10);
+                if (pageNum && pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    renderCatalogGrid();
+                    scrollToGrid();
+                }
+            });
+        });
+    }
+
+    function scrollToGrid() {
+        const gridSection = document.getElementById('pos_product_grid');
+        if (gridSection) {
+            gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
     /* --- Render Quick Maintenance Services in Grid --- */
@@ -783,6 +918,7 @@ function initPosMain(session) {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             activeCategory = btn.getAttribute('data-category') || 'all';
+            currentPage = 1;
             renderCatalogGrid();
         });
     });
@@ -790,6 +926,7 @@ function initPosMain(session) {
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             searchQuery = searchInput.value.trim();
+            currentPage = 1;
             renderCatalogGrid();
         });
     }
@@ -1922,7 +2059,37 @@ function initPosHistory(session) {
     const receiptModal = document.getElementById('receipt_modal_overlay');
     if (!historyTable || !tbody) return;
 
+    // Check if logged in user is admin/manager or Brian
+    const isAdmin = Boolean(session && (
+        session.role === 'admin' ||
+        session.role === 'manager' ||
+        (session.name && (session.name.toLowerCase().includes('admin') || session.name.toLowerCase().includes('brian'))) ||
+        (session.email && (session.email.toLowerCase().includes('admin') || session.email.toLowerCase().includes('brian')))
+    ));
+
+    // Show/hide admin indicator badge and table column header
+    const adminBadge = document.getElementById('history_admin_badge');
+    if (adminBadge) adminBadge.style.display = isAdmin ? 'inline-flex' : 'none';
+
+    const thCashier = document.getElementById('th_cashier_col');
+    if (thCashier) thCashier.style.display = isAdmin ? '' : 'none';
+
+    const colSpanCount = isAdmin ? 9 : 8;
+
     let allOrders = [];
+
+    function extractCashierName(order) {
+        if (order.cashierName && order.cashierName.trim()) return order.cashierName.trim();
+        if (order.cashier_name && order.cashier_name.trim()) return order.cashier_name.trim();
+        if (order.cashier && typeof order.cashier === 'string' && order.cashier.trim()) return order.cashier.trim();
+        if (order.notes) {
+            const match = order.notes.match(/Cashier:\s*([^|]+)/i);
+            if (match && match[1]) return match[1].trim();
+        }
+        if (order.user_name && order.user_name.trim()) return order.user_name.trim();
+        if (order.userName && order.userName.trim()) return order.userName.trim();
+        return 'Brian';
+    }
 
     async function loadHistory() {
         try {
@@ -1935,7 +2102,7 @@ function initPosHistory(session) {
             console.error('[POS History Error]:', err);
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" style="text-align: center; padding: 32px; color: #b91c1c;">
+                    <td colspan="${colSpanCount}" style="text-align: center; padding: 32px; color: #b91c1c;">
                         Failed to load transaction history: ${escapeHtml(err.message)}
                     </td>
                 </tr>
@@ -1950,7 +2117,7 @@ function initPosHistory(session) {
         if (ordersList.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" style="text-align: center; padding: 40px; color: var(--pos_text_muted);">
+                    <td colspan="${colSpanCount}" style="text-align: center; padding: 40px; color: var(--pos_text_muted);">
                         No transaction records found matching criteria
                     </td>
                 </tr>
@@ -1978,10 +2145,27 @@ function initPosHistory(session) {
             const status = (order.payment_status || order.paymentStatus || 'paid').toUpperCase();
             const statusBadge = `<span class="badge_status_paid">${escapeHtml(status)}</span>`;
 
+            let cashierCellHtml = '';
+            if (isAdmin) {
+                const cashierName = extractCashierName(order);
+                cashierCellHtml = `
+                    <td class="txn_cashier_cell">
+                        <span class="badge_cashier_tag" title="Transaction processed by Cashier ${escapeHtml(cashierName)}">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>${escapeHtml(cashierName)}</span>
+                        </span>
+                    </td>
+                `;
+            }
+
             tr.innerHTML = `
                 <td class="txn_id_cell">${escapeHtml(order.order_number || order.orderNumber)}</td>
                 <td>${formatDateTime(order.created_at || order.createdAt)}</td>
                 <td><strong>${escapeHtml(order.customer_name || order.customerName || 'Walk-in')}</strong></td>
+                ${cashierCellHtml}
                 <td style="max-width: 280px; font-size: 12px; color: var(--pos_text_body);">${escapeHtml(itemsSummary)}</td>
                 <td class="txn_total_cell">${formatCurrency(amount)}</td>
                 <td>${methodBadge}</td>
@@ -2016,9 +2200,10 @@ function initPosHistory(session) {
                 const inv = (o.invoice_number || o.invoiceNumber || '').toLowerCase();
                 const cust = (o.customer_name || o.customerName || '').toLowerCase();
                 const method = (o.payment_method || o.paymentMethod || '').toLowerCase();
+                const cashier = extractCashierName(o).toLowerCase();
                 const items = (o.orderItems || o.items || []).map(i => (i.name || i.product_name || '').toLowerCase()).join(' ');
 
-                return num.includes(q) || inv.includes(q) || cust.includes(q) || method.includes(q) || items.includes(q);
+                return num.includes(q) || inv.includes(q) || cust.includes(q) || (isAdmin && cashier.includes(q)) || method.includes(q) || items.includes(q);
             });
             renderHistoryTable(filtered);
         });
@@ -2041,7 +2226,7 @@ function initPosHistory(session) {
         if (rcptTxnId) rcptTxnId.textContent = order.order_number || order.orderNumber;
         if (rcptInvId) rcptInvId.textContent = order.invoice_number || order.invoiceNumber || 'INV-HIST';
         if (rcptDateTime) rcptDateTime.textContent = formatDateTime(order.created_at || order.createdAt);
-        if (rcptCashier) rcptCashier.textContent = session ? session.name : 'Store Cashier';
+        if (rcptCashier) rcptCashier.textContent = extractCashierName(order);
         if (rcptCustomer) rcptCustomer.textContent = order.customer_name || order.customerName || 'Walk-in Customer';
         if (rcptMethodBadge) {
             const m = (order.payment_method || order.paymentMethod || 'cash').toUpperCase();

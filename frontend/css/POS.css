@@ -561,10 +561,14 @@ button, input, select, textarea {
     color: var(--pos_text_body);
     font-size: 12.5px;
     font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 16px;
+    padding: 6px 13px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    user-select: none;
 }
 
 .pill_filter_btn:hover {
@@ -576,6 +580,33 @@ button, input, select, textarea {
 .pill_filter_btn.active {
     background-color: var(--pos_red);
     border-color: var(--pos_red);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(197, 31, 38, 0.25);
+}
+
+.filter_count_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 10px;
+    background-color: #f1f5f9;
+    color: var(--pos_text_muted);
+    line-height: 1;
+    transition: all 0.15s ease;
+}
+
+.pill_filter_btn:hover .filter_count_badge {
+    background-color: #e2e8f0;
+    color: var(--pos_text_dark);
+}
+
+.pill_filter_btn.active .filter_count_badge {
+    background-color: rgba(255, 255, 255, 0.28);
     color: #ffffff;
 }
 
@@ -599,35 +630,38 @@ button, input, select, textarea {
 }
 
 /* product grid - 4 columns in split view */
+/* product grid - 4 columns in split view */
 .pos_product_grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 16px;
 }
 
 .pos_product_card {
     background-color: var(--pos_card_bg);
-    border: 1px solid var(--pos_border);
-    border-radius: 8px;
-    padding: 12px;
+    border: 1.5px solid var(--pos_border);
+    border-radius: 12px;
+    padding: 16px 14px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    min-height: 290px;
 }
 
 .pos_product_card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    border-color: #cbd5e1;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    border-color: var(--pos_red);
 }
 
 .product_visual_box {
     width: 100%;
-    height: 90px;
+    height: 135px;
     background-color: #f8fafc;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -636,11 +670,24 @@ button, input, select, textarea {
     position: relative;
     border: 1px solid var(--pos_border_light);
     overflow: hidden;
+    padding: 8px;
+}
+
+.product_visual_img {
+    max-height: 110px !important;
+    max-width: 92% !important;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.pos_product_card:hover .product_visual_img {
+    transform: scale(1.05);
 }
 
 .product_category_icon {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -648,66 +695,165 @@ button, input, select, textarea {
 }
 
 .product_category_badge {
-    background-color: #e2e8f0;
+    position: absolute;
+    bottom: 6px;
+    background-color: rgba(241, 245, 249, 0.95);
     color: #475569;
-    font-size: 9.5px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(203, 213, 225, 0.6);
 }
 
 .product_sku_text {
-    font-size: 10.5px;
+    font-size: 11.5px;
     color: var(--pos_text_muted);
     font-family: monospace;
     font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
 .product_title_text {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--pos_text_dark);
-    line-height: 1.3;
-    min-height: 32px;
+    line-height: 1.35;
+    min-height: 38px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .product_price_stock_row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 11.5px;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 4px;
 }
 
 .product_price_red {
     color: var(--pos_red);
     font-weight: 800;
-    font-size: 12.5px;
+    font-size: 16px;
+    letter-spacing: -0.2px;
 }
 
 .product_stock_green {
     color: #16a34a;
-    font-weight: 600;
-    font-size: 11px;
+    font-weight: 700;
+    font-size: 12px;
 }
 
 .btn_add_to_cart {
     background-color: var(--pos_red_btn_bg);
     color: var(--pos_red);
-    border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    font-size: 11.5px;
+    border: 1px solid rgba(197, 31, 38, 0.15);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    transition: background-color 0.15s ease;
+    transition: all 0.15s ease;
+    margin-top: 4px;
 }
 
 .btn_add_to_cart:hover {
-    background-color: #fecdd3;
+    background-color: var(--pos_red);
+    color: #ffffff;
+    border-color: var(--pos_red);
+    box-shadow: 0 3px 8px rgba(197, 31, 38, 0.25);
+}
+
+/* ==========================================================================
+   POS Product Catalog Pagination
+   ========================================================================== */
+.pos_pagination_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+    padding: 14px 18px;
+    background-color: #ffffff;
+    border: 1px solid var(--pos_border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.pos_pagination_info {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pos_text_muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pos_pagination_info strong {
+    color: var(--pos_text_dark);
+}
+
+.pos_pagination_controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pos_page_btn {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--pos_border);
+    background-color: #ffffff;
+    color: var(--pos_text_dark);
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.pos_page_btn:hover:not(:disabled):not(.active) {
+    border-color: var(--pos_red);
+    color: var(--pos_red);
+    background-color: #fff1f2;
+}
+
+.pos_page_btn.active {
+    background-color: var(--pos_red);
+    border-color: var(--pos_red);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(197, 31, 38, 0.25);
+    cursor: default;
+}
+
+.pos_page_btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #f8fafc;
+    border-color: var(--pos_border_light);
+}
+
+.pos_page_ellipsis {
+    min-width: 26px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--pos_text_muted);
+    user-select: none;
 }
 
 /* ==========================================================================
@@ -3358,6 +3504,46 @@ button, input, select, textarea {
 .pos_staff_chip:hover {
     border-color: var(--pos_red);
     background-color: #fff1f2;
+}
+
+/* ==========================================================================
+   Admin Transaction History Tracking Badge & Cashier Tag
+   ========================================================================== */
+.history_admin_badge {
+    background-color: #fee2e2;
+    color: var(--pos_red);
+    border: 1px solid #fca5a5;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.txn_cashier_cell {
+    white-space: nowrap;
+}
+
+.badge_cashier_tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: var(--pos_text_dark);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 6px;
+}
+
+.badge_cashier_tag svg {
+    color: var(--pos_red);
+    flex-shrink: 0;
 }
 
 

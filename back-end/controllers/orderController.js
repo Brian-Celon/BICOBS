@@ -1,48 +1,66 @@
 const { pool } = require('../config/db');
 
 // Helper to format an order row and its items
-const formatOrder = (orderRow, items = []) => ({
-  _id: orderRow.id.toString(),
-  id: orderRow.id,
-  orderNumber: orderRow.order_number,
-  order_number: orderRow.order_number,
-  invoiceNumber: orderRow.invoice_number || null,
-  invoice_number: orderRow.invoice_number || null,
-  user: orderRow.user_id,
-  customerName: orderRow.customer_name,
-  customerEmail: orderRow.customer_email,
-  customerPhone: orderRow.customer_phone,
-  deliveryType: orderRow.delivery_type,
-  deliveryAddress: orderRow.delivery_address,
-  notes: orderRow.notes,
-  paymentMethod: orderRow.payment_method,
-  subtotal: parseFloat(orderRow.subtotal || 0),
-  shippingFee: parseFloat(orderRow.shipping_fee || 0),
-  totalPrice: parseFloat(orderRow.total_amount),
-  total_amount: parseFloat(orderRow.total_amount),
-  orderStatus: orderRow.order_status,
-  order_status: orderRow.order_status,
-  paymentStatus: orderRow.payment_status,
-  payment_status: orderRow.payment_status,
-  orderItems: items.map(i => ({
-    id: i.id,
-    product: i.product_id,
-    name: i.product_name,
-    quantity: i.quantity,
-    price: parseFloat(i.unit_price),
-    subtotal: parseFloat(i.subtotal)
-  })),
-  items: items.map(i => ({
-    id: i.id,
-    product: i.product_id,
-    name: i.product_name,
-    quantity: i.quantity,
-    price: parseFloat(i.unit_price),
-    subtotal: parseFloat(i.subtotal)
-  })),
-  createdAt: orderRow.created_at,
-  updatedAt: orderRow.updated_at
-});
+const formatOrder = (orderRow, items = []) => {
+  let cashierName = 'Store Cashier';
+  if (orderRow.notes) {
+    const match = orderRow.notes.match(/Cashier:\s*([^|]+)/i);
+    if (match && match[1]) {
+      cashierName = match[1].trim();
+    }
+  }
+  if (cashierName === 'Store Cashier' && (orderRow.user_name || orderRow.userName)) {
+    cashierName = (orderRow.user_name || orderRow.userName).trim();
+  }
+
+  return {
+    _id: orderRow.id.toString(),
+    id: orderRow.id,
+    orderNumber: orderRow.order_number,
+    order_number: orderRow.order_number,
+    invoiceNumber: orderRow.invoice_number || null,
+    invoice_number: orderRow.invoice_number || null,
+    user: orderRow.user_id,
+    userName: orderRow.user_name || null,
+    user_name: orderRow.user_name || null,
+    customerName: orderRow.customer_name,
+    customerEmail: orderRow.customer_email,
+    customerPhone: orderRow.customer_phone,
+    deliveryType: orderRow.delivery_type,
+    deliveryAddress: orderRow.delivery_address,
+    notes: orderRow.notes,
+    cashierName,
+    cashier_name: cashierName,
+    cashier: cashierName,
+    paymentMethod: orderRow.payment_method,
+    subtotal: parseFloat(orderRow.subtotal || 0),
+    shippingFee: parseFloat(orderRow.shipping_fee || 0),
+    totalPrice: parseFloat(orderRow.total_amount),
+    total_amount: parseFloat(orderRow.total_amount),
+    orderStatus: orderRow.order_status,
+    order_status: orderRow.order_status,
+    paymentStatus: orderRow.payment_status,
+    payment_status: orderRow.payment_status,
+    orderItems: items.map(i => ({
+      id: i.id,
+      product: i.product_id,
+      name: i.product_name,
+      quantity: i.quantity,
+      price: parseFloat(i.unit_price),
+      subtotal: parseFloat(i.subtotal)
+    })),
+    items: items.map(i => ({
+      id: i.id,
+      product: i.product_id,
+      name: i.product_name,
+      quantity: i.quantity,
+      price: parseFloat(i.unit_price),
+      subtotal: parseFloat(i.subtotal)
+    })),
+    createdAt: orderRow.created_at,
+    updatedAt: orderRow.updated_at
+  };
+};
 
 // @desc    Create new order
 // @route   POST /api/orders

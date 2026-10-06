@@ -84,19 +84,58 @@
 
                     <!-- category filter pills -->
                     <section class="category_filter_bar" id="category_filter_bar">
-                        <button class="pill_filter_btn active" data-category="all">All Items</button>
-                        <button class="pill_filter_btn" data-category="built_bikes">Bicycles</button>
-                        <button class="pill_filter_btn" data-category="frame">Frames</button>
-                        <button class="pill_filter_btn" data-category="fork">Forks &amp; Suspension</button>
-                        <button class="pill_filter_btn" data-category="drivetrain">Drivetrain</button>
-                        <button class="pill_filter_btn" data-category="chain">Chains</button>
-                        <button class="pill_filter_btn" data-category="pedals">Pedals</button>
-                        <button class="pill_filter_btn" data-category="rims">Wheelsets &amp; Rims</button>
-                        <button class="pill_filter_btn" data-category="hubs">Hubs</button>
-                        <button class="pill_filter_btn" data-category="tires">Tires</button>
-                        <button class="pill_filter_btn" data-category="cockpit">Cockpit &amp; Bars</button>
-                        <button class="pill_filter_btn" data-category="saddle">Saddles &amp; Grips</button>
-                        <button class="pill_filter_btn" data-category="upgrade_kit">Upgrade Kits</button>
+                        <button class="pill_filter_btn active" data-category="all">
+                            <span>All Items</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="built_bikes">
+                            <span>Bicycles</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="frame">
+                            <span>Frames</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="fork">
+                            <span>Forks &amp; Suspension</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="drivetrain">
+                            <span>Drivetrain</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="chain">
+                            <span>Chains</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="pedals">
+                            <span>Pedals</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="rims">
+                            <span>Wheelsets &amp; Rims</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="hubs">
+                            <span>Hubs</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="tires">
+                            <span>Tires</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="cockpit">
+                            <span>Cockpit &amp; Bars</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="saddle">
+                            <span>Saddles &amp; Grips</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
+                        <button class="pill_filter_btn" data-category="upgrade_kit">
+                            <span>Upgrade Kits</span>
+                            <span class="filter_count_badge">0</span>
+                        </button>
                     </section>
 
                     <!-- products info row -->
@@ -113,6 +152,9 @@
                             <div style="font-size: 13px; margin-top: 6px; color: var(--pos_text_muted);">Retrieving 150 items directly from PostgreSQL</div>
                         </div>
                     </section>
+
+                    <!-- pagination controls -->
+                    <div class="pos_pagination_wrapper" id="pos_pagination_wrapper" style="display: none;"></div>
 
                 </div>
 

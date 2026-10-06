@@ -52,7 +52,13 @@
             <!-- subheader section -->
             <section class="history_sub_header">
                 <div class="sub_header_left">
-                    <span class="sub_label_red">TAURUS</span>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="sub_label_red">TAURUS</span>
+                        <span class="history_admin_badge" id="history_admin_badge" style="display: none;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Admin Audit View
+                        </span>
+                    </div>
                     <h1 class="page_title_bold">Transaction History</h1>
                 </div>
                 <div class="filtered_total_box">
@@ -69,7 +75,7 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </span>
-                <input type="text" class="pos_search_input" id="history_search_input" placeholder="Search by transaction ID or product name...">
+                <input type="text" class="pos_search_input" id="history_search_input" placeholder="Search by transaction ID, customer, product, or cashier...">
             </section>
 
             <!-- transaction history table -->
@@ -80,6 +86,7 @@
                             <th>ORDER / TXN #</th>
                             <th>DATE &amp; TIME</th>
                             <th>CUSTOMER</th>
+                            <th id="th_cashier_col" style="display: none;">CASHIER</th>
                             <th>ITEMS SUMMARY</th>
                             <th>TOTAL</th>
                             <th>METHOD</th>
