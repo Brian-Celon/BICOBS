@@ -27,16 +27,9 @@ npm install
 ### 2️⃣ Step 2: Create the `.env` File
 Inside the `back-end` folder:
 1. Create a new file named **`.env`**
-2. Copy and paste this exact text into it:
+2. Paste the environment variables into it.
 
-```env
-PORT=5000
-NODE_ENV=development
-DATABASE_URL=postgresql://postgres.qhircluswzwtbfufmgsb:BICOBS_DB123@aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres
-JWT_SECRET=taurus_bike_shop_secret_jwt_key_2026
-JWT_EXPIRE=30d
-CLOUDINARY_CLOUD_NAME=q3ywfemm
-```
+> 💬 **Note:** For security reasons, the active `.env` configuration can be found pinned in our **group chat**. You can also check [`back-end/.env.example`](back-end/.env.example) for the template.
 
 3. Save the file.
 
