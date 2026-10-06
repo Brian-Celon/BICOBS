@@ -1378,7 +1378,7 @@ img {
 
 .footer_grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+    grid-template-columns: 1.5fr 1fr 1.3fr;
     gap: 36px;
     width: 100%;
 }
