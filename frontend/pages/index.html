@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taurus Bike - Landing Page</title>
+    <title>Taurus Bike - Buy and Enjoy Your Cycling Experience</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- landing page stylesheet -->
     <link rel="stylesheet" href="/frontend/css/landing_page.css">
 </head>
@@ -85,106 +89,285 @@
             <a href="#main_footer" class="nav_link">CONTACT</a>
         </nav>
 
-        <!-- hero banner section -->
+        <!-- ============================================================
+             1. HERO SECTION
+             ============================================================ -->
         <section class="hero_section" id="hero_section">
+            <div class="hero_backdrop_mesh" aria-hidden="true"></div>
             <div class="hero_inner">
+                <!-- hero left content -->
                 <div class="hero_content">
-                    <h1 class="hero_headline">BUY AND ENJOY</h1>
-                    <h2 class="hero_subheadline">YOUR CYCLING EXPERIENCE HERE AT</h2>
-                    <div class="hero_badge_box">
-                        <div class="arched_badge_wrapper">
-                            <svg viewBox="0 0 280 110" class="badge_curve_svg" aria-hidden="true">
-                                <defs>
-                                    <path id="arch_text_path" d="M 20,100 A 120,70 0 0,1 260,100" fill="none" />
-                                </defs>
-                                <text class="arched_text">
-                                    <textPath href="#arch_text_path" startOffset="50%" text-anchor="middle">
-                                        TAURUS BIKE STORE
-                                    </textPath>
-                                </text>
+                    <div class="hero_pill_badge">
+                        <span class="hero_pill_dash"></span>
+                        <span class="hero_pill_text">ELITE CARBON FRAMES &amp; PRO BUILDS</span>
+                    </div>
+                    <h1 class="hero_headline">
+                        BUY AND ENJOY<br>
+                        YOUR CYCLING<br>
+                        EXPERIENCE
+                    </h1>
+                    <p class="hero_subheadline">
+                        Discover world-class road bikes, premium mountain trail rigs, carbon fiber frames, and expert maintenance services tailored for serious cyclists.
+                    </p>
+                    <div class="hero_actions">
+                        <a href="/frontend/pages/shop.html" class="hero_btn_primary">
+                            <span>Explore Shop Catalog</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
-                            <img src="/frontend/Pictures/logo.png" alt="Taurus Bull Logo" class="hero_bull_logo">
-                        </div>
+                        </a>
+                        <a href="/frontend/pages/service.html" class="hero_btn_secondary">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                            <span>Book Service</span>
+                        </a>
                     </div>
                 </div>
-                <div class="hero_image_wrapper">
-                    <img src="/frontend/Pictures/background-home.png" alt="Featured Bike Frame" class="hero_image">
-                </div>
-            </div>
-        </section>
 
-        <!-- promo 3-column banner -->
-        <section class="promo_section" id="promo_section">
-            <div class="promo_inner">
-                <div class="promo_grid">
-                    <!-- promo card 1 -->
-                    <div class="promo_card">
-                        <div class="promo_image_box">
-                            <img src="/frontend/Pictures/new-arrival.jpg" alt="New Arrivals" class="promo_image">
+                <!-- hero right featured floating card -->
+                <div class="hero_card_wrapper">
+                    <div class="hero_featured_card">
+                        <span class="hero_featured_badge">FEATURED</span>
+                        <div class="hero_card_image_box">
+                            <img src="/frontend/Pictures/background-home.png" alt="Elves Falath Pro Carbon" class="hero_card_image">
                         </div>
-                        <h3 class="promo_title">NEW ARRIVALS</h3>
-                    </div>
-
-                    <!-- promo card 2 -->
-                    <div class="promo_card">
-                        <div class="promo_image_box">
-                            <img src="/frontend/Pictures/exclusive.jpg" alt="Exclusive" class="promo_image">
+                        <div class="hero_card_footer">
+                            <div class="hero_card_info">
+                                <h3 class="hero_card_title">Elves Falath Pro Carbon</h3>
+                                <p class="hero_card_subtitle">Aerodynamic Road Frame Set</p>
+                            </div>
+                            <div class="hero_card_price">₱68,500</div>
                         </div>
-                        <h3 class="promo_title">EXCLUSIVE</h3>
-                    </div>
-
-                    <!-- promo card 3 -->
-                    <div class="promo_card">
-                        <div class="promo_image_box">
-                            <img src="/frontend/Pictures/bestseller.jpg" alt="Best Sellers" class="promo_image">
-                        </div>
-                        <h3 class="promo_title">BEST SELLERS</h3>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- featured products section -->
-        <section class="featured_section" id="featured_section">
-            <div class="featured_inner">
-                <h2 class="section_heading">FEATURED PRODUCTS</h2>
-                <div class="featured_grid" id="featured_products_grid">
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #64748b;">
-                        <p>Loading featured products from Taurus Bike shop...</p>
+        <!-- ============================================================
+             2. SERVICE & VALUE PROPOSITION HIGHLIGHTS BAR
+             ============================================================ -->
+        <section class="service_highlights_section" id="service_highlights_section">
+            <div class="service_highlights_inner">
+                <div class="service_highlights_grid">
+                    <!-- item 1: Trained Technicians -->
+                    <div class="service_highlight_card">
+                        <div class="highlight_icon_box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                        </div>
+                        <div class="highlight_text_box">
+                            <h4 class="highlight_title">Trained Technicians</h4>
+                            <p class="highlight_desc">Shimano &amp; certified mechanics</p>
+                        </div>
+                    </div>
+
+                    <!-- item 2: Walk-In Service Only -->
+                    <div class="service_highlight_card">
+                        <div class="highlight_icon_box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
+                        <div class="highlight_text_box">
+                            <h4 class="highlight_title">Walk-In Service Only</h4>
+                            <p class="highlight_desc">No appointment needed, drop anytime</p>
+                        </div>
+                    </div>
+
+                    <!-- item 3: Free 15-Point Check -->
+                    <div class="service_highlight_card">
+                        <div class="highlight_icon_box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <polyline points="9 12 11 14 15 10"></polyline>
+                            </svg>
+                        </div>
+                        <div class="highlight_text_box">
+                            <h4 class="highlight_title">Free 15-Point Check</h4>
+                            <p class="highlight_desc">Complimentary stand safety check</p>
+                        </div>
+                    </div>
+
+                    <!-- item 4: Hours & Location -->
+                    <div class="service_highlight_card">
+                        <div class="highlight_icon_box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="highlight_text_box">
+                            <h4 class="highlight_title">Mon - Sat: 8AM - 6PM</h4>
+                            <p class="highlight_desc">Sandico St., Abangan Sur, Marilao</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- product categories 3-column section -->
-        <section class="categories_section" id="categories_section">
-            <div class="categories_inner">
-                <div class="categories_grid">
-                    <!-- category 1: bikes and frames -->
-                    <div class="category_item">
-                        <div class="category_image_box">
-                            <img src="/frontend/Pictures/bike&frames.jpg" alt="Bikes and Frames" class="category_image">
+        <!-- ============================================================
+             3. COLLECTIONS / FEATURED CATEGORIES
+             ============================================================ -->
+        <section class="collections_section" id="collections_section">
+            <div class="collections_inner">
+                <div class="section_header_row">
+                    <div class="section_title_group">
+                        <span class="section_eyebrow">COLLECTIONS</span>
+                        <h2 class="section_main_title">FEATURED CATEGORIES</h2>
+                    </div>
+                    <a href="/frontend/pages/shop.html" class="section_action_link">
+                        <span>Browse All Categories</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="categories_mosaic_grid">
+                    <!-- category 1: New Arrivals -->
+                    <a href="/frontend/pages/shop.html?category=Bikes" class="category_mosaic_card">
+                        <img src="/frontend/Pictures/new-arrival.jpg" alt="New Arrivals" class="category_mosaic_bg">
+                        <div class="category_mosaic_overlay"></div>
+                        <div class="category_mosaic_content">
+                            <span class="category_badge">NEW</span>
+                            <h3 class="category_card_title">NEW ARRIVALS</h3>
+                            <p class="category_card_subtitle">Latest 2026 carbon models &amp; gear</p>
                         </div>
-                        <h3 class="category_title">BIKES & FRAMES</h3>
-                        <p class="category_desc">Explore high-performance road bikes, rugged mountain trail frames, and versatile urban cruisers engineered for endurance.</p>
+                    </a>
+
+                    <!-- category 2: Exclusive Drops -->
+                    <a href="/frontend/pages/shop.html?category=Components" class="category_mosaic_card">
+                        <img src="/frontend/Pictures/exclusive.jpg" alt="Exclusive Drops" class="category_mosaic_bg">
+                        <div class="category_mosaic_overlay"></div>
+                        <div class="category_mosaic_content">
+                            <span class="category_badge">LIMITED</span>
+                            <h3 class="category_card_title">EXCLUSIVE DROPS</h3>
+                            <p class="category_card_subtitle">Pro drivetrain components &amp; wheelsets</p>
+                        </div>
+                    </a>
+
+                    <!-- category 3: Best Sellers -->
+                    <a href="/frontend/pages/shop.html?category=Bikes" class="category_mosaic_card">
+                        <img src="/frontend/Pictures/bestseller.jpg" alt="Best Sellers" class="category_mosaic_bg">
+                        <div class="category_mosaic_overlay"></div>
+                        <div class="category_mosaic_content">
+                            <span class="category_badge">POPULAR</span>
+                            <h3 class="category_card_title">BEST SELLERS</h3>
+                            <p class="category_card_subtitle">Top-rated mountain &amp; gravel bikes</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             4. CATALOG / FEATURED PRODUCTS
+             ============================================================ -->
+        <section class="catalog_section" id="catalog_section">
+            <div class="catalog_inner">
+                <div class="catalog_header_row">
+                    <div class="section_title_group">
+                        <span class="section_eyebrow">CATALOG</span>
+                        <h2 class="section_main_title">FEATURED PRODUCTS</h2>
+                    </div>
+                    <!-- category filter pills -->
+                    <div class="catalog_filter_tabs" id="catalog_filter_tabs">
+                        <button type="button" class="catalog_tab active" data-category="all">All</button>
+                        <button type="button" class="catalog_tab" data-category="bikes">Bikes &amp; Frames</button>
+                        <button type="button" class="catalog_tab" data-category="rims">Rims &amp; Tires</button>
+                        <button type="button" class="catalog_tab" data-category="shoes">Shoes &amp; Pedals</button>
+                    </div>
+                </div>
+
+                <!-- featured products grid -->
+                <div class="catalog_products_grid" id="featured_products_grid">
+                    <!-- product 1: Taurus Pro Carbon Road Frame -->
+                    <div class="catalog_product_card" data-category="bikes" data-id="featured_1">
+                        <span class="product_status_badge badge_hot">HOT</span>
+                        <div class="product_thumb_box">
+                            <img src="/frontend/Pictures/bike&frames.jpg" alt="Taurus Pro Carbon Road Frame" class="product_thumb_img">
+                        </div>
+                        <div class="product_info_box">
+                            <span class="product_cat_label">BIKES &amp; FRAMES</span>
+                            <h4 class="product_item_title">Taurus Pro Carbon Road Frame</h4>
+                            <p class="product_item_desc">Explore high-performance road bikes, rugged mountain trail frames, and versatile urban cruisers.</p>
+                            <div class="product_meta_row">
+                                <span class="product_item_price">₱45,000</span>
+                                <div class="product_rating_box">
+                                    <span class="rating_stars">★★★★★</span>
+                                    <span class="rating_count">(38)</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn_add_catalog_cart" data-id="featured_1" data-name="Taurus Pro Carbon Road Frame" data-price="45000" data-img="/frontend/Pictures/bike&frames.jpg" data-cat="Bikes & Frames">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                <span>Add to Cart</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- category 2: rims and tires -->
-                    <div class="category_item">
-                        <div class="category_image_box">
-                            <img src="/frontend/Pictures/rims&tiles.jpg" alt="Rims and Tires" class="category_image">
+                    <!-- product 2: LDCNC Aero Carbon Wheelset -->
+                    <div class="catalog_product_card" data-category="rims" data-id="featured_2">
+                        <span class="product_status_badge badge_popular">POPULAR</span>
+                        <div class="product_thumb_box">
+                            <img src="/frontend/Pictures/rims&tiles.jpg" alt="LDCNC Aero Carbon Wheelset" class="product_thumb_img">
                         </div>
-                        <h3 class="category_title">RIMS & TIRES</h3>
-                        <p class="category_desc">Upgrade your ride with aerodynamic wheelsets, puncture-resistant tubeless tires, and precision-built alloy rims.</p>
+                        <div class="product_info_box">
+                            <span class="product_cat_label">RIMS &amp; TIRES</span>
+                            <h4 class="product_item_title">LDCNC Aero Carbon Wheelset</h4>
+                            <p class="product_item_desc">Upgrade your ride with aerodynamic wheelsets, puncture-resistant tubeless tires, and precision-built alloy rims.</p>
+                            <div class="product_meta_row">
+                                <span class="product_item_price">₱28,900</span>
+                                <div class="product_rating_box">
+                                    <span class="rating_stars">★★★★★</span>
+                                    <span class="rating_count">(24)</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn_add_catalog_cart" data-id="featured_2" data-name="LDCNC Aero Carbon Wheelset" data-price="28900" data-img="/frontend/Pictures/rims&tiles.jpg" data-cat="Rims & Tires">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                <span>Add to Cart</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- category 3: shoes and pedals -->
-                    <div class="category_item">
-                        <div class="category_image_box">
-                            <img src="/frontend/Pictures/shoes&pedals.jpg" alt="Shoes and Pedals" class="category_image">
+                    <!-- product 3: Shimano S-Phyre Pro Cycling Shoes -->
+                    <div class="catalog_product_card" data-category="shoes" data-id="featured_3">
+                        <span class="product_status_badge badge_bestseller">BEST SELLER</span>
+                        <div class="product_thumb_box">
+                            <img src="/frontend/Pictures/shoes&pedals.jpg" alt="Shimano S-Phyre Pro Cycling Shoes" class="product_thumb_img">
                         </div>
-                        <h3 class="category_title">SHOES & PEDALS</h3>
-                        <p class="category_desc">Maximize pedaling efficiency and grip with SPD clip-in cycling shoes, flat platform pedals, and ergonomic cleats.</p>
+                        <div class="product_info_box">
+                            <span class="product_cat_label">SHOES &amp; PEDALS</span>
+                            <h4 class="product_item_title">Shimano S-Phyre Pro Cycling Shoes</h4>
+                            <p class="product_item_desc">Maximize pedaling efficiency and grip with SPD clip-in cycling shoes, flat platform pedals, and ergonomic cleats.</p>
+                            <div class="product_meta_row">
+                                <span class="product_item_price">₱12,500</span>
+                                <div class="product_rating_box">
+                                    <span class="rating_stars">★★★★★</span>
+                                    <span class="rating_count">(42)</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn_add_catalog_cart" data-id="featured_3" data-name="Shimano S-Phyre Pro Cycling Shoes" data-price="12500" data-img="/frontend/Pictures/shoes&pedals.jpg" data-cat="Shoes & Pedals">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                <span>Add to Cart</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

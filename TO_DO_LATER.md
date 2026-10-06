@@ -54,11 +54,16 @@ This roadmap focuses primarily on the **Customer Journey (`Login ➔ Browse ➔ 
   - [x] Production SMTP email dispatch via `nodemailer` with built-in development terminal simulator fallback.
   - [x] Interactive 6-digit OTP modal on `login.html` with auto-focus jumping, backspace navigation, paste handling, and 60-second resend timer.
   - [x] Unverified account login guard: rejects unverified logins with prompt to verify code immediately.
-- [ ] **Auth Guard & Checkout Redirection**
-  - [ ] When a guest user clicks "Proceed to Checkout" in `mycart.html`, trigger `auth_modal.js` without losing their cart items.
-  - [ ] Automatically resume and reopen the checkout modal upon successful customer login.
-  - [ ] Update navigation bar on all customer pages (`index.html`, `shop.html`, `service.html`) to dynamically display user avatar, full name, and "My Orders" link when signed in.
-  - [ ] Handle expired session tokens gracefully with automatic re-login prompt instead of generic error alerts.
+- [x] **Auth Guard & Checkout Guest Interceptor**
+  - [x] When a guest user clicks "Proceed to Checkout" in `mycart.html`, explicitly show `"Please create an account first to proceed to checkout."` and trigger registration modal without losing their cart items.
+  - [x] Automatically resume and reopen the checkout modal upon successful customer login.
+  - [x] Handle expired session tokens gracefully with automatic re-login prompt.
+- [x] **Guest Dashboard Visibility (Account Login Required)**
+  - [x] Unauthenticated visitors without an account **only** see the **"Account Login Required"** screen in the dashboard; all dashboard fields and sidebar navigation links are hidden until signed in.
+  - [x] Public Order Tracking: Orders can be looked up anytime using Order Number or Invoice Number via `GET /api/orders/track/:orderNumber`.
+- [x] **Saved Payments Wallet Requirement for Checkout**
+  - [x] Persistent saved wallet management (`payments.html`) supporting GCash, Maya, and Card methods with deletion and primary selection.
+  - [x] Enforced checkout rule: Logged-in customers cannot complete a transaction without a saved wallet in their Payments field. If none exist, checkout is blocked with a direct prompt to add a wallet.
 
 ### 2. Catalog Discovery & Stock Availability Transparency
 - [x] **Dynamic Catalog & Filtering**
@@ -80,28 +85,25 @@ This roadmap focuses primarily on the **Customer Journey (`Login ➔ Browse ➔ 
   - [x] Quantity steppers (+ / -) capped at product's maximum available stock.
   - [x] Item removal button and "Empty Cart" action.
   - [x] Empty cart placeholder state with quick action button directing back to `shop.html`.
-- [ ] **Transparent Order Summary Calculation**
-  - [ ] Real-time breakdown: `Subtotal`, `Fulfillment Fee` (Delivery: ₱150 / In-Store Pickup: ₱0), `Discount Amount`, and `Total Price`.
+- [x] **Transparent Order Summary Calculation**
+  - [x] Real-time breakdown: `Subtotal`, `Delivery Fee` (Delivery: Handled by customer courier / In-Store Pickup: ₱0), `Discount Amount`, and `Total Price`.
 
 ### 4. Customer Checkout Flow (`mycart.html` Modal)
-- [ ] **Fulfillment Method Selector**
-  - [ ] Provide clear toggle between:
-    - 🚚 **Standard Delivery:** Fixed ₱150 delivery fee (Marilao & neighboring areas). Requires delivery address and contact phone.
-    - 🏬 **Store Pickup:** ₱0 delivery fee (Pick up at Taurus Bike Shop, Marilao, Bulacan).
-- [ ] **Customer Contact & Delivery Form**
-  - [ ] Pre-fill fields with user's saved profile data:
-    - Recipient Full Name (editable)
-    - Mobile Phone Number (validated 11-digit PH mobile format, e.g., `09XXXXXXXXX`)
-    - Complete Delivery Address (Street / Barangay / Municipality / Province)
-    - Special Delivery / Pickup Notes (optional instructions)
-- [ ] **Payment Method Selection**
-  - [ ] Let customer select their intended payment method:
-    - 💵 **Cash on Delivery (COD)** / **Cash on Pickup**
-    - 📱 **GCash / E-Wallet Over-the-Counter** (with payment instructions)
-- [ ] **Robust Pre-Submission Validation**
-  - [ ] Prevent submission if cart is empty.
-  - [ ] Validate phone number and shipping address before dispatching request.
-  - [ ] Prevent multiple accidental submissions by disabling submit button and displaying a loading spinner during API dispatch.
+- [x] **Fulfillment Method Selector**
+  - [x] Provide clear interactive cards between:
+    - 🚚 **Home Delivery:** Delivery fee handled directly by customer upon courier delivery.
+    - 🏬 **Store Pick-Up:** ₱0 delivery fee (Pick up at Taurus Bike Shop, Marilao, Bulacan).
+- [x] **Store Pick-Up Scheduling & Delivery Forms**
+  - [x] **Store Pick-Up:** Required Preferred Pick-up Date (with minimum date validation) and Time Slot selection (8AM–6PM store hours).
+  - [x] **Delivery:** Pre-filled recipient phone number and complete delivery address from user profile.
+- [x] **Payment Method Selection & Policy Enforcement**
+  - [x] **Delivery Policy:** Advance payment required via **GCash** or **BPI**. Cash on Delivery (COD) is strictly disabled with clear explanation notices.
+  - [x] **Pick-Up Policy:** All payment methods enabled (**Cash on Pick-Up**, **GCash**, and **BPI**).
+  - [x] Dedicated payment instruction cards for GCash and BPI with account details and optional Reference Number input.
+- [x] **Robust Pre-Submission Validation**
+  - [x] Prevent submission if cart is empty.
+  - [x] Validate phone number and shipping address for delivery, and scheduled pickup date/time for in-store pickup before dispatching request.
+  - [x] Prevent multiple accidental submissions by disabling submit button and displaying a loading spinner during API dispatch.
 
 ### 5. Order Confirmation & Customer Order Tracking (`myorders.html`)
 - [x] **Order Confirmation Modal**
