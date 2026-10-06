@@ -169,6 +169,16 @@ This roadmap outlines the complete status, backend integration requirements, and
 
 ---
 
+### Phase 10: Security Hardening & Environment Sanitization
+- [x] **Secrets & Credentials Protection**
+  - [x] Audit tracked files to ensure `.env` and sensitive environment configurations are never leaked.
+  - [x] Remove hardcoded default admin credentials from `seed_default_admin.js`, `login.html`, and `HOW_TO_RUN.md`.
+  - [x] Introduce `DEFAULT_ADMIN_PASSWORD` environment variable in `.env` and `.env.example`.
+  - [x] Eliminate insecure `fallback_secret` fallbacks in JWT verification (`authMiddleware.js`) and generation (`authController.js`).
+  - [x] Sanitize documentation (`HOW_TO_RUN.md`) to remove raw database connection strings and secrets.
+
+---
+
 ## 🔌 API Endpoint Reference for Admin Integration
 
 The following endpoints built in the backend are ready for the admin pages to consume:

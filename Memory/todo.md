@@ -55,3 +55,9 @@
   - [x] Store profile, registration, and business hours management.
   - [x] Payment channels and delivery fulfillment configurations.
   - [x] System audit log and export.
+- [x] **Phase 10: Security Hardening & Environment Sanitization**
+  - [x] Audit tracked repository files for exposed secrets.
+  - [x] Remove hardcoded credentials from `seed_default_admin.js`, `login.html`, and `HOW_TO_RUN.md`.
+  - [x] Switch to `DEFAULT_ADMIN_PASSWORD` environment variable.
+  - [x] Remove insecure JWT fallback secrets in `authMiddleware.js` and `authController.js`.
+  - [x] Sanitize database connection strings and sensitive guide instructions.
