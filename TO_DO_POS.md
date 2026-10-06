@@ -147,14 +147,35 @@ This roadmap tracks the complete development, backend infrastructure, live datab
 
 ---
 
+### 🔐 Phase 8: Cashier Authentication & Shift Session Gate (Eliminating Pre-filled Accounts)
+- [ ] **Remove Pre-filled / Hardcoded Cashier Identity**
+  - [ ] Strip hardcoded `"Russel Lu Caisido"` from initial HTML navigation bars in `POS-home.html`, `POS-main.html`, and `POS-history.html`.
+  - [ ] Remove automatic hardcoded fallback in `POS.js`; replace with dynamic session lookup from `sessionStorage` / `localStorage`.
+- [ ] **Dedicated Cashier Login Gate (`POS-login.html` / Lock Screen Modal)**
+  - [ ] Create dedicated `frontend/pages/POS/POS-login.html` (or modal terminal lock).
+  - [ ] Cashier sign-in form: Email / Staff ID and Password (or quick 4-digit Cashier PIN).
+  - [ ] Connect to `POST /api/auth/login` to authenticate staff against the database `users` table.
+  - [ ] Restrict POS access strictly to authorized store personnel (`role IN ('admin', 'staff')`).
+- [ ] **Session Protection & Route Guard**
+  - [ ] Add client-side route guard: if no active cashier session exists when opening `POS-home.html` or `POS-main.html`, redirect immediately to `POS-login.html`.
+  - [ ] Store active session object (`cashierId`, `cashierName`, `role`, `token`) in browser storage.
+  - [ ] Dynamically render active cashier name and staff role badge in navbar on every POS page.
+- [ ] **Shift Management & Cashier Clock-Out**
+  - [ ] Add **"Switch Cashier / Clock Out"** button to navbar header.
+  - [ ] Terminate cashier session, clear storage, and return to login screen.
+  - [ ] Tie orders and audit receipts to the logged-in staff member's real account ID in database.
+
+---
+
 ## 🔌 API Endpoint Reference for POS Integration
 
 | Resource | HTTP Method | Endpoint | Description |
 | :--- | :--- | :--- | :--- |
 | **Catalog** | `GET` | `/api/products` | Fetch all products with live stock, SKU, and prices |
 | **Categories** | `GET` | `/api/categories` | Reference list of 16 store product categories |
-| **Checkout** | `POST` | `/api/orders` | Process walk-in order, deduct stock, create billing invoice |
+| **POS Checkout** | `POST` | `/api/orders/pos` | Process walk-in order, deduct stock, create billing invoice |
+| **POS History** | `GET` | `/api/orders/pos` | Fetch walk-in transaction history for columnar ledger |
+| **POS Summary** | `GET` | `/api/orders/pos/summary` | Fetch today's sales volume and transaction count |
 | **Repairs** | `POST` | `/api/repairs` | Log repair ticket when maintenance service is sold |
-| **History** | `GET` | `/api/orders` | Fetch walk-in transaction history |
-| **Summary** | `GET` | `/api/dashboard/summary` | Fetch today's sales volume and transaction count |
-| **Staff** | `GET` | `/api/users` | List staff & mechanics for technician assignments |
+| **Cashier Auth** | `POST` | `/api/auth/login` | Authenticate staff/cashier credentials |
+| **Staff List** | `GET` | `/api/users` | List staff & mechanics for technician assignments |
