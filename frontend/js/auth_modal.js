@@ -48,6 +48,7 @@ const BICOBS_Auth = (() => {
     localStorage.removeItem('tb_user_phone');
     localStorage.removeItem('tb_user_shipping');
     updateHeaderUI();
+    window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: null }));
   }
 
   // Build and inject modal DOM if not already present
@@ -437,9 +438,8 @@ const BICOBS_Auth = (() => {
       const cb = pendingCallback;
       pendingCallback = null;
       cb(user);
-    } else {
-      window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: user }));
     }
+    window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: user }));
   }
 
   // Show the mini login modal

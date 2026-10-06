@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_payment_modal();
     setup_ticket_modal();
     setup_global_keyboard();
-    setup_profile_sync();
     setup_profile_navigation();
     setup_shopping_cart();
     setup_password_visibility();
@@ -19,39 +18,129 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_ticket_chat_modal();
     setup_logout_modal();
     setup_products_catalog();
-    load_dashboard_summary_from_backend();
-    load_user_orders_from_backend();
-    load_user_payments_from_backend();
-    load_recommended_products_from_backend();
 
-    // Check if on a protected customer dashboard page without auth
-    check_page_auth_guard();
+    // Check auth status and gate all dashboard fields if unauthenticated
+    apply_dashboard_auth_visibility();
+
+    // Listen for auth state changes so dashboard dynamically locks/unlocks
+    window.addEventListener('bicobs_auth_changed', () => {
+        apply_dashboard_auth_visibility();
+    });
 });
 
-/* Page level auth guard for dashboard pages */
-function check_page_auth_guard() {
+/* Apply strict auth gating for dashboard: all fields hidden until logged in */
+function apply_dashboard_auth_visibility() {
     const isDashboardPage = window.location.pathname.includes('/Dashboard/') || 
+        window.location.pathname.includes('dashboard.html') || 
         window.location.pathname.includes('profile.html') || 
         window.location.pathname.includes('myorders.html') || 
         window.location.pathname.includes('payments.html') || 
-        window.location.pathname.includes('support.html');
+        window.location.pathname.includes('support.html') ||
+        window.location.pathname.includes('mycart.html') ||
+        window.location.pathname.includes('products.html');
 
-    if (isDashboardPage && window.BICOBS_Auth && !window.BICOBS_Auth.isAuthenticated()) {
-        const path = window.location.pathname;
-        let msg = 'Please sign in to access your customer account';
-        if (path.includes('profile.html')) msg = 'Please sign in to view and edit your profile settings';
-        if (path.includes('myorders.html')) msg = 'Please sign in to view your order history and tracking';
-        if (path.includes('payments.html')) msg = 'Please sign in to view your billing and payment history';
-        if (path.includes('support.html')) msg = 'Please sign in to manage your support tickets';
+    if (!isDashboardPage) return;
 
-        window.BICOBS_Auth.showLoginModal({
-            message: msg,
-            onSuccess: () => {
-                load_user_orders_from_backend();
-                load_user_payments_from_backend();
-                setup_profile_sync();
+    const isAuth = window.BICOBS_Auth ? window.BICOBS_Auth.isAuthenticated() : false;
+    const dashboardContainer = document.getElementById('dashboard_container');
+    let authGate = document.getElementById('dashboard_auth_gate');
+
+    if (!isAuth) {
+        // User is NOT logged in: HIDE all fields in the dashboard
+        if (dashboardContainer) {
+            dashboardContainer.style.display = 'none';
+        }
+
+        // Ensure Auth Gate card exists in the DOM
+        if (!authGate) {
+            authGate = document.createElement('div');
+            authGate.id = 'dashboard_auth_gate';
+            authGate.className = 'dashboard_auth_gate';
+
+            const isCartPage = window.location.pathname.includes('mycart.html');
+
+            if (isCartPage) {
+                authGate.innerHTML = `
+                    <div class="auth_gate_card">
+                        <div class="auth_gate_icon_box">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <span class="auth_gate_badge">DASHBOARD CART</span>
+                        <h2 class="auth_gate_title">Dashboard Cart Requires Sign In</h2>
+                        <p class="auth_gate_desc">
+                            The Dashboard Cart is reserved for registered member accounts. You can access and manage your shopping cart anytime via the dedicated top right Shopping Cart area without needing to log in.
+                        </p>
+                        <div class="auth_gate_actions">
+                            <a href="/frontend/pages/cart.html" class="btn_gate_primary">
+                                <i class="fas fa-shopping-cart"></i> View Shopping Cart (Top Right Area)
+                            </a>
+                            <button type="button" class="btn_gate_secondary" id="btn_gate_signin">
+                                <i class="fas fa-sign-in-alt"></i> Sign In to Account
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authGate.innerHTML = `
+                    <div class="auth_gate_card">
+                        <div class="auth_gate_icon_box">
+                            <i class="fas fa-user-lock"></i>
+                        </div>
+                        <span class="auth_gate_badge">AUTHENTICATION REQUIRED</span>
+                        <h2 class="auth_gate_title">Sign In to Access Customer Dashboard</h2>
+                        <p class="auth_gate_desc">
+                            All account fields, order tracking, address books, and profile settings are reserved for registered Taurus Bike members. Please sign in to view your dashboard.
+                        </p>
+                        <div class="auth_gate_actions">
+                            <button type="button" class="btn_gate_primary" id="btn_gate_signin">
+                                <i class="fas fa-sign-in-alt"></i> Sign In / Register
+                            </button>
+                            <a href="/frontend/pages/cart.html" class="btn_gate_secondary">
+                                <i class="fas fa-shopping-cart"></i> View My Shopping Cart
+                            </a>
+                        </div>
+                        <div class="auth_gate_note">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Looking for your cart? You can view and manage items in your <a href="/frontend/pages/cart.html">Shopping Cart</a> anytime without signing in.</span>
+                        </div>
+                    </div>
+                `;
             }
-        });
+
+            if (dashboardContainer && dashboardContainer.parentNode) {
+                dashboardContainer.parentNode.insertBefore(authGate, dashboardContainer);
+            } else {
+                document.body.appendChild(authGate);
+            }
+        }
+
+        authGate.style.display = 'block';
+
+        // Bind sign in button in the gate card
+        const btnSignIn = authGate.querySelector('#btn_gate_signin');
+        if (btnSignIn && !btnSignIn.dataset.bound) {
+            btnSignIn.dataset.bound = 'true';
+            btnSignIn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const currentPath = window.location.pathname || '/frontend/pages/Dashboard/dashboard.html';
+                window.location.href = '/frontend/pages/login.html?redirect=' + encodeURIComponent(currentPath);
+            });
+        }
+    } else {
+        // User IS logged in: reveal all fields in the dashboard and load data
+        if (authGate) {
+            authGate.style.display = 'none';
+        }
+        if (dashboardContainer) {
+            dashboardContainer.style.display = 'flex';
+        }
+
+        // Load protected customer data
+        setup_profile_sync();
+        load_dashboard_summary_from_backend();
+        load_user_orders_from_backend();
+        load_user_payments_from_backend();
+        load_recommended_products_from_backend();
     }
 }
 

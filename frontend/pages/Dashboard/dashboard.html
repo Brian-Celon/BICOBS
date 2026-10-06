@@ -39,7 +39,7 @@
                     </button>
                 </div>
                 <div class="header_actions_group">
-                    <a href="/frontend/pages/Dashboard/mycart.html" class="btn_header">
+                    <a href="/frontend/pages/cart.html" class="btn_header">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="9" cy="21" r="1"/>
                             <circle cx="20" cy="21" r="1"/>
@@ -77,7 +77,33 @@
     </nav>
     <div class="nav_overlay" id="nav_overlay"></div>
 
-    <!-- main layout container with gap -->
+    <!-- Dashboard Auth Gate (Shown when user is not logged in) -->
+    <div id="dashboard_auth_gate" class="dashboard_auth_gate" style="display: none;">
+        <div class="auth_gate_card">
+            <div class="auth_gate_icon_box">
+                <i class="fas fa-user-lock"></i>
+            </div>
+            <span class="auth_gate_badge">AUTHENTICATION REQUIRED</span>
+            <h2 class="auth_gate_title">Sign In to Access Customer Dashboard</h2>
+            <p class="auth_gate_desc">
+                All account fields, order tracking, address books, and profile settings are reserved for registered Taurus Bike members. Please sign in to view your dashboard.
+            </p>
+            <div class="auth_gate_actions">
+                <button type="button" class="btn_gate_primary" id="btn_gate_signin">
+                    <i class="fas fa-sign-in-alt"></i> Sign In / Register
+                </button>
+                <a href="/frontend/pages/cart.html" class="btn_gate_secondary">
+                    <i class="fas fa-shopping-cart"></i> View My Shopping Cart
+                </a>
+            </div>
+            <div class="auth_gate_note">
+                <i class="fas fa-info-circle"></i>
+                <span>Looking for your cart? You can view and manage items in your <a href="/frontend/pages/cart.html">Shopping Cart</a> anytime without signing in.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- main layout container with gap (Hidden until user logs in) -->
     <div id="dashboard_container" class="dashboard_layout">
         <!-- floating sidebar card -->
         <aside id="dashboard_sidebar" class="sidebar_container">

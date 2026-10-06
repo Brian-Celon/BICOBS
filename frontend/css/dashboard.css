@@ -1390,8 +1390,10 @@ body {
 }
 
 /* Modal Content Card */
-.modal_container {
+.modal_container,
+.modal_box {
     background: #ffffff;
+    background-color: #ffffff;
     border-radius: 16px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
     width: 90%;
@@ -1401,9 +1403,12 @@ body {
     transition: transform 0.25s ease;
     max-height: 90vh;
     overflow-y: auto;
+    position: relative;
+    z-index: 1001;
 }
 
-.modal_overlay.active .modal_container {
+.modal_overlay.active .modal_container,
+.modal_overlay.active .modal_box {
     transform: translateY(0) scale(1);
 }
 
@@ -2882,5 +2887,220 @@ body {
     background: #f1f5f9;
     border-color: #94a3b8;
     color: #0f172a;
+}
+
+/* ==========================================================================
+   Dashboard Auth Gate (Hidden when logged in, visible when logged out)
+   ========================================================================== */
+.dashboard_auth_gate {
+    width: 100%;
+    max-width: 680px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.auth_gate_card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 48px 36px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth_gate_icon_box {
+    width: 68px;
+    height: 68px;
+    background: #fef2f2;
+    color: #dc2626;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    border: 2px solid #fee2e2;
+}
+
+.auth_gate_badge {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    margin-bottom: 12px;
+}
+
+.auth_gate_title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
+    line-height: 1.25;
+}
+
+.auth_gate_desc {
+    font-size: 14.5px;
+    color: #64748b;
+    line-height: 1.6;
+    max-width: 520px;
+    margin-bottom: 28px;
+}
+
+.auth_gate_actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.btn_gate_primary {
+    background-color: #b91c1c;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 4px 12px rgba(185, 28, 28, 0.25);
+}
+
+.btn_gate_primary:hover {
+    background-color: #991b1b;
+    transform: translateY(-1px);
+}
+
+.btn_gate_secondary {
+    background-color: #ffffff;
+    color: #1e293b;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn_gate_secondary:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.auth_gate_note {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    max-width: 520px;
+    line-height: 1.45;
+}
+
+.auth_gate_note a {
+    color: #b91c1c;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.auth_gate_note i {
+    color: #3b82f6;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Standalone Top-Right Shopping Cart Page Layout (No dashboard sidebar)
+   ========================================================================== */
+.standalone_cart_page {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.standalone_cart_header {
+    margin-bottom: 24px;
+}
+
+.standalone_breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.standalone_breadcrumb a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.standalone_breadcrumb a:hover {
+    color: #0f172a;
+}
+
+.standalone_cart_title_row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.standalone_cart_title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+.standalone_cart_subtitle {
+    font-size: 13.5px;
+    color: #64748b;
+}
+
+.standalone_cart_grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .standalone_cart_grid {
+        grid-template-columns: 1fr;
+    }
 }
 

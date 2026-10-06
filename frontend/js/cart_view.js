@@ -138,17 +138,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (btn_guest_banner_login && window.BICOBS_Auth) {
-        btn_guest_banner_login.addEventListener('click', () => {
-            window.BICOBS_Auth.showLoginModal({
-                message: 'Sign in to Taurus Bike to place and manage your orders',
-                onSuccess: () => {
-                    updateAuthStatusUI();
-                    renderCart();
-                }
-            });
+    if (btn_guest_banner_login) {
+        btn_guest_banner_login.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentPath = window.location.pathname || '/frontend/pages/cart.html';
+            window.location.href = '/frontend/pages/login.html?redirect=' + encodeURIComponent(currentPath);
         });
     }
+
+    // React dynamically to global auth state changes
+    window.addEventListener('bicobs_auth_changed', () => {
+        updateAuthStatusUI();
+    });
 
     // Synchronize item selection state with cart
     function syncSelectionState(cart) {
@@ -523,17 +524,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btn_proceed_to_login) {
-        btn_proceed_to_login.addEventListener('click', () => {
+        btn_proceed_to_login.addEventListener('click', (e) => {
+            e.preventDefault();
             hideAccountWarningModal();
-            if (window.BICOBS_Auth) {
-                window.BICOBS_Auth.showLoginModal({
-                    message: 'Sign in to complete your Taurus Bike order',
-                    onSuccess: () => {
-                        updateAuthStatusUI();
-                        openCheckoutModal();
-                    }
-                });
-            }
+            const currentPath = window.location.pathname || '/frontend/pages/cart.html';
+            window.location.href = '/frontend/pages/login.html?redirect=' + encodeURIComponent(currentPath);
         });
     }
 

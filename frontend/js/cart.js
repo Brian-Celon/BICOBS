@@ -178,7 +178,7 @@ const BICOBS_Cart = (() => {
     });
 
     // Also update header cart link if it has a count container
-    const headerCartBtns = document.querySelectorAll('.btn_header[href*="mycart.html"], .header_actions_group a[href*="mycart.html"]');
+    const headerCartBtns = document.querySelectorAll('.btn_header[href*="cart.html"], .header_actions_group a[href*="cart.html"], .btn_header[href*="mycart.html"], .header_actions_group a[href*="mycart.html"]');
     headerCartBtns.forEach(btn => {
       let pill = btn.querySelector('.cart_count_pill');
       if (!pill) {
