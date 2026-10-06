@@ -27,6 +27,8 @@ const BICOBS_Cart = (() => {
     return null;
   }
 
+  let isSyncing = false;
+
   // Active storage key: user-specific key when logged in, guest key when logged out
   function getActiveStorageKey() {
     const userIdentifier = getCurrentUserIdentifier();
@@ -38,44 +40,53 @@ const BICOBS_Cart = (() => {
 
   // Sync guest cart into user account cart upon login
   function syncCartOnAuth() {
-    const userIdentifier = getCurrentUserIdentifier();
-    if (!userIdentifier) return;
+    if (isSyncing) return;
+    isSyncing = true;
 
-    const userKey = `bicobs_cart_user_${userIdentifier}`;
-    const guestData = localStorage.getItem(GUEST_STORAGE_KEY);
-    const legacyData = localStorage.getItem(LEGACY_STORAGE_KEY);
-
-    let guestItems = [];
     try {
-      if (guestData) guestItems = JSON.parse(guestData);
-      else if (legacyData) guestItems = JSON.parse(legacyData);
-    } catch (e) {}
+      const userIdentifier = getCurrentUserIdentifier();
+      if (!userIdentifier) return;
 
-    if (Array.isArray(guestItems) && guestItems.length > 0) {
-      let userCart = [];
+      const userKey = `bicobs_cart_user_${userIdentifier}`;
+      const guestData = localStorage.getItem(GUEST_STORAGE_KEY);
+      const legacyData = localStorage.getItem(LEGACY_STORAGE_KEY);
+
+      let guestItems = [];
       try {
-        const existingUserData = localStorage.getItem(userKey);
-        if (existingUserData) userCart = JSON.parse(existingUserData);
+        if (guestData) guestItems = JSON.parse(guestData);
+        else if (legacyData) guestItems = JSON.parse(legacyData);
       } catch (e) {}
 
-      guestItems.forEach(guestItem => {
-        const gId = String(guestItem.id || guestItem._id);
-        const existingIdx = userCart.findIndex(i => String(i.id || i._id) === gId);
-        if (existingIdx > -1) {
-          const maxStock = typeof guestItem.stockQuantity === 'number' ? guestItem.stockQuantity : 99;
-          userCart[existingIdx].quantity = Math.min(maxStock, (userCart[existingIdx].quantity || 1) + (guestItem.quantity || 1));
-        } else {
-          userCart.push(guestItem);
-        }
-      });
-
-      localStorage.setItem(userKey, JSON.stringify(userCart));
+      // Always clear guest & legacy keys so they never trigger again
       localStorage.removeItem(GUEST_STORAGE_KEY);
       localStorage.removeItem(LEGACY_STORAGE_KEY);
-    }
 
-    updateBadgeCount();
-    window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart: getCart() } }));
+      if (Array.isArray(guestItems) && guestItems.length > 0) {
+        let userCart = [];
+        try {
+          const existingUserData = localStorage.getItem(userKey);
+          if (existingUserData) userCart = JSON.parse(existingUserData);
+        } catch (e) {}
+
+        guestItems.forEach(guestItem => {
+          const gId = String(guestItem.id || guestItem._id);
+          const existingIdx = userCart.findIndex(i => String(i.id || i._id) === gId);
+          if (existingIdx > -1) {
+            const maxStock = typeof guestItem.stockQuantity === 'number' ? guestItem.stockQuantity : 99;
+            userCart[existingIdx].quantity = Math.min(maxStock, (userCart[existingIdx].quantity || 1) + (guestItem.quantity || 1));
+          } else {
+            userCart.push(guestItem);
+          }
+        });
+
+        localStorage.setItem(userKey, JSON.stringify(userCart));
+      }
+
+      updateBadgeCount();
+      window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart: getCart() } }));
+    } finally {
+      isSyncing = false;
+    }
   }
 
   // Handle logout: clear guest session so signed-in cart does not stay on screen
@@ -90,11 +101,8 @@ const BICOBS_Cart = (() => {
   function getCart() {
     try {
       const userIdentifier = getCurrentUserIdentifier();
-      if (userIdentifier && (localStorage.getItem(GUEST_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY))) {
-        syncCartOnAuth();
-      }
-
       const activeKey = getActiveStorageKey();
+
       // One-time legacy migration for guest
       if (!userIdentifier && localStorage.getItem(LEGACY_STORAGE_KEY) && !localStorage.getItem(GUEST_STORAGE_KEY)) {
         localStorage.setItem(GUEST_STORAGE_KEY, localStorage.getItem(LEGACY_STORAGE_KEY));
