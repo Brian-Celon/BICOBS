@@ -47,6 +47,9 @@ const BICOBS_Auth = (() => {
     localStorage.removeItem('tb_user_email');
     localStorage.removeItem('tb_user_phone');
     localStorage.removeItem('tb_user_shipping');
+    if (window.BICOBS_Cart && typeof window.BICOBS_Cart.handleLogout === 'function') {
+      window.BICOBS_Cart.handleLogout();
+    }
     updateHeaderUI();
     window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: null }));
   }
@@ -430,6 +433,9 @@ const BICOBS_Auth = (() => {
     localStorage.setItem('tb_user_email', user.email || '');
     localStorage.setItem('tb_user_phone', user.phone || '');
     localStorage.setItem('tb_user_shipping', user.address || '');
+    if (window.BICOBS_Cart && typeof window.BICOBS_Cart.syncCartOnAuth === 'function') {
+      window.BICOBS_Cart.syncCartOnAuth();
+    }
     updateHeaderUI();
   }
 

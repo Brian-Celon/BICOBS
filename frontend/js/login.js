@@ -393,6 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('tb_user_phone', result.data.phone || '');
           localStorage.setItem('tb_user_shipping', result.data.address || '');
 
+          if (window.BICOBS_Cart && typeof window.BICOBS_Cart.syncCartOnAuth === 'function') {
+            window.BICOBS_Cart.syncCartOnAuth();
+          }
+          window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: result.data }));
+
           showAuthAlert('sign_in_alert', `Welcome back, ${result.data.name}! Redirecting...`, 'success');
           setTimeout(() => {
             window.location.href = getRedirectUrl();
@@ -525,6 +530,10 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('tb_user_email', result.data.email);
           localStorage.setItem('tb_user_phone', result.data.phone || cleanPhone);
           localStorage.setItem('tb_user_shipping', fullAddress);
+          if (window.BICOBS_Cart && typeof window.BICOBS_Cart.syncCartOnAuth === 'function') {
+            window.BICOBS_Cart.syncCartOnAuth();
+          }
+          window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: result.data }));
 
           showAuthAlert('sign_up_alert', `Welcome to Taurus Bike, ${username}! Your account has been created. Redirecting...`, 'success');
           setTimeout(() => {
@@ -735,6 +744,11 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('tb_user_email', result.data.email);
           localStorage.setItem('tb_user_phone', result.data.phone || '');
           localStorage.setItem('tb_user_shipping', result.data.address || '');
+
+          if (window.BICOBS_Cart && typeof window.BICOBS_Cart.syncCartOnAuth === 'function') {
+            window.BICOBS_Cart.syncCartOnAuth();
+          }
+          window.dispatchEvent(new CustomEvent('bicobs_auth_changed', { detail: result.data }));
 
           showOtpAlert('Email verified successfully! Welcome to Taurus Bike!', 'success');
           setTimeout(() => {

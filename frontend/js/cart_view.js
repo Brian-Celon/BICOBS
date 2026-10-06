@@ -153,9 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // React dynamically to global auth state changes
+    // React dynamically to global auth state changes and cart updates
     window.addEventListener('bicobs_auth_changed', () => {
         updateAuthStatusUI();
+        renderCart();
+    });
+
+    window.addEventListener('bicobs_cart_updated', () => {
+        renderCart();
     });
 
     // Synchronize item selection state with cart
@@ -588,11 +593,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Gate 2: Check if user has added a payment method in Payments section of customer dashboard
+            // Gate 2: Payment method check
+            // For Store Pick Up, cash payment is available at the counter, so users without saved e-wallets
+            // can still proceed directly via Store Pick-up.
             const hasPayment = window.BICOBS_Payments ? window.BICOBS_Payments.hasMethod() : false;
             if (!hasPayment) {
-                showPaymentRequiredModal();
-                return;
+                fulfillmentType = 'pickup';
+                if (mode_pickup) mode_pickup.checked = true;
+                if (card_mode_pickup) card_mode_pickup.classList.add('active');
+                if (card_mode_delivery) card_mode_delivery.classList.remove('active');
+                if (section_delivery_address) section_delivery_address.style.display = 'none';
+                if (section_pickup_info) section_pickup_info.style.display = 'block';
+                if (delivery_payment_badge) delivery_payment_badge.style.display = 'none';
+                if (delivery_payment_notice) delivery_payment_notice.style.display = 'none';
+                selectedPaymentMethod = 'cash';
+                selectedUserPaymentAccount = null;
             }
 
             openCheckoutModal();
@@ -603,29 +618,55 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupFulfillmentAndPayment() {
         // Toggle Delivery vs Store Pick-up
         const modeRadios = document.querySelectorAll('input[name="fulfillment_mode"]');
+        const handleModeChange = (targetVal) => {
+            fulfillmentType = (targetVal === 'pickup') ? 'pickup' : 'delivery';
+            if (mode_delivery) mode_delivery.checked = (fulfillmentType === 'delivery');
+            if (mode_pickup) mode_pickup.checked = (fulfillmentType === 'pickup');
+            if (card_mode_delivery) card_mode_delivery.classList.toggle('active', fulfillmentType === 'delivery');
+            if (card_mode_pickup) card_mode_pickup.classList.toggle('active', fulfillmentType === 'pickup');
+
+            if (fulfillmentType === 'delivery') {
+                if (section_delivery_address) section_delivery_address.style.display = 'block';
+                if (section_pickup_info) section_pickup_info.style.display = 'none';
+                if (delivery_payment_badge) delivery_payment_badge.style.display = 'inline-block';
+                if (delivery_payment_notice) delivery_payment_notice.style.display = 'block';
+
+                const methods = window.BICOBS_Payments ? window.BICOBS_Payments.getMethods() : [];
+                selectedUserPaymentAccount = methods.find(m => m.isPrimary) || methods[0] || null;
+                selectedPaymentMethod = selectedUserPaymentAccount ? (selectedUserPaymentAccount.provider === 'paymaya' ? 'maya' : selectedUserPaymentAccount.provider) : '';
+            } else {
+                if (section_delivery_address) section_delivery_address.style.display = 'none';
+                if (section_pickup_info) section_pickup_info.style.display = 'block';
+                if (delivery_payment_badge) delivery_payment_badge.style.display = 'none';
+                if (delivery_payment_notice) delivery_payment_notice.style.display = 'none';
+
+                selectedPaymentMethod = 'cash';
+                selectedUserPaymentAccount = null;
+            }
+
+            updateSummaryTotals();
+            updateCheckoutModalSummary();
+            renderCheckoutPaymentMethods();
+            renderPaymentAccountDetails();
+        };
+
         modeRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
-                fulfillmentType = e.target.value;
-                if (card_mode_delivery) card_mode_delivery.classList.toggle('active', fulfillmentType === 'delivery');
-                if (card_mode_pickup) card_mode_pickup.classList.toggle('active', fulfillmentType === 'pickup');
-
-                if (fulfillmentType === 'delivery') {
-                    if (section_delivery_address) section_delivery_address.style.display = 'block';
-                    if (section_pickup_info) section_pickup_info.style.display = 'none';
-                    if (delivery_payment_badge) delivery_payment_badge.style.display = 'inline-block';
-                    if (delivery_payment_notice) delivery_payment_notice.style.display = 'block';
-                } else {
-                    if (section_delivery_address) section_delivery_address.style.display = 'none';
-                    if (section_pickup_info) section_pickup_info.style.display = 'block';
-                    if (delivery_payment_badge) delivery_payment_badge.style.display = 'none';
-                    if (delivery_payment_notice) delivery_payment_notice.style.display = 'none';
-                }
-
-                updateSummaryTotals();
-                updateCheckoutModalSummary();
-                renderPaymentAccountDetails();
+                const val = e.target.value || (e.target.id === 'mode_pickup' ? 'pickup' : 'delivery');
+                handleModeChange(val);
             });
         });
+
+        if (card_mode_delivery) {
+            card_mode_delivery.addEventListener('click', (e) => {
+                if (e.target !== mode_delivery) handleModeChange('delivery');
+            });
+        }
+        if (card_mode_pickup) {
+            card_mode_pickup.addEventListener('click', (e) => {
+                if (e.target !== mode_pickup) handleModeChange('pickup');
+            });
+        }
 
         // Edit Address Toggle & Live Sync
         if (btn_edit_delivery_addr && address_edit_block) {
@@ -671,7 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render in checkout JUST the available accounts the user has added
+    // Render in checkout the available payment accounts or Cash on Pickup
     function renderCheckoutPaymentMethods() {
         const grid = document.getElementById('payment_method_grid');
         if (!grid) return;
@@ -679,20 +720,63 @@ document.addEventListener('DOMContentLoaded', () => {
         const methods = window.BICOBS_Payments ? window.BICOBS_Payments.getMethods() : [];
         grid.innerHTML = '';
 
-        if (methods.length === 0) {
+        // 1. If Store Pick-up mode, ALWAYS provide Cash on Pick-up option
+        if (fulfillmentType === 'pickup') {
+            const isCashSelected = selectedPaymentMethod === 'cash' || !selectedUserPaymentAccount;
+            if (isCashSelected && !selectedPaymentMethod) {
+                selectedPaymentMethod = 'cash';
+            }
+            const cashCard = document.createElement('div');
+            cashCard.className = `pay_method_card ${isCashSelected ? 'active' : ''}`;
+            cashCard.setAttribute('data-id', 'cash');
+            cashCard.style.cssText = `
+                border: ${isCashSelected ? '2px solid #16a34a' : '1px solid #cbd5e1'};
+                background: ${isCashSelected ? '#f0fdf4' : '#ffffff'};
+                border-radius: 10px;
+                padding: 12px 10px;
+                cursor: pointer;
+                text-align: left;
+                transition: all 0.2s ease;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                box-shadow: ${isCashSelected ? '0 4px 10px rgba(0,0,0,0.06)' : 'none'};
+            `;
+            cashCard.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-money-bill-wave" style="color: #16a34a; font-size: 16px;"></i>
+                        <strong style="font-size: 13px; color: #166534;">Cash on Pick-up</strong>
+                    </div>
+                    <span style="font-size: 10px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px;">At Counter</span>
+                </div>
+                <div style="font-size: 12px; font-weight: 700; color: #0f172a;">
+                    Pay upon Store Claim
+                </div>
+                <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                    Inspect items & pay cash at counter
+                </div>
+            `;
+            cashCard.addEventListener('click', () => {
+                selectedUserPaymentAccount = null;
+                selectedPaymentMethod = 'cash';
+                renderCheckoutPaymentMethods();
+                renderPaymentAccountDetails();
+            });
+            grid.appendChild(cashCard);
+        }
+
+        // 2. Render user's linked electronic payment methods (GCash, Maya, Card)
+        if (methods.length === 0 && fulfillmentType === 'delivery') {
             grid.innerHTML = `
                 <div style="grid-column: 1 / -1; background: #fff5f5; border: 1px dashed #fca5a5; border-radius: 8px; padding: 14px; text-align: center; font-size: 13px; color: #b91c1c;">
                     <i class="fas fa-exclamation-triangle" style="font-size: 20px; display: block; margin-bottom: 6px;"></i>
-                    No saved payment accounts found. 
-                    <a href="/frontend/pages/Dashboard/payments.html" target="_blank" style="color: #b91c1c; font-weight: 700; text-decoration: underline; margin-left: 4px;">Click here to add one</a>.
+                    No saved payment accounts found for delivery.<br>
+                    <a href="/frontend/pages/Dashboard/payments.html" target="_blank" style="color: #b91c1c; font-weight: 700; text-decoration: underline; margin-top: 4px; display: inline-block;">Click here to add one</a>
+                    or switch to <strong>Store Pick-up</strong> to pay Cash at counter.
                 </div>
             `;
             return;
-        }
-
-        // Default selection to primary method or first method
-        if (!selectedUserPaymentAccount || !methods.find(m => m.id === selectedUserPaymentAccount.id)) {
-            selectedUserPaymentAccount = methods.find(m => m.isPrimary) || methods[0];
         }
 
         methods.forEach(method => {
@@ -759,7 +843,8 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.appendChild(card);
         });
 
-        if (selectedUserPaymentAccount) {
+        if (fulfillmentType === 'delivery' && !selectedUserPaymentAccount && methods.length > 0) {
+            selectedUserPaymentAccount = methods.find(m => m.isPrimary) || methods[0];
             selectedPaymentMethod = selectedUserPaymentAccount.provider === 'paymaya' ? 'maya' : selectedUserPaymentAccount.provider;
         }
     }
@@ -771,9 +856,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const shipping = selectedSubtotal > 0 && fulfillmentType === 'delivery' ? SHIPPING_FEE : 0;
         const total = Math.max(0, selectedSubtotal - discount + shipping);
 
+        // CASE 1: Cash on Store Pick-up
+        if (fulfillmentType === 'pickup' && (selectedPaymentMethod === 'cash' || !selectedUserPaymentAccount)) {
+            if (pay_verification_inputs) pay_verification_inputs.style.display = 'none';
+            if (payment_error_msg) payment_error_msg.style.display = 'none';
+
+            pay_details_content.innerHTML = `
+                <div style="background: #ffffff; border: 1px solid #86efac; border-radius: 8px; padding: 14px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <strong style="color: #166534; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-money-bill-wave" style="color: #16a34a;"></i> Cash Payment at Counter
+                        </strong>
+                        <span style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Pay on Pick-up</span>
+                    </div>
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; font-size: 13px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase;">Pick-up Branch</div>
+                        <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; margin: 2px 0;">Taurus Bike Store - Marilao Branch</div>
+                        <div style="font-size: 11.5px; color: #475569;">Taurus Building, Sandico St, Abangan Sur, Marilao, Bulacan | Mon – Sat: 8:00 AM – 6:00 PM</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px;">
+                        <span style="font-size: 12.5px; font-weight: 700; color: #065f46;">Exact Amount to Pay at Counter:</span>
+                        <strong style="font-size: 17px; color: #16a34a;">₱${total.toLocaleString()}</strong>
+                    </div>
+                    <p style="margin: 0; color: #475569; font-size: 12px; line-height: 1.45;">
+                        <i class="fas fa-check-circle" style="color: #16a34a;"></i> No advance payment required. We will prepare and reserve your items for pick-up. Simply inspect your items and pay cash to the cashier upon claiming.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        // CASE 2: Linked Electronic Payment
         const currentAccount = selectedUserPaymentAccount || (window.BICOBS_Payments ? window.BICOBS_Payments.getPrimaryMethod() : null);
 
         if (!currentAccount) {
+            if (pay_verification_inputs) pay_verification_inputs.style.display = 'none';
             pay_details_content.innerHTML = `
                 <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 14px; text-align: center; color: #64748b; font-size: 13px;">
                     Please select or add a payment method above.
@@ -802,7 +919,8 @@ document.addEventListener('DOMContentLoaded', () => {
             checkout_payment_ref.placeholder = isCard ? 'Enter 3-digit CVV on back of card' : 'e.g. 13-digit GCash/Maya reference number';
         }
         if (checkout_payment_sender) {
-            checkout_payment_sender.value = currentAccount.accountName || '';
+            const defaultSender = currentAccount.accountName || localStorage.getItem('tb_user_name') || '';
+            checkout_payment_sender.value = defaultSender;
             checkout_payment_sender.placeholder = 'Account Holder Name';
         }
 
@@ -885,15 +1003,15 @@ document.addEventListener('DOMContentLoaded', () => {
         populateCheckoutPreview();
         updateCheckoutModalSummary();
 
-        // Pre-fill and display user delivery info
+        // Pre-fill and display user delivery info from Profile
         let userObj = {};
         try {
             const userStr = localStorage.getItem('user');
             if (userStr) userObj = JSON.parse(userStr);
         } catch (e) {}
 
-        const currentName = userObj.name || userObj.fullName || userObj.username || 'Customer';
-        const currentPhone = userObj.phone || localStorage.getItem('tb_user_phone') || '';
+        const currentName = userObj.name || userObj.fullName || userObj.full_name || localStorage.getItem('tb_user_name') || userObj.username || 'Customer';
+        const currentPhone = userObj.phone || userObj.phone_number || localStorage.getItem('tb_user_phone') || '';
         const currentAddress = userObj.address || localStorage.getItem('tb_user_shipping') || '';
 
         if (checkout_customer_address) {
@@ -904,13 +1022,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (display_customer_name) {
-            display_customer_name.textContent = currentName;
+            display_customer_name.innerHTML = `<i class="fas fa-user-circle" style="color: #dc2626; margin-right: 6px;"></i> ${currentName}`;
         }
         if (display_customer_address) {
             display_customer_address.textContent = currentAddress || 'No delivery address saved. Click Edit to add.';
         }
         if (display_customer_phone) {
             display_customer_phone.innerHTML = `<i class="fas fa-phone-alt" style="font-size: 10px;"></i> ${currentPhone || 'No contact number'}`;
+        }
+
+        // Asynchronously refresh user profile from /api/auth/me if logged in
+        const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+        if (token) {
+            fetch('/api/auth/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                if (result && result.data) {
+                    const u = result.data;
+                    const liveName = u.name || u.full_name || u.username;
+                    const livePhone = u.phone || u.phone_number;
+                    const liveAddress = u.address;
+
+                    if (liveName && display_customer_name) {
+                        display_customer_name.innerHTML = `<i class="fas fa-user-circle" style="color: #dc2626; margin-right: 6px;"></i> ${liveName}`;
+                        localStorage.setItem('tb_user_name', liveName);
+                    }
+                    if (livePhone) {
+                        if (display_customer_phone) display_customer_phone.innerHTML = `<i class="fas fa-phone-alt" style="font-size: 10px;"></i> ${livePhone}`;
+                        if (checkout_customer_phone && !checkout_customer_phone.value) checkout_customer_phone.value = livePhone;
+                        localStorage.setItem('tb_user_phone', livePhone);
+                    }
+                    if (liveAddress) {
+                        if (display_customer_address) display_customer_address.textContent = liveAddress;
+                        if (checkout_customer_address && !checkout_customer_address.value) checkout_customer_address.value = liveAddress;
+                        localStorage.setItem('tb_user_shipping', liveAddress);
+                    }
+                }
+            })
+            .catch(() => {});
         }
 
         // Show edit fields if user has no saved address or phone
@@ -924,11 +1075,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Default to delivery
-        if (mode_delivery) mode_delivery.checked = true;
-        fulfillmentType = 'delivery';
-        if (card_mode_delivery) card_mode_delivery.classList.add('active');
-        if (card_mode_pickup) card_mode_pickup.classList.remove('active');
+        // Set fulfillment mode: if user has no saved e-wallets, default directly to Store Pick-up (Cash)
+        const hasPayment = window.BICOBS_Payments ? window.BICOBS_Payments.hasMethod() : false;
+        if (!hasPayment) {
+            fulfillmentType = 'pickup';
+        }
+
+        if (fulfillmentType === 'pickup') {
+            if (mode_pickup) mode_pickup.checked = true;
+            if (mode_delivery) mode_delivery.checked = false;
+            if (card_mode_pickup) card_mode_pickup.classList.add('active');
+            if (card_mode_delivery) card_mode_delivery.classList.remove('active');
+            if (section_delivery_address) section_delivery_address.style.display = 'none';
+            if (section_pickup_info) section_pickup_info.style.display = 'block';
+            if (delivery_payment_badge) delivery_payment_badge.style.display = 'none';
+            if (delivery_payment_notice) delivery_payment_notice.style.display = 'none';
+            selectedPaymentMethod = 'cash';
+            selectedUserPaymentAccount = null;
+        } else {
+            if (mode_delivery) mode_delivery.checked = true;
+            if (mode_pickup) mode_pickup.checked = false;
+            if (card_mode_delivery) card_mode_delivery.classList.add('active');
+            if (card_mode_pickup) card_mode_pickup.classList.remove('active');
+            if (section_delivery_address) section_delivery_address.style.display = 'block';
+            if (section_pickup_info) section_pickup_info.style.display = 'none';
+            if (delivery_payment_badge) delivery_payment_badge.style.display = 'inline-block';
+            if (delivery_payment_notice) delivery_payment_notice.style.display = 'block';
+
+            const methods = window.BICOBS_Payments ? window.BICOBS_Payments.getMethods() : [];
+            selectedUserPaymentAccount = methods.find(m => m.isPrimary) || methods[0] || null;
+            selectedPaymentMethod = selectedUserPaymentAccount ? (selectedUserPaymentAccount.provider === 'paymaya' ? 'maya' : selectedUserPaymentAccount.provider) : '';
+        }
 
         // Render available user accounts and selected details
         renderCheckoutPaymentMethods();
@@ -1049,7 +1226,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const paymentRef = (checkout_payment_ref?.value || '').trim();
             const paymentSender = (checkout_payment_sender?.value || '').trim();
 
-            const activeProvider = selectedUserPaymentAccount ? selectedUserPaymentAccount.provider : selectedPaymentMethod;
+            const activeProvider = (fulfillmentType === 'pickup' && (!selectedUserPaymentAccount || selectedPaymentMethod === 'cash'))
+                ? 'cash'
+                : (selectedUserPaymentAccount ? selectedUserPaymentAccount.provider : selectedPaymentMethod);
 
             if (fulfillmentType === 'delivery') {
                 const allowedDeliveryMethods = ['bpi', 'maya', 'paymaya', 'gcash', 'card'];
@@ -1080,6 +1259,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                 }
+            } else if (fulfillmentType === 'pickup' && activeProvider !== 'cash') {
+                // If customer is doing store pickup but chose to pay upfront via e-wallet or card
+                if (!paymentRef) {
+                    if (payment_error_msg) {
+                        payment_error_msg.textContent = '⚠️ Please enter your payment reference / CVV code, or select "Cash on Pick-up" to pay at the counter.';
+                        payment_error_msg.style.display = 'block';
+                    }
+                    if (checkout_payment_ref) checkout_payment_ref.focus();
+                    return;
+                }
             }
 
             if (payment_error_msg) payment_error_msg.style.display = 'none';
@@ -1091,9 +1280,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const shipping = 0;
             const finalTotal = Math.max(0, selectedSubtotal - discount + shipping);
 
-            const paymentSummaryNote = selectedUserPaymentAccount
-                ? `Paid via ${selectedUserPaymentAccount.provider.toUpperCase()} (${selectedUserPaymentAccount.accountNumber}) | Holder: ${selectedUserPaymentAccount.accountName} | Ref/Auth: ${paymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`
-                : `Paid via ${selectedPaymentMethod.toUpperCase()} | Ref: ${paymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`;
+            const finalPaymentRef = (fulfillmentType === 'pickup' && activeProvider === 'cash')
+                ? 'CASH_ON_PICKUP'
+                : paymentRef;
+
+            const paymentSummaryNote = (fulfillmentType === 'pickup' && activeProvider === 'cash')
+                ? 'Payment Method: Cash on Store Pick-up (Pay at counter upon claim)'
+                : (selectedUserPaymentAccount
+                    ? `Paid via ${selectedUserPaymentAccount.provider.toUpperCase()} (${selectedUserPaymentAccount.accountNumber}) | Holder: ${selectedUserPaymentAccount.accountName} | Ref/Auth: ${finalPaymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`
+                    : `Paid via ${(activeProvider || 'Cash').toUpperCase()} | Ref: ${finalPaymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`);
 
             const orderPayload = {
                 orderItems: selectedItems.map(item => ({
@@ -1107,10 +1302,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     phone: customerPhone
                 },
                 fulfillmentType: fulfillmentType,
-                paymentMethod: (activeProvider === 'paymaya') ? 'maya' : activeProvider,
+                paymentMethod: (activeProvider === 'paymaya' || activeProvider === 'maya') ? 'maya' : (activeProvider || 'cash'),
                 deliveryFee: 0,
                 discount: discount,
-                paymentReference: paymentRef,
+                paymentReference: finalPaymentRef,
                 notes: customerNotes ? `${customerNotes} [${paymentSummaryNote}]` : paymentSummaryNote
             };
 
@@ -1162,7 +1357,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderCart();
 
                     if (window.BICOBS_Cart) {
-                        window.BICOBS_Cart.showToast(`Order confirmed! Payment handled via ${selectedPaymentMethod.toUpperCase()}.`, 'success');
+                        const toastMsg = (fulfillmentType === 'pickup' && activeProvider === 'cash')
+                            ? 'Order reserved! Please pay in cash upon claiming at our Marilao counter.'
+                            : `Order confirmed! Payment handled via ${(activeProvider || 'Cash').toUpperCase()}.`;
+                        window.BICOBS_Cart.showToast(toastMsg, 'success');
                     }
                 } else {
                     alert(data.message || 'Failed to place order. Please verify your details.');

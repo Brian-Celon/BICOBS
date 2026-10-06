@@ -4,17 +4,104 @@
  */
 
 const BICOBS_Cart = (() => {
-  const STORAGE_KEY = 'bicobs_cart';
+  const GUEST_STORAGE_KEY = 'bicobs_cart_guest';
+  const LEGACY_STORAGE_KEY = 'bicobs_cart';
 
-  // Get cart from localStorage and normalize item structure
+  // Helper to get active user identifier if logged in
+  function getCurrentUserIdentifier() {
+    try {
+      const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+      if (!token) return null;
+
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const u = JSON.parse(userStr);
+        if (u) {
+          const id = u.id || u._id || u.email;
+          if (id) return String(id);
+        }
+      }
+      const email = localStorage.getItem('tb_user_email');
+      if (email) return String(email);
+    } catch (e) {}
+    return null;
+  }
+
+  // Active storage key: user-specific key when logged in, guest key when logged out
+  function getActiveStorageKey() {
+    const userIdentifier = getCurrentUserIdentifier();
+    if (userIdentifier) {
+      return `bicobs_cart_user_${userIdentifier}`;
+    }
+    return GUEST_STORAGE_KEY;
+  }
+
+  // Sync guest cart into user account cart upon login
+  function syncCartOnAuth() {
+    const userIdentifier = getCurrentUserIdentifier();
+    if (!userIdentifier) return;
+
+    const userKey = `bicobs_cart_user_${userIdentifier}`;
+    const guestData = localStorage.getItem(GUEST_STORAGE_KEY);
+    const legacyData = localStorage.getItem(LEGACY_STORAGE_KEY);
+
+    let guestItems = [];
+    try {
+      if (guestData) guestItems = JSON.parse(guestData);
+      else if (legacyData) guestItems = JSON.parse(legacyData);
+    } catch (e) {}
+
+    if (Array.isArray(guestItems) && guestItems.length > 0) {
+      let userCart = [];
+      try {
+        const existingUserData = localStorage.getItem(userKey);
+        if (existingUserData) userCart = JSON.parse(existingUserData);
+      } catch (e) {}
+
+      guestItems.forEach(guestItem => {
+        const gId = String(guestItem.id || guestItem._id);
+        const existingIdx = userCart.findIndex(i => String(i.id || i._id) === gId);
+        if (existingIdx > -1) {
+          const maxStock = typeof guestItem.stockQuantity === 'number' ? guestItem.stockQuantity : 99;
+          userCart[existingIdx].quantity = Math.min(maxStock, (userCart[existingIdx].quantity || 1) + (guestItem.quantity || 1));
+        } else {
+          userCart.push(guestItem);
+        }
+      });
+
+      localStorage.setItem(userKey, JSON.stringify(userCart));
+      localStorage.removeItem(GUEST_STORAGE_KEY);
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+    }
+
+    updateBadgeCount();
+    window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart: getCart() } }));
+  }
+
+  // Handle logout: clear guest session so signed-in cart does not stay on screen
+  function handleLogout() {
+    localStorage.removeItem(GUEST_STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
+    updateBadgeCount();
+    window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart: [] } }));
+  }
+
+  // Get cart from active storage key and normalize item structure
   function getCart() {
     try {
-      // Purge generic 'cart' key to prevent stale items from other localhost apps
-      if (localStorage.getItem('cart') && !localStorage.getItem(STORAGE_KEY)) {
-        localStorage.removeItem('cart');
+      const userIdentifier = getCurrentUserIdentifier();
+      if (userIdentifier && (localStorage.getItem(GUEST_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY))) {
+        syncCartOnAuth();
       }
 
-      const data = localStorage.getItem(STORAGE_KEY);
+      const activeKey = getActiveStorageKey();
+      // One-time legacy migration for guest
+      if (!userIdentifier && localStorage.getItem(LEGACY_STORAGE_KEY) && !localStorage.getItem(GUEST_STORAGE_KEY)) {
+        localStorage.setItem(GUEST_STORAGE_KEY, localStorage.getItem(LEGACY_STORAGE_KEY));
+        localStorage.removeItem(LEGACY_STORAGE_KEY);
+      }
+
+      const data = localStorage.getItem(activeKey);
       const parsed = data ? JSON.parse(data) : [];
       if (Array.isArray(parsed)) {
         return parsed
@@ -37,7 +124,7 @@ const BICOBS_Cart = (() => {
     }
   }
 
-  // Save cart to localStorage
+  // Save cart to active storage key
   function saveCart(cart) {
     try {
       const normalized = cart.map(item => ({
@@ -51,7 +138,8 @@ const BICOBS_Cart = (() => {
         quantity: Math.max(1, parseInt(item.quantity, 10) || 1)
       }));
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+      const activeKey = getActiveStorageKey();
+      localStorage.setItem(activeKey, JSON.stringify(normalized));
       updateBadgeCount();
       window.dispatchEvent(new CustomEvent('bicobs_cart_updated', { detail: { cart: normalized } }));
     } catch (e) {
@@ -258,10 +346,41 @@ const BICOBS_Cart = (() => {
   // Auto initialize on DOM ready
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', updateBadgeCount);
+      document.addEventListener('DOMContentLoaded', () => {
+        updateBadgeCount();
+        const userIdentifier = getCurrentUserIdentifier();
+        if (userIdentifier && (localStorage.getItem(GUEST_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY))) {
+          syncCartOnAuth();
+        }
+      });
     } else {
       updateBadgeCount();
+      const userIdentifier = getCurrentUserIdentifier();
+      if (userIdentifier && (localStorage.getItem(GUEST_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY))) {
+        syncCartOnAuth();
+      }
     }
+
+    // Listen for auth state changes
+    window.addEventListener('bicobs_auth_changed', (e) => {
+      if (e && e.detail) {
+        syncCartOnAuth();
+      } else {
+        handleLogout();
+      }
+    });
+
+    // Listen for cross-tab or storage changes
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'token' || e.key === 'bicobs_token' || e.key === 'user') {
+        const userIdentifier = getCurrentUserIdentifier();
+        if (userIdentifier) {
+          syncCartOnAuth();
+        } else {
+          handleLogout();
+        }
+      }
+    });
   }
 
   return {
@@ -275,7 +394,9 @@ const BICOBS_Cart = (() => {
     getCartCount,
     getCartSubtotal,
     updateBadgeCount,
-    showToast
+    showToast,
+    syncCartOnAuth,
+    handleLogout
   };
 })();
 

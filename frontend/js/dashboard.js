@@ -1601,6 +1601,12 @@ function setup_logout_modal() {
             localStorage.removeItem('tb_user_email');
             localStorage.removeItem('tb_user_phone');
             localStorage.removeItem('tb_user_shipping');
+            if (window.BICOBS_Cart && typeof window.BICOBS_Cart.handleLogout === 'function') {
+                window.BICOBS_Cart.handleLogout();
+            }
+            if (window.BICOBS_Auth && typeof window.BICOBS_Auth.clearAuth === 'function') {
+                window.BICOBS_Auth.clearAuth();
+            }
             showToast('Logged out successfully! Redirecting to login...', true);
             setTimeout(() => {
                 window.location.href = '/frontend/pages/login.html';
