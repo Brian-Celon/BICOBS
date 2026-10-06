@@ -135,12 +135,12 @@ const createOrder = async (req, res, next) => {
     // When checking out, payment MUST be handled first when mode is delivery.
     // Available payment methods for delivery: BPI, Maya, and GCash.
     if (deliveryType === 'delivery') {
-      const allowedDeliveryPayments = ['bpi', 'maya', 'gcash'];
+      const allowedDeliveryPayments = ['bpi', 'maya', 'paymaya', 'gcash', 'card', 'credit_card', 'debit_card'];
       if (!allowedDeliveryPayments.includes(normalizedMethod)) {
         await client.query('ROLLBACK');
         return res.status(400).json({
           status: 'error',
-          message: 'Payment must be handled first for delivery orders. Available payment methods: BPI, Maya, and GCash.'
+          message: 'Payment must be handled first for delivery orders. Available payment methods: Card, GCash, Maya, and BPI.'
         });
       }
     }
@@ -150,7 +150,7 @@ const createOrder = async (req, res, next) => {
     const totalPrice = Math.max(0, itemsPrice - discountAmount + calculatedDeliveryFee);
 
     // Determine payment and order status
-    const isPrepaid = ['bpi', 'maya', 'gcash'].includes(normalizedMethod);
+    const isPrepaid = ['bpi', 'maya', 'paymaya', 'gcash', 'card', 'credit_card', 'debit_card'].includes(normalizedMethod);
     const orderPaymentStatus = (deliveryType === 'delivery' || isPrepaid) ? 'paid' : 'pending';
     const orderStatus = (deliveryType === 'delivery' || isPrepaid) ? 'confirmed' : 'pending';
 

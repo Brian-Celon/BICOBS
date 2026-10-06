@@ -29,6 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn_cancel_account_warning = document.getElementById('btn_cancel_account_warning');
     const btn_proceed_to_login = document.getElementById('btn_proceed_to_login');
 
+    // Payment Required Modal Elements (User has no added payment methods)
+    const payment_required_modal = document.getElementById('payment_required_modal');
+    const btn_cancel_payment_required = document.getElementById('btn_cancel_payment_required');
+    const btn_goto_add_payment = document.getElementById('btn_goto_add_payment');
+    const payment_method_grid = document.getElementById('payment_method_grid');
+
     // Checkout Modal Elements
     const checkout_modal = document.getElementById('checkout_modal');
     const close_checkout_modal = document.getElementById('close_checkout_modal');
@@ -87,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let discount = 0;
     let fulfillmentType = 'delivery'; // 'delivery' | 'pickup'
     let selectedPaymentMethod = 'gcash'; // 'gcash' | 'maya' | 'bpi' | 'cash'
+    let selectedUserPaymentAccount = null; // Currently chosen saved account object from BICOBS_Payments
     const SHIPPING_FEE = 0; // Customer handles booking and pays rider directly
     const selectedItemIds = new Set();
     let hasInitializedSelection = false;
@@ -495,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Account Warning Modal Handlers
+    // Account Warning Modal Handlers (Guests without account)
     function showAccountWarningModal() {
         if (account_warning_modal) {
             account_warning_modal.style.display = 'flex';
@@ -532,7 +539,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Checkout Button Click Handler
+    // Payment Required Modal Handlers (Logged in but NO payment methods in dashboard)
+    function showPaymentRequiredModal() {
+        if (payment_required_modal) {
+            payment_required_modal.style.display = 'flex';
+            payment_required_modal.classList.add('active');
+        }
+        if (window.BICOBS_Cart) {
+            window.BICOBS_Cart.showToast('Please add a payment method in your dashboard to proceed.', 'warning');
+        }
+    }
+
+    function hidePaymentRequiredModal() {
+        if (payment_required_modal) {
+            payment_required_modal.style.display = 'none';
+            payment_required_modal.classList.remove('active');
+        }
+    }
+
+    if (btn_cancel_payment_required) {
+        btn_cancel_payment_required.addEventListener('click', hidePaymentRequiredModal);
+    }
+
+    if (payment_required_modal) {
+        payment_required_modal.addEventListener('click', (e) => {
+            if (e.target === payment_required_modal) hidePaymentRequiredModal();
+        });
+    }
+
+    // Checkout Button Click Handler with Strict Dual Gate (Auth + Added Payment Method)
     if (btn_checkout) {
         btn_checkout.addEventListener('click', () => {
             const cart = window.BICOBS_Cart ? window.BICOBS_Cart.getCart() : [];
@@ -546,10 +581,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Check if user has an account
+            // Gate 1: Check if user has an account
             const isAuth = window.BICOBS_Auth ? window.BICOBS_Auth.isAuthenticated() : false;
             if (!isAuth) {
                 showAccountWarningModal();
+                return;
+            }
+
+            // Gate 2: Check if user has added a payment method in Payments section of customer dashboard
+            const hasPayment = window.BICOBS_Payments ? window.BICOBS_Payments.hasMethod() : false;
+            if (!hasPayment) {
+                showPaymentRequiredModal();
                 return;
             }
 
@@ -572,40 +614,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (section_pickup_info) section_pickup_info.style.display = 'none';
                     if (delivery_payment_badge) delivery_payment_badge.style.display = 'inline-block';
                     if (delivery_payment_notice) delivery_payment_notice.style.display = 'block';
-                    if (card_pay_cash) card_pay_cash.style.display = 'none';
-
-                    // Cash is strictly not available for delivery - switch to gcash if cash was selected
-                    if (selectedPaymentMethod === 'cash') {
-                        selectPayment('gcash');
-                    }
                 } else {
                     if (section_delivery_address) section_delivery_address.style.display = 'none';
                     if (section_pickup_info) section_pickup_info.style.display = 'block';
                     if (delivery_payment_badge) delivery_payment_badge.style.display = 'none';
                     if (delivery_payment_notice) delivery_payment_notice.style.display = 'none';
-                    if (card_pay_cash) card_pay_cash.style.display = 'block';
                 }
 
                 updateSummaryTotals();
                 updateCheckoutModalSummary();
                 renderPaymentAccountDetails();
             });
-        });
-
-        // Toggle Payment Method Cards
-        const payCards = [
-            { el: card_pay_gcash, method: 'gcash' },
-            { el: card_pay_maya, method: 'maya' },
-            { el: card_pay_bpi, method: 'bpi' },
-            { el: card_pay_cash, method: 'cash' }
-        ];
-
-        payCards.forEach(({ el, method }) => {
-            if (el) {
-                el.addEventListener('click', () => {
-                    selectPayment(method);
-                });
-            }
         });
 
         // Edit Address Toggle & Live Sync
@@ -652,91 +671,212 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function selectPayment(method) {
-        selectedPaymentMethod = method;
+    // Render in checkout JUST the available accounts the user has added
+    function renderCheckoutPaymentMethods() {
+        const grid = document.getElementById('payment_method_grid');
+        if (!grid) return;
 
-        // Update active classes on cards
-        if (card_pay_gcash) card_pay_gcash.classList.toggle('active', method === 'gcash');
-        if (card_pay_maya) card_pay_maya.classList.toggle('active', method === 'maya');
-        if (card_pay_bpi) card_pay_bpi.classList.toggle('active', method === 'bpi');
-        if (card_pay_cash) card_pay_cash.classList.toggle('active', method === 'cash');
+        const methods = window.BICOBS_Payments ? window.BICOBS_Payments.getMethods() : [];
+        grid.innerHTML = '';
 
-        // Check the radio input
-        const radio = document.getElementById(`pay_${method}`);
-        if (radio) radio.checked = true;
+        if (methods.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; background: #fff5f5; border: 1px dashed #fca5a5; border-radius: 8px; padding: 14px; text-align: center; font-size: 13px; color: #b91c1c;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 20px; display: block; margin-bottom: 6px;"></i>
+                    No saved payment accounts found. 
+                    <a href="/frontend/pages/Dashboard/payments.html" target="_blank" style="color: #b91c1c; font-weight: 700; text-decoration: underline; margin-left: 4px;">Click here to add one</a>.
+                </div>
+            `;
+            return;
+        }
 
-        if (payment_error_msg) payment_error_msg.style.display = 'none';
+        // Default selection to primary method or first method
+        if (!selectedUserPaymentAccount || !methods.find(m => m.id === selectedUserPaymentAccount.id)) {
+            selectedUserPaymentAccount = methods.find(m => m.isPrimary) || methods[0];
+        }
 
-        renderPaymentAccountDetails();
+        methods.forEach(method => {
+            const isSelected = selectedUserPaymentAccount && selectedUserPaymentAccount.id === method.id;
+            const card = document.createElement('div');
+            card.className = `pay_method_card ${isSelected ? 'active' : ''}`;
+            card.setAttribute('data-id', method.id);
+
+            let providerIcon = '';
+            let providerTitle = '';
+            let accentColor = '#b91c1c';
+
+            if (method.provider === 'gcash') {
+                accentColor = '#005ce6';
+                providerTitle = 'GCash';
+                providerIcon = '<i class="fas fa-wallet" style="color: #005ce6; font-size: 16px;"></i>';
+            } else if (method.provider === 'paymaya') {
+                accentColor = '#059669';
+                providerTitle = 'Maya';
+                providerIcon = '<i class="fas fa-mobile-alt" style="color: #059669; font-size: 16px;"></i>';
+            } else {
+                accentColor = '#1e293b';
+                providerTitle = method.cardType || 'Card';
+                providerIcon = '<i class="far fa-credit-card" style="color: #8b1e28; font-size: 16px;"></i>';
+            }
+
+            card.style.cssText = `
+                border: ${isSelected ? `2px solid ${accentColor}` : '1px solid #cbd5e1'};
+                background: ${isSelected ? (method.provider === 'gcash' ? '#eff6ff' : (method.provider === 'paymaya' ? '#f0fdf4' : '#fff5f5')) : '#ffffff'};
+                border-radius: 10px;
+                padding: 12px 10px;
+                cursor: pointer;
+                text-align: left;
+                transition: all 0.2s ease;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                box-shadow: ${isSelected ? '0 4px 10px rgba(0,0,0,0.06)' : 'none'};
+            `;
+
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        ${providerIcon}
+                        <strong style="font-size: 13px; color: ${accentColor};">${providerTitle}</strong>
+                    </div>
+                    ${method.isPrimary ? '<span style="font-size: 10px; font-weight: 700; background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 4px;">Primary</span>' : ''}
+                </div>
+                <div style="font-size: 12px; font-weight: 700; color: #0f172a; font-family: monospace; letter-spacing: 0.5px;">
+                    ${method.accountNumber}
+                </div>
+                <div style="font-size: 11px; color: #64748b; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${method.accountName}
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                selectedUserPaymentAccount = method;
+                selectedPaymentMethod = method.provider === 'paymaya' ? 'maya' : method.provider;
+                renderCheckoutPaymentMethods();
+                renderPaymentAccountDetails();
+            });
+
+            grid.appendChild(card);
+        });
+
+        if (selectedUserPaymentAccount) {
+            selectedPaymentMethod = selectedUserPaymentAccount.provider === 'paymaya' ? 'maya' : selectedUserPaymentAccount.provider;
+        }
     }
 
-    // Render interactive payment receiving instructions & copy details
+    // Render interactive payment receiving instructions & details for selected added account
     function renderPaymentAccountDetails() {
         if (!pay_details_content) return;
-        const config = PAYMENT_ACCOUNTS[selectedPaymentMethod] || PAYMENT_ACCOUNTS.gcash;
         const { selectedSubtotal } = getSelectedTotals();
         const shipping = selectedSubtotal > 0 && fulfillmentType === 'delivery' ? SHIPPING_FEE : 0;
         const total = Math.max(0, selectedSubtotal - discount + shipping);
 
-        if (selectedPaymentMethod === 'cash') {
+        const currentAccount = selectedUserPaymentAccount || (window.BICOBS_Payments ? window.BICOBS_Payments.getPrimaryMethod() : null);
+
+        if (!currentAccount) {
             pay_details_content.innerHTML = `
-                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; font-size: 13px;">
-                    <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 700; margin-bottom: 4px;">
-                        <i class="fas fa-money-bill-wave" style="color: #16a34a;"></i> Store Counter Cash Payment
-                    </div>
-                    <p style="margin: 0; color: #64748b; font-size: 12px; line-height: 1.4;">
-                        ${config.instructions}
-                    </p>
-                    <div style="margin-top: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">
-                        Payable at counter: <span style="color: #dc2626;">₱${total.toLocaleString()}</span>
-                    </div>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 14px; text-align: center; color: #64748b; font-size: 13px;">
+                    Please select or add a payment method above.
                 </div>
             `;
-            if (pay_verification_inputs) pay_verification_inputs.style.display = 'none';
             return;
         }
 
+        const isGcash = currentAccount.provider === 'gcash';
+        const isMaya = currentAccount.provider === 'paymaya' || currentAccount.provider === 'maya';
+        const isCard = currentAccount.provider === 'card';
+        const shopReceivingConfig = isMaya ? PAYMENT_ACCOUNTS.maya : (isGcash ? PAYMENT_ACCOUNTS.gcash : null);
+
         if (pay_verification_inputs) pay_verification_inputs.style.display = 'flex';
 
-        pay_details_content.innerHTML = `
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <strong style="color: #0f172a; font-size: 13px;">
-                        <i class="fas fa-qrcode" style="color: ${config.badgeBg};"></i> ${config.title}
-                    </strong>
-                    <button type="button" class="copy_btn_pill" id="btn_copy_pay_account" data-copy="${config.rawNumber}">
-                        <i class="fas fa-copy"></i> Copy Number
-                    </button>
-                </div>
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; font-size: 13px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Receiver Account</div>
-                    <div style="font-weight: 700; color: #0f172a; font-size: 15px; margin: 2px 0;">${config.accountNumber}</div>
-                    <div style="font-size: 12px; color: #475569;">${config.accountName}</div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 700; color: #991b1b;">Exact Amount to Transfer:</span>
-                    <strong style="font-size: 16px; color: #dc2626;">₱${total.toLocaleString()}</strong>
-                </div>
-                <p style="margin: 0; color: #64748b; font-size: 11px; line-height: 1.4;">
-                    <i class="fas fa-info-circle"></i> ${config.instructions}
-                </p>
-            </div>
-        `;
+        // Update placeholder and label of verification input based on account type
+        const refLabel = document.querySelector('label[for="checkout_payment_ref"]') || document.querySelector('#pay_verification_inputs label');
+        if (refLabel) {
+            if (isCard) {
+                refLabel.innerHTML = '<span style="color: #dc2626;">*</span> Card Security Code (CVV)';
+            } else {
+                refLabel.innerHTML = '<span style="color: #dc2626;">*</span> Transaction / Reference Number (From Receipt)';
+            }
+        }
+        if (checkout_payment_ref) {
+            checkout_payment_ref.placeholder = isCard ? 'Enter 3-digit CVV on back of card' : 'e.g. 13-digit GCash/Maya reference number';
+        }
+        if (checkout_payment_sender) {
+            checkout_payment_sender.value = currentAccount.accountName || '';
+            checkout_payment_sender.placeholder = 'Account Holder Name';
+        }
 
-        // Attach copy button handler
-        const copyBtn = document.getElementById('btn_copy_pay_account');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => {
-                const textToCopy = copyBtn.getAttribute('data-copy');
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                        setTimeout(() => {
-                            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Number';
-                        }, 2000);
-                    });
-                }
-            });
+        if (isCard) {
+            pay_details_content.innerHTML = `
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                            <i class="far fa-credit-card" style="color: #b91c1c;"></i> ${currentAccount.cardType || 'Credit / Debit'} Card Payment
+                        </strong>
+                        <span style="font-size: 11px; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Authorized Card</span>
+                    </div>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; font-size: 13px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Your Linked Card</div>
+                        <div style="font-weight: 700; color: #0f172a; font-size: 14px; margin: 2px 0;">${currentAccount.accountNumber}</div>
+                        <div style="font-size: 12px; color: #475569;">Cardholder: ${currentAccount.accountName} ${currentAccount.expDate ? `| Exp: ${currentAccount.expDate}` : ''}</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #991b1b;">Amount to Charge:</span>
+                        <strong style="font-size: 16px; color: #dc2626;">₱${total.toLocaleString()}</strong>
+                    </div>
+                    <p style="margin: 0; color: #64748b; font-size: 11.5px; line-height: 1.4;">
+                        <i class="fas fa-lock"></i> Your linked card will be charged upon order confirmation. Please enter your 3-digit CVV below for security authorization.
+                    </p>
+                </div>
+            `;
+        } else {
+            // GCash or Maya
+            pay_details_content.innerHTML = `
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #0f172a; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-qrcode" style="color: ${shopReceivingConfig?.badgeBg || '#005ce6'};"></i> ${shopReceivingConfig?.title || 'e-Wallet Payment'}
+                        </strong>
+                        <button type="button" class="copy_btn_pill" id="btn_copy_pay_account" data-copy="${shopReceivingConfig?.rawNumber || ''}">
+                            <i class="fas fa-copy"></i> Copy Store Number
+                        </button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; font-size: 12px;">
+                            <div style="font-size: 10.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Your Saved Account</div>
+                            <div style="font-weight: 700; color: #0f172a; font-size: 13px; margin: 1px 0;">${currentAccount.accountNumber}</div>
+                            <div style="font-size: 11px; color: #475569;">${currentAccount.accountName}</div>
+                        </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; font-size: 12px;">
+                            <div style="font-size: 10.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Store Receiver</div>
+                            <div style="font-weight: 700; color: #0f172a; font-size: 13px; margin: 1px 0;">${shopReceivingConfig?.accountNumber || ''}</div>
+                            <div style="font-size: 11px; color: #475569;">${shopReceivingConfig?.accountName || ''}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #991b1b;">Exact Amount to Transfer:</span>
+                        <strong style="font-size: 16px; color: #dc2626;">₱${total.toLocaleString()}</strong>
+                    </div>
+                    <p style="margin: 0; color: #64748b; font-size: 11.5px; line-height: 1.4;">
+                        <i class="fas fa-info-circle"></i> Send payment from your registered account above to Taurus Bike. Enter the transaction reference number from your receipt below.
+                    </p>
+                </div>
+            `;
+
+            const copyBtn = document.getElementById('btn_copy_pay_account');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const textToCopy = copyBtn.getAttribute('data-copy');
+                    if (navigator.clipboard && textToCopy) {
+                        navigator.clipboard.writeText(textToCopy).then(() => {
+                            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => {
+                                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Store Number';
+                            }, 2000);
+                        });
+                    }
+                });
+            }
         }
     }
 
@@ -784,14 +924,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Default to delivery with gcash payment
+        // Default to delivery
         if (mode_delivery) mode_delivery.checked = true;
         fulfillmentType = 'delivery';
         if (card_mode_delivery) card_mode_delivery.classList.add('active');
         if (card_mode_pickup) card_mode_pickup.classList.remove('active');
-        if (card_pay_cash) card_pay_cash.style.display = 'none';
 
-        selectPayment('gcash');
+        // Render available user accounts and selected details
+        renderCheckoutPaymentMethods();
+        renderPaymentAccountDetails();
 
         if (checkout_modal) {
             checkout_modal.classList.add('active');
@@ -908,23 +1049,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const paymentRef = (checkout_payment_ref?.value || '').trim();
             const paymentSender = (checkout_payment_sender?.value || '').trim();
 
+            const activeProvider = selectedUserPaymentAccount ? selectedUserPaymentAccount.provider : selectedPaymentMethod;
+
             if (fulfillmentType === 'delivery') {
-                const allowedDeliveryMethods = ['bpi', 'maya', 'gcash'];
-                if (!allowedDeliveryMethods.includes(selectedPaymentMethod)) {
+                const allowedDeliveryMethods = ['bpi', 'maya', 'paymaya', 'gcash', 'card'];
+                if (!allowedDeliveryMethods.includes(activeProvider)) {
                     if (payment_error_msg) {
-                        payment_error_msg.textContent = 'For delivery orders, payment must be handled first via BPI, Maya, or GCash.';
+                        payment_error_msg.textContent = 'For delivery orders, payment must be handled first via your verified payment account.';
                         payment_error_msg.style.display = 'block';
                     }
                     return;
                 }
 
-                if (!paymentRef || paymentRef.length < 5) {
-                    if (payment_error_msg) {
-                        payment_error_msg.textContent = '⚠️ Payment must be handled first for delivery orders. Please enter your valid payment reference / transaction number.';
-                        payment_error_msg.style.display = 'block';
+                if (activeProvider === 'card') {
+                    if (!paymentRef || paymentRef.length < 3) {
+                        if (payment_error_msg) {
+                            payment_error_msg.textContent = '⚠️ Please enter your 3-digit Card CVV / security authorization code.';
+                            payment_error_msg.style.display = 'block';
+                        }
+                        if (checkout_payment_ref) checkout_payment_ref.focus();
+                        return;
                     }
-                    if (checkout_payment_ref) checkout_payment_ref.focus();
-                    return;
+                } else {
+                    if (!paymentRef || paymentRef.length < 5) {
+                        if (payment_error_msg) {
+                            payment_error_msg.textContent = '⚠️ Payment must be handled first for delivery orders. Please enter your valid payment reference / transaction number.';
+                            payment_error_msg.style.display = 'block';
+                        }
+                        if (checkout_payment_ref) checkout_payment_ref.focus();
+                        return;
+                    }
                 }
             }
 
@@ -937,8 +1091,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const shipping = 0;
             const finalTotal = Math.max(0, selectedSubtotal - discount + shipping);
 
-            const paymentSummaryNote = selectedPaymentMethod === 'cash' 
-                ? 'Store Counter Cash on Pick-up' 
+            const paymentSummaryNote = selectedUserPaymentAccount
+                ? `Paid via ${selectedUserPaymentAccount.provider.toUpperCase()} (${selectedUserPaymentAccount.accountNumber}) | Holder: ${selectedUserPaymentAccount.accountName} | Ref/Auth: ${paymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`
                 : `Paid via ${selectedPaymentMethod.toUpperCase()} | Ref: ${paymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`;
 
             const orderPayload = {
@@ -953,7 +1107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     phone: customerPhone
                 },
                 fulfillmentType: fulfillmentType,
-                paymentMethod: selectedPaymentMethod,
+                paymentMethod: (activeProvider === 'paymaya') ? 'maya' : activeProvider,
                 deliveryFee: 0,
                 discount: discount,
                 paymentReference: paymentRef,

@@ -290,6 +290,43 @@
         </div>
     </div>
 
+    <!-- ============================================================
+         PAYMENT METHOD REQUIRED MODAL (When logged in but has no payment method)
+         ============================================================ -->
+    <div id="payment_required_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="payment_req_modal_title" style="display: none;">
+        <div class="modal_container" style="max-width: 480px; text-align: center; border-top: 5px solid #dc2626; padding: 28px 24px; background: #ffffff; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
+                <i class="fas fa-credit-card"></i>
+            </div>
+            <h3 id="payment_req_modal_title" style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0 0 8px;">
+                Payment Method Required
+            </h3>
+            <p style="font-size: 14px; color: #64748b; margin: 0 0 20px; line-height: 1.5;">
+                You cannot checkout until you have added a payment method in the Payments section of your Customer Dashboard. Please add your GCash, Maya, or Credit/Debit card first.
+            </p>
+            
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; margin-bottom: 22px; text-align: left;">
+                <div style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                    How to add a payment method:
+                </div>
+                <ol style="margin: 0; padding-left: 20px; font-size: 13px; color: #334155; line-height: 1.6;">
+                    <li>Go to the <strong>Payments</strong> section in your Dashboard.</li>
+                    <li>Click <strong>+ Add Payment Method</strong>.</li>
+                    <li>Select Credit/Debit, GCash, or PayMaya and save your account.</li>
+                </ol>
+            </div>
+
+            <div class="modal_actions" style="display: flex; gap: 10px; justify-content: center;">
+                <button type="button" class="btn_modal_cancel" id="btn_cancel_payment_required" style="flex: 1; padding: 12px; background: #f1f5f9; color: #475569; font-weight: 600; border: none; border-radius: 8px; cursor: pointer;">
+                    Return to Cart
+                </button>
+                <a href="/frontend/pages/Dashboard/payments.html" class="btn_modal_submit" id="btn_goto_add_payment" style="flex: 1.4; padding: 12px; background: #dc2626; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); text-decoration: none;">
+                    <i class="fas fa-plus-circle"></i> Add Payment Method
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Checkout Confirmation Modal -->
     <div id="checkout_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="checkout_modal_title">
         <div class="modal_container checkout_modal_container" style="max-width: 620px;">
@@ -389,59 +426,21 @@
                 <div class="checkout_form_group" style="margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <label class="form_label" style="font-size: 13px; font-weight: 700; color: #1e293b; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
-                            <i class="fas fa-credit-card" style="color: #dc2626;"></i> 2. Payment Method
+                            <i class="fas fa-credit-card" style="color: #dc2626;"></i> 2. Payment Method (Your Available Accounts)
                         </label>
-                        <span id="delivery_payment_badge" style="font-size: 11px; background: #eff6ff; color: #1d4ed8; font-weight: 700; padding: 3px 8px; border-radius: 12px; border: 1px solid #bfdbfe;">
-                            Prepaid Required
-                        </span>
+                        <a href="/frontend/pages/Dashboard/payments.html" target="_blank" style="font-size: 11.5px; color: #dc2626; text-decoration: none; font-weight: 600;">
+                            <i class="fas fa-plus-circle"></i> Add / Manage Accounts
+                        </a>
                     </div>
 
                     <!-- Delivery Notice: Payment Handled First -->
                     <div id="delivery_payment_notice" style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #2563eb; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #1e40af; line-height: 1.4;">
-                        <i class="fas fa-shield-alt"></i> Delivery orders must be paid first via <strong>GCash, Maya, or BPI</strong>.
+                        <i class="fas fa-shield-alt"></i> Delivery orders require payment upfront via your verified payment account.
                     </div>
 
                     <!-- Payment Cards Grid -->
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;" id="payment_method_grid">
-                        <!-- GCash -->
-                        <label class="pay_method_card active" id="card_pay_gcash" style="border: 2px solid #005ce6; background: #f0f6ff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                            <input type="radio" name="payment_method" id="pay_gcash" value="gcash" checked style="display: none;">
-                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #005ce6; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 auto 6px;">
-                                G
-                            </div>
-                            <strong style="font-size: 13px; color: #005ce6; display: block;">GCash</strong>
-                            <span style="font-size: 10px; color: #64748b;">Instant e-Wallet</span>
-                        </label>
-
-                        <!-- Maya -->
-                        <label class="pay_method_card" id="card_pay_maya" style="border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                            <input type="radio" name="payment_method" id="pay_maya" value="maya" style="display: none;">
-                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #00d665; color: #0b1f14; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 auto 6px;">
-                                M
-                            </div>
-                            <strong style="font-size: 13px; color: #047857; display: block;">Maya</strong>
-                            <span style="font-size: 10px; color: #64748b;">PayMaya Wallet</span>
-                        </label>
-
-                        <!-- BPI -->
-                        <label class="pay_method_card" id="card_pay_bpi" style="border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                            <input type="radio" name="payment_method" id="pay_bpi" value="bpi" style="display: none;">
-                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #b91c1c; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; margin: 0 auto 6px;">
-                                BPI
-                            </div>
-                            <strong style="font-size: 13px; color: #b91c1c; display: block;">BPI</strong>
-                            <span style="font-size: 10px; color: #64748b;">Bank Transfer</span>
-                        </label>
-
-                        <!-- Cash (Pick-up only) -->
-                        <label class="pay_method_card" id="card_pay_cash" style="display: none; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                            <input type="radio" name="payment_method" id="pay_cash" value="cash" style="display: none;">
-                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #475569; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; margin: 0 auto 6px;">
-                                <i class="fas fa-money-bill-wave"></i>
-                            </div>
-                            <strong style="font-size: 13px; color: #334155; display: block;">Cash</strong>
-                            <span style="font-size: 10px; color: #64748b;">In-Store Counter</span>
-                        </label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;" id="payment_method_grid">
+                        <!-- Dynamically populated with customer's added payment accounts -->
                     </div>
 
                     <!-- Payment Handling & Account Instructions Box -->
@@ -626,8 +625,9 @@
             </div>
         </footer>
 
-    <!-- universal auth modal, cart and cart view scripts -->
+    <!-- universal auth modal, payments, cart and cart view scripts -->
     <script src="/frontend/js/auth_modal.js"></script>
+    <script src="/frontend/js/payments.js"></script>
     <script src="/frontend/js/cart.js"></script>
     <script src="/frontend/js/cart_view.js"></script>
     <script src="/frontend/js/dashboard.js"></script>

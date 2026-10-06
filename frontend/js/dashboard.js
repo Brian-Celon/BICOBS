@@ -606,6 +606,17 @@ function setup_payment_modal() {
         });
     });
 
+    const cardsGrid = document.querySelector('.payment_cards_grid') || document.getElementById('payment_cards_container');
+    const noCards = document.getElementById('no_payment_methods');
+
+    const renderSavedCards = () => {
+        if (cardsGrid && window.BICOBS_Payments) {
+            window.BICOBS_Payments.renderDashboardCards(cardsGrid, noCards);
+        }
+    };
+
+    renderSavedCards();
+
     // Handle Form Submit
     if (form) {
         form.addEventListener('submit', (e) => {
@@ -615,93 +626,58 @@ function setup_payment_modal() {
             const activeOpt = modal.querySelector('.provider_option.active');
             const provider = activeOpt ? activeOpt.getAttribute('data-provider') : 'card';
             const isPrimary = document.getElementById('is_primary_payment')?.checked || false;
+            const currentUserName = localStorage.getItem('tb_user_name') || 'Account Holder';
 
-            const cardsGrid = document.querySelector('.payment_cards_grid');
-            const noCards = document.getElementById('no_payment_methods');
-            if (cardsGrid) {
-                const newCard = document.createElement('article');
-                const currentUserName = localStorage.getItem('tb_user_name') || 'Account Holder';
+            if (provider === 'card') {
+                const cardNumRaw = (document.getElementById('card_number')?.value || '').trim();
+                const expDate = (document.getElementById('exp_date')?.value || '').trim() || '12/30';
+                const holderName = (document.getElementById('cardholder_name')?.value || '').trim() || currentUserName;
+                const digits = cardNumRaw.replace(/\D/g, '');
+                const last4 = digits.length >= 4 ? digits.slice(-4) : (digits || '1234');
+                const masked = `•••• •••• •••• ${last4}`;
 
-                if (provider === 'card') {
-                    const cardNum = document.getElementById('card_number')?.value || '•••• •••• •••• 1234';
-                    const expDate = document.getElementById('exp_date')?.value || '12/30';
-                    const holderName = document.getElementById('cardholder_name')?.value.trim() || currentUserName;
-                    const last4 = cardNum.replace(/\s+/g, '').slice(-4) || '1234';
-
-                    newCard.className = 'payment_card_item card_taurus';
-                    newCard.innerHTML = `
-                        <div class="card_top_row">
-                            <span>Credit / Debit Card</span>
-                            <span class="card_visa_badge">VISA</span>
-                        </div>
-                        <div>
-                            <div class="card_field_label">Card Number</div>
-                            <div class="card_number_text">•••• •••• •••• ${last4}</div>
-                        </div>
-                        <div class="card_bottom_row">
-                            <div>
-                                <div class="card_field_label">Cardholder</div>
-                                <strong>${holderName}</strong>
-                            </div>
-                            <div style="text-align: right;">
-                                <div class="card_field_label">Expires</div>
-                                <strong>${expDate}</strong>
-                            </div>
-                        </div>
-                    `;
-                } else if (provider === 'gcash') {
-                    const mobileNum = document.getElementById('gcash_number')?.value || '+63 917 ••• 0000';
-                    const holderName = document.getElementById('gcash_name')?.value.trim() || currentUserName;
-
-                    newCard.className = 'payment_card_item card_gcash';
-                    newCard.innerHTML = `
-                        <div class="card_top_row">
-                            <span>GCash Wallet</span>
-                            <i class="fas fa-wallet" style="font-size: 20px;"></i>
-                        </div>
-                        <div>
-                            <div class="card_field_label">Mobile Account</div>
-                            <div class="card_number_text">${mobileNum}</div>
-                        </div>
-                        <div class="card_bottom_row">
-                            <div>
-                                <div class="card_field_label">Account Name</div>
-                                <strong>${holderName}</strong>
-                            </div>
-                            <div>
-                                ${isPrimary ? '<span class="card_primary_badge">Primary</span>' : ''}
-                            </div>
-                        </div>
-                    `;
-                } else if (provider === 'paymaya') {
-                    const mobileNum = document.getElementById('paymaya_number')?.value || '+63 918 ••• 0000';
-                    const holderName = document.getElementById('paymaya_name')?.value.trim() || currentUserName;
-
-                    newCard.className = 'payment_card_item card_taurus';
-                    newCard.style.backgroundColor = '#00a859';
-                    newCard.innerHTML = `
-                        <div class="card_top_row">
-                            <span>PayMaya Wallet</span>
-                            <i class="fas fa-mobile-alt" style="font-size: 20px;"></i>
-                        </div>
-                        <div>
-                            <div class="card_field_label">Mobile Account</div>
-                            <div class="card_number_text">${mobileNum}</div>
-                        </div>
-                        <div class="card_bottom_row">
-                            <div>
-                                <div class="card_field_label">Account Name</div>
-                                <strong>${holderName}</strong>
-                            </div>
-                            <div>
-                                ${isPrimary ? '<span class="card_primary_badge">Primary</span>' : ''}
-                            </div>
-                        </div>
-                    `;
+                if (window.BICOBS_Payments) {
+                    window.BICOBS_Payments.saveMethod({
+                        provider: 'card',
+                        accountName: holderName,
+                        accountNumber: masked,
+                        rawNumber: digits,
+                        expDate: expDate,
+                        cardType: digits.startsWith('5') ? 'Mastercard' : 'VISA',
+                        isPrimary
+                    });
                 }
+            } else if (provider === 'gcash') {
+                const mobileNum = (document.getElementById('gcash_number')?.value || '').trim() || '0917-000-0000';
+                const holderName = (document.getElementById('gcash_name')?.value || '').trim() || currentUserName;
 
-                if (noCards) noCards.style.display = 'none';
-                cardsGrid.appendChild(newCard);
+                if (window.BICOBS_Payments) {
+                    window.BICOBS_Payments.saveMethod({
+                        provider: 'gcash',
+                        accountName: holderName,
+                        accountNumber: mobileNum,
+                        rawNumber: mobileNum.replace(/\D/g, ''),
+                        isPrimary
+                    });
+                }
+            } else if (provider === 'paymaya') {
+                const mobileNum = (document.getElementById('paymaya_number')?.value || '').trim() || '0918-000-0000';
+                const holderName = (document.getElementById('paymaya_name')?.value || '').trim() || currentUserName;
+
+                if (window.BICOBS_Payments) {
+                    window.BICOBS_Payments.saveMethod({
+                        provider: 'paymaya',
+                        accountName: holderName,
+                        accountNumber: mobileNum,
+                        rawNumber: mobileNum.replace(/\D/g, ''),
+                        isPrimary
+                    });
+                }
+            }
+
+            renderSavedCards();
+            if (window.BICOBS_Cart) {
+                window.BICOBS_Cart.showToast('Payment method saved successfully!', 'success');
             }
 
             form.reset();
