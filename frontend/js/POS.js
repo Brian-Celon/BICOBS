@@ -1277,10 +1277,16 @@ function initPosRepairs(session) {
     /* --- Preset Selection (NO redundant dropdown) --- */
     presetPills.forEach(pill => {
         pill.addEventListener('click', () => {
-            presetPills.forEach(p => p.classList.remove('active'));
+            presetPills.forEach(p => {
+                p.classList.remove('active');
+                const selBadge = p.querySelector('.service_card_select_badge');
+                if (selBadge) selBadge.textContent = 'Select';
+            });
             pill.classList.add('active');
+            const activeSelBadge = pill.querySelector('.service_card_select_badge');
+            if (activeSelBadge) activeSelBadge.innerHTML = 'Selected &check;';
 
-            const srvName = pill.getAttribute('data-service') || pill.textContent.trim();
+            const srvName = pill.getAttribute('data-service') || pill.querySelector('.preset_name')?.textContent.trim() || pill.textContent.trim();
             const srvCost = parseFloat(pill.getAttribute('data-cost')) || 0;
 
             activePreset.name = srvName;

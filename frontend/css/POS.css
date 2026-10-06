@@ -2287,13 +2287,13 @@ button, input, select, textarea {
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 38px;
-    padding: 0 12px;
+    height: 40px;
+    padding: 0 14px;
     background-color: #fff1f2;
     border: 1.5px solid #fecdd3;
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--pos_red_dark);
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 700;
 }
 
@@ -2305,12 +2305,264 @@ button, input, select, textarea {
     box-shadow: 0 0 0 2px rgba(197, 31, 38, 0.2);
 }
 
+/* ==========================================================================
+   Dedicated Workshop & Repairs Page Architecture (POS-repairs.html)
+   ========================================================================== */
+
+.repairs_page_column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 1. Workshop Service Presets Catalog Grid */
+.workshop_services_section {
+    background-color: #ffffff;
+    border: 1px solid var(--pos_border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.workshop_section_header_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.workshop_section_heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    margin: 0;
+}
+
+.workshop_section_subtitle {
+    font-size: 12px;
+    color: var(--pos_text_muted);
+    margin: 2px 0 0;
+}
+
+.workshop_services_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 14px;
+}
+
+.workshop_service_card {
+    background-color: #ffffff;
+    border: 1.5px solid var(--pos_border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    user-select: none;
+}
+
+.workshop_service_card:hover {
+    border-color: var(--pos_red);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(197, 31, 38, 0.09);
+}
+
+.workshop_service_card.active {
+    border-color: var(--pos_red);
+    background-color: #fff9f9;
+    box-shadow: 0 0 0 3px rgba(197, 31, 38, 0.15), 0 4px 12px rgba(197, 31, 38, 0.08);
+}
+
+.service_card_top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.service_card_icon_wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: var(--pos_red_light);
+    color: var(--pos_red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.workshop_service_card.active .service_card_icon_wrap {
+    background-color: var(--pos_red);
+    color: #ffffff;
+}
+
+.service_card_badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background-color: #f1f5f9;
+    color: var(--pos_text_muted);
+}
+
+.workshop_service_card.active .service_card_badge {
+    background-color: var(--pos_red_light);
+    color: var(--pos_red_dark);
+}
+
+.service_card_title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    line-height: 1.25;
+    margin: 0 0 4px;
+}
+
+.service_card_desc {
+    font-size: 12px;
+    color: var(--pos_text_muted);
+    line-height: 1.35;
+    margin: 0 0 12px;
+    flex-grow: 1;
+}
+
+.service_card_bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px dashed var(--pos_border_light);
+}
+
+.service_card_price {
+    font-size: 16.5px;
+    font-weight: 900;
+    color: var(--pos_red);
+    letter-spacing: -0.3px;
+}
+
+.service_card_select_badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--pos_text_muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.workshop_service_card.active .service_card_select_badge {
+    color: var(--pos_red);
+}
+
+/* 2. Service Ticket Intake & Assignment Form Card */
+.workshop_intake_card {
+    background-color: #ffffff;
+    border: 1px solid var(--pos_border);
+    border-left: 4px solid var(--pos_red);
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.workshop_intake_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--pos_border_light);
+}
+
+.workshop_intake_title_group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.workshop_intake_icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background-color: var(--pos_red_light);
+    color: var(--pos_red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.workshop_intake_title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+    margin: 0;
+}
+
+.workshop_intake_desc {
+    font-size: 12px;
+    color: var(--pos_text_muted);
+    margin: 2px 0 0;
+}
+
+.intake_form_grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.intake_col_4 { grid-column: span 4; }
+.intake_col_5 { grid-column: span 5; }
+.intake_col_3 { grid-column: span 3; }
+.intake_col_6 { grid-column: span 6; }
+.intake_col_12 { grid-column: span 12; }
+
+@media (max-width: 900px) {
+    .intake_col_4, .intake_col_5, .intake_col_3, .intake_col_6 {
+        grid-column: span 12;
+    }
+}
+
+.btn_add_maint_to_order {
+    width: 100%;
+    height: 42px;
+    background-color: var(--pos_red);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(197, 31, 38, 0.2);
+}
+
+.btn_add_maint_to_order:hover {
+    background-color: var(--pos_red_dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(197, 31, 38, 0.3);
+}
+
+/* 3. Workshop Guide Reference Card */
 .workshop_guide_card {
     background-color: #ffffff;
     border: 1px solid var(--pos_border);
-    border-radius: 8px;
-    padding: 16px 20px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .workshop_guide_header {
@@ -2318,8 +2570,8 @@ button, input, select, textarea {
     align-items: center;
     gap: 8px;
     color: var(--pos_red);
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #f1f5f9;
 }
 
@@ -2332,30 +2584,14 @@ button, input, select, textarea {
 .workshop_guide_item {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 12px;
+    border-radius: 8px;
+    padding: 12px 14px;
 }
 
-.btn_add_maint_to_order {
-    width: 100%;
-    height: 38px;
-    background-color: var(--pos_red);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: background-color 0.15s ease, transform 0.1s ease;
-}
-
-.btn_add_maint_to_order:hover {
-    background-color: var(--pos_red_dark);
-    transform: translateY(-1px);
+@media (max-width: 768px) {
+    .workshop_guide_grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Service Item display in cart */
