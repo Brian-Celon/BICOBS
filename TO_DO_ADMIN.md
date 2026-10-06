@@ -33,6 +33,13 @@ This roadmap outlines the complete status, backend integration requirements, and
   - [x] `users.html` – User account table with roles (`admin`, `staff`, `customer`) and status toggles.
   - [x] `settings.html` – Store profile form, business operating hours, receipt customization, and admin password form.
   - [x] `login.html` – Dedicated administrative sign-in portal.
+- [x] **Core UI & UX Quality Standards**
+  - [x] Prevent HTML injection by rendering user-entered text safely in tables, modals, and detail cards.
+  - [x] Password form security: show/hide controls, no prefilled credentials, and matching confirmation validation.
+  - [x] Client-side search, category filtering, and sorting across products, orders, users, and repairs.
+  - [x] Polished empty, loading, and error states for all administrative tables, modals, and reports.
+  - [x] Modal accessibility: keyboard navigation, Escape key dismiss, and focus restoration.
+  - [x] Responsive layouts across mobile, tablet, laptop, and desktop viewports without unwanted horizontal overflow.
 
 ---
 
