@@ -26,19 +26,16 @@ npm install
 
 ### 2️⃣ Step 2: Create the `.env` File
 Inside the `back-end` folder:
-1. Create a new file named **`.env`**
-2. Copy and paste this exact text into it:
+1. Copy the example environment file:
 
-```env
-PORT=5000
-NODE_ENV=development
-DATABASE_URL=postgresql://postgres.qhircluswzwtbfufmgsb:BICOBS_DB123@aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres
-JWT_SECRET=taurus_bike_shop_secret_jwt_key_2026
-JWT_EXPIRE=30d
-CLOUDINARY_CLOUD_NAME=q3ywfemm
+```bash
+copy .env.example .env
 ```
 
+2. Open the new `.env` file and fill in your **real** values for each variable (database URL, JWT secret, email credentials, etc.).
 3. Save the file.
+
+> ⚠️ **Never commit `.env` to git** — it contains your real secrets.
 
 ---
 
