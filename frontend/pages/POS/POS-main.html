@@ -26,7 +26,8 @@
             <!-- navigation tabs -->
             <nav class="pos_nav_tabs">
                 <a href="POS-home.html" class="pos_tab_link">Home</a>
-                <a href="POS-main.html" class="pos_tab_link active">New Sale</a>
+                <a href="POS-main.html" class="pos_tab_link active">Products</a>
+                <a href="POS-repairs.html" class="pos_tab_link">Repairs &amp; Services</a>
                 <a href="POS-history.html" class="pos_tab_link">History</a>
             </nav>
 
@@ -51,164 +52,23 @@
             <!-- split layout: catalog area on left, order side window on right -->
             <div class="pos_split_layout">
 
-                <!-- left column: product catalog -->
+                <!-- left column: product catalog (100% focused on products) -->
                 <div class="catalog_column">
 
-                    <!-- subheader section with quick maintenance button -->
+                    <!-- subheader section focused on product catalog -->
                     <section class="sub_header_row">
                         <div class="sub_header_left">
-                            <span class="sub_label_red">NEW TRANSACTION</span>
-                            <h1 class="page_title_bold">Select Products &amp; Services</h1>
+                            <span class="sub_label_red">IN-STORE INVENTORY</span>
+                            <h1 class="page_title_bold">Product Catalog &amp; Checkout</h1>
                         </div>
                         <div class="sub_header_right_actions">
-                            <button type="button" class="btn_quick_maint_action" id="btn_quick_maint_action">
+                            <a href="POS-repairs.html" class="btn_quick_maint_action" style="text-decoration: none;">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
                                 </svg>
-                                <span>+ Add Maintenance Service</span>
-                            </button>
+                                <span>Go to Bike Repairs &amp; Services &rarr;</span>
+                            </a>
                         </div>
-                    </section>
-
-                    <!-- dedicated bike maintenance and service section -->
-                    <section class="pos_maintenance_section" id="pos_maintenance_section">
-                        <!-- section header -->
-                        <div class="maintenance_header_wrap">
-                            <div class="maintenance_title_group">
-                                <div class="maintenance_icon_badge">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h2 class="maintenance_section_title">Bike Maintenance &amp; Repair Services</h2>
-                                    <p class="maintenance_section_desc">Log labor fees, assign mechanics/technicians, and attach maintenance items to this order.</p>
-                                </div>
-                            </div>
-                            <button type="button" class="btn_maint_collapse" id="btn_maint_collapse" title="Collapse / Expand">
-                                <span id="maint_collapse_text">Hide Section</span> &utrif;
-                            </button>
-                        </div>
-
-                        <!-- quick service preset buttons -->
-                        <div class="maint_presets_bar" id="maint_presets_bar">
-                            <span class="maint_presets_label">Quick Presets:</span>
-                            <div class="maint_presets_list">
-                                <button type="button" class="maint_preset_pill active" data-service="Full Bike Tune-Up" data-cost="750">
-                                    <span class="preset_name">Full Tune-Up</span>
-                                    <span class="preset_price">&#8369;750.00</span>
-                                </button>
-                                <button type="button" class="maint_preset_pill" data-service="Hydraulic Brake Bleeding" data-cost="450">
-                                    <span class="preset_name">Brake Bleed</span>
-                                    <span class="preset_price">&#8369;450.00</span>
-                                </button>
-                                <button type="button" class="maint_preset_pill" data-service="Drivetrain Clean &amp; Tune" data-cost="500">
-                                    <span class="preset_name">Drivetrain Clean</span>
-                                    <span class="preset_price">&#8369;500.00</span>
-                                </button>
-                                <button type="button" class="maint_preset_pill" data-service="Wheel Truing &amp; Spoke Tension" data-cost="350">
-                                    <span class="preset_name">Wheel Truing</span>
-                                    <span class="preset_price">&#8369;350.00</span>
-                                </button>
-                                <button type="button" class="maint_preset_pill" data-service="Inner Tube &amp; Flat Tire Repair" data-cost="150">
-                                    <span class="preset_name">Flat Tire Repair</span>
-                                    <span class="preset_price">&#8369;150.00</span>
-                                </button>
-                                <button type="button" class="maint_preset_pill" data-service="Fork &amp; Suspension Overhaul" data-cost="1200">
-                                    <span class="preset_name">Fork Overhaul</span>
-                                    <span class="preset_price">&#8369;1,200.00</span>
-                                </button>
-                                <button type="button" class="maint_preset_pill" data-service="Custom Labor / General Repair" data-cost="300">
-                                    <span class="preset_name">Custom Labor</span>
-                                    <span class="preset_price">&#8369;300.00</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- interactive maintenance form -->
-                        <form class="maintenance_form_body" id="pos_maintenance_form" onsubmit="return false;">
-                            <div class="maint_form_row">
-                                <!-- service type / name -->
-                                <div class="maint_field_group flex_2">
-                                    <label for="maint_service_name" class="maint_field_label">
-                                        Service / Maintenance Type <span class="req_star">*</span>
-                                    </label>
-                                    <input type="text" class="maint_text_input" id="maint_service_name" list="preset_services_datalist" placeholder="Select or type service..." value="Full Bike Tune-Up" required>
-                                    <datalist id="preset_services_datalist">
-                                        <option value="Full Bike Tune-Up"></option>
-                                        <option value="Hydraulic Brake Bleeding"></option>
-                                        <option value="Drivetrain Clean & Tune"></option>
-                                        <option value="Wheel Truing & Spoke Tension"></option>
-                                        <option value="Inner Tube & Flat Tire Repair"></option>
-                                        <option value="Fork & Suspension Overhaul"></option>
-                                        <option value="Bottom Bracket & Headset Service"></option>
-                                        <option value="Gear Shifting & Cable Replacement"></option>
-                                        <option value="Brake Pad Replacement & Rotor Alignment"></option>
-                                        <option value="Tubeless Conversion & Sealant Refresh"></option>
-                                        <option value="Custom Labor / General Repair"></option>
-                                    </datalist>
-                                </div>
-
-                                <!-- technician / mechanic in-charge -->
-                                <div class="maint_field_group flex_2">
-                                    <label for="maint_technician_select" class="maint_field_label">
-                                        Mechanic / Technician In-Charge <span class="req_star">*</span>
-                                    </label>
-                                    <div class="technician_select_wrap">
-                                        <select class="maint_select_input" id="maint_technician_select" required>
-                                            <option value="">-- Choose Assigned Mechanic --</option>
-                                            <option value="Reynaldo Santos" selected>Reynaldo Santos (Lead Mechanic)</option>
-                                            <option value="Mark Javier">Mark Javier (Bicycle Tech)</option>
-                                            <option value="Russel Lu Caisido">Russel Lu Caisido (Staff Tech)</option>
-                                            <option value="Jhon Edrian Capisonda">Jhon Edrian Capisonda (Mechanic)</option>
-                                            <option value="Brian Howard Celon">Brian Howard Celon (Specialist)</option>
-                                            <option value="__custom__">+ Enter Custom Mechanic Name...</option>
-                                        </select>
-                                        <input type="text" class="maint_text_input" id="maint_technician_custom" placeholder="Type mechanic's full name..." style="display: none; margin-top: 4px;">
-                                    </div>
-                                </div>
-
-                                <!-- cost / labor fee -->
-                                <div class="maint_field_group flex_1">
-                                    <label for="maint_service_cost" class="maint_field_label">
-                                        Cost / Labor Fee (&#8369;) <span class="req_star">*</span>
-                                    </label>
-                                    <div class="currency_input_box">
-                                        <span class="currency_symbol">&#8369;</span>
-                                        <input type="number" class="maint_text_input currency_input" id="maint_service_cost" placeholder="0.00" value="750" min="0" step="10" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="maint_form_row">
-                                <!-- bike / customer details -->
-                                <div class="maint_field_group flex_3">
-                                    <label for="maint_bike_details" class="maint_field_label">
-                                        Customer &amp; Bike Details <span class="optional_hint">(Optional)</span>
-                                    </label>
-                                    <input type="text" class="maint_text_input" id="maint_bike_details" placeholder="e.g. Juan Dela Cruz &bull; Trek Marlin 7 (Matte Black)">
-                                </div>
-
-                                <!-- service notes -->
-                                <div class="maint_field_group flex_3">
-                                    <label for="maint_service_notes" class="maint_field_label">
-                                        Service Notes / Work Done <span class="optional_hint">(Optional)</span>
-                                    </label>
-                                    <input type="text" class="maint_text_input" id="maint_service_notes" placeholder="e.g. Replaced shift cable, aligned derailleur hanger">
-                                </div>
-
-                                <!-- action buttons -->
-                                <div class="maint_form_buttons flex_2">
-                                    <button type="submit" class="btn_add_maint_to_order" id="btn_add_maint_to_order">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                        </svg>
-                                        <span>Add Service to Order</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                     </section>
 
                     <!-- search bar -->
@@ -219,13 +79,12 @@
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                         </span>
-                        <input type="text" class="pos_search_input" id="product_search_input" placeholder="Search products and services by name, SKU, or category...">
+                        <input type="text" class="pos_search_input" id="product_search_input" placeholder="Search products by name, SKU, or category...">
                     </section>
 
                     <!-- category filter pills -->
                     <section class="category_filter_bar" id="category_filter_bar">
                         <button class="pill_filter_btn active" data-category="all">All Items</button>
-                        <button class="pill_filter_btn" data-category="maintenance" style="color: var(--pos_red); font-weight: 700;">🔧 Maintenance</button>
                         <button class="pill_filter_btn" data-category="built_bikes">Bicycles</button>
                         <button class="pill_filter_btn" data-category="frame">Frames</button>
                         <button class="pill_filter_btn" data-category="fork">Forks &amp; Suspension</button>

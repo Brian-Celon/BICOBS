@@ -26,7 +26,8 @@
             <!-- navigation tabs -->
             <nav class="pos_nav_tabs">
                 <a href="POS-home.html" class="pos_tab_link active">Home</a>
-                <a href="POS-main.html" class="pos_tab_link">New Sale</a>
+                <a href="POS-main.html" class="pos_tab_link">Products</a>
+                <a href="POS-repairs.html" class="pos_tab_link">Repairs &amp; Services</a>
                 <a href="POS-history.html" class="pos_tab_link">History</a>
             </nav>
 
@@ -51,18 +52,19 @@
             <section class="pos_hero_banner">
                 <div class="hero_left_box">
                     <span class="hero_tagline">TAURUS POINT OF SALE</span>
-                    <h1 class="hero_title">Welcome back,<br>Russel Lu Caisido</h1>
+                    <h1 class="hero_title">Welcome back,<br><span id="home_welcome_cashier_name">Store Cashier</span></h1>
                     <div class="hero_actions_group">
-                        <a href="POS-main.html" class="btn_hero_primary">New Transaction</a>
+                        <a href="POS-main.html" class="btn_hero_primary">New Sale (Products)</a>
+                        <a href="POS-repairs.html" class="btn_hero_secondary" style="background: #fff; color: var(--pos_red); border: 1px solid #fecdd3;">&#128295; Repairs &amp; Services</a>
                         <a href="POS-history.html" class="btn_hero_secondary">View History</a>
                     </div>
                 </div>
                 <img src="/frontend/Pictures/logo.png" alt="Taurus Bull Watermark" class="hero_bull_graphic">
             </section>
 
-            <!-- 3 action cards grid -->
+            <!-- action cards grid -->
             <section class="action_cards_row">
-                <!-- card 1: new transaction -->
+                <!-- card 1: new transaction (products) -->
                 <a href="POS-main.html" class="action_card card_new_transaction">
                     <div class="action_card_icon">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -71,11 +73,22 @@
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
                     </div>
-                    <h2 class="action_card_title">New Transaction</h2>
-                    <p class="action_card_subtitle">Search products and process a sale</p>
+                    <h2 class="action_card_title">Products &amp; Sale</h2>
+                    <p class="action_card_subtitle">Search catalog and sell parts/bikes</p>
                 </a>
 
-                <!-- card 2: transaction history -->
+                <!-- card 2: repairs and workshop -->
+                <a href="POS-repairs.html" class="action_card card_repairs">
+                    <div class="action_card_icon" style="background: rgba(185, 28, 28, 0.1); color: var(--pos_red);">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="action_card_title">Repairs &amp; Services</h2>
+                    <p class="action_card_subtitle">Log labor, assign mechanics &amp; tune-ups</p>
+                </a>
+
+                <!-- card 3: transaction history -->
                 <a href="POS-history.html" class="action_card card_history">
                     <div class="action_card_icon">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -86,10 +99,10 @@
                         </svg>
                     </div>
                     <h2 class="action_card_title">Transaction History</h2>
-                    <p class="action_card_subtitle">Browse and review past receipts</p>
+                    <p class="action_card_subtitle">Browse receipts &amp; reprint</p>
                 </a>
 
-                <!-- card 3: daily summary -->
+                <!-- card 4: daily summary -->
                 <a href="POS-history.html" class="action_card card_summary">
                     <div class="action_card_icon">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">

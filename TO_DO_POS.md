@@ -11,7 +11,8 @@ This roadmap tracks the complete development, backend infrastructure, live datab
 * **Database:** Connects to the store's central PostgreSQL (Supabase) database to share real-time product inventory, customer records, repair tickets, and billing ledgers.
 * **Core Files:**
   * [`frontend/pages/POS/POS-home.html`](file:///d:/BICOBS/frontend/pages/POS/POS-home.html) — POS Terminal Dashboard, daily metrics, and recent sales
-  * [`frontend/pages/POS/POS-main.html`](file:///d:/BICOBS/frontend/pages/POS/POS-main.html) — Counter Checkout, product catalog, maintenance builder, order side-panel cart
+  * [`frontend/pages/POS/POS-main.html`](file:///d:/BICOBS/frontend/pages/POS/POS-main.html) — Counter Checkout & live product catalog (100% focused on products)
+  * [`frontend/pages/POS/POS-repairs.html`](file:///d:/BICOBS/frontend/pages/POS/POS-repairs.html) — Workshop & Repair Service intake, technician assignment & labor ticket dispatch
   * [`frontend/pages/POS/POS-history.html`](file:///d:/BICOBS/frontend/pages/POS/POS-history.html) — Receipt history ledger, transaction search, and reprint
   * [`frontend/css/POS.css`](file:///d:/BICOBS/frontend/css/POS.css) — Unified POS styling system
   * [`frontend/js/POS.js`](file:///d:/BICOBS/frontend/js/POS.js) — Cart engine, promo code validator, and receipt generator
@@ -164,6 +165,22 @@ This roadmap tracks the complete development, backend infrastructure, live datab
   - [x] Add **"Switch Cashier / Clock Out"** button to navbar header.
   - [x] Terminate cashier session, clear storage, and return to login screen.
   - [x] Tie orders and audit receipts to the logged-in staff member's real account ID in database.
+
+---
+
+### 🔧 Phase 9: Dedicated Workshop Repairs Tab & Clean Preset UI
+- [x] **Separate Workshop Repairs from Product Checkout**
+  - [x] Create dedicated [`POS-repairs.html`](file:///d:/BICOBS/frontend/pages/POS/POS-repairs.html) page for workshop service intake.
+  - [x] Strip out maintenance builder section from [`POS-main.html`](file:///d:/BICOBS/frontend/pages/POS/POS-main.html) so it remains 100% focused on product discovery and inventory sales.
+  - [x] Remove maintenance filter pill from product category bar; keep only physical product categories.
+- [x] **Streamline Service Intake & Remove Redundant Dropdown**
+  - [x] Remove redundant service maintenance `<select>` / datalist dropdown; preset buttons above directly select the active service.
+  - [x] Add dynamic selected service badge (`#active_service_title`) with active status indicator dot.
+  - [x] Provide clean fallback text field for custom labor description only when "Custom Labor" preset is chosen.
+  - [x] Shared `orderCart` state across tabs via `sessionStorage` (`pos_active_cart`) so parts and labor can be combined in one customer receipt.
+- [x] **Unified 4-Tab Navigation Across POS Suite**
+  - [x] Synchronized navigation links (`Home`, `Products`, `Repairs & Services`, `History`) across all 4 terminal views.
+  - [x] Added dedicated "Repairs & Services" action card to [`POS-home.html`](file:///d:/BICOBS/frontend/pages/POS/POS-home.html).
 
 ---
 

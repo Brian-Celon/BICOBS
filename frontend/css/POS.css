@@ -280,10 +280,10 @@ button, input, select, textarea {
     z-index: 2;
 }
 
-/* 3 action cards row */
+/* action cards row */
 .action_cards_row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
 }
 
@@ -306,6 +306,10 @@ button, input, select, textarea {
 
 .card_new_transaction {
     background-color: var(--pos_red);
+}
+
+.card_repairs {
+    background-color: #991b1b;
 }
 
 .card_history {
@@ -2273,6 +2277,63 @@ button, input, select, textarea {
     padding-left: 26px !important;
     font-weight: 700;
     color: var(--pos_red);
+}
+
+.selected_service_badge_wrap {
+    width: 100%;
+}
+
+.selected_service_display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 12px;
+    background-color: #fff1f2;
+    border: 1.5px solid #fecdd3;
+    border-radius: 6px;
+    color: var(--pos_red_dark);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.service_dot_indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--pos_red);
+    box-shadow: 0 0 0 2px rgba(197, 31, 38, 0.2);
+}
+
+.workshop_guide_card {
+    background-color: #ffffff;
+    border: 1px solid var(--pos_border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.workshop_guide_header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pos_red);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.workshop_guide_grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.workshop_guide_item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
 }
 
 .btn_add_maint_to_order {

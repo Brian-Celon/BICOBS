@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus POS - Repairs &amp; Services</title>
+    <!-- pos unified stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/POS.css">
+</head>
+<body>
+
+    <!-- pos container wrapper -->
+    <div class="pos_container" id="pos_container">
+
+        <!-- top navigation bar -->
+        <header class="pos_top_nav" id="pos_top_nav">
+            <!-- brand section -->
+            <a href="POS-home.html" class="pos_brand_section">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="pos_brand_logo">
+                <div class="pos_brand_text_box">
+                    <span class="pos_brand_title">TAURUS</span>
+                    <span class="pos_brand_subtitle">Bike Shop &bull; POS Terminal</span>
+                </div>
+            </a>
+
+            <!-- navigation tabs -->
+            <nav class="pos_nav_tabs">
+                <a href="POS-home.html" class="pos_tab_link">Home</a>
+                <a href="POS-main.html" class="pos_tab_link">Products</a>
+                <a href="POS-repairs.html" class="pos_tab_link active">Repairs &amp; Services</a>
+                <a href="POS-history.html" class="pos_tab_link">History</a>
+            </nav>
+
+            <!-- cashier status and home button right -->
+            <div class="pos_header_right">
+                <div class="cashier_status_wrap" id="cashier_status_wrap">
+                    <span class="cashier_pill_badge" id="cashier_role_badge">STAFF</span>
+                    <span>Cashier: <strong class="cashier_name" id="active_cashier_name">Checking shift...</strong></span>
+                    <button type="button" class="btn_clock_out" id="btn_switch_cashier" title="Clock out &amp; switch cashier">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        Clock Out
+                    </button>
+                    <span class="clock_display" id="clock_display">06:06:45 PM</span>
+                </div>
+                <a href="POS-home.html" class="btn_back_home">&larr; Home</a>
+            </div>
+        </header>
+
+        <!-- main content area -->
+        <main class="pos_main_content">
+
+            <!-- split layout: repairs workshop on left, order side window on right -->
+            <div class="pos_split_layout">
+
+                <!-- left column: dedicated repair & maintenance dispatch -->
+                <div class="catalog_column repairs_page_column">
+
+                    <!-- subheader section -->
+                    <section class="sub_header_row">
+                        <div class="sub_header_left">
+                            <span class="sub_label_red">WORKSHOP &amp; SERVICE DISPATCH</span>
+                            <h1 class="page_title_bold">Bike Maintenance &amp; Repair Services</h1>
+                        </div>
+                        <div class="sub_header_right_actions">
+                            <a href="POS-main.html" class="btn_quick_maint_action" style="text-decoration: none;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                </svg>
+                                <span>&larr; Back to Products Catalog</span>
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- dedicated bike maintenance and service section -->
+                    <section class="pos_maintenance_section expanded" id="pos_maintenance_section" style="margin-bottom: 20px;">
+                        <!-- section header -->
+                        <div class="maintenance_header_wrap">
+                            <div class="maintenance_title_group">
+                                <div class="maintenance_icon_badge">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="maintenance_section_title">Workshop Repair Intake Form</h2>
+                                    <p class="maintenance_section_desc">Select a service preset above, assign a technician, and add labor to the order cart.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- quick service preset buttons -->
+                        <div class="maint_presets_bar" id="maint_presets_bar">
+                            <span class="maint_presets_label">Quick Presets:</span>
+                            <div class="maint_presets_list">
+                                <button type="button" class="maint_preset_pill active" data-service="Full Bike Tune-Up" data-cost="750">
+                                    <span class="preset_name">Full Tune-Up</span>
+                                    <span class="preset_price">&#8369;750.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Hydraulic Brake Bleeding" data-cost="450">
+                                    <span class="preset_name">Brake Bleed</span>
+                                    <span class="preset_price">&#8369;450.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Drivetrain Clean &amp; Tune" data-cost="500">
+                                    <span class="preset_name">Drivetrain Clean</span>
+                                    <span class="preset_price">&#8369;500.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Wheel Truing &amp; Spoke Tension" data-cost="350">
+                                    <span class="preset_name">Wheel Truing</span>
+                                    <span class="preset_price">&#8369;350.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Inner Tube &amp; Flat Tire Repair" data-cost="150">
+                                    <span class="preset_name">Flat Tire Repair</span>
+                                    <span class="preset_price">&#8369;150.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Fork &amp; Suspension Overhaul" data-cost="1200">
+                                    <span class="preset_name">Fork Overhaul</span>
+                                    <span class="preset_price">&#8369;1,200.00</span>
+                                </button>
+                                <button type="button" class="maint_preset_pill" data-service="Custom Labor / General Repair" data-cost="300">
+                                    <span class="preset_name">Custom Labor</span>
+                                    <span class="preset_price">&#8369;300.00</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- interactive maintenance form (NO redundant service type dropdown - selected from presets above) -->
+                        <form class="maintenance_form_body" id="pos_repairs_form" onsubmit="return false;">
+                            <div class="maint_form_row">
+                                <!-- selected service banner (replaces redundant dropdown) -->
+                                <div class="maint_field_group flex_2">
+                                    <label class="maint_field_label">
+                                        Selected Service Preset
+                                    </label>
+                                    <div class="selected_service_badge_wrap">
+                                        <div class="selected_service_display" id="selected_service_display">
+                                            <span class="service_dot_indicator"></span>
+                                            <strong id="active_service_title">Full Bike Tune-Up</strong>
+                                        </div>
+                                        <input type="text" class="maint_text_input" id="maint_custom_service_title" placeholder="Type custom service title..." style="display: none; margin-top: 6px;">
+                                    </div>
+                                </div>
+
+                                <!-- technician / mechanic in-charge -->
+                                <div class="maint_field_group flex_2">
+                                    <label for="maint_technician_select" class="maint_field_label">
+                                        Mechanic / Technician In-Charge <span class="req_star">*</span>
+                                    </label>
+                                    <div class="technician_select_wrap">
+                                        <select class="maint_select_input" id="maint_technician_select" required>
+                                            <option value="">-- Choose Assigned Mechanic --</option>
+                                            <option value="Reynaldo Santos" selected>Reynaldo Santos (Lead Mechanic)</option>
+                                            <option value="Mark Javier">Mark Javier (Bicycle Tech)</option>
+                                            <option value="Russel Lu Caisido">Russel Lu Caisido (Staff Tech)</option>
+                                            <option value="Jhon Edrian Capisonda">Jhon Edrian Capisonda (Mechanic)</option>
+                                            <option value="Brian Howard Celon">Brian Howard Celon (Specialist)</option>
+                                            <option value="__custom__">+ Enter Custom Mechanic Name...</option>
+                                        </select>
+                                        <input type="text" class="maint_text_input" id="maint_technician_custom" placeholder="Type mechanic's full name..." style="display: none; margin-top: 4px;">
+                                    </div>
+                                </div>
+
+                                <!-- cost / labor fee -->
+                                <div class="maint_field_group flex_1">
+                                    <label for="maint_service_cost" class="maint_field_label">
+                                        Labor Fee (&#8369;) <span class="req_star">*</span>
+                                    </label>
+                                    <div class="currency_input_box">
+                                        <span class="currency_symbol">&#8369;</span>
+                                        <input type="number" class="maint_text_input currency_input" id="maint_service_cost" placeholder="0.00" value="750" min="0" step="10" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="maint_form_row">
+                                <!-- bike / customer details -->
+                                <div class="maint_field_group flex_3">
+                                    <label for="maint_bike_details" class="maint_field_label">
+                                        Customer &amp; Bike Details <span class="optional_hint">(Optional)</span>
+                                    </label>
+                                    <input type="text" class="maint_text_input" id="maint_bike_details" placeholder="e.g. Juan Dela Cruz &bull; Trek Marlin 7 (Matte Black)">
+                                </div>
+
+                                <!-- service notes -->
+                                <div class="maint_field_group flex_3">
+                                    <label for="maint_service_notes" class="maint_field_label">
+                                        Service Notes / Work Done <span class="optional_hint">(Optional)</span>
+                                    </label>
+                                    <input type="text" class="maint_text_input" id="maint_service_notes" placeholder="e.g. Replaced shift cable, aligned derailleur hanger">
+                                </div>
+
+                                <!-- action buttons -->
+                                <div class="maint_form_buttons flex_2">
+                                    <button type="submit" class="btn_add_maint_to_order" id="btn_add_maint_to_order">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                        <span>Add Service to Order Cart</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- workshop pricing & standard labor reference card -->
+                    <section class="workshop_guide_card">
+                        <div class="workshop_guide_header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--pos_text_dark);">Taurus Workshop Guidelines &amp; Repair Policy</h3>
+                        </div>
+                        <div class="workshop_guide_grid">
+                            <div class="workshop_guide_item">
+                                <strong style="color: var(--pos_red); font-size: 13px;">Full Bike Tune-Up (&#8369;750)</strong>
+                                <p style="font-size: 12px; color: var(--pos_text_muted); margin: 4px 0 0;">Comprehensive inspection: bolt torque verification, gear adjustment, brake alignment, drivetrain clean and lubrication.</p>
+                            </div>
+                            <div class="workshop_guide_item">
+                                <strong style="color: var(--pos_red); font-size: 13px;">Hydraulic Brake Bleeding (&#8369;450)</strong>
+                                <p style="font-size: 12px; color: var(--pos_text_muted); margin: 4px 0 0;">Shimano/SRAM mineral oil or DOT fluid purge, lever feel calibration, and rotor degreasing.</p>
+                            </div>
+                            <div class="workshop_guide_item">
+                                <strong style="color: var(--pos_red); font-size: 13px;">Flat Tire &amp; Tube Repair (&#8369;150)</strong>
+                                <p style="font-size: 12px; color: var(--pos_text_muted); margin: 4px 0 0;">Inner tube replacement or patch vulcanization, casing puncture inspection, and tire inflation to specified PSI.</p>
+                            </div>
+                            <div class="workshop_guide_item">
+                                <strong style="color: var(--pos_red); font-size: 13px;">Parts &amp; Labor Transparency</strong>
+                                <p style="font-size: 12px; color: var(--pos_text_muted); margin: 4px 0 0;">Replacement parts (chains, cables, inner tubes) should be added from the Products catalog tab to ensure accurate stock deduction.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- right column: order side window (Shared with Products tab) -->
+                <aside class="order_column" id="order_column">
+
+                    <!-- order side window header -->
+                    <div class="order_header_row">
+                        <div class="order_title_group">
+                            <span class="order_title_text">Current Order</span>
+                            <span class="order_badge" id="order_badge_count">0</span>
+                        </div>
+                        <button type="button" class="btn_clear_order" id="btn_clear_order" title="Clear All Items">
+                            Clear Order
+                        </button>
+                    </div>
+
+                    <!-- order items scrollable list -->
+                    <div class="order_items_list" id="order_items_list">
+                        <!-- empty order state -->
+                        <div class="empty_order_state" id="empty_order_state">
+                            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            <span class="empty_state_text">No items in current order</span>
+                            <span class="empty_state_subtext">Add repair services or switch to Products tab</span>
+                        </div>
+                    </div>
+
+                    <!-- order summary sticky bottom -->
+                    <div class="order_summary_section">
+                        <!-- subtotal -->
+                        <div class="summary_calc_row">
+                            <span class="calc_label">Subtotal</span>
+                            <span class="calc_value" id="summary_subtotal">&#8369;0.00</span>
+                        </div>
+
+                        <!-- cashier discount row -->
+                        <div class="summary_calc_row">
+                            <span class="calc_label">Discount</span>
+                            <button type="button" class="btn_add_discount" id="summary_discount_btn">
+                                Add Code
+                            </button>
+                        </div>
+
+                        <!-- grand total -->
+                        <div class="summary_total_row">
+                            <div class="total_title_group">
+                                <span class="total_label">TOTAL</span>
+                                <span class="total_item_count" id="summary_item_count">0 Items</span>
+                            </div>
+                            <span class="total_amount_red" id="summary_total">&#8369;0.00</span>
+                        </div>
+
+                        <!-- charge button -->
+                        <button type="button" class="btn_charge_action" id="btn_charge_action" disabled>
+                            Charge &#8369;0.00
+                        </button>
+                    </div>
+                </aside>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 1. DISCOUNT / PROMO CODE MODAL -->
+    <div class="pos_modal_backdrop" id="discount_modal_overlay">
+        <div class="pos_modal_box modal_discount_box">
+            <div class="pos_modal_header">
+                <div>
+                    <h3 class="pos_modal_title">Apply Order Discount</h3>
+                    <p class="pos_modal_subtitle">Enter promo voucher or apply authorized cashier concession</p>
+                </div>
+                <button type="button" class="btn_modal_close" id="btn_close_discount_modal">&times;</button>
+            </div>
+
+            <div class="discount_tabs_row">
+                <button type="button" class="discount_tab active" id="tab_promo_code">Store Promo Codes</button>
+                <button type="button" class="discount_tab" id="tab_custom_discount">Custom Cashier % / &#8369;</button>
+            </div>
+
+            <!-- promo tab -->
+            <div id="view_promo_code">
+                <div class="modal_field_wrap">
+                    <label class="modal_field_label" for="discount_code_input">Promo / Voucher Code</label>
+                    <input type="text" class="modal_text_input" id="discount_code_input" placeholder="e.g. TAURUS10, VIP50, SAVE100">
+                </div>
+                <div class="promo_samples_wrap">
+                    <span class="promo_sample_label">Quick Codes:</span>
+                    <button type="button" class="btn_promo_sample maint_preset_pill" data-code="TAURUS10">TAURUS10 (10% OFF)</button>
+                    <button type="button" class="btn_promo_sample maint_preset_pill" data-code="SAVE100">SAVE100 (&#8369;100 OFF)</button>
+                    <button type="button" class="btn_promo_sample maint_preset_pill" data-code="VIP50">VIP50 (50% OFF)</button>
+                </div>
+            </div>
+
+            <!-- custom cashier discount tab -->
+            <div id="view_custom_discount" style="display: none;">
+                <div class="modal_field_wrap">
+                    <label class="modal_field_label" for="custom_discount_value">Discount Value (% or &#8369;)</label>
+                    <input type="text" class="modal_text_input" id="custom_discount_value" placeholder="e.g. 15% or 250">
+                    <span style="font-size: 11px; color: var(--pos_text_muted); margin-top: 4px; display: block;">Include '%' for percentage (e.g. 15%) or type plain number for exact Peso deduction.</span>
+                </div>
+                <div class="modal_field_wrap" style="margin-top: 10px;">
+                    <label class="modal_field_label" for="custom_discount_reason">Reason / Authorization Note</label>
+                    <input type="text" class="modal_text_input" id="custom_discount_reason" placeholder="e.g. Loyal customer discount / store promotion">
+                </div>
+            </div>
+
+            <div class="pos_modal_footer">
+                <button type="button" class="btn_modal_secondary" id="btn_cancel_discount">Cancel</button>
+                <button type="button" class="btn_modal_primary" id="btn_apply_discount">Apply Discount</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. PAYMENT SETTLEMENT & CASH TENDERED MODAL -->
+    <div class="pos_modal_backdrop" id="payment_modal_overlay">
+        <div class="pos_modal_box modal_payment_box">
+            <div class="pos_modal_header">
+                <div>
+                    <h3 class="pos_modal_title">Payment Settlement</h3>
+                    <p class="pos_modal_subtitle">Total Payable: <strong id="pay_modal_total_amount" style="color: var(--pos_red); font-size: 16px;">&#8369;0.00</strong> (<span id="pay_modal_items_count">0</span> items)</p>
+                </div>
+                <button type="button" class="btn_modal_close" id="btn_close_payment_modal">&times;</button>
+            </div>
+
+            <div class="modal_field_row">
+                <div class="modal_field_wrap flex_1">
+                    <label class="modal_field_label" for="pay_customer_name">Customer Full Name</label>
+                    <input type="text" class="modal_text_input" id="pay_customer_name" placeholder="Walk-in Customer" value="Walk-in Customer">
+                </div>
+                <div class="modal_field_wrap flex_1">
+                    <label class="modal_field_label" for="pay_customer_phone">Contact Phone Number</label>
+                    <input type="text" class="modal_text_input" id="pay_customer_phone" placeholder="09XXXXXXXXX">
+                </div>
+            </div>
+
+            <!-- payment methods -->
+            <div class="payment_method_tabs">
+                <button type="button" class="btn_pay_tab active" id="tab_method_cash" data-method="cash">
+                    &#128181; Cash Payment
+                </button>
+                <button type="button" class="btn_pay_tab" id="tab_method_gcash" data-method="gcash">
+                    &#128241; GCash / Maya E-Wallet
+                </button>
+            </div>
+
+            <!-- cash view -->
+            <div id="view_payment_cash">
+                <div class="modal_field_wrap">
+                    <label class="modal_field_label" for="tendered_amount_input">Amount Tendered (&#8369;)</label>
+                    <input type="number" class="modal_text_input cash_tendered_input" id="tendered_amount_input" placeholder="0.00" step="10">
+                </div>
+
+                <!-- quick cash denomination buttons -->
+                <div class="quick_cash_row">
+                    <button type="button" class="btn_quick_cash" id="btn_quick_exact">Exact Amount</button>
+                    <button type="button" class="btn_quick_cash" id="btn_quick_plus100">+&#8369;100</button>
+                    <button type="button" class="btn_quick_cash" id="btn_quick_plus500">+&#8369;500</button>
+                    <button type="button" class="btn_quick_cash" id="btn_quick_plus1000">+&#8369;1,000</button>
+                </div>
+
+                <div class="change_due_display_card">
+                    <span class="change_label">Change Due:</span>
+                    <strong class="change_val" id="change_due_display">&#8369;0.00</strong>
+                </div>
+            </div>
+
+            <!-- gcash view -->
+            <div id="view_payment_gcash" style="display: none;">
+                <div class="modal_field_wrap">
+                    <label class="modal_field_label" for="gcash_ref_input">GCash / Reference Number <span class="req_star">*</span></label>
+                    <input type="text" class="modal_text_input" id="gcash_ref_input" placeholder="e.g. 1029 3847 5612">
+                </div>
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px; border-radius: 8px; font-size: 12px; margin-top: 12px; line-height: 1.5;">
+                    Verify payment on the store GCash terminal before confirming transaction. Reference number will be printed on receipt.
+                </div>
+            </div>
+
+            <div class="pos_modal_footer">
+                <button type="button" class="btn_modal_secondary" id="btn_cancel_payment">Cancel</button>
+                <button type="button" class="btn_modal_primary" id="btn_confirm_payment">Confirm &amp; Issue Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. THERMAL DIGITAL RECEIPT MODAL -->
+    <div class="pos_modal_backdrop" id="receipt_modal_overlay">
+        <div class="pos_modal_box modal_receipt_box">
+            <div class="pos_modal_header no_print">
+                <div>
+                    <h3 class="pos_modal_title">&#9989; Transaction Completed</h3>
+                    <p class="pos_modal_subtitle">Digital receipt generated and recorded in system ledger</p>
+                </div>
+                <button type="button" class="btn_modal_close" id="btn_close_receipt_modal">&times;</button>
+            </div>
+
+            <!-- printable thermal paper slip -->
+            <div class="thermal_receipt_paper" id="thermal_receipt_paper">
+                <div class="thermal_header">
+                    <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="thermal_logo" onerror="this.src='/frontend/Pictures/logo.jpg'">
+                    <h2 class="thermal_store_name">TAURUS BIKE SHOP</h2>
+                    <p class="thermal_store_sub">Sandico St, Abangan Sur, Marilao, Bulacan</p>
+                    <p class="thermal_store_sub">Tel: 0917-555-TAURUS &bull; Non-VAT Reg.</p>
+                </div>
+
+                <div class="thermal_divider">================================</div>
+
+                <div class="thermal_meta_grid">
+                    <div><span>Date:</span> <strong id="rcpt_date_time">--</strong></div>
+                    <div><span>Txn ID:</span> <strong id="rcpt_txn_id">ORD-0000</strong></div>
+                    <div><span>Invoice:</span> <strong id="rcpt_inv_id">INV-0000</strong></div>
+                    <div><span>Cashier:</span> <strong id="rcpt_cashier">Staff</strong></div>
+                    <div><span>Customer:</span> <strong id="rcpt_customer">Walk-in</strong></div>
+                    <div><span>Payment:</span> <strong id="rcpt_method_badge">CASH</strong></div>
+                </div>
+
+                <div class="thermal_divider">--------------------------------</div>
+
+                <table class="thermal_items_table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">ITEM / SERVICE</th>
+                            <th style="text-align: center;">QTY</th>
+                            <th style="text-align: right;">PRICE</th>
+                            <th style="text-align: right;">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcpt_items_tbody">
+                        <!-- dynamically populated -->
+                    </tbody>
+                </table>
+
+                <div class="thermal_divider">--------------------------------</div>
+
+                <div class="thermal_totals_box">
+                    <div class="thermal_total_line">
+                        <span>Subtotal:</span>
+                        <strong id="rcpt_subtotal">&#8369;0.00</strong>
+                    </div>
+                    <div class="thermal_total_line" id="rcpt_discount_row" style="display: none; color: #b91c1c;">
+                        <span>Discount Applied:</span>
+                        <strong id="rcpt_discount">-&#8369;0.00</strong>
+                    </div>
+                    <div class="thermal_total_line total_bold">
+                        <span>GRAND TOTAL:</span>
+                        <strong id="rcpt_grand_total">&#8369;0.00</strong>
+                    </div>
+                    <div class="thermal_total_line" id="rcpt_tendered_row">
+                        <span>Amount Tendered:</span>
+                        <span id="rcpt_tendered_val">&#8369;0.00</span>
+                    </div>
+                    <div class="thermal_total_line" id="rcpt_change_row">
+                        <span>Change Due:</span>
+                        <strong id="rcpt_change_val">&#8369;0.00</strong>
+                    </div>
+                </div>
+
+                <div class="thermal_divider">================================</div>
+
+                <div class="thermal_footer">
+                    <p class="thermal_policy_title"><strong>OFFICIAL STORE POLICY</strong></p>
+                    <p class="thermal_policy_text">Items non-refundable. 7-day replacement for factory defective items with receipt upon supplier return.</p>
+                    <p class="thermal_thankyou">THANK YOU FOR RIDING WITH TAURUS!</p>
+                </div>
+            </div>
+
+            <div class="pos_modal_footer no_print">
+                <button type="button" class="btn_modal_secondary" id="btn_print_receipt">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Print Receipt
+                </button>
+                <button type="button" class="btn_modal_primary" id="btn_done_receipt">Done &amp; New Sale &rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- unified pos engine -->
+    <script src="/frontend/js/POS.js"></script>
+</body>
+</html>
