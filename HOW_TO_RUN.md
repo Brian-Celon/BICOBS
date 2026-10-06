@@ -79,10 +79,10 @@ Open your browser and navigate to:
 | Field | Value |
 | :--- | :--- |
 | **Email / Username** | `admin@taurusbike.ph` |
-| **Password** | `taurus2026` |
+| **Password** | *(set via `DEFAULT_ADMIN_PASSWORD` in your `.env` file)* |
 | **Role** | System Administrator |
 
-*(Note: The login inputs on `login.html` are pre-filled with these credentials for quick sign-in during development/evaluation).*
+*(Run `node scripts/seed_default_admin.js` after setting the env var to create/reset the admin account).*
 
 ---
 

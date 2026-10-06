@@ -12,10 +12,10 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
 
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || 'fallback_secret'
-      );
+      if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not configured');
+      }
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       const result = await db.query(
         'SELECT id, full_name, email, role, phone_number, address FROM users WHERE id = $1',

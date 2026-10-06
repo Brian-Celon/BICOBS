@@ -10,10 +10,15 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const { pool } = require('../config/db');
 
+if (!process.env.DEFAULT_ADMIN_PASSWORD) {
+  console.error('[Seed Error] DEFAULT_ADMIN_PASSWORD is not set in .env');
+  process.exit(1);
+}
+
 const DEFAULT_ADMIN = {
   full_name: 'Taurus Administrator',
   email: 'admin@taurusbike.ph',
-  password: 'taurus2026',
+  password: process.env.DEFAULT_ADMIN_PASSWORD,
   phone_number: '09171234567',
   address: 'Taurus Bike Shop, Sandico St, Marilao, Bulacan'
 };
