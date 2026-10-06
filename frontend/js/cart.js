@@ -138,6 +138,15 @@ const BICOBS_Cart = (() => {
     }
   }
 
+  // Remove multiple products from cart
+  function removeItemsFromCart(productIds) {
+    if (!Array.isArray(productIds) || productIds.length === 0) return;
+    const idSet = new Set(productIds.map(String));
+    let cart = getCart();
+    cart = cart.filter(i => !idSet.has(String(i.id || i._id)));
+    saveCart(cart);
+  }
+
   // Clear entire cart
   function clearCart() {
     saveCart([]);
@@ -261,6 +270,7 @@ const BICOBS_Cart = (() => {
     addToCart,
     updateQuantity,
     removeFromCart,
+    removeItemsFromCart,
     clearCart,
     getCartCount,
     getCartSubtotal,

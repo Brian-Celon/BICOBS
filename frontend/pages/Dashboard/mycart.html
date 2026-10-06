@@ -168,8 +168,37 @@
                 </button>
             </header>
 
+            <!-- Guest Account Warning Banner (Visible if user is not logged in) -->
+            <div id="cart_guest_banner" class="cart_guest_warning_box" style="display: none; background: #fffbeb; border: 1px solid #fde68a; border-left: 5px solid #d97706; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; align-items: center; justify-content: space-between; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 8px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <strong style="color: #92400e; font-size: 14px; display: block;">No account detected</strong>
+                        <p style="margin: 2px 0 0; color: #b45309; font-size: 12px; line-height: 1.4;">
+                            You are browsing as a guest. Please create an account or sign in to complete checkout, track delivery, and receive your receipt.
+                        </p>
+                    </div>
+                </div>
+                <button type="button" id="btn_guest_banner_login" style="background: #dc2626; color: #ffffff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);">
+                    <i class="fas fa-sign-in-alt"></i> Sign In / Register
+                </button>
+            </div>
+
             <!-- cart items section -->
             <section class="cart_items_section">
+                <!-- Select All Bar -->
+                <div class="cart_select_bar" id="cart_select_bar" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 700; color: #1e293b; user-select: none;">
+                        <input type="checkbox" id="cart_select_all" checked style="width: 18px; height: 18px; accent-color: #dc2626; cursor: pointer;">
+                        <span>Select All (<span id="cart_selected_count">0</span> / <span id="cart_total_count">0</span> items)</span>
+                    </label>
+                    <button type="button" id="btn_delete_selected" style="background: none; border: none; color: #ef4444; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; transition: background 0.15s;">
+                        <i class="fas fa-trash-alt"></i> Delete Selected
+                    </button>
+                </div>
+
                 <ul class="cart_item_list" id="cart_item_list">
                     <!-- Dynamic cart items loaded from database / user cart -->
                 </ul>
@@ -179,7 +208,7 @@
             <section class="order_summary_section">
                 <h3 class="summary_title">Order Summary</h3>
                 <div class="summary_row">
-                    <span>Total Items Ordered</span>
+                    <span>Selected Items</span>
                     <span class="summary_value" id="cart_total_items">0 items</span>
                 </div>
                 <div class="summary_row">
@@ -191,43 +220,242 @@
                     <span class="summary_value discount_text" id="cart_discount_amount">-₱0</span>
                 </div>
                 <div class="summary_row">
-                    <span>Shipping Fee</span>
+                    <span>Estimated Shipping</span>
                     <span class="summary_value" id="cart_shipping">₱0.00</span>
                 </div>
                 <div class="summary_row total_row">
-                    <span>Total Amount Ordered</span>
+                    <span>Total Amount</span>
                     <span class="summary_value total_price" id="cart_total_price">₱0</span>
                 </div>
                 <button type="button" class="checkout_button" id="btn_checkout">Proceed to Checkout</button>
+                <div id="cart_checkout_guest_hint" style="display: none; text-align: center; margin-top: 8px; font-size: 12px; color: #b45309;">
+                    <i class="fas fa-info-circle"></i> Account login required to confirm purchase
+                </div>
             </section>
         </main>
     </div>
 
+    <!-- Account Required Warning Modal (Displayed when guest clicks Proceed to Checkout) -->
+    <div id="account_warning_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="warning_modal_title" style="display: none;">
+        <div class="modal_container" style="max-width: 460px; text-align: center; border-top: 5px solid #d97706; padding: 28px 24px;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 16px;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 id="warning_modal_title" style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0 0 8px;">
+                Account Required to Checkout
+            </h3>
+            <p style="font-size: 14px; color: #64748b; margin: 0 0 20px; line-height: 1.5;">
+                You don't have an active account session yet. Taurus Bike requires an account so we can link your order, verify your delivery address, and provide your official receipt.
+            </p>
+            
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; margin-bottom: 22px; text-align: left;">
+                <div style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                    Why create an account?
+                </div>
+                <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #334155; line-height: 1.6;">
+                    <li>Live door-to-door delivery updates & tracking</li>
+                    <li>Prepaid order verification with <strong>BPI, Maya, and GCash</strong></li>
+                    <li>Downloadable invoice and official store warranty</li>
+                </ul>
+            </div>
+
+            <div class="modal_actions" style="display: flex; gap: 10px; justify-content: center;">
+                <button type="button" class="btn_modal_cancel" id="btn_cancel_account_warning" style="flex: 1; padding: 12px;">Return to Cart</button>
+                <button type="button" class="btn_modal_submit" id="btn_proceed_to_login" style="flex: 1.3; padding: 12px; background: #dc2626; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);">
+                    <i class="fas fa-user-plus"></i> Sign In / Register
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Checkout Confirmation Modal -->
     <div id="checkout_modal" class="modal_overlay" role="dialog" aria-modal="true" aria-labelledby="checkout_modal_title">
-        <div class="modal_container checkout_modal_container">
+        <div class="modal_container checkout_modal_container" style="max-width: 620px;">
             <div class="modal_header_row space_between">
                 <div class="modal_header_text">
                     <h3 id="checkout_modal_title" class="modal_title">Confirm Transaction</h3>
-                    <p class="modal_subtitle">Please confirm your transaction details before completing the purchase.</p>
+                    <p class="modal_subtitle">Complete fulfillment & payment details to place your order.</p>
                 </div>
                 <button type="button" class="modal_close_btn" id="close_checkout_modal" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
-            <div class="modal_card_box">
-                <!-- Order Items Breakdown -->
-                <div class="checkout_items_box">
-                    <h4 class="checkout_box_title"><i class="fas fa-shopping-bag"></i> Selected Items</h4>
+            <div class="modal_card_box" style="max-height: 70vh; overflow-y: auto; padding-right: 6px;">
+                <!-- 1. Fulfillment Mode Selection -->
+                <div class="checkout_form_group" style="margin-bottom: 20px;">
+                    <label class="form_label" style="font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <i class="fas fa-truck-moving" style="color: #dc2626;"></i> 1. Fulfillment Mode
+                    </label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" id="fulfillment_mode_group">
+                        <label class="mode_card active" id="card_mode_delivery" style="border: 2px solid #dc2626; background: #fff5f5; border-radius: 10px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+                            <input type="radio" name="fulfillment_mode" id="mode_delivery" value="delivery" checked style="accent-color: #dc2626;">
+                            <strong style="font-size: 14px; color: #0f172a;">🚚 Delivery</strong>
+                        </label>
+                        <label class="mode_card" id="card_mode_pickup" style="border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+                            <input type="radio" name="fulfillment_mode" id="mode_pickup" value="pickup" style="accent-color: #dc2626;">
+                            <strong style="font-size: 14px; color: #0f172a;">🏪 Store Pick-Up</strong>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 2. Delivery Address & Contact Details -->
+                <div id="section_delivery_address" style="margin-bottom: 20px;">
+                    <!-- Destination Delivery Address Display Card -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label class="form_label" style="font-size: 12px; font-weight: 700; color: #475569; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <i class="fas fa-map-marker-alt" style="color: #dc2626;"></i> Delivery Address
+                            </label>
+                            <button type="button" id="btn_edit_delivery_addr" style="background: none; border: none; color: #dc2626; font-size: 12px; font-weight: 700; cursor: pointer; padding: 2px 6px; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-edit"></i> <span id="btn_edit_addr_label">Edit</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Display Address Info -->
+                        <div id="address_display_block" style="font-size: 13px; color: #1e293b; line-height: 1.5;">
+                            <div style="font-weight: 700; color: #0f172a;" id="display_customer_name">--</div>
+                            <div id="display_customer_address" style="color: #334155; margin: 2px 0;">--</div>
+                            <div id="display_customer_phone" style="color: #64748b; font-size: 12px;"><i class="fas fa-phone-alt" style="font-size: 10px;"></i> --</div>
+                        </div>
+
+                        <!-- Editable Fields (Expandable) -->
+                        <div id="address_edit_block" style="display: none; margin-top: 12px; border-top: 1px dashed #e2e8f0; padding-top: 12px;">
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase;">Address</label>
+                                <input type="text" id="checkout_customer_address" class="form_input" placeholder="Complete Street, Barangay, City, Province" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;" required>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase;">Contact Number</label>
+                                    <input type="tel" id="checkout_customer_phone" class="form_input" placeholder="09171234567" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;" required>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase;">Note (Optional)</label>
+                                    <input type="text" id="checkout_customer_notes" class="form_input" placeholder="Landmark / instructions" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Pickup Address for customer third-party booking -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px;">
+                        <div>
+                            <span style="font-weight: 700; color: #334155;"><i class="fas fa-store"></i> Store Pickup Address:</span>
+                            <span style="color: #64748b; margin-left: 4px;">Taurus Building, Sandico St, Abangan Sur, Marilao, Bulacan</span>
+                        </div>
+                        <button type="button" class="copy_btn_pill" id="btn_copy_pickup_pin" data-copy="Taurus Building, Sandico St, Abangan Sur, Marilao, Bulacan" style="white-space: nowrap;">
+                            <i class="fas fa-copy"></i> Copy Address
+                        </button>
+                    </div>
+                </div>
+
+                <div id="section_pickup_info" style="display: none; margin-bottom: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 16px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <i class="fas fa-store" style="color: #16a34a; font-size: 18px; margin-top: 2px;"></i>
+                        <div>
+                            <strong style="color: #166534; font-size: 14px; display: block;">Store Pick-up Location</strong>
+                            <p style="margin: 4px 0 0; color: #15803d; font-size: 12px; line-height: 1.4;">
+                                Taurus Building, Sandico St, Abangan Sur, Marilao, Bulacan, 3019<br>
+                                <strong>Operating Hours:</strong> Mon – Sat: 8:00 AM – 6:00 PM
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Payment Method Section -->
+                <div class="checkout_form_group" style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label class="form_label" style="font-size: 13px; font-weight: 700; color: #1e293b; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <i class="fas fa-credit-card" style="color: #dc2626;"></i> 2. Payment Method
+                        </label>
+                        <span id="delivery_payment_badge" style="font-size: 11px; background: #eff6ff; color: #1d4ed8; font-weight: 700; padding: 3px 8px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                            Prepaid Required
+                        </span>
+                    </div>
+
+                    <!-- Delivery Notice: Payment Handled First -->
+                    <div id="delivery_payment_notice" style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #2563eb; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #1e40af; line-height: 1.4;">
+                        <i class="fas fa-shield-alt"></i> Delivery orders must be paid first via <strong>GCash, Maya, or BPI</strong>.
+                    </div>
+
+                    <!-- Payment Cards Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;" id="payment_method_grid">
+                        <!-- GCash -->
+                        <label class="pay_method_card active" id="card_pay_gcash" style="border: 2px solid #005ce6; background: #f0f6ff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                            <input type="radio" name="payment_method" id="pay_gcash" value="gcash" checked style="display: none;">
+                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #005ce6; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 auto 6px;">
+                                G
+                            </div>
+                            <strong style="font-size: 13px; color: #005ce6; display: block;">GCash</strong>
+                            <span style="font-size: 10px; color: #64748b;">Instant e-Wallet</span>
+                        </label>
+
+                        <!-- Maya -->
+                        <label class="pay_method_card" id="card_pay_maya" style="border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                            <input type="radio" name="payment_method" id="pay_maya" value="maya" style="display: none;">
+                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #00d665; color: #0b1f14; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 auto 6px;">
+                                M
+                            </div>
+                            <strong style="font-size: 13px; color: #047857; display: block;">Maya</strong>
+                            <span style="font-size: 10px; color: #64748b;">PayMaya Wallet</span>
+                        </label>
+
+                        <!-- BPI -->
+                        <label class="pay_method_card" id="card_pay_bpi" style="border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                            <input type="radio" name="payment_method" id="pay_bpi" value="bpi" style="display: none;">
+                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #b91c1c; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; margin: 0 auto 6px;">
+                                BPI
+                            </div>
+                            <strong style="font-size: 13px; color: #b91c1c; display: block;">BPI</strong>
+                            <span style="font-size: 10px; color: #64748b;">Bank Transfer</span>
+                        </label>
+
+                        <!-- Cash (Pick-up only) -->
+                        <label class="pay_method_card" id="card_pay_cash" style="display: none; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all 0.2s;">
+                            <input type="radio" name="payment_method" id="pay_cash" value="cash" style="display: none;">
+                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #475569; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; margin: 0 auto 6px;">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <strong style="font-size: 13px; color: #334155; display: block;">Cash</strong>
+                            <span style="font-size: 10px; color: #64748b;">In-Store Counter</span>
+                        </label>
+                    </div>
+
+                    <!-- Payment Handling & Account Instructions Box -->
+                    <div id="payment_handling_box" style="margin-top: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px;">
+                        <div id="pay_details_content" style="margin-bottom: 12px;">
+                            <!-- Injected dynamically based on selected payment -->
+                        </div>
+
+                        <!-- Reference Number & Proof Inputs -->
+                        <div id="pay_verification_inputs" style="display: flex; flex-direction: column; gap: 8px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-size: 12px; font-weight: 700; color: #0f172a; text-transform: uppercase;">
+                                    <span style="color: #dc2626;">*</span> Transaction / Reference Number
+                                </label>
+                                <span style="font-size: 11px; color: #64748b;">From payment receipt</span>
+                            </div>
+                            <input type="text" id="checkout_payment_ref" placeholder="e.g. 1029384756 (or receipt ref no.)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-family: monospace; letter-spacing: 0.5px; font-weight: 600;" required>
+                            <input type="text" id="checkout_payment_sender" placeholder="Account Name or Sender Mobile Number" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px;">
+                            <div id="payment_error_msg" style="display: none; color: #dc2626; font-size: 12px; font-weight: 600;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Selected Items Breakdown -->
+                <div class="checkout_items_box" style="margin-bottom: 16px;">
+                    <h4 class="checkout_box_title" style="font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+                        <i class="fas fa-shopping-bag" style="color: #dc2626;"></i> 3. Selected Items Preview
+                    </h4>
                     <ul class="checkout_items_list" id="checkout_items_preview">
                         <!-- Dynamically populated -->
                     </ul>
                 </div>
 
-                <!-- Discount Code Input Option -->
-                <div class="discount_section">
-                    <label class="form_label" for="checkout_discount_input"><i class="fas fa-ticket-alt"></i> DISCOUNT CODE</label>
+                <!-- 5. Discount Code Input Option -->
+                <div class="discount_section" style="margin-bottom: 16px;">
+                    <label class="form_label" for="checkout_discount_input" style="font-size: 12px; font-weight: 700; color: #475569;"><i class="fas fa-ticket-alt"></i> DISCOUNT CODE</label>
                     <div class="discount_input_group">
                         <input type="text" id="checkout_discount_input" class="form_input discount_input" placeholder="Enter code (e.g. TAURUS10, SAVE500)" autocomplete="off">
                         <button type="button" class="btn_apply_discount" id="btn_apply_discount">Apply</button>
@@ -235,35 +463,34 @@
                     <div id="discount_msg" class="discount_msg"></div>
                 </div>
 
-                <!-- Checkout Totals Summary -->
-                <div class="checkout_totals_box">
-                    <div class="summary_row">
+                <!-- 6. Checkout Totals Summary -->
+                <div class="checkout_totals_box" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px;">
+                    <div class="summary_row" style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px;">
                         <span>Total Items:</span>
                         <strong id="modal_total_items">0 items</strong>
                     </div>
-                    <div class="summary_row">
+                    <div class="summary_row" style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px;">
                         <span>Subtotal:</span>
                         <strong id="modal_subtotal">₱0</strong>
                     </div>
-                    <div class="summary_row" id="modal_discount_row" style="display: none;">
+                    <div class="summary_row" id="modal_discount_row" style="display: none; justify-content: space-between; margin-bottom: 6px; font-size: 13px;">
                         <span>Discount:</span>
                         <strong id="modal_discount_amount" class="discount_text">-₱0</strong>
                     </div>
-                    <div class="summary_row">
+                    <div class="summary_row" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px;">
                         <span>Shipping Fee:</span>
                         <strong id="modal_shipping">₱0.00</strong>
                     </div>
-                    <div class="summary_row total_row">
-                        <span>Total Amount Ordered:</span>
-                        <strong id="modal_total_price" class="total_price">₱0</strong>
+                    <div class="summary_row total_row" style="display: flex; justify-content: space-between; font-size: 16px; border-top: 1px solid #cbd5e1; padding-top: 8px; color: #0f172a;">
+                        <span style="font-weight: 700;">Total Amount Ordered:</span>
+                        <strong id="modal_total_price" class="total_price" style="color: #dc2626; font-size: 18px;">₱0</strong>
                     </div>
                 </div>
             </div>
 
-
-            <div class="modal_actions">
+            <div class="modal_actions" style="margin-top: 16px; display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" class="btn_modal_cancel" id="cancel_checkout_btn">Cancel</button>
-                <button type="button" class="btn_modal_submit" id="confirm_checkout_btn">
+                <button type="button" class="btn_modal_submit" id="confirm_checkout_btn" style="background: #dc2626; color: #ffffff; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
                     <i class="fas fa-check-circle"></i> Confirm Transaction
                 </button>
             </div>

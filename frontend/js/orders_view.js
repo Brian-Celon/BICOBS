@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const addressEl = document.getElementById('modal_order_address');
                 if (addressEl) {
                     const deliveryType = (order.deliveryType || 'delivery').toLowerCase();
-                    const typeLabel = deliveryType === 'pickup' ? '🏪 In-Store Pickup' : '🚚 Home Delivery';
+                    const typeLabel = deliveryType === 'pickup' ? '🏪 In-Store Pickup' : '🚚 Delivery';
                     addressEl.innerHTML = `<strong>${typeLabel}</strong><br><span style="color:#64748b;">${order.deliveryAddress || 'No address provided'}</span>`;
                 }
 
@@ -231,7 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const method = (order.paymentMethod || 'cash').toUpperCase();
                     const payStatus = (order.paymentStatus || 'pending').toUpperCase();
                     const statusColor = payStatus === 'PAID' ? '#16a34a' : '#ea580c';
-                    paymentEl.innerHTML = `<span>${method}</span> &bull; <span style="font-size:11px; color:${statusColor}; font-weight:700;">${payStatus}</span>`;
+                    const notesInfo = order.notes ? `<div style="font-size:11px; color:#64748b; margin-top:3px; font-weight:normal;">${order.notes}</div>` : '';
+                    paymentEl.innerHTML = `<div><span>${method}</span> &bull; <span style="font-size:11px; color:${statusColor}; font-weight:700;">${payStatus}</span>${notesInfo}</div>`;
                 }
 
                 // Render Ordered Items List Breakdown

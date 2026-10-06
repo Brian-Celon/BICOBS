@@ -130,8 +130,29 @@ const createOrder = async (req, res, next) => {
     }
 
     const deliveryType = fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
-    const calculatedDeliveryFee = deliveryType === 'delivery' ? parseFloat(deliveryFee || 100) : 0;
-    const totalPrice = itemsPrice + calculatedDeliveryFee;
+    const normalizedMethod = (paymentMethod || (deliveryType === 'delivery' ? '' : 'cash')).toLowerCase().trim();
+
+    // When checking out, payment MUST be handled first when mode is delivery.
+    // Available payment methods for delivery: BPI, Maya, and GCash.
+    if (deliveryType === 'delivery') {
+      const allowedDeliveryPayments = ['bpi', 'maya', 'gcash'];
+      if (!allowedDeliveryPayments.includes(normalizedMethod)) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({
+          status: 'error',
+          message: 'Payment must be handled first for delivery orders. Available payment methods: BPI, Maya, and GCash.'
+        });
+      }
+    }
+
+    const calculatedDeliveryFee = deliveryType === 'delivery' ? parseFloat(deliveryFee !== undefined ? deliveryFee : 150) : 0;
+    const discountAmount = Math.max(0, parseFloat(req.body.discount || 0));
+    const totalPrice = Math.max(0, itemsPrice - discountAmount + calculatedDeliveryFee);
+
+    // Determine payment and order status
+    const isPrepaid = ['bpi', 'maya', 'gcash'].includes(normalizedMethod);
+    const orderPaymentStatus = (deliveryType === 'delivery' || isPrepaid) ? 'paid' : 'pending';
+    const orderStatus = (deliveryType === 'delivery' || isPrepaid) ? 'confirmed' : 'pending';
 
     // Generate unique order number
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -144,7 +165,7 @@ const createOrder = async (req, res, next) => {
         order_number, user_id, customer_name, customer_email, customer_phone,
         delivery_type, delivery_address, notes, payment_method,
         subtotal, shipping_fee, total_amount, order_status, payment_status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'pending', 'pending')
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING *;
     `;
 
@@ -157,10 +178,12 @@ const createOrder = async (req, res, next) => {
       deliveryType,
       customerAddress,
       notes || '',
-      paymentMethod || 'cash',
+      normalizedMethod || 'cash',
       itemsPrice,
       calculatedDeliveryFee,
-      totalPrice
+      totalPrice,
+      orderStatus,
+      orderPaymentStatus
     ]);
 
     const createdOrder = orderRes.rows[0];
@@ -176,11 +199,12 @@ const createOrder = async (req, res, next) => {
 
     // 5. Generate Billing Record
     const invoiceNumber = `INV-${dateStr}-${randomSuffix}`;
+    const paymentDate = orderPaymentStatus === 'paid' ? new Date() : null;
     await client.query(
       `INSERT INTO billings (
         order_id, invoice_number, customer_name, customer_email, customer_phone,
-        subtotal, shipping_fee, total_amount, payment_method, payment_status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'pending');`,
+        subtotal, shipping_fee, total_amount, payment_method, payment_status, payment_date
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`,
       [
         createdOrder.id,
         invoiceNumber,
@@ -190,7 +214,9 @@ const createOrder = async (req, res, next) => {
         itemsPrice,
         calculatedDeliveryFee,
         totalPrice,
-        paymentMethod || 'cash'
+        normalizedMethod || 'cash',
+        orderPaymentStatus,
+        paymentDate
       ]
     );
 

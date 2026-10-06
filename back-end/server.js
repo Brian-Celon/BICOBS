@@ -20,12 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve frontend static files at both /frontend and /
 const frontendPath = path.join(__dirname, '../frontend');
-app.use('/frontend', express.static(frontendPath));
-app.use(express.static(frontendPath));
+app.use('/frontend', express.static(frontendPath, { dotfiles: 'allow' }));
+app.use(express.static(frontendPath, { dotfiles: 'allow' }));
 
 // Root redirect to landing page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'pages/index.html'));
+  res.sendFile(path.join(frontendPath, 'pages/index.html'), { dotfiles: 'allow' });
 });
 
 // 5. Health Check Route
