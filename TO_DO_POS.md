@@ -92,29 +92,33 @@ This roadmap tracks the complete development, backend infrastructure, live datab
 
 ### 💳 Phase 4: Live Walk-in Order Processing & Stock Deduction (`POST /api/orders`)
 - [ ] **Backend Walk-in Order Endpoint**
-  - [ ] Mount `POST /api/orders` to handle walk-in POS sales.
+  - [ ] Mount `POST /api/orders` to handle in-store walk-in POS sales.
   - [ ] Validate requested items against PostgreSQL stock inside an ACID transaction (`BEGIN` / `COMMIT`).
   - [ ] Deduct sold quantities from `products.stock_quantity`.
   - [ ] Insert order record with `order_type: 'walk_in'`, `delivery_type: 'pickup'`, `order_status: 'completed'`, `payment_status: 'paid'`.
   - [ ] Automatically create sequential invoice record (`INV-...`) in `billings` table marked as `paid`.
-- [ ] **Payment & Change Calculation Modal**
+- [ ] **Payment & Cash Calculator Modal**
   - [ ] On clicking **"Charge ₱..."**, open payment settlement modal:
     - [ ] **Cash:** Enter Amount Tendered (₱), calculate Change Due automatically. Quick cash shortcut buttons (+₱100, +₱500, +₱1,000, Exact).
     - [ ] **GCash / Maya:** Input 6-8 digit payment reference number.
-- [ ] **Integrated Repair Ticket Dispatch**
-  - [ ] When an order includes a Bike Maintenance item, dispatch `POST /api/repairs`.
-  - [ ] Record customer name, bike details, assigned mechanic, labor fee, and status (`In Progress`).
-- [ ] **Live Receipt Generation**
+- [ ] **Custom Cashier Discount Control (Client Requirement - Interview 1)**
+  - [ ] Support flexible custom discount inputs: cashier can input arbitrary percentage (`%`) or direct Peso amount (`₱`), honoring store owner's requested flexibility.
+- [ ] **Integrated Repair Ticket Dispatch (Document Section 1.1)**
+  - [ ] When an order includes a Bike Maintenance item, separate **In-Store Parts Cost** (deducted from inventory) and **Labor Fee** (disbursed to mechanic).
+  - [ ] Dispatch `POST /api/repairs` recording customer name, contact number, bike details, assigned mechanic, labor fee, and status (`In Progress`).
+- [ ] **Official Digital Receipt Generation (Replacing Manual Paper Receipts)**
   - [ ] Populate `#receipt_modal_overlay` with real database Order ID (`ORD-...`), timestamp, itemized breakdown, and cashier name.
+  - [ ] Include official Taurus store policy disclaimer on receipt footer: *"Items non-refundable. 7-day replacement for factory defective items with receipt upon supplier return."* (per Interview 1 & Doc 1.1).
   - [ ] Support printing receipt via `window.print()` or thermal printer mode.
   - [ ] Automatically clear cart on clicking "Done & New Transaction".
 
 ---
 
-### 📊 Phase 5: Transaction History & Receipt Audit (`POS-history.html`)
-- [ ] **Live Historical Sales Ledger**
+### 📊 Phase 5: Transaction History & Digital Columnar Logbook (`POS-history.html`)
+- [ ] **Digital Sales Ledger (Replacing Physical Columnar Notebook - Doc 1.1)**
   - [ ] Fetch walk-in orders from `GET /api/orders`.
   - [ ] Dynamically render `#history_tbody` table rows with real transaction numbers, dates, items count, total, payment method, and status.
+  - [ ] Support daily columnar-style summary view for BIR tax preparation (3-5% tax breakdown per Interview 1).
 - [ ] **Instant Search & Running Total**
   - [ ] Filter rows in real time by Transaction ID, product name, or payment method.
   - [ ] Dynamically update **Filtered Total** badge (`#filtered_total_value`) based on displayed rows.
@@ -129,7 +133,7 @@ This roadmap tracks the complete development, backend infrastructure, live datab
   - [ ] Connect **Daily Summary** card to today's cumulative sales sum from database.
   - [ ] Connect **Recent Transactions** table to show the 5 latest completed sales.
 - [ ] **Active Cashier Session Sync**
-  - [ ] Display active logged-in cashier / staff member name across all POS headers.
+  - [ ] Display active logged-in cashier name (defaulting to co-owner Russel Lu Caisido per Doc 1.1) across all POS headers.
   - [ ] Provide staff login / switch cashier modal if session expires.
 
 ---
