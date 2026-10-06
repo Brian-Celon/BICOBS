@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const sign_in_form = document.getElementById('sign_in_form');
   const sign_up_form = document.getElementById('sign_up_form');
 
-  const google_sign_in_btn = document.getElementById('google_sign_in_btn');
-  const google_sign_up_btn = document.getElementById('google_sign_up_btn');
 
   // Address Dropdown Elements
   const sign_up_island_group = document.getElementById('sign_up_island_group');
@@ -89,20 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mobile_switch_to_sign_in.addEventListener('click', switchToSignIn);
   }
 
-  // Google OAuth button handlers
-  if (google_sign_in_btn) {
-    google_sign_in_btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Google Sign In clicked');
-    });
-  }
 
-  if (google_sign_up_btn) {
-    google_sign_up_btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Google Sign Up clicked');
-    });
-  }
 
   // ==========================================================================
   // Philippine Standard Geographic Code (PSGC) Complete Address API Integration
