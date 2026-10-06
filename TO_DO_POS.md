@@ -48,20 +48,20 @@ This roadmap tracks the complete development, backend infrastructure, live datab
 ---
 
 ### 📦 Phase 1: Backend Infrastructure & Server Setup
-- [ ] **Express Server Configuration (`back-end/server.js`)**
-  - [ ] Initialize Express app with CORS, JSON body parser, and urlencoded middlewares.
-  - [ ] Serve frontend static assets: `app.use('/frontend', express.static(...))` and `app.use('/assets', express.static(...))`.
-  - [ ] Configure root URL redirect (`/` ➔ `/frontend/pages/POS/POS-home.html`).
-- [ ] **Dependencies & Scripts (`back-end/package.json`)**
-  - [ ] Add `"dev": "nodemon server.js"` and `"start": "node server.js"`.
-  - [ ] Add `pg` (node-postgres) and `bcryptjs` dependencies.
-- [ ] **Environment Configuration (`back-end/.env`)**
-  - [ ] Set `PORT=5000` (or dedicated POS port).
-  - [ ] Configure Supabase PostgreSQL connection string `DATABASE_URL`.
-  - [ ] Create sanitized template `.env.example`.
-- [ ] **Database Connection Pool (`back-end/config/db.js`)**
-  - [ ] Create robust PostgreSQL connection pool with SSL rejectUnauthorized handling.
-  - [ ] Test live database connectivity.
+- [x] **Express Server Configuration (`back-end/server.js`)**
+  - [x] Initialize Express app with CORS, JSON body parser, and urlencoded middlewares.
+  - [x] Serve frontend static assets: `app.use('/frontend', express.static(...))` and `app.use('/assets', express.static(...))`.
+  - [x] Configure root URL redirect (`/` ➔ `/frontend/pages/POS/POS-home.html`).
+- [x] **Dependencies & Scripts (`back-end/package.json`)**
+  - [x] Add `"dev": "nodemon server.js"` and `"start": "node server.js"`.
+  - [x] Add `pg` (node-postgres) and `bcryptjs` dependencies.
+- [x] **Environment Configuration (`back-end/.env`)**
+  - [x] Set `PORT=5000` (or dedicated POS port).
+  - [x] Configure Supabase PostgreSQL connection string `DATABASE_URL`.
+  - [x] Create sanitized template `.env.example`.
+- [x] **Database Connection Pool (`back-end/config/db.js`)**
+  - [x] Create robust PostgreSQL connection pool with SSL rejectUnauthorized handling.
+  - [x] Test live database connectivity.
 
 ---
 
