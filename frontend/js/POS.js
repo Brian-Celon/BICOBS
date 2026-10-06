@@ -123,6 +123,23 @@ function initPosLogin() {
         });
     });
 
+    // Show / hide password visibility toggle
+    const btnTogglePass = document.getElementById('btn_toggle_pass');
+    if (btnTogglePass && passInput) {
+        btnTogglePass.addEventListener('click', () => {
+            const isPassword = passInput.type === 'password';
+            passInput.type = isPassword ? 'text' : 'password';
+            const iconEye = btnTogglePass.querySelector('.icon_eye');
+            const iconEyeOff = btnTogglePass.querySelector('.icon_eye_off');
+            if (iconEye && iconEyeOff) {
+                iconEye.style.display = isPassword ? 'none' : 'block';
+                iconEyeOff.style.display = isPassword ? 'block' : 'none';
+            }
+            btnTogglePass.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+            passInput.focus();
+        });
+    }
+
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();

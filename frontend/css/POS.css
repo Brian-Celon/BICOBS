@@ -2928,6 +2928,44 @@ button, input, select, textarea {
     box-shadow: 0 0 0 3px rgba(197, 31, 38, 0.12);
 }
 
+.pos_password_wrap {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.pos_password_wrap .pos_login_input {
+    padding-right: 42px;
+}
+
+.pos_btn_toggle_pass {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--pos_text_muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.pos_btn_toggle_pass:hover {
+    color: var(--pos_text_dark);
+    background-color: #f1f5f9;
+}
+
+.pos_btn_toggle_pass:focus-visible {
+    outline: none;
+    color: var(--pos_red);
+}
+
 .btn_start_shift {
     width: 100%;
     height: 46px;
