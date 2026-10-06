@@ -153,13 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // React dynamically to global auth state changes and cart updates
+    // React dynamically to global auth state changes
     window.addEventListener('bicobs_auth_changed', () => {
         updateAuthStatusUI();
-        renderCart();
-    });
-
-    window.addEventListener('bicobs_cart_updated', () => {
         renderCart();
     });
 
