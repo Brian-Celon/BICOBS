@@ -148,22 +148,22 @@ This roadmap tracks the complete development, backend infrastructure, live datab
 ---
 
 ### 🔐 Phase 8: Cashier Authentication & Shift Session Gate (Eliminating Pre-filled Accounts)
-- [ ] **Remove Pre-filled / Hardcoded Cashier Identity**
-  - [ ] Strip hardcoded `"Russel Lu Caisido"` from initial HTML navigation bars in `POS-home.html`, `POS-main.html`, and `POS-history.html`.
-  - [ ] Remove automatic hardcoded fallback in `POS.js`; replace with dynamic session lookup from `sessionStorage` / `localStorage`.
-- [ ] **Dedicated Cashier Login Gate (`POS-login.html` / Lock Screen Modal)**
-  - [ ] Create dedicated `frontend/pages/POS/POS-login.html` (or modal terminal lock).
-  - [ ] Cashier sign-in form: Email / Staff ID and Password (or quick 4-digit Cashier PIN).
-  - [ ] Connect to `POST /api/auth/login` to authenticate staff against the database `users` table.
-  - [ ] Restrict POS access strictly to authorized store personnel (`role IN ('admin', 'staff')`).
-- [ ] **Session Protection & Route Guard**
-  - [ ] Add client-side route guard: if no active cashier session exists when opening `POS-home.html` or `POS-main.html`, redirect immediately to `POS-login.html`.
-  - [ ] Store active session object (`cashierId`, `cashierName`, `role`, `token`) in browser storage.
-  - [ ] Dynamically render active cashier name and staff role badge in navbar on every POS page.
-- [ ] **Shift Management & Cashier Clock-Out**
-  - [ ] Add **"Switch Cashier / Clock Out"** button to navbar header.
-  - [ ] Terminate cashier session, clear storage, and return to login screen.
-  - [ ] Tie orders and audit receipts to the logged-in staff member's real account ID in database.
+- [x] **Remove Pre-filled / Hardcoded Cashier Identity**
+  - [x] Strip hardcoded `"Russel Lu Caisido"` from initial HTML navigation bars in `POS-home.html`, `POS-main.html`, and `POS-history.html`.
+  - [x] Remove automatic hardcoded fallback in `POS.js`; replace with dynamic session lookup from `sessionStorage` / `localStorage`.
+- [x] **Dedicated Cashier Login Gate (`POS-login.html` / Lock Screen Modal)**
+  - [x] Create dedicated `frontend/pages/POS/POS-login.html` (or modal terminal lock).
+  - [x] Cashier sign-in form: Email / Staff ID and Password (or quick 4-digit Cashier PIN).
+  - [x] Connect to `POST /api/auth/login` to authenticate staff against the database `users` table.
+  - [x] Restrict POS access strictly to authorized store personnel (`role IN ('admin', 'staff')`).
+- [x] **Session Protection & Route Guard**
+  - [x] Add client-side route guard: if no active cashier session exists when opening `POS-home.html` or `POS-main.html`, redirect immediately to `POS-login.html`.
+  - [x] Store active session object (`cashierId`, `cashierName`, `role`, `token`) in browser storage.
+  - [x] Dynamically render active cashier name and staff role badge in navbar on every POS page.
+- [x] **Shift Management & Cashier Clock-Out**
+  - [x] Add **"Switch Cashier / Clock Out"** button to navbar header.
+  - [x] Terminate cashier session, clear storage, and return to login screen.
+  - [x] Tie orders and audit receipts to the logged-in staff member's real account ID in database.
 
 ---
 

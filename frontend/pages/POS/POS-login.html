@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier Sign-In &bull; Taurus POS Terminal</title>
+    <link rel="stylesheet" href="/frontend/css/POS.css">
+    <link rel="icon" type="image/png" href="/frontend/Pictures/logo.png">
+</head>
+<body class="pos_login_wrap">
+
+    <div class="pos_login_card">
+        <!-- header banner -->
+        <div class="pos_login_header">
+            <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="pos_login_logo" onerror="this.src='/frontend/Pictures/logo.jpg'">
+            <h1 class="pos_login_title">TAURUS POINT OF SALE</h1>
+            <p class="pos_login_subtitle">Store Counter Checkout &amp; Workshop Dispatch</p>
+            <div style="font-size: 11px; color: #fecdd3; margin-top: 8px; font-weight: 600;">
+                <span id="clock_display">12:00:00 PM</span> &bull; Terminal #01 (Marilao)
+            </div>
+        </div>
+
+        <!-- login body -->
+        <div class="pos_login_body">
+            <!-- alert banner -->
+            <div id="login_error_banner" style="display: none; background: #fff1f2; border: 1px solid #fecdd3; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; line-height: 1.4;">
+                <strong id="login_error_text">Invalid email or password</strong>
+            </div>
+
+            <form id="cashier_login_form">
+                <div class="pos_login_field">
+                    <label class="pos_login_label" for="login_email">Cashier / Staff Email</label>
+                    <input type="email" class="pos_login_input" id="login_email" placeholder="e.g. russel@taurusbike.ph" required autocomplete="username">
+                </div>
+
+                <div class="pos_login_field" style="margin-top: 12px;">
+                    <label class="pos_login_label" for="login_password">Terminal Password</label>
+                    <input type="password" class="pos_login_input" id="login_password" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn_start_shift" id="btn_submit_login">
+                    Start Cashier Shift &rarr;
+                </button>
+            </form>
+
+            <!-- quick staff shift selector for store testing -->
+            <div class="pos_quick_staff_box">
+                <div class="pos_quick_staff_title">Authorized Store Cashiers (Quick Fill)</div>
+                
+                <div class="pos_staff_chip" data-email="russel@taurusbike.ph" data-pass="taurus2026">
+                    <div>
+                        <strong style="color: var(--pos_text_dark); font-size: 12.5px;">Russel Lu Caisido</strong>
+                        <div style="color: var(--pos_text_muted); font-size: 11px;">russel@taurusbike.ph &bull; Staff Cashier</div>
+                    </div>
+                    <span class="cashier_pill_badge">STAFF</span>
+                </div>
+
+                <div class="pos_staff_chip" data-email="admin@taurusbike.ph" data-pass="taurus2026">
+                    <div>
+                        <strong style="color: var(--pos_text_dark); font-size: 12.5px;">Taurus Administrator</strong>
+                        <div style="color: var(--pos_text_muted); font-size: 11px;">admin@taurusbike.ph &bull; Store Owner</div>
+                    </div>
+                    <span class="cashier_pill_badge badge_admin">ADMIN</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- pos scripts -->
+    <script src="/frontend/js/POS.js"></script>
+</body>
+</html>

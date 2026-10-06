@@ -1,27 +1,198 @@
 /* =============================================================================
    TAURUS BIKE SHOP - POINT OF SALE (POS) SYSTEM ENGINE
-   Unified Frontend Logic for POS-home.html, POS-main.html, and POS-history.html
-   Connected to live PostgreSQL (Supabase) Database REST APIs
+   Unified Frontend Logic for POS Terminal:
+   - POS-login.html (Shift Gate & Staff Authentication)
+   - POS-home.html (Dashboard & Shift Summary)
+   - POS-main.html (Counter Checkout & Maintenance Dispatch)
+   - POS-history.html (Audit Ledger & Receipt Reprint)
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
     initClock();
-    initCashierHeader();
+
+    // Check if on login page
+    if (document.getElementById('cashier_login_form')) {
+        initPosLogin();
+        return;
+    }
+
+    // Route guard for POS terminal pages
+    const session = enforceCashierAuth();
+    if (!session) return; // redirected to POS-login.html
 
     // Initialize page-specific modules based on active DOM elements
     if (document.getElementById('pos_product_grid')) {
-        initPosMain();
+        initPosMain(session);
     }
     if (document.getElementById('history_data_table')) {
-        initPosHistory();
+        initPosHistory(session);
     }
     if (document.getElementById('home_recent_tbody')) {
-        initPosHome();
+        initPosHome(session);
     }
 });
 
 /* =============================================================================
-   1. LIVE CASHIER DIGITAL CLOCK & CASHIER SESSION
+   1. CASHIER SESSION MANAGEMENT & AUTH GATE
+   ============================================================================= */
+const POS_SESSION_KEY = 'pos_cashier_session';
+
+function getCashierSession() {
+    try {
+        const raw = localStorage.getItem(POS_SESSION_KEY);
+        if (!raw) return null;
+        const session = JSON.parse(raw);
+        if (!session || !session.name) return null;
+        return session;
+    } catch {
+        return null;
+    }
+}
+
+function setCashierSession(sessionData) {
+    localStorage.setItem(POS_SESSION_KEY, JSON.stringify(sessionData));
+}
+
+function clearCashierSession() {
+    localStorage.removeItem(POS_SESSION_KEY);
+}
+
+// Client-side route guard ensuring an active cashier session exists
+function enforceCashierAuth() {
+    const session = getCashierSession();
+    if (!session) {
+        window.location.href = 'POS-login.html';
+        return null;
+    }
+
+    // Sync header elements
+    const nameEl = document.getElementById('active_cashier_name');
+    const badgeEl = document.getElementById('cashier_role_badge');
+    const clockOutBtn = document.getElementById('btn_switch_cashier');
+
+    if (nameEl) nameEl.textContent = session.name;
+    if (badgeEl) {
+        badgeEl.textContent = (session.role || 'staff').toUpperCase();
+        if (session.role === 'admin') {
+            badgeEl.classList.add('badge_admin');
+        } else {
+            badgeEl.classList.remove('badge_admin');
+        }
+    }
+
+    // Wire Clock Out / Switch Cashier button
+    if (clockOutBtn) {
+        clockOutBtn.addEventListener('click', () => {
+            if (confirm(`Clock out current cashier shift for ${session.name}?`)) {
+                clearCashierSession();
+                window.location.href = 'POS-login.html';
+            }
+        });
+    }
+
+    return session;
+}
+
+/* =============================================================================
+   2. POS LOGIN PAGE MODULE (POS-login.html)
+   ============================================================================= */
+function initPosLogin() {
+    const loginForm = document.getElementById('cashier_login_form');
+    const emailInput = document.getElementById('login_email');
+    const passInput = document.getElementById('login_password');
+    const btnSubmit = document.getElementById('btn_submit_login');
+    const errBanner = document.getElementById('login_error_banner');
+    const errText = document.getElementById('login_error_text');
+    const staffChips = document.querySelectorAll('.pos_staff_chip');
+
+    // If already logged in, redirect straight to POS terminal home
+    const existingSession = getCashierSession();
+    if (existingSession) {
+        window.location.href = 'POS-home.html';
+        return;
+    }
+
+    // Quick fill chips for store testing
+    staffChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const email = chip.getAttribute('data-email');
+            const pass = chip.getAttribute('data-pass');
+            if (emailInput && email) emailInput.value = email;
+            if (passInput && pass) passInput.value = pass;
+            if (emailInput) emailInput.focus();
+        });
+    });
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = (emailInput ? emailInput.value : '').trim();
+            const password = (passInput ? passInput.value : '').trim();
+
+            if (!email || !password) {
+                showError('Please enter cashier email and password.');
+                return;
+            }
+
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.textContent = 'Verifying Shift...';
+            }
+            if (errBanner) errBanner.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.message || 'Invalid email or password.');
+                }
+
+                const user = data.data;
+                // Enforce POS role check: Only admin or staff can access
+                if (user.role !== 'admin' && user.role !== 'staff') {
+                    throw new Error('Access Denied: Customer accounts cannot operate the POS terminal. Please sign in with a staff account.');
+                }
+
+                // Store cashier session
+                setCashierSession({
+                    id: user.id,
+                    name: user.name || user.full_name || 'Store Cashier',
+                    email: user.email,
+                    role: user.role,
+                    token: data.token,
+                    shiftStartedAt: new Date().toISOString()
+                });
+
+                // Redirect to terminal hub
+                window.location.href = 'POS-home.html';
+
+            } catch (err) {
+                showError(err.message);
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = 'Start Cashier Shift →';
+                }
+            }
+        });
+    }
+
+    function showError(msg) {
+        if (errBanner && errText) {
+            errText.textContent = msg;
+            errBanner.style.display = 'block';
+        } else {
+            alert(msg);
+        }
+    }
+}
+
+/* =============================================================================
+   3. LIVE DIGITAL CASHIER CLOCK
    ============================================================================= */
 function initClock() {
     const clockEl = document.getElementById('clock_display');
@@ -42,19 +213,8 @@ function initClock() {
     updateClock();
 }
 
-function initCashierHeader() {
-    // Default co-owner / cashier per Taurus meeting notes: Russel Lu Caisido
-    const defaultCashier = 'Russel Lu Caisido';
-    const cashierEls = document.querySelectorAll('.cashier_display_name, #cashier_name, #rcpt_cashier');
-    cashierEls.forEach(el => {
-        if (!el.textContent || el.textContent.trim() === 'Cashier' || el.textContent.includes('...')) {
-            el.textContent = defaultCashier;
-        }
-    });
-}
-
 /* =============================================================================
-   2. FORMATTING HELPERS
+   4. FORMATTING HELPERS
    ============================================================================= */
 function formatCurrency(num) {
     const val = parseFloat(num) || 0;
@@ -90,9 +250,9 @@ function formatDateTime(dateStr) {
 }
 
 /* =============================================================================
-   3. POS TERMINAL COUNTER CHECKOUT ENGINE (POS-main.html)
+   5. POS TERMINAL COUNTER CHECKOUT ENGINE (POS-main.html)
    ============================================================================= */
-function initPosMain() {
+function initPosMain(session) {
     const productGrid = document.getElementById('pos_product_grid');
     const orderItemsList = document.getElementById('order_items_list');
     if (!productGrid || !orderItemsList) return;
@@ -203,7 +363,7 @@ function initPosMain() {
     const btnPrintReceipt = document.getElementById('btn_print_receipt');
     const btnDoneReceipt = document.getElementById('btn_done_receipt');
 
-    let activePaymentMethod = 'cash'; // 'cash' or 'gcash'
+    let activePaymentMethod = 'cash';
 
     /* --- Fetch Products from Live PostgreSQL Database --- */
     async function loadProductsFromApi() {
@@ -231,13 +391,11 @@ function initPosMain() {
     function renderCatalogGrid() {
         productGrid.innerHTML = '';
 
-        // If category is maintenance, show service cards
         if (activeCategory === 'maintenance') {
             renderMaintenanceServiceCards();
             return;
         }
 
-        // Filter products by category & search
         const filtered = allProducts.filter(p => {
             const cat = (p.category || '').toLowerCase();
             const matchesCat = activeCategory === 'all' || 
@@ -255,7 +413,6 @@ function initPosMain() {
                    (p.category || '').toLowerCase().includes(q);
         });
 
-        // Update count label
         if (countLabel) {
             countLabel.textContent = `${activeCategory.toUpperCase().replace('_', ' ')} — ${filtered.length} ITEMS`;
         }
@@ -294,7 +451,6 @@ function initPosMain() {
                 stockHtml = `<span class="stock_pill stock_in">${stock} in stock</span>`;
             }
 
-            // Thumbnail or category icon
             let visualBoxHtml = '';
             if (p.image_url && p.image_url.trim()) {
                 visualBoxHtml = `
@@ -325,7 +481,6 @@ function initPosMain() {
                 <button class="btn_add_to_cart" ${isOutOfStock ? 'disabled' : ''}>${isOutOfStock ? 'Sold Out' : '+ Add to Order'}</button>
             `;
 
-            // Card click adds to cart
             card.addEventListener('click', () => {
                 if (!isOutOfStock) {
                     addProductToCart(p);
@@ -488,7 +643,6 @@ function initPosMain() {
             orderItemsList.appendChild(itemCard);
         });
 
-        // Recalculate discount
         let calculatedDiscount = 0;
         if (currentDiscount.type === 'promo') {
             if (currentDiscount.code === 'TAURUS10') calculatedDiscount = subtotal * 0.10;
@@ -502,7 +656,6 @@ function initPosMain() {
         calculatedDiscount = Math.min(calculatedDiscount, subtotal);
         const grandTotal = Math.max(0, subtotal - calculatedDiscount);
 
-        // Update totals on side panel
         if (orderBadgeCount) orderBadgeCount.textContent = totalCount;
         if (summarySubtotal) summarySubtotal.textContent = formatCurrency(subtotal);
         if (summaryDiscountBtn) {
@@ -522,7 +675,6 @@ function initPosMain() {
             btnCharge.textContent = `Charge ${formatCurrency(grandTotal)}`;
         }
 
-        // Add event listeners to qty adjust and remove buttons
         const minusBtns = orderItemsList.querySelectorAll('.btn_qty_minus');
         minusBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -563,7 +715,6 @@ function initPosMain() {
         });
     }
 
-    // Clear cart listener
     if (btnClear) {
         btnClear.addEventListener('click', () => {
             if (orderCart.length === 0) return;
@@ -575,7 +726,6 @@ function initPosMain() {
         });
     }
 
-    // Category pills click listeners
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
@@ -585,7 +735,6 @@ function initPosMain() {
         });
     });
 
-    // Product search input listener
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             searchQuery = searchInput.value.trim();
@@ -609,7 +758,6 @@ function initPosMain() {
         });
     }
 
-    // Preset pills click
     const presetPills = document.querySelectorAll('.maint_preset_pill:not(.btn_promo_sample)');
     presetPills.forEach(pill => {
         pill.addEventListener('click', () => {
@@ -655,7 +803,6 @@ function initPosMain() {
                 serviceNotes: notes
             });
 
-            // Reset inputs
             if (maintServiceName) maintServiceName.value = '';
             if (maintServiceCost) maintServiceCost.value = '';
             if (maintBikeDetails) maintBikeDetails.value = '';
@@ -681,7 +828,6 @@ function initPosMain() {
         btnCancelDiscount.addEventListener('click', () => discountModal.classList.remove('active'));
     }
 
-    // Toggle between promo code and custom cashier discount
     if (tabPromoCode && tabCustomDiscount) {
         tabPromoCode.addEventListener('click', () => {
             tabPromoCode.classList.add('active');
@@ -724,7 +870,6 @@ function initPosMain() {
                     return;
                 }
             } else {
-                // Cashier custom discount (Meeting requirement)
                 const radioPercent = document.getElementById('radio_discount_percent');
                 const isPercent = radioPercent ? radioPercent.checked : true;
                 const rawVal = parseFloat(customDiscountValue ? customDiscountValue.value : 0) || 0;
@@ -801,7 +946,6 @@ function initPosMain() {
             if (payModalTotal) payModalTotal.textContent = formatCurrency(grandTotal);
             if (payModalItemsCount) payModalItemsCount.textContent = `${totalCount} item${totalCount !== 1 ? 's' : ''} in order`;
 
-            // Reset tendered and change to exact
             if (tenderedInput) tenderedInput.value = grandTotal.toFixed(2);
             calculateChange();
 
@@ -899,8 +1043,8 @@ function initPosMain() {
                     paymentReference: gcashRef,
                     discountAmount: discount,
                     discountNote: currentDiscount.note || (discount > 0 ? 'Promo Discount' : ''),
-                    notes: `Counter Checkout | Method: ${activePaymentMethod.toUpperCase()}`,
-                    cashierName: 'Russel Lu Caisido',
+                    notes: `Counter Checkout | Method: ${activePaymentMethod.toUpperCase()} | Shift: ${session.name}`,
+                    cashierName: session.name,
                     orderItems: orderCart.map(item => ({
                         productId: item.productId,
                         name: item.name,
@@ -924,7 +1068,6 @@ function initPosMain() {
                     throw new Error(resData.message || 'Failed to process sale');
                 }
 
-                // Close settlement modal
                 if (paymentModal) paymentModal.classList.remove('active');
 
                 // Render Digital Receipt
@@ -934,7 +1077,7 @@ function initPosMain() {
                     orderNumber: orderData.orderNumber || orderData.order_number,
                     invoiceNumber: invoiceNumber,
                     dateTime: new Date(),
-                    cashier: 'Russel Lu Caisido',
+                    cashier: session.name,
                     customer: customerName,
                     paymentMethod: activePaymentMethod,
                     items: orderCart,
@@ -971,7 +1114,7 @@ function initPosMain() {
         if (rcptTxnId) rcptTxnId.textContent = rcpt.orderNumber || 'ORD-POS-001';
         if (rcptInvId) rcptInvId.textContent = rcpt.invoiceNumber || 'INV-POS-001';
         if (rcptDateTime) rcptDateTime.textContent = formatDateTime(rcpt.dateTime);
-        if (rcptCashier) rcptCashier.textContent = rcpt.cashier || 'Russel Lu Caisido';
+        if (rcptCashier) rcptCashier.textContent = rcpt.cashier || session.name;
         if (rcptCustomer) rcptCustomer.textContent = rcpt.customer || 'Walk-in Customer';
         if (rcptMethodBadge) {
             rcptMethodBadge.textContent = rcpt.paymentMethod.toUpperCase();
@@ -1049,9 +1192,9 @@ function initPosMain() {
 }
 
 /* =============================================================================
-   4. TRANSACTION HISTORY & DIGITAL LOGBOOK (POS-history.html)
+   6. TRANSACTION HISTORY & DIGITAL LOGBOOK (POS-history.html)
    ============================================================================= */
-function initPosHistory() {
+function initPosHistory(session) {
     const historyTable = document.getElementById('history_data_table');
     const searchInput = document.getElementById('history_search_input');
     const totalEl = document.getElementById('filtered_total_value');
@@ -1130,7 +1273,6 @@ function initPosHistory() {
                 </td>
             `;
 
-            // Open receipt modal for reprint
             const btnRcpt = tr.querySelector('.btn_view_rcpt_row');
             if (btnRcpt) {
                 btnRcpt.addEventListener('click', () => {
@@ -1146,7 +1288,6 @@ function initPosHistory() {
         }
     }
 
-    // Search filter
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             const q = searchInput.value.toLowerCase().trim();
@@ -1180,7 +1321,7 @@ function initPosHistory() {
         if (rcptTxnId) rcptTxnId.textContent = order.order_number || order.orderNumber;
         if (rcptInvId) rcptInvId.textContent = order.invoice_number || order.invoiceNumber || 'INV-HIST';
         if (rcptDateTime) rcptDateTime.textContent = formatDateTime(order.created_at || order.createdAt);
-        if (rcptCashier) rcptCashier.textContent = 'Russel Lu Caisido';
+        if (rcptCashier) rcptCashier.textContent = session ? session.name : 'Store Cashier';
         if (rcptCustomer) rcptCustomer.textContent = order.customer_name || order.customerName || 'Walk-in Customer';
         if (rcptMethodBadge) {
             const m = (order.payment_method || order.paymentMethod || 'cash').toUpperCase();
@@ -1220,9 +1361,9 @@ function initPosHistory() {
 }
 
 /* =============================================================================
-   5. POS TERMINAL DASHBOARD & METRICS SUMMARY (POS-home.html)
+   7. POS TERMINAL DASHBOARD & METRICS SUMMARY (POS-home.html)
    ============================================================================= */
-function initPosHome() {
+function initPosHome(session) {
     const summaryText = document.getElementById('home_daily_sales_text');
     const recentTbody = document.getElementById('home_recent_tbody');
     if (!summaryText || !recentTbody) return;
@@ -1234,12 +1375,10 @@ function initPosHome() {
             const json = await res.json();
             const data = json.data;
 
-            // Update daily sales badge
             const todaySales = parseFloat(data.todaySales || 0);
             const todayCount = parseInt(data.todayOrdersCount || 0, 10);
             summaryText.textContent = `${formatCurrency(todaySales)} in sales today (${todayCount} orders)`;
 
-            // Render 5 recent transactions
             recentTbody.innerHTML = '';
             const recent = data.recentOrders || [];
 

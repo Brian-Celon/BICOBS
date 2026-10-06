@@ -25,9 +25,9 @@ app.use('/frontend', express.static(frontendPath));
 app.use('/assets', express.static(assetsPath));
 app.use(express.static(frontendPath));
 
-// Root redirect to POS Terminal Home
+// Root redirect to POS Terminal Login
 app.get('/', (req, res) => {
-  res.redirect('/frontend/pages/POS/POS-home.html');
+  res.redirect('/frontend/pages/POS/POS-login.html');
 });
 
 // 5. Health Check Route
