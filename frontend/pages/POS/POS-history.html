@@ -51,7 +51,7 @@
                 </div>
                 <div class="filtered_total_box">
                     <span class="filtered_total_label">Filtered Total</span>
-                    <span class="filtered_total_value" id="filtered_total_value">&#8369;52,060.00</span>
+                    <span class="filtered_total_value" id="filtered_total_value">₱0.00</span>
                 </div>
             </section>
 
@@ -71,76 +71,22 @@
                 <table class="pos_data_table" id="history_data_table">
                     <thead>
                         <tr>
-                            <th>TRANSACTION ID</th>
+                            <th>ORDER / TXN #</th>
                             <th>DATE &amp; TIME</th>
-                            <th>ITEMS</th>
-                            <th>SUBTOTAL</th>
-                            <th>DISCOUNT</th>
+                            <th>CUSTOMER</th>
+                            <th>ITEMS SUMMARY</th>
                             <th>TOTAL</th>
                             <th>METHOD</th>
                             <th>STATUS</th>
+                            <th style="text-align: center;">RECEIPT</th>
                         </tr>
                     </thead>
                     <tbody id="history_tbody">
-                        <tr data-amount="1430.00">
-                            <td class="txn_id_cell">TXN-20240801-003</td>
-                            <td>Sep 26, 2026, 5:15 PM</td>
-                            <td>2 items &bull; <span style="color:#b91c1c; font-weight:700;">Tune-Up (Reynaldo Santos)</span></td>
-                            <td>&#8369;1,430.00</td>
-                            <td>&mdash;</td>
-                            <td class="txn_total_cell">&#8369;1,430.00</td>
-                            <td><span class="badge_method_cash">Cash</span></td>
-                            <td><span class="badge_status_paid">PAID</span></td>
-                        </tr>
-                        <tr data-amount="2210.00">
-                            <td class="txn_id_cell">TXN-20240801-001</td>
-                            <td>Sep 26, 2026, 2:37 PM</td>
-                            <td>2</td>
-                            <td>&#8369;2,210.00</td>
-                            <td>&mdash;</td>
-                            <td class="txn_total_cell">&#8369;2,210.00</td>
-                            <td><span class="badge_method_cash">Cash</span></td>
-                            <td><span class="badge_status_paid">PAID</span></td>
-                        </tr>
-                        <tr data-amount="17200.00">
-                            <td class="txn_id_cell">TXN-20240801-002</td>
-                            <td>Sep 26, 2026, 4:41 PM</td>
-                            <td>2</td>
-                            <td>&#8369;17,700.00</td>
-                            <td class="discount_red">-&#8369;500.00</td>
-                            <td class="txn_total_cell">&#8369;17,200.00</td>
-                            <td><span class="badge_method_gcash">GCash</span></td>
-                            <td><span class="badge_status_paid">PAID</span></td>
-                        </tr>
-                        <tr data-amount="6150.00">
-                            <td class="txn_id_cell">TXN-20240731-001</td>
-                            <td>Sep 25, 2026, 11:58 AM</td>
-                            <td>2</td>
-                            <td>&#8369;6,150.00</td>
-                            <td>&mdash;</td>
-                            <td class="txn_total_cell">&#8369;6,150.00</td>
-                            <td><span class="badge_method_cash">Cash</span></td>
-                            <td><span class="badge_status_paid">PAID</span></td>
-                        </tr>
-                        <tr data-amount="5500.00">
-                            <td class="txn_id_cell">TXN-20240730-001</td>
-                            <td>Sep 24, 2026, 4:03 PM</td>
-                            <td>3</td>
-                            <td>&#8369;5,830.00</td>
-                            <td class="discount_red">-&#8369;330.00</td>
-                            <td class="txn_total_cell">&#8369;5,500.00</td>
-                            <td><span class="badge_method_cash">Cash</span></td>
-                            <td><span class="badge_status_paid">PAID</span></td>
-                        </tr>
-                        <tr data-amount="21000.00">
-                            <td class="txn_id_cell">TXN-20240729-001</td>
-                            <td>Sep 23, 2026, 10:28 AM</td>
-                            <td>1</td>
-                            <td>&#8369;22,000.00</td>
-                            <td class="discount_red">-&#8369;1,000.00</td>
-                            <td class="txn_total_cell">&#8369;21,000.00</td>
-                            <td><span class="badge_method_gcash">GCash</span></td>
-                            <td><span class="badge_status_paid">PAID</span></td>
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 36px; color: var(--pos_text_muted);">
+                                <div class="pos_spinner" style="margin: 0 auto 10px; width: 28px; height: 28px; border: 2px solid #e2e8f0; border-top-color: var(--pos_red); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                                Loading live transaction history from database...
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -150,7 +96,80 @@
 
     </div>
 
-    <!-- pos interactive scripts -->
+    
+    <!-- reprint receipt modal -->
+    <div class="pos_modal_overlay" id="receipt_modal_overlay">
+        <div class="receipt_box">
+            <div class="receipt_header">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="receipt_logo" onerror="this.src='/frontend/Pictures/logo.jpg'">
+                <h2 class="receipt_brand_name">TAURUS BIKE SHOP</h2>
+                <div class="receipt_store_meta">
+                    <span>Main Branch &bull; Bicycle Sales &amp; Workshop Service</span><br>
+                    <span>Contact: +63 912 345 6789 &bull; POS Terminal #1</span>
+                </div>
+            </div>
+
+            <div class="receipt_divider"></div>
+
+            <div class="receipt_info_grid">
+                <div><strong>Order:</strong> <span id="rcpt_txn_id">ORD-POS-...</span></div>
+                <div><strong>Invoice:</strong> <span id="rcpt_inv_id">INV-POS-...</span></div>
+                <div><strong>Date:</strong> <span id="rcpt_date_time">Oct 06, 2026</span></div>
+                <div><strong>Cashier:</strong> <span id="rcpt_cashier">Russel Lu Caisido</span></div>
+                <div><strong>Customer:</strong> <span id="rcpt_customer">Walk-in</span></div>
+                <div><strong>Payment:</strong> <span id="rcpt_method_badge">Cash</span></div>
+            </div>
+
+            <div class="receipt_divider"></div>
+
+            <table class="receipt_items_table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Item / Service Description</th>
+                        <th style="width: 15%; text-align: center;">Qty</th>
+                        <th style="width: 35%; text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="rcpt_items_tbody">
+                    <!-- populated dynamically -->
+                </tbody>
+            </table>
+
+            <div class="receipt_divider"></div>
+
+            <div class="receipt_totals_area">
+                <div class="receipt_total_row">
+                    <span style="color: var(--pos_text_muted);">Subtotal:</span>
+                    <strong id="rcpt_subtotal">₱0.00</strong>
+                </div>
+                <div class="receipt_total_row" id="rcpt_discount_row" style="display: none; color: #16a34a;">
+                    <span>Discount:</span>
+                    <strong id="rcpt_discount">-₱0.00</strong>
+                </div>
+                <div class="receipt_total_row receipt_grand_total">
+                    <span>Grand Total:</span>
+                    <span id="rcpt_grand_total">₱0.00</span>
+                </div>
+            </div>
+
+            <!-- official store non-refundable policy -->
+            <div class="receipt_footer_policy" style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--pos_border); font-size: 11px; text-align: center; color: var(--pos_text_muted); line-height: 1.45;">
+                <strong>IMPORTANT STORE POLICY:</strong><br>
+                Items non-refundable. 7-day replacement for factory defective items with receipt upon supplier return.<br>
+                <em>Thank you for choosing Taurus Bike Shop!</em>
+            </div>
+
+            <div class="receipt_actions_row">
+                <button type="button" class="btn_modal_cancel" id="btn_print_receipt">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right: 4px; vertical-align: -2px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Print Receipt
+                </button>
+                <button type="button" class="btn_modal_submit" id="btn_done_receipt">Close</button>
+            </div>
+        </div>
+    </div>
+
+<!-- pos interactive scripts -->
     <script src="/frontend/js/POS.js"></script>
 </body>
 </html>

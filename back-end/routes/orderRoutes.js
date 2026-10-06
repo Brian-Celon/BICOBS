@@ -5,9 +5,17 @@ const {
   getOrderById,
   getMyOrders,
   getAllOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  createPosOrder,
+  getPosOrders,
+  getPosSummary
 } = require('../controllers/orderController');
 const { protect, authorize } = require('../middleware/authMiddleware');
+
+// Dedicated in-store POS Terminal routes (Counter Checkout)
+router.post('/pos', createPosOrder);
+router.get('/pos/summary', getPosSummary);
+router.get('/pos', getPosOrders);
 
 // Customer routes
 router.post('/', protect, createOrder);

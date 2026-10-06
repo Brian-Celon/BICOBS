@@ -2475,3 +2475,329 @@ button, input, select, textarea {
     margin-top: 18px;
 }
 
+/* ==========================================================================
+   Modals, Settlement & Dynamic Catalog Enhancements
+   ========================================================================== */
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.pos_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    padding: 16px;
+}
+
+.pos_modal_overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal_box {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--pos_border);
+    animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--pos_border);
+}
+
+.modal_title {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--pos_text_dark);
+}
+
+.modal_close_btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--pos_text_muted);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.modal_close_btn:hover {
+    color: var(--pos_red);
+}
+
+.modal_body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal_footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 22px;
+    border-top: 1px solid var(--pos_border);
+    background-color: #f8fafc;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.btn_modal_cancel {
+    padding: 9px 18px;
+    border: 1px solid var(--pos_border);
+    background-color: #ffffff;
+    color: var(--pos_text_body);
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn_modal_cancel:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.btn_modal_submit {
+    padding: 9px 20px;
+    border: none;
+    background-color: var(--pos_red);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 800;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn_modal_submit:hover:not(:disabled) {
+    background-color: var(--pos_red_dark);
+    transform: translateY(-1px);
+}
+
+.btn_modal_submit:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Payment Settlement Component */
+.payment_tabs_row {
+    display: flex;
+    gap: 8px;
+    background-color: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.payment_tab_btn {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pos_text_muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.payment_tab_btn.active {
+    background-color: #ffffff;
+    color: var(--pos_text_dark);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.settlement_amount_banner {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 10px;
+    padding: 16px 20px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settlement_label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.settlement_val {
+    font-size: 24px;
+    font-weight: 900;
+    color: #38bdf8;
+    letter-spacing: -0.5px;
+}
+
+.quick_cash_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.btn_quick_cash {
+    padding: 8px;
+    background-color: #ffffff;
+    border: 1px solid var(--pos_border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--pos_text_dark);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn_quick_cash:hover {
+    background-color: #f1f5f9;
+    border-color: var(--pos_red);
+    color: var(--pos_red);
+}
+
+.change_due_box {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.change_due_label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #065f46;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.change_due_value {
+    font-size: 20px;
+    font-weight: 900;
+    color: #047857;
+}
+
+/* Stock status indicators on cards */
+.stock_pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.stock_pill.stock_in {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.stock_pill.stock_low {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.stock_pill.stock_out {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.pos_product_card.out_of_stock {
+    opacity: 0.6;
+    pointer-events: none;
+    border-color: #e2e8f0;
+}
+
+.pos_product_card.out_of_stock .btn_add_to_cart {
+    background-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed;
+}
+
+/* Printer Media Queries (58mm/80mm Thermal Receipt Ready) */
+@media print {
+    body {
+        background-color: #ffffff !important;
+    }
+    
+    body * {
+        visibility: hidden !important;
+    }
+
+    #receipt_modal_overlay,
+    #receipt_modal_overlay * {
+        visibility: visible !important;
+    }
+
+    #receipt_modal_overlay {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        background: transparent !important;
+        padding: 0 !important;
+        backdrop-filter: none !important;
+    }
+
+    .receipt_box {
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 8px !important;
+        margin: 0 !important;
+        animation: none !important;
+    }
+
+    .receipt_actions_row {
+        display: none !important;
+    }
+}
+

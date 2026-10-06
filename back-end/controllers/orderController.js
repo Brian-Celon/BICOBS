@@ -421,10 +421,351 @@ const updateOrderStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Process counter POS walk-in sale
+// @route   POST /api/orders/pos
+// @access  Public / Staff Counter
+const createPosOrder = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const {
+      customerName = 'Walk-in Customer',
+      customerPhone = '',
+      paymentMethod = 'cash',
+      amountTendered = 0,
+      changeDue = 0,
+      paymentReference = '',
+      discountAmount = 0,
+      discountNote = '',
+      notes = '',
+      cashierName = 'Russel Lu Caisido',
+      orderItems = []
+    } = req.body;
+
+    if (!orderItems || orderItems.length === 0) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'No items in order cart'
+      });
+    }
+
+    await client.query('BEGIN');
+
+    // 1. Process items, check stock, and deduct product inventory
+    let subtotal = 0;
+    const processedItems = [];
+    const repairTickets = [];
+
+    for (const item of orderItems) {
+      const isService = Boolean(item.isService || item.is_service);
+      const reqQty = parseInt(item.quantity || item.qty || 1, 10);
+      const unitPrice = parseFloat(item.price || item.unit_price || 0);
+      const itemSubtotal = unitPrice * reqQty;
+      subtotal += itemSubtotal;
+
+      const prodId = item.productId || item.product_id || item.id;
+      if (!isService && prodId) {
+        const prodRes = await client.query(
+          'SELECT id, name, price, stock_quantity FROM products WHERE id = $1 FOR UPDATE',
+          [prodId]
+        );
+
+        if (prodRes.rows.length === 0) {
+          await client.query('ROLLBACK');
+          return res.status(404).json({
+            status: 'error',
+            message: `Product not found: ID ${prodId}`
+          });
+        }
+
+        const product = prodRes.rows[0];
+        if (product.stock_quantity < reqQty) {
+          await client.query('ROLLBACK');
+          return res.status(400).json({
+            status: 'error',
+            message: `Insufficient stock for '${product.name}'. Available: ${product.stock_quantity}, Requested: ${reqQty}`
+          });
+        }
+
+        // Deduct inventory
+        await client.query(
+          'UPDATE products SET stock_quantity = stock_quantity - $1 WHERE id = $2',
+          [reqQty, product.id]
+        );
+
+        processedItems.push({
+          productId: product.id,
+          name: product.name,
+          quantity: reqQty,
+          price: unitPrice,
+          subtotal: itemSubtotal,
+          isService: false
+        });
+      } else {
+        // Service / Maintenance item
+        processedItems.push({
+          productId: null,
+          name: item.name || 'Bicycle Maintenance Service',
+          quantity: reqQty,
+          price: unitPrice,
+          subtotal: itemSubtotal,
+          isService: true
+        });
+
+        repairTickets.push({
+          customerName: customerName.trim(),
+          customerPhone: customerPhone.trim(),
+          bikeModel: item.bikeDetails || 'Walk-in Bicycle',
+          mechanicName: item.mechanic || 'Reynaldo',
+          serviceType: item.name || 'General Tune-Up',
+          problemDescription: item.serviceNotes || (notes ? `POS Note: ${notes}` : ''),
+          estimatedCost: unitPrice * reqQty
+        });
+      }
+    }
+
+    const discount = Math.max(0, parseFloat(discountAmount || 0));
+    const finalTotal = Math.max(0, subtotal - discount);
+
+    // Format notes with cashier and payment metadata
+    const posNotes = [
+      notes,
+      discountNote ? `Discount: ${discountNote} (-₱${discount.toFixed(2)})` : '',
+      paymentMethod.toLowerCase() === 'cash' ? `Tendered: ₱${parseFloat(amountTendered || 0).toFixed(2)}, Change: ₱${parseFloat(changeDue || 0).toFixed(2)}` : '',
+      paymentReference ? `Ref Code: ${paymentReference}` : '',
+      `Cashier: ${cashierName}`
+    ].filter(Boolean).join(' | ');
+
+    // Generate unique order number
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const orderNumber = `ORD-POS-${dateStr}-${randomSuffix}`;
+    const invoiceNumber = `INV-POS-${dateStr}-${randomSuffix}`;
+
+    // Get default cashier user id (admin/staff)
+    let cashierUserId = 3;
+    const userCheck = await client.query("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
+    if (userCheck.rows.length > 0) {
+      cashierUserId = userCheck.rows[0].id;
+    }
+
+    // 2. Insert into orders table
+    const insertOrderSql = `
+      INSERT INTO orders (
+        order_number, user_id, customer_name, customer_email, customer_phone,
+        delivery_type, delivery_address, notes, payment_method,
+        subtotal, shipping_fee, total_amount, order_status, payment_status
+      ) VALUES ($1, $2, $3, $4, $5, 'pickup', 'Taurus In-Store Counter', $6, $7, $8, 0, $9, 'completed', 'paid')
+      RETURNING *;
+    `;
+
+    const orderRes = await client.query(insertOrderSql, [
+      orderNumber,
+      cashierUserId,
+      customerName.trim() || 'Walk-in Customer',
+      'pos@taurusbike.ph',
+      customerPhone.trim() || 'Walk-in',
+      posNotes,
+      paymentMethod.toLowerCase(),
+      subtotal,
+      finalTotal
+    ]);
+
+    const createdOrder = orderRes.rows[0];
+
+    // 3. Insert order items
+    for (const item of processedItems) {
+      await client.query(
+        `INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_price, subtotal)
+         VALUES ($1, $2, $3, $4, $5, $6);`,
+        [createdOrder.id, item.productId, item.name, item.quantity, item.price, item.subtotal]
+      );
+    }
+
+    // 4. Insert billing / invoice record
+    await client.query(
+      `INSERT INTO billings (
+        order_id, invoice_number, customer_name, customer_email, customer_phone,
+        subtotal, shipping_fee, total_amount, payment_method, payment_status, payment_date
+      ) VALUES ($1, $2, $3, $4, $5, $6, 0, $7, $8, 'paid', CURRENT_TIMESTAMP);`,
+      [
+        createdOrder.id,
+        invoiceNumber,
+        createdOrder.customer_name,
+        createdOrder.customer_email,
+        createdOrder.customer_phone,
+        subtotal,
+        finalTotal,
+        paymentMethod.toLowerCase()
+      ]
+    );
+
+    // 5. Insert repair tickets if service items were present
+    const createdRepairs = [];
+    for (const rep of repairTickets) {
+      const lastRes = await client.query("SELECT ticket_number FROM repairs ORDER BY id DESC LIMIT 1");
+      let nextNum = 11;
+      if (lastRes.rows.length > 0) {
+        const match = (lastRes.rows[0].ticket_number || '').match(/\d+/);
+        if (match) nextNum = parseInt(match[0], 10) + 1;
+      }
+      const ticketNumber = `#R${String(nextNum).padStart(3, '0')}`;
+
+      const repRes = await client.query(
+        `INSERT INTO repairs (
+          ticket_number, order_id, user_id, customer_name, customer_phone,
+          bike_model, mechanic_name, service_type, problem_description,
+          status, estimated_cost, estimated_finish
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'in-progress', $10, 'Today')
+        RETURNING *;`,
+        [
+          ticketNumber,
+          createdOrder.id,
+          cashierUserId,
+          rep.customerName,
+          rep.customerPhone,
+          rep.bikeModel,
+          rep.mechanicName,
+          rep.serviceType,
+          rep.problemDescription,
+          rep.estimatedCost
+        ]
+      );
+      createdRepairs.push(repRes.rows[0]);
+    }
+
+    await client.query('COMMIT');
+
+    createdOrder.invoice_number = invoiceNumber;
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Walk-in order processed successfully',
+      data: {
+        order: formatOrder(createdOrder, processedItems.map(p => ({
+          id: p.productId,
+          product_id: p.productId,
+          product_name: p.name,
+          quantity: p.quantity,
+          unit_price: p.price,
+          subtotal: p.subtotal
+        }))),
+        invoiceNumber,
+        repairs: createdRepairs,
+        payment: {
+          method: paymentMethod,
+          amountTendered: parseFloat(amountTendered || 0),
+          changeDue: parseFloat(changeDue || 0),
+          paymentReference
+        },
+        cashier: cashierName
+      }
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+// @desc    Get walk-in POS orders for history ledger
+// @route   GET /api/orders/pos
+// @access  Public / Staff Counter
+const getPosOrders = async (req, res, next) => {
+  try {
+    const sql = `
+      SELECT o.*, b.invoice_number, u.full_name as user_name
+      FROM orders o
+      LEFT JOIN billings b ON b.order_id = o.id
+      LEFT JOIN users u ON o.user_id = u.id
+      ORDER BY o.created_at DESC
+      LIMIT 100
+    `;
+    const ordersRes = await pool.query(sql);
+    const orders = [];
+    for (const ord of ordersRes.rows) {
+      const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [ord.id]);
+      orders.push(formatOrder(ord, itemsRes.rows));
+    }
+    res.status(200).json({
+      status: 'success',
+      count: orders.length,
+      data: orders
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get POS daily shift metrics and recent sales
+// @route   GET /api/orders/pos/summary
+// @access  Public / Staff Counter
+const getPosSummary = async (req, res, next) => {
+  try {
+    const todayRes = await pool.query(`
+      SELECT 
+        COALESCE(SUM(total_amount), 0) AS today_sales,
+        COUNT(*) AS today_orders_count
+      FROM orders
+      WHERE payment_status = 'paid'
+        AND DATE(created_at AT TIME ZONE 'Asia/Manila') = DATE(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Manila')
+    `);
+
+    const allTimeRes = await pool.query(`
+      SELECT 
+        COALESCE(SUM(total_amount), 0) AS total_sales,
+        COUNT(*) AS total_orders_count
+      FROM orders
+      WHERE payment_status = 'paid'
+    `);
+
+    const recentRes = await pool.query(`
+      SELECT o.id, o.order_number, o.customer_name, o.payment_method, o.total_amount, o.created_at, b.invoice_number
+      FROM orders o
+      LEFT JOIN billings b ON b.order_id = o.id
+      ORDER BY o.created_at DESC
+      LIMIT 5
+    `);
+
+    const recentOrders = [];
+    for (const r of recentRes.rows) {
+      const itemsRes = await pool.query('SELECT product_name, quantity FROM order_items WHERE order_id = $1', [r.id]);
+      const itemsDesc = itemsRes.rows.map(i => `${i.product_name} (x${i.quantity})`).join(', ');
+      recentOrders.push({
+        id: r.id,
+        orderNumber: r.order_number,
+        invoiceNumber: r.invoice_number,
+        customerName: r.customer_name,
+        paymentMethod: r.payment_method,
+        totalAmount: parseFloat(r.total_amount),
+        createdAt: r.created_at,
+        itemsCount: itemsRes.rows.reduce((sum, i) => sum + i.quantity, 0),
+        itemsSummary: itemsDesc || '1 item'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        todaySales: parseFloat(todayRes.rows[0].today_sales || 0),
+        todayOrdersCount: parseInt(todayRes.rows[0].today_orders_count || 0, 10),
+        totalSales: parseFloat(allTimeRes.rows[0].total_sales || 0),
+        totalOrdersCount: parseInt(allTimeRes.rows[0].total_orders_count || 0, 10),
+        recentOrders
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createOrder,
   getOrderById,
   getMyOrders,
   getAllOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  createPosOrder,
+  getPosOrders,
+  getPosSummary
 };

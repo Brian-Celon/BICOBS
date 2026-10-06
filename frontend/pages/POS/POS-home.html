@@ -94,7 +94,7 @@
                         </svg>
                     </div>
                     <h2 class="action_card_title">Daily Summary</h2>
-                    <p class="action_card_subtitle">&#8369;52,060 in recent sales</p>
+                    <p class="action_card_subtitle" id="home_daily_sales_text">Loading today's sales...</p>
                 </a>
             </section>
 
@@ -109,48 +109,19 @@
                     <table class="pos_data_table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>DATE</th>
+                                <th>ORDER #</th>
+                                <th>DATE &amp; TIME</th>
                                 <th>ITEMS</th>
                                 <th>TOTAL</th>
                                 <th>METHOD</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="home_recent_tbody">
                             <tr>
-                                <td class="txn_id_cell">TXN-20240801-003</td>
-                                <td>Sep 26, 2026, 5:15 PM</td>
-                                <td>Tune-Up (Reynaldo Santos) + Parts</td>
-                                <td class="txn_total_cell">&#8369;1,430.00</td>
-                                <td><span class="badge_method_cash">Cash</span></td>
-                            </tr>
-                            <tr>
-                                <td class="txn_id_cell">TXN-20240801-001</td>
-                                <td>Sep 26, 2026, 2:37 PM</td>
-                                <td>2 items</td>
-                                <td class="txn_total_cell">&#8369;2,210.00</td>
-                                <td><span class="badge_method_cash">Cash</span></td>
-                            </tr>
-                            <tr>
-                                <td class="txn_id_cell">TXN-20240801-002</td>
-                                <td>Sep 26, 2026, 4:41 PM</td>
-                                <td>2 items</td>
-                                <td class="txn_total_cell">&#8369;17,200.00</td>
-                                <td><span class="badge_method_gcash">GCash</span></td>
-                            </tr>
-                            <tr>
-                                <td class="txn_id_cell">TXN-20240731-001</td>
-                                <td>Sep 25, 2026, 11:58 AM</td>
-                                <td>2 items</td>
-                                <td class="txn_total_cell">&#8369;6,150.00</td>
-                                <td><span class="badge_method_cash">Cash</span></td>
-                            </tr>
-                            <tr>
-                                <td class="txn_id_cell">TXN-20240730-001</td>
-                                <td>Sep 24, 2026, 4:03 PM</td>
-                                <td>3 items</td>
-                                <td class="txn_total_cell">&#8369;5,500.00</td>
-                                <td><span class="badge_method_cash">Cash</span></td>
+                                <td colspan="5" style="text-align: center; padding: 32px; color: var(--pos_text_muted);">
+                                    <div class="pos_spinner" style="margin: 0 auto 10px; width: 26px; height: 26px; border: 2px solid #e2e8f0; border-top-color: var(--pos_red); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                                    Loading live transactions from database...
+                                </td>
                             </tr>
                         </tbody>
                     </table>

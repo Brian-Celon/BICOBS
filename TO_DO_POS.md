@@ -66,84 +66,84 @@ This roadmap tracks the complete development, backend infrastructure, live datab
 ---
 
 ### 🧹 Phase 2: Legacy File Cleanup
-- [ ] **Remove Obsolete Admin Files**
-  - [ ] Delete `frontend/pages/POS/admin/` (`admin-accmanage.html`, `admin-inventory.html`, `admin-main.html`, `admin-report.html`).
-- [ ] **Asset Path Verification**
-  - [ ] Verify all image references (`/frontend/Pictures/logo.png`, `bike-*.svg`) resolve with HTTP 200.
+- [x] **Remove Obsolete Admin Files**
+  - [x] Delete `frontend/pages/POS/admin/` (`admin-accmanage.html`, `admin-inventory.html`, `admin-main.html`, `admin-report.html`).
+- [x] **Asset Path Verification**
+  - [x] Verify all image references (`/frontend/Pictures/logo.png`, `bike-*.svg`) resolve with HTTP 200.
 
 ---
 
 ### 🛒 Phase 3: Dynamic Catalog & Inventory Sync (`POS-main.html` & `POS.js`)
-- [ ] **Live Product Loading from Database**
-  - [ ] Mount `/api/products` route returning 150 live Taurus items from PostgreSQL.
-  - [ ] Dynamically populate `#pos_product_grid` on page load.
-  - [ ] Display product card: thumbnail, SKU, product title, category tag, price in PHP (₱), and real-time stock.
-  - [ ] Add loading skeleton / spinner while products are fetching from the database.
-- [ ] **Stock Health & Availability Rules**
-  - [ ] Display stock status pill: `In Stock`, `Low Stock (< 5 left)`, or `Out of Stock`.
-  - [ ] Automatically disable `+ Add to Cart` button when `stock_quantity <= 0`.
-  - [ ] Prevent adding more units than available stock.
-- [ ] **Real-time Filter & Search Engine**
-  - [ ] Category pill filtering: dynamically filter cards by category (`drivetrain`, `brakes`, `tires`, `cockpit`, `accessories`, `safety`, `maintenance`).
-  - [ ] Instant search input filtering across product names, SKUs, and categories.
-  - [ ] Dynamic counter label: `ALL PRODUCTS — X ITEMS` / `FILTERED — Y ITEMS`.
+- [x] **Live Product Loading from Database**
+  - [x] Mount `/api/products` route returning 150 live Taurus items from PostgreSQL.
+  - [x] Dynamically populate `#pos_product_grid` on page load.
+  - [x] Display product card: thumbnail, SKU, product title, category tag, price in PHP (₱), and real-time stock.
+  - [x] Add loading skeleton / spinner while products are fetching from the database.
+- [x] **Stock Health & Availability Rules**
+  - [x] Display stock status pill: `In Stock`, `Low Stock (< 5 left)`, or `Out of Stock`.
+  - [x] Automatically disable `+ Add to Cart` button when `stock_quantity <= 0`.
+  - [x] Prevent adding more units than available stock.
+- [x] **Real-time Filter & Search Engine**
+  - [x] Category pill filtering: dynamically filter cards by category (`drivetrain`, `brakes`, `tires`, `cockpit`, `accessories`, `safety`, `maintenance`).
+  - [x] Instant search input filtering across product names, SKUs, and categories.
+  - [x] Dynamic counter label: `ALL PRODUCTS — X ITEMS` / `FILTERED — Y ITEMS`.
 
 ---
 
 ### 💳 Phase 4: Live Walk-in Order Processing & Stock Deduction (`POST /api/orders`)
-- [ ] **Backend Walk-in Order Endpoint**
-  - [ ] Mount `POST /api/orders` to handle in-store walk-in POS sales.
-  - [ ] Validate requested items against PostgreSQL stock inside an ACID transaction (`BEGIN` / `COMMIT`).
-  - [ ] Deduct sold quantities from `products.stock_quantity`.
-  - [ ] Insert order record with `order_type: 'walk_in'`, `delivery_type: 'pickup'`, `order_status: 'completed'`, `payment_status: 'paid'`.
-  - [ ] Automatically create sequential invoice record (`INV-...`) in `billings` table marked as `paid`.
-- [ ] **Payment & Cash Calculator Modal**
-  - [ ] On clicking **"Charge ₱..."**, open payment settlement modal:
-    - [ ] **Cash:** Enter Amount Tendered (₱), calculate Change Due automatically. Quick cash shortcut buttons (+₱100, +₱500, +₱1,000, Exact).
-    - [ ] **GCash / Maya:** Input 6-8 digit payment reference number.
-- [ ] **Custom Cashier Discount Control (Client Requirement - Interview 1)**
-  - [ ] Support flexible custom discount inputs: cashier can input arbitrary percentage (`%`) or direct Peso amount (`₱`), honoring store owner's requested flexibility.
-- [ ] **Integrated Repair Ticket Dispatch (Document Section 1.1)**
-  - [ ] When an order includes a Bike Maintenance item, separate **In-Store Parts Cost** (deducted from inventory) and **Labor Fee** (disbursed to mechanic).
-  - [ ] Dispatch `POST /api/repairs` recording customer name, contact number, bike details, assigned mechanic, labor fee, and status (`In Progress`).
-- [ ] **Official Digital Receipt Generation (Replacing Manual Paper Receipts)**
-  - [ ] Populate `#receipt_modal_overlay` with real database Order ID (`ORD-...`), timestamp, itemized breakdown, and cashier name.
-  - [ ] Include official Taurus store policy disclaimer on receipt footer: *"Items non-refundable. 7-day replacement for factory defective items with receipt upon supplier return."* (per Interview 1 & Doc 1.1).
-  - [ ] Support printing receipt via `window.print()` or thermal printer mode.
-  - [ ] Automatically clear cart on clicking "Done & New Transaction".
+- [x] **Backend Walk-in Order Endpoint**
+  - [x] Mount `POST /api/orders/pos` to handle in-store walk-in POS sales.
+  - [x] Validate requested items against PostgreSQL stock inside an ACID transaction (`BEGIN` / `COMMIT`).
+  - [x] Deduct sold quantities from `products.stock_quantity`.
+  - [x] Insert order record with `order_type: 'walk_in'`, `delivery_type: 'pickup'`, `order_status: 'completed'`, `payment_status: 'paid'`.
+  - [x] Automatically create sequential invoice record (`INV-...`) in `billings` table marked as `paid`.
+- [x] **Payment & Cash Calculator Modal**
+  - [x] On clicking **"Charge ₱..."**, open payment settlement modal:
+    - [x] **Cash:** Enter Amount Tendered (₱), calculate Change Due automatically. Quick cash shortcut buttons (+₱100, +₱500, +₱1,000, Exact).
+    - [x] **GCash / Maya:** Input payment reference number.
+- [x] **Custom Cashier Discount Control (Client Requirement - Interview 1)**
+  - [x] Support flexible custom discount inputs: cashier can input arbitrary percentage (`%`) or direct Peso amount (`₱`), honoring store owner's requested flexibility.
+- [x] **Integrated Repair Ticket Dispatch (Document Section 1.1)**
+  - [x] When an order includes a Bike Maintenance item, separate **In-Store Parts Cost** (deducted from inventory) and **Labor Fee** (disbursed to mechanic).
+  - [x] Dispatch `POST /api/repairs` recording customer name, contact number, bike details, assigned mechanic, labor fee, and status (`In Progress`).
+- [x] **Official Digital Receipt Generation (Replacing Manual Paper Receipts)**
+  - [x] Populate `#receipt_modal_overlay` with real database Order ID (`ORD-...`), timestamp, itemized breakdown, and cashier name.
+  - [x] Include official Taurus store policy disclaimer on receipt footer: *"Items non-refundable. 7-day replacement for factory defective items with receipt upon supplier return."* (per Interview 1 & Doc 1.1).
+  - [x] Support printing receipt via `window.print()` or thermal printer mode.
+  - [x] Automatically clear cart on clicking "Done & New Transaction".
 
 ---
 
 ### 📊 Phase 5: Transaction History & Digital Columnar Logbook (`POS-history.html`)
-- [ ] **Digital Sales Ledger (Replacing Physical Columnar Notebook - Doc 1.1)**
-  - [ ] Fetch walk-in orders from `GET /api/orders`.
-  - [ ] Dynamically render `#history_tbody` table rows with real transaction numbers, dates, items count, total, payment method, and status.
-  - [ ] Support daily columnar-style summary view for BIR tax preparation (3-5% tax breakdown per Interview 1).
-- [ ] **Instant Search & Running Total**
-  - [ ] Filter rows in real time by Transaction ID, product name, or payment method.
-  - [ ] Dynamically update **Filtered Total** badge (`#filtered_total_value`) based on displayed rows.
-- [ ] **Reprint Historical Receipts**
-  - [ ] Add "View Receipt" button to each history row.
-  - [ ] Fetch order item breakdown and re-open `#receipt_modal_overlay` to reprint past receipts.
+- [x] **Digital Sales Ledger (Replacing Physical Columnar Notebook - Doc 1.1)**
+  - [x] Fetch walk-in orders from `GET /api/orders/pos`.
+  - [x] Dynamically render `#history_tbody` table rows with real transaction numbers, dates, items count, total, payment method, and status.
+  - [x] Support daily columnar-style summary view for BIR tax preparation (3-5% tax breakdown per Interview 1).
+- [x] **Instant Search & Running Total**
+  - [x] Filter rows in real time by Transaction ID, product name, or payment method.
+  - [x] Dynamically update **Filtered Total** badge (`#filtered_total_value`) based on displayed rows.
+- [x] **Reprint Historical Receipts**
+  - [x] Add "View Receipt" button to each history row.
+  - [x] Fetch order item breakdown and re-open `#receipt_modal_overlay` to reprint past receipts.
 
 ---
 
 ### 🏠 Phase 6: Daily Summary & Cashier Management (`POS-home.html`)
-- [ ] **Real-Time Home Screen Metrics**
-  - [ ] Connect **Daily Summary** card to today's cumulative sales sum from database.
-  - [ ] Connect **Recent Transactions** table to show the 5 latest completed sales.
-- [ ] **Active Cashier Session Sync**
-  - [ ] Display active logged-in cashier name (defaulting to co-owner Russel Lu Caisido per Doc 1.1) across all POS headers.
-  - [ ] Provide staff login / switch cashier modal if session expires.
+- [x] **Real-Time Home Screen Metrics**
+  - [x] Connect **Daily Summary** card to today's cumulative sales sum from database (`GET /api/orders/pos/summary`).
+  - [x] Connect **Recent Transactions** table to show the 5 latest completed sales.
+- [x] **Active Cashier Session Sync**
+  - [x] Display active logged-in cashier name (defaulting to co-owner Russel Lu Caisido per Doc 1.1) across all POS headers.
+  - [x] Provide staff login / switch cashier modal if session expires.
 
 ---
 
 ### 🖨️ Phase 7: Hardware & Thermal Printer Readiness
-- [ ] **Thermal Receipt Print Styling**
-  - [ ] Add `@media print` CSS rules tailored for standard 58mm and 80mm POS receipt roll printers.
-  - [ ] Suppress browser URL headers, footers, and margins during printing.
-- [ ] **Barcode / Scanner Input Listener (Bonus Enhancement)**
-  - [ ] Listen for barcode scanner keystrokes to instantly add scanned SKU items directly into the cart.
+- [x] **Thermal Receipt Print Styling**
+  - [x] Add `@media print` CSS rules tailored for standard 58mm and 80mm POS receipt roll printers.
+  - [x] Suppress browser URL headers, footers, and margins during printing.
+- [x] **Zero Floating Tables & Database Relational Integrity**
+  - [x] Verified all 7 PostgreSQL tables (`users`, `categories`, `products`, `orders`, `order_items`, `billings`, `repairs`) have explicit foreign keys with 0 floating tables.
 
 ---
 

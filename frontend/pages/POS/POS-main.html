@@ -219,341 +219,35 @@
 
                     <!-- category filter pills -->
                     <section class="category_filter_bar" id="category_filter_bar">
-                        <button class="pill_filter_btn active" data-category="all">All</button>
+                        <button class="pill_filter_btn active" data-category="all">All Items</button>
                         <button class="pill_filter_btn" data-category="maintenance" style="color: var(--pos_red); font-weight: 700;">🔧 Maintenance</button>
-                        <button class="pill_filter_btn" data-category="accessories">Accessories</button>
-                        <button class="pill_filter_btn" data-category="bicycle">Bicycle</button>
-                        <button class="pill_filter_btn" data-category="brakes">Brakes</button>
-                        <button class="pill_filter_btn" data-category="cockpit">Cockpit</button>
+                        <button class="pill_filter_btn" data-category="built_bikes">Bicycles</button>
+                        <button class="pill_filter_btn" data-category="frame">Frames</button>
+                        <button class="pill_filter_btn" data-category="fork">Forks &amp; Suspension</button>
                         <button class="pill_filter_btn" data-category="drivetrain">Drivetrain</button>
-                        <button class="pill_filter_btn" data-category="headset">Headset</button>
+                        <button class="pill_filter_btn" data-category="chain">Chains</button>
                         <button class="pill_filter_btn" data-category="pedals">Pedals</button>
-                        <button class="pill_filter_btn" data-category="saddle">Saddle</button>
-                        <button class="pill_filter_btn" data-category="safety">Safety</button>
-                        <button class="pill_filter_btn" data-category="suspension">Suspension</button>
+                        <button class="pill_filter_btn" data-category="rims">Wheelsets &amp; Rims</button>
+                        <button class="pill_filter_btn" data-category="hubs">Hubs</button>
                         <button class="pill_filter_btn" data-category="tires">Tires</button>
-                        <button class="pill_filter_btn" data-category="tools">Tools</button>
+                        <button class="pill_filter_btn" data-category="cockpit">Cockpit &amp; Bars</button>
+                        <button class="pill_filter_btn" data-category="saddle">Saddles &amp; Grips</button>
+                        <button class="pill_filter_btn" data-category="upgrade_kit">Upgrade Kits</button>
                     </section>
 
                     <!-- products info row -->
                     <div class="products_info_row">
-                        <span class="products_count_text" id="products_count_label">ALL PRODUCTS &mdash; 12 ITEMS</span>
-                        <span class="helper_hint_text">Click a card to select quantity</span>
+                        <span class="products_count_text" id="products_count_label">ALL PRODUCTS &mdash; LOADING...</span>
+                        <span class="helper_hint_text">Click any product card to add to order</span>
                     </div>
 
-                    <!-- product grid -->
+                    <!-- dynamic product grid -->
                     <section class="pos_product_grid" id="pos_product_grid">
-
-                        <!-- product 1 -->
-                        <div class="pos_product_card" data-sku="SH-XT-001" data-name="Shimano Deore XT Derailleur" data-price="3850" data-category="drivetrain">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                                </div>
-                                <span class="product_category_badge">DRIVETRAIN</span>
-                            </div>
-                            <span class="product_sku_text">SH-XT-001</span>
-                            <h3 class="product_title_text">Shimano Deore XT Derailleur</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;3,850.00</span>
-                                <span class="product_stock_green">4 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
+                        <div class="pos_catalog_loader" id="catalog_loader" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--pos_text_muted);">
+                            <div class="pos_spinner" style="margin: 0 auto 16px; width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: var(--pos_red); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                            <div style="font-weight: 700; font-size: 16px; color: var(--pos_text_dark);">Loading Live Taurus Catalog...</div>
+                            <div style="font-size: 13px; margin-top: 6px; color: var(--pos_text_muted);">Retrieving 150 items directly from PostgreSQL</div>
                         </div>
-
-                        <!-- product 2 -->
-                        <div class="pos_product_card" data-sku="MX-MIN-002" data-name="Maxxis Minion DHF 29x2.5" data-price="2200" data-category="tires">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7" stroke="#0284c7"><circle cx="12" cy="12" r="9"></circle></svg>
-                                </div>
-                                <span class="product_category_badge">TIRES</span>
-                            </div>
-                            <span class="product_sku_text">MX-MIN-002</span>
-                            <h3 class="product_title_text">Maxxis Minion DHF 29&times;2.5</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;2,200.00</span>
-                                <span class="product_stock_green">8 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 3 -->
-                        <div class="pos_product_card" data-sku="RS-PK-003" data-name="RockShox Pike Ultimate Fork" data-price="28500" data-category="suspension">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                                </div>
-                                <span class="product_category_badge">SUSPENSION</span>
-                            </div>
-                            <span class="product_sku_text">RS-PK-003</span>
-                            <h3 class="product_title_text">RockShox Pike Ultimate Fork</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;28,500.00</span>
-                                <span class="product_stock_green">2 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 4 -->
-                        <div class="pos_product_card" data-sku="SR-GX-004" data-name="SRAM Eagle GX Cassette" data-price="4100" data-category="drivetrain">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                                </div>
-                                <span class="product_category_badge">DRIVETRAIN</span>
-                            </div>
-                            <span class="product_sku_text">SR-GX-004</span>
-                            <h3 class="product_title_text">SRAM Eagle GX Cassette</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;4,100.00</span>
-                                <span class="product_stock_green">6 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 5 -->
-                        <div class="pos_product_card" data-sku="ER-GP5-005" data-name="Ergon GP5 Grips" data-price="950" data-category="cockpit">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="8.5" r="1.5"></circle><circle cx="8.5" cy="15.5" r="1.5"></circle><circle cx="15.5" cy="15.5" r="1.5"></circle></svg>
-                                </div>
-                                <span class="product_category_badge">COCKPIT</span>
-                            </div>
-                            <span class="product_sku_text">ER-GP5-005</span>
-                            <h3 class="product_title_text">Ergon GP5 Grips</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;950.00</span>
-                                <span class="product_stock_green">12 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 6 -->
-                        <div class="pos_product_card" data-sku="GI-ATX-006" data-name="Giant ATX 26 Mountain Bike" data-price="14500" data-category="bicycle">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l4-3 3 5h4"></path></svg>
-                                </div>
-                                <span class="product_category_badge">BICYCLE</span>
-                            </div>
-                            <span class="product_sku_text">GI-ATX-006</span>
-                            <h3 class="product_title_text">Giant ATX 26" Mountain Bike</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;14,500.00</span>
-                                <span class="product_stock_green">3 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 7 -->
-                        <div class="pos_product_card" data-sku="TR-M5-007" data-name="Trek Marlin 5 27.5" data-price="22000" data-category="bicycle">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l4-3 3 5h4"></path></svg>
-                                </div>
-                                <span class="product_category_badge">BICYCLE</span>
-                            </div>
-                            <span class="product_sku_text">TR-M5-007</span>
-                            <h3 class="product_title_text">Trek Marlin 5 27.5"</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;22,000.00</span>
-                                <span class="product_stock_green">2 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 8 -->
-                        <div class="pos_product_card" data-sku="SH-BL-008" data-name="Shimano BL-M315 Brake Lever Set" data-price="1200" data-category="brakes">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ea580c" stroke="#ea580c"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon></svg>
-                                </div>
-                                <span class="product_category_badge">BRAKES</span>
-                            </div>
-                            <span class="product_sku_text">SH-BL-008</span>
-                            <h3 class="product_title_text">Shimano BL-M315 Brake Lever Set</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;1,200.00</span>
-                                <span class="product_stock_green">9 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 9 -->
-                        <div class="pos_product_card" data-sku="CO-RK-009" data-name="Continental Race King 29x2.2" data-price="1750" data-category="tires">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7" stroke="#0284c7"><circle cx="12" cy="12" r="9"></circle></svg>
-                                </div>
-                                <span class="product_category_badge">TIRES</span>
-                            </div>
-                            <span class="product_sku_text">CO-RK-009</span>
-                            <h3 class="product_title_text">Continental Race King 29&times;2.2</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;1,750.00</span>
-                                <span class="product_stock_green">5 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 10 -->
-                        <div class="pos_product_card" data-sku="WB-VT-010" data-name="WTB Volt Saddle" data-price="1600" data-category="saddle">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"></path><path d="M5 5h14v4H5z"></path></svg>
-                                </div>
-                                <span class="product_category_badge">SADDLE</span>
-                            </div>
-                            <span class="product_sku_text">WB-VT-010</span>
-                            <h3 class="product_title_text">WTB Volt Saddle</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;1,600.00</span>
-                                <span class="product_stock_green">7 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 11 -->
-                        <div class="pos_product_card" data-sku="CC-40-011" data-name="Cane Creek 40 Headset" data-price="2800" data-category="headset">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="4" rx="1"></rect><rect x="8" y="8" width="8" height="8"></rect><rect x="6" y="16" width="12" height="4" rx="1"></rect></svg>
-                                </div>
-                                <span class="product_category_badge">HEADSET</span>
-                            </div>
-                            <span class="product_sku_text">CC-40-011</span>
-                            <h3 class="product_title_text">Cane Creek 40 Headset</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;2,800.00</span>
-                                <span class="product_stock_green">3 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- product 12 -->
-                        <div class="pos_product_card" data-sku="KM-X11-012" data-name="KMC X11 Chain" data-price="680" data-category="drivetrain">
-                            <div class="product_visual_box">
-                                <div class="product_category_icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                                </div>
-                                <span class="product_category_badge">DRIVETRAIN</span>
-                            </div>
-                            <span class="product_sku_text">KM-X11-012</span>
-                            <h3 class="product_title_text">KMC X11 Chain</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;680.00</span>
-                                <span class="product_stock_green">15 in stock</span>
-                            </div>
-                            <button class="btn_add_to_cart">+ Add to Cart</button>
-                        </div>
-
-                        <!-- maintenance service 1 -->
-                        <div class="pos_product_card card_service_item" data-sku="SRV-TUNE-001" data-name="Full Bike Tune-Up" data-price="750" data-category="maintenance" data-is-service="true">
-                            <div class="product_visual_box" style="background-color: #fff7ed;">
-                                <div class="product_category_icon" style="color: #ea580c;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                                    </svg>
-                                </div>
-                                <span class="product_category_badge badge_cat_service">SERVICE</span>
-                            </div>
-                            <span class="product_sku_text">SRV-TUNE-001</span>
-                            <h3 class="product_title_text">Full Bike Tune-Up</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;750.00</span>
-                                <span class="product_stock_green">Service Ready</span>
-                            </div>
-                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
-                        </div>
-
-                        <!-- maintenance service 2 -->
-                        <div class="pos_product_card card_service_item" data-sku="SRV-BLEED-002" data-name="Hydraulic Brake Bleeding" data-price="450" data-category="maintenance" data-is-service="true">
-                            <div class="product_visual_box" style="background-color: #fff7ed;">
-                                <div class="product_category_icon" style="color: #ea580c;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-                                    </svg>
-                                </div>
-                                <span class="product_category_badge badge_cat_service">SERVICE</span>
-                            </div>
-                            <span class="product_sku_text">SRV-BLEED-002</span>
-                            <h3 class="product_title_text">Hydraulic Brake Bleeding</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;450.00</span>
-                                <span class="product_stock_green">Service Ready</span>
-                            </div>
-                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
-                        </div>
-
-                        <!-- maintenance service 3 -->
-                        <div class="pos_product_card card_service_item" data-sku="SRV-DRIVE-003" data-name="Drivetrain Clean & Tune" data-price="500" data-category="maintenance" data-is-service="true">
-                            <div class="product_visual_box" style="background-color: #fff7ed;">
-                                <div class="product_category_icon" style="color: #ea580c;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                                </div>
-                                <span class="product_category_badge badge_cat_service">SERVICE</span>
-                            </div>
-                            <span class="product_sku_text">SRV-DRIVE-003</span>
-                            <h3 class="product_title_text">Drivetrain Clean &amp; Tune</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;500.00</span>
-                                <span class="product_stock_green">Service Ready</span>
-                            </div>
-                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
-                        </div>
-
-                        <!-- maintenance service 4 -->
-                        <div class="pos_product_card card_service_item" data-sku="SRV-WHL-004" data-name="Wheel Truing & Spoke Tension" data-price="350" data-category="maintenance" data-is-service="true">
-                            <div class="product_visual_box" style="background-color: #fff7ed;">
-                                <div class="product_category_icon" style="color: #ea580c;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M3 12h18"></path></svg>
-                                </div>
-                                <span class="product_category_badge badge_cat_service">SERVICE</span>
-                            </div>
-                            <span class="product_sku_text">SRV-WHL-004</span>
-                            <h3 class="product_title_text">Wheel Truing &amp; Spoke Tension</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;350.00</span>
-                                <span class="product_stock_green">Service Ready</span>
-                            </div>
-                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
-                        </div>
-
-                        <!-- maintenance service 5 -->
-                        <div class="pos_product_card card_service_item" data-sku="SRV-FLAT-005" data-name="Inner Tube & Flat Tire Repair" data-price="150" data-category="maintenance" data-is-service="true">
-                            <div class="product_visual_box" style="background-color: #fff7ed;">
-                                <div class="product_category_icon" style="color: #ea580c;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3"></circle></svg>
-                                </div>
-                                <span class="product_category_badge badge_cat_service">SERVICE</span>
-                            </div>
-                            <span class="product_sku_text">SRV-FLAT-005</span>
-                            <h3 class="product_title_text">Inner Tube &amp; Flat Tire Repair</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;150.00</span>
-                                <span class="product_stock_green">Service Ready</span>
-                            </div>
-                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
-                        </div>
-
-                        <!-- maintenance service 6 -->
-                        <div class="pos_product_card card_service_item" data-sku="SRV-FORK-006" data-name="Fork & Suspension Overhaul" data-price="1200" data-category="maintenance" data-is-service="true">
-                            <div class="product_visual_box" style="background-color: #fff7ed;">
-                                <div class="product_category_icon" style="color: #ea580c;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                                </div>
-                                <span class="product_category_badge badge_cat_service">SERVICE</span>
-                            </div>
-                            <span class="product_sku_text">SRV-FORK-006</span>
-                            <h3 class="product_title_text">Fork &amp; Suspension Overhaul</h3>
-                            <div class="product_price_stock_row">
-                                <span class="product_price_red">&#8369;1,200.00</span>
-                                <span class="product_stock_green">Service Ready</span>
-                            </div>
-                            <button class="btn_add_to_cart btn_service_pick">+ Add Service</button>
-                        </div>
-
                     </section>
 
                 </div>
@@ -609,22 +303,53 @@
 
     </div>
 
-    <!-- discount modal -->
+    <!-- custom discount modal (Promo codes & Client Interview custom cashier discounts) -->
     <div class="pos_modal_overlay" id="discount_modal_overlay">
-        <div class="pos_modal_box" style="max-width: 420px;">
+        <div class="modal_box" style="max-width: 440px;">
             <div class="modal_header">
-                <h3 class="modal_title">Apply Order Discount</h3>
-                <button class="btn_close_modal" id="btn_close_discount_modal">&times;</button>
+                <h3 class="modal_title">Discount Settings</h3>
+                <button class="modal_close_btn" id="btn_close_discount_modal">&times;</button>
             </div>
             <div class="modal_body">
-                <div class="form_group">
-                    <label class="form_label" for="discount_code_input">Discount Promo Code</label>
-                    <input type="text" class="form_input" id="discount_code_input" placeholder="e.g. TAURUS10, VIP50, SAVE100">
+                <div class="payment_tabs_row">
+                    <button type="button" class="payment_tab_btn active" id="tab_promo_code">Promo Code</button>
+                    <button type="button" class="payment_tab_btn" id="tab_custom_discount">Cashier Custom</button>
                 </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="maint_preset_pill btn_promo_sample" data-code="TAURUS10">TAURUS10 (10% Off)</button>
-                    <button type="button" class="maint_preset_pill btn_promo_sample" data-code="VIP50">VIP50 (&#8369;50 Off)</button>
-                    <button type="button" class="maint_preset_pill btn_promo_sample" data-code="SAVE100">SAVE100 (&#8369;100 Off)</button>
+
+                <!-- Promo code view -->
+                <div id="view_promo_code">
+                    <div class="form_group">
+                        <label class="form_label" for="discount_code_input">Preset Promo Code</label>
+                        <input type="text" class="form_input" id="discount_code_input" placeholder="e.g. TAURUS10, VIP50, SAVE100">
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+                        <button type="button" class="maint_preset_pill btn_promo_sample" data-code="TAURUS10">TAURUS10 (10% Off)</button>
+                        <button type="button" class="maint_preset_pill btn_promo_sample" data-code="VIP50">VIP50 (₱50 Off)</button>
+                        <button type="button" class="maint_preset_pill btn_promo_sample" data-code="SAVE100">SAVE100 (₱100 Off)</button>
+                    </div>
+                </div>
+
+                <!-- Custom cashier discount view -->
+                <div id="view_custom_discount" style="display: none;">
+                    <div class="form_group">
+                        <label class="form_label">Discount Type</label>
+                        <div style="display: flex; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                                <input type="radio" name="custom_discount_type" value="percent" checked id="radio_discount_percent"> Percentage (%)
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                                <input type="radio" name="custom_discount_type" value="amount" id="radio_discount_amount"> Exact Amount (₱)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="custom_discount_value">Discount Value</label>
+                        <input type="number" class="form_input" id="custom_discount_value" placeholder="e.g. 5 for 5% or 150 for ₱150" min="0" step="any">
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="custom_discount_reason">Reason / Note</label>
+                        <input type="text" class="form_input" id="custom_discount_reason" placeholder="e.g. Suki / Bulk purchase / Concession">
+                    </div>
                 </div>
             </div>
             <div class="modal_footer">
@@ -634,14 +359,91 @@
         </div>
     </div>
 
+    <!-- payment settlement modal -->
+    <div class="pos_modal_overlay" id="payment_modal_overlay">
+        <div class="modal_box" style="max-width: 480px;">
+            <div class="modal_header">
+                <h3 class="modal_title">Payment Settlement</h3>
+                <button class="modal_close_btn" id="btn_close_payment_modal">&times;</button>
+            </div>
+            <div class="modal_body">
+                <!-- amount to pay banner -->
+                <div class="settlement_amount_banner">
+                    <div>
+                        <div class="settlement_label">Grand Total Due</div>
+                        <div style="font-size: 12px; color: #cbd5e1;" id="pay_modal_items_count">0 items in order</div>
+                    </div>
+                    <div class="settlement_val" id="pay_modal_total_amount">₱0.00</div>
+                </div>
+
+                <!-- customer details -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form_group">
+                        <label class="form_label" for="pay_customer_name">Customer Name</label>
+                        <input type="text" class="form_input" id="pay_customer_name" value="Walk-in Customer">
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="pay_customer_phone">Phone (Optional)</label>
+                        <input type="tel" class="form_input" id="pay_customer_phone" placeholder="09XX-XXX-XXXX">
+                    </div>
+                </div>
+
+                <!-- payment method tabs -->
+                <div class="payment_tabs_row">
+                    <button type="button" class="payment_tab_btn active" id="tab_method_cash">
+                        💵 Cash
+                    </button>
+                    <button type="button" class="payment_tab_btn" id="tab_method_gcash">
+                        📱 GCash / Maya
+                    </button>
+                </div>
+
+                <!-- cash payment fields -->
+                <div id="view_payment_cash">
+                    <div class="form_group">
+                        <label class="form_label" for="tendered_amount_input">Amount Tendered (₱)</label>
+                        <input type="number" class="form_input" id="tendered_amount_input" placeholder="0.00" min="0" step="any" style="font-size: 18px; font-weight: 700; color: var(--pos_text_dark);">
+                    </div>
+                    <div class="quick_cash_grid" style="margin-bottom: 12px;">
+                        <button type="button" class="btn_quick_cash" id="btn_quick_exact">Exact</button>
+                        <button type="button" class="btn_quick_cash" id="btn_quick_plus100">+₱100</button>
+                        <button type="button" class="btn_quick_cash" id="btn_quick_plus500">+₱500</button>
+                        <button type="button" class="btn_quick_cash" id="btn_quick_plus1000">+₱1,000</button>
+                    </div>
+                    <div class="change_due_box">
+                        <span class="change_due_label">Change Due</span>
+                        <span class="change_due_value" id="change_due_display">₱0.00</span>
+                    </div>
+                </div>
+
+                <!-- gcash / digital payment fields -->
+                <div id="view_payment_gcash" style="display: none;">
+                    <div class="form_group">
+                        <label class="form_label" for="gcash_ref_input">GCash / Maya Reference Number</label>
+                        <input type="text" class="form_input" id="gcash_ref_input" placeholder="e.g. 100982348712" maxlength="20">
+                    </div>
+                    <div style="font-size: 12px; color: var(--pos_text_muted); background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px dashed var(--pos_border);">
+                        ℹ️ Scan Taurus Store QR at counter and verify customer SMS receipt before completing transaction.
+                    </div>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_modal_cancel" id="btn_cancel_payment">Cancel</button>
+                <button type="button" class="btn_modal_submit" id="btn_confirm_payment">
+                    Complete &amp; Print Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- receipt & checkout success modal -->
     <div class="pos_modal_overlay" id="receipt_modal_overlay">
         <div class="receipt_box">
             <div class="receipt_header">
-                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="receipt_logo">
+                <img src="/frontend/Pictures/logo.png" alt="Taurus Logo" class="receipt_logo" onerror="this.src='/frontend/Pictures/logo.jpg'">
                 <h2 class="receipt_brand_name">TAURUS BIKE SHOP</h2>
                 <div class="receipt_store_meta">
-                    <span>Main Branch &bull; Sales &amp; Workshop Service</span><br>
+                    <span>Main Branch &bull; Bicycle Sales &amp; Workshop Service</span><br>
                     <span>Contact: +63 912 345 6789 &bull; POS Terminal #1</span>
                 </div>
             </div>
@@ -649,9 +451,11 @@
             <div class="receipt_divider"></div>
 
             <div class="receipt_info_grid">
-                <div><strong>Transaction:</strong> <span id="rcpt_txn_id">TXN-20261003-001</span></div>
-                <div><strong>Date:</strong> <span id="rcpt_date_time">Oct 03, 2026</span></div>
+                <div><strong>Order:</strong> <span id="rcpt_txn_id">ORD-POS-...</span></div>
+                <div><strong>Invoice:</strong> <span id="rcpt_inv_id">INV-POS-...</span></div>
+                <div><strong>Date:</strong> <span id="rcpt_date_time">Oct 06, 2026</span></div>
                 <div><strong>Cashier:</strong> <span id="rcpt_cashier">Russel Lu Caisido</span></div>
+                <div><strong>Customer:</strong> <span id="rcpt_customer">Walk-in</span></div>
                 <div><strong>Payment:</strong> <span id="rcpt_method_badge">Cash</span></div>
             </div>
 
@@ -675,16 +479,31 @@
             <div class="receipt_totals_area">
                 <div class="receipt_total_row">
                     <span style="color: var(--pos_text_muted);">Subtotal:</span>
-                    <strong id="rcpt_subtotal">&#8369;0.00</strong>
+                    <strong id="rcpt_subtotal">₱0.00</strong>
                 </div>
                 <div class="receipt_total_row" id="rcpt_discount_row" style="display: none; color: #16a34a;">
-                    <span>Discount:</span>
-                    <strong id="rcpt_discount">-&#8369;0.00</strong>
+                    <span id="rcpt_discount_label">Discount:</span>
+                    <strong id="rcpt_discount">-₱0.00</strong>
                 </div>
                 <div class="receipt_total_row receipt_grand_total">
                     <span>Grand Total:</span>
-                    <span id="rcpt_grand_total">&#8369;0.00</span>
+                    <span id="rcpt_grand_total">₱0.00</span>
                 </div>
+                <div class="receipt_total_row" id="rcpt_tendered_row" style="color: var(--pos_text_muted); font-size: 12px; margin-top: 4px;">
+                    <span>Amount Tendered:</span>
+                    <span id="rcpt_tendered_val">₱0.00</span>
+                </div>
+                <div class="receipt_total_row" id="rcpt_change_row" style="color: #047857; font-size: 12px; font-weight: 700;">
+                    <span>Change:</span>
+                    <span id="rcpt_change_val">₱0.00</span>
+                </div>
+            </div>
+
+            <!-- official store non-refundable policy -->
+            <div class="receipt_footer_policy" style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--pos_border); font-size: 11px; text-align: center; color: var(--pos_text_muted); line-height: 1.45;">
+                <strong>IMPORTANT STORE POLICY:</strong><br>
+                Items non-refundable. 7-day replacement for factory defective items with receipt upon supplier return.<br>
+                <em>Thank you for choosing Taurus Bike Shop!</em>
             </div>
 
             <div class="receipt_actions_row">
