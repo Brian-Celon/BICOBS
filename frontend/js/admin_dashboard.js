@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     loadDashboardSummary();
+    initDashboardAutoSKU();
 });
 
 async function loadDashboardSummary() {
@@ -152,3 +153,100 @@ function formatDate(dateStr) {
         return dateStr;
     }
 }
+
+// Auto-SKU & Dashboard Add Product Controller
+let dashboardAutoSKURefresh = null;
+
+function initDashboardAutoSKU() {
+    if (typeof attachAutoSKUGenerator === 'function') {
+        dashboardAutoSKURefresh = attachAutoSKUGenerator({
+            nameInputId: "dash_product_name",
+            catInputId: "dash_product_category",
+            skuInputId: "dash_product_sku",
+            regenBtnId: "regen_dash_product_sku_btn"
+        });
+    }
+}
+
+function openDashboardAddProductModal() {
+    if (typeof openModal === 'function') {
+        openModal("add_product_modal");
+    }
+    const skuInput = document.getElementById("dash_product_sku");
+    if (skuInput && (!skuInput.value || skuInput.value.trim() === '')) {
+        const cat = document.getElementById("dash_product_category")?.value || "";
+        const name = document.getElementById("dash_product_name")?.value || "";
+        if (typeof generateAutoSKU === 'function') {
+            skuInput.value = generateAutoSKU(cat, name);
+        }
+    }
+}
+window.openDashboardAddProductModal = openDashboardAddProductModal;
+
+async function handleDashboardAddProduct(e) {
+    e.preventDefault();
+
+    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    if (!token) {
+        alert("You must be logged in as an administrator.");
+        return;
+    }
+
+    const name = (document.getElementById("dash_product_name")?.value || "").trim();
+    const sku = (document.getElementById("dash_product_sku")?.value || "").trim();
+    const category = document.getElementById("dash_product_category")?.value || "mountain_bikes";
+    const price = parseFloat(document.getElementById("dash_product_price")?.value || 0);
+    const stock = parseInt(document.getElementById("dash_product_stock")?.value || 0, 10);
+
+    if (!name || price <= 0) {
+        alert("Please provide a valid product name and price.");
+        return;
+    }
+
+    const submitBtn = e.target.querySelector("button[type='submit']");
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    }
+
+    try {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+        const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: name,
+                sku: sku || undefined,
+                category: category,
+                price: price,
+                stock_quantity: stock,
+                image_url: "/frontend/Pictures/placeholder.png"
+            })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.status === "success") {
+            if (typeof closeModal === 'function') closeModal("add_product_modal");
+            if (typeof showToast === 'function') showToast(`Product "${name}" added to catalog!`, true);
+            e.target.reset();
+            if (typeof dashboardAutoSKURefresh === 'function') {
+                dashboardAutoSKURefresh(true);
+            }
+            await loadDashboardSummary();
+        } else {
+            alert(data.message || "Failed to add product");
+        }
+    } catch (err) {
+        console.error("Dashboard create product error:", err);
+        alert("Server error when adding product.");
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Save Product';
+        }
+    }
+}
+window.handleDashboardAddProduct = handleDashboardAddProduct;

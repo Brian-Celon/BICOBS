@@ -21,6 +21,36 @@ const formatProduct = (row) => ({
   updatedAt: row.updated_at
 });
 
+// Helper to auto-generate standard Taurus SKU code if omitted
+const generateBackendSKU = (category, productName) => {
+  const cat = (category || '').toLowerCase().trim();
+  let dept = 'GEN';
+  if (['bicycles', 'built_bikes', 'mountain_bikes', 'road_bikes', 'gravel_bikes', 'bmx_urban', 'folding_commuter'].includes(cat)) {
+    dept = 'BIC';
+  } else if (['frame', 'frames', 'fork', 'handle_bar', 'stem', 'chain', 'upgrade_kit', 'gears', 'pedals', 'brakes', 'components', 'drivetrain'].includes(cat)) {
+    dept = 'SPA';
+  } else if (['tires', 'rims', 'rims_tires', 'hubs', 'wheelset'].includes(cat)) {
+    dept = 'WHL';
+  } else if (['saddle', 'handlebars_saddles', 'handle_grip', 'accessories', 'grips'].includes(cat)) {
+    dept = 'ACC';
+  } else if (['apparel', 'shoes', 'clothing', 'helmet'].includes(cat)) {
+    dept = 'APP';
+  }
+
+  let nameCode = 'PRD';
+  if (productName && typeof productName === 'string') {
+    const cleaned = productName.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    if (cleaned.length >= 3) {
+      nameCode = cleaned.substring(0, Math.min(cleaned.length, 6));
+    } else if (cleaned.length > 0) {
+      nameCode = cleaned.padEnd(3, 'X');
+    }
+  }
+
+  const rand = Math.floor(100 + Math.random() * 900);
+  return `TBS-${dept}-${nameCode}-${rand}`;
+};
+
 // @desc    Get all products (supports category filter, search, availability)
 // @route   GET /api/products
 // @access  Public
@@ -141,6 +171,7 @@ const createProduct = async (req, res, next) => {
     const finalImage = imageUrl || image_url || '';
     const finalAvailable = isAvailable !== undefined ? isAvailable : (is_available !== undefined ? is_available : true);
     const finalFeatured = isFeatured !== undefined ? isFeatured : (is_featured !== undefined ? is_featured : false);
+    const finalSku = (sku && typeof sku === 'string' && sku.trim().length > 0) ? sku.trim() : generateBackendSKU(category, name);
 
     if (!name || !category || price === undefined) {
       return res.status(400).json({
@@ -161,7 +192,7 @@ const createProduct = async (req, res, next) => {
       category.toLowerCase(),
       parseFloat(price),
       parseInt(finalStock, 10),
-      sku || null,
+      finalSku,
       finalImage,
       finalAvailable,
       finalFeatured

@@ -50,7 +50,36 @@ let currentSort = "default";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadAdminProducts();
+    initProductAutoSKU();
 });
+
+let productAutoSKURefresh = null;
+
+function initProductAutoSKU() {
+    if (typeof attachAutoSKUGenerator === 'function') {
+        productAutoSKURefresh = attachAutoSKUGenerator({
+            nameInputId: "new_product_title",
+            catInputId: "new_product_category",
+            skuInputId: "new_product_sku",
+            regenBtnId: "regen_new_product_sku_btn"
+        });
+    }
+}
+
+function openAddProductModal() {
+    if (typeof openModal === 'function') {
+        openModal("add_product_modal");
+    }
+    const skuInput = document.getElementById("new_product_sku");
+    if (skuInput && (!skuInput.value || skuInput.value.trim() === '')) {
+        const cat = document.getElementById("new_product_category")?.value || "";
+        const name = document.getElementById("new_product_title")?.value || "";
+        if (typeof generateAutoSKU === 'function') {
+            skuInput.value = generateAutoSKU(cat, name);
+        }
+    }
+}
+window.openAddProductModal = openAddProductModal;
 
 // Load live products from backend API
 async function loadAdminProducts() {
@@ -390,6 +419,9 @@ async function handleAddProductSubmit(e) {
             if (typeof showToast === 'function') showToast(`Product "${title}" added to catalog!`, true);
             e.target.reset();
             resetProductImage();
+            if (typeof productAutoSKURefresh === 'function') {
+                productAutoSKURefresh(true);
+            }
             await loadAdminProducts();
         } else {
             alert(data.message || "Failed to create product");
