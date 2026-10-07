@@ -225,7 +225,14 @@ function renderOrdersTable() {
                     <span style="font-size: 12px; font-weight: 600; color: #334155;">${paymentMethod}</span>
                     <span style="display: block; font-size: 10px; text-transform: uppercase; font-weight: 700; color: ${paymentStatus === 'paid' ? '#16a34a' : '#d97706'};">${paymentStatus}</span>
                 </td>
-                <td class="order_status_cell">${statusBadge}</td>
+                <td class="order_status_cell">
+                    ${statusBadge}
+                    ${orderStatus.toLowerCase() === 'declined' ? `
+                        <div style="font-size: 11px; color: #991b1b; margin-top: 3px; font-weight: 500;">
+                            <i class="fas fa-info-circle"></i> ${escapeHtml(order.declineReason || order.decline_reason || 'Payment has not been received')}
+                        </div>
+                    ` : ''}
+                </td>
                 <td class="cell_amount" style="font-weight: 700; color: #0f172a;">₱${total.toLocaleString()}</td>
                 <td>
                     <div class="table_actions_cell">
