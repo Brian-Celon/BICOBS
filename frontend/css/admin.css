@@ -5,6 +5,7 @@
     --primary_red: #b82828;
     --dark_red: #941b1b;
     --nav-height: 72px;
+    --font_main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* css reset and font configuration for taurOS admin panel */
@@ -12,7 +13,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font_main);
 }
 
 /* html and body root properties for full viewport height */
@@ -23,6 +24,7 @@ html, body {
     padding: 0;
     background-color: #f1f4f9;
     color: #1e293b;
+    font-family: var(--font_main);
     overflow: hidden;
 }
 
@@ -31,6 +33,11 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font-family: var(--font_main);
+}
+
+button, input, select, textarea {
+    font-family: inherit;
 }
 
 /* top navigation bar spanning header */
@@ -48,6 +55,12 @@ body {
     position: sticky;
     top: 0;
     z-index: 1200;
+    font-family: var(--font_main);
+}
+
+.admin_top_navbar,
+.admin_top_navbar * {
+    font-family: var(--font_main);
 }
 
 /* left container of top navbar holding brand and mobile menu */
@@ -82,11 +95,11 @@ body {
 
 /* brand logo text title */
 .top_nav_brand_title {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: #ffffff;
+    font-family: var(--font_main) !important;
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px !important;
+    color: #ffffff !important;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -1887,7 +1900,7 @@ input:checked + .slider::before {
         padding: 0 12px;
     }
     .top_nav_brand_title {
-        font-size: 20px;
+        font-size: 20px !important;
     }
     .admin_profile_details {
         display: none;
@@ -2000,11 +2013,7 @@ input:checked + .slider::before {
 /* Extra Small Mobile Devices (max-width: 380px) */
 @media screen and (max-width: 380px) {
     .top_nav_brand_title {
-        font-size: 15px;
-    }
-    .top_nav_logo_box {
-        width: 30px;
-        height: 30px;
+        font-size: 18px !important;
     }
     .admin_profile_avatar {
         width: 30px;
