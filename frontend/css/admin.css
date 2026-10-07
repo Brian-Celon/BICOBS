@@ -1448,14 +1448,49 @@ body {
     font-size: 13px;
     color: #1e293b;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     background-color: #ffffff;
+    box-sizing: border-box;
 }
 
-/* form input focus */
-.form_input:focus {
+/* form dropdown select matching input dimensions and styling */
+.form_select,
+select.form_input {
+    width: 100%;
+    height: 42px;
+    padding: 8px 36px 8px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+    outline: none;
+    cursor: pointer;
+    background-color: #ffffff;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2364748b' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* form input & select focus */
+.form_input:focus,
+.form_select:focus,
+select.form_input:focus {
     border-color: #b91c1c;
     box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+.form_select:disabled,
+select.form_input:disabled {
+    background-color: #f1f5f9;
+    cursor: not-allowed;
+    color: #94a3b8;
 }
 
 /* toggle preference item */
