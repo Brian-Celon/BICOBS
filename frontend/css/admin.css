@@ -1,3 +1,12 @@
+/* import Inter font matching customer web version */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    --primary_red: #b82828;
+    --dark_red: #941b1b;
+    --nav-height: 72px;
+}
+
 /* css reset and font configuration for taurOS admin panel */
 * {
     margin: 0;
@@ -27,14 +36,14 @@ body {
 /* top navigation bar spanning header */
 .admin_top_navbar {
     width: 100%;
-    height: 56px;
-    background: linear-gradient(90deg, #841822 0%, #9b1c26 60%, #a8202b 100%);
+    height: var(--nav-height);
+    background-color: var(--primary_red);
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 0 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     flex-shrink: 0;
     position: sticky;
     top: 0;
@@ -45,7 +54,7 @@ body {
 .top_nav_left {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
 }
 
 /* mobile sidebar drawer toggle button */
@@ -63,59 +72,69 @@ body {
 
 /* mobile toggle button hover effect */
 .sidebar_toggle_btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.18);
 }
 
 /* logo container holding taurus bike emblem */
 .top_nav_logo_box {
-    width: 36px;
-    height: 36px;
-    background-color: #ffffff;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    border: 2px solid #ffffff;
+    flex-shrink: 0;
 }
 
 /* brand logo image */
 .top_nav_logo_img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
 }
 
 /* fallback icon if logo image is not found */
 .top_nav_logo_fallback {
-    color: #9b1c26;
-    font-size: 18px;
+    color: #ffffff;
+    font-size: 24px;
     display: none;
 }
 
 /* brand logo text title */
 .top_nav_brand_title {
-    font-size: 20px;
-    font-weight: 700;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
     color: #ffffff;
-    letter-spacing: 0.5px;
     text-decoration: none;
     display: flex;
     align-items: center;
+    line-height: 1;
+    transition: opacity 0.2s ease;
+}
+
+.top_nav_brand_title:hover {
+    opacity: 0.92;
 }
 
 /* right area of top navbar holding search and user pill */
 .top_nav_right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
 }
 
 /* search input wrapper container */
 .top_search_container {
     position: relative;
+    display: flex;
+    align-items: center;
     width: 280px;
+    transition: width 0.25s ease;
+}
+
+.top_search_container:focus-within {
+    width: 320px;
 }
 
 /* search magnifying glass icon */
@@ -127,26 +146,33 @@ body {
     color: #94a3b8;
     font-size: 14px;
     pointer-events: none;
+    z-index: 2;
 }
 
 /* search text input element */
 .top_search_input {
     width: 100%;
     height: 38px;
-    padding: 8px 14px 8px 38px;
+    padding: 8px 16px 8px 38px;
     background-color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 20px;
     font-size: 13px;
     color: #1e293b;
     outline: none;
     transition: all 0.2s ease;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.top_search_input::placeholder {
+    color: #94a3b8;
 }
 
 /* search input focus state */
 .top_search_input:focus {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-    width: 320px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.12);
+    border-color: #ffffff;
 }
 
 /* top notifications bell button */
@@ -167,7 +193,7 @@ body {
 
 /* top notifications bell hover effect */
 .top_notification_btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.18);
 }
 
 /* notification red indicator badge */
@@ -178,7 +204,7 @@ body {
     width: 8px;
     height: 8px;
     background-color: #ef4444;
-    border: 2px solid #9b1c26;
+    border: 2px solid var(--primary_red);
     border-radius: 50%;
 }
 
@@ -188,9 +214,9 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 24px;
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: rgba(0, 0, 0, 0.14);
     transition: background-color 0.2s ease;
     user-select: none;
     text-decoration: none;
@@ -198,7 +224,7 @@ body {
 
 /* administrator profile hover */
 .admin_profile_pill:hover {
-    background-color: rgba(0, 0, 0, 0.22);
+    background-color: rgba(0, 0, 0, 0.24);
 }
 
 /* user profile circular avatar */
@@ -248,7 +274,7 @@ body {
 .admin_workspace_layout {
     display: flex;
     flex: 1;
-    height: calc(100vh - 56px);
+    height: calc(100vh - var(--nav-height));
     overflow: hidden;
     position: relative;
 }
@@ -418,10 +444,10 @@ body {
 .sidebar_backdrop {
     display: none;
     position: fixed;
-    top: 56px;
+    top: var(--nav-height);
     left: 0;
     width: 100%;
-    height: calc(100vh - 56px);
+    height: calc(100vh - var(--nav-height));
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 850;
 }
@@ -1789,11 +1815,11 @@ input:checked + .slider::before {
     }
     .admin_sidebar {
         position: fixed;
-        top: 56px;
+        top: var(--nav-height);
         left: 0;
         width: 260px;
         max-width: 82vw;
-        height: calc(100vh - 56px);
+        height: calc(100vh - var(--nav-height));
         transform: translateX(-100%);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.35);
         z-index: 1100;
@@ -1805,7 +1831,7 @@ input:checked + .slider::before {
     .sidebar_backdrop {
         display: none;
         position: fixed;
-        top: 56px;
+        top: var(--nav-height);
         left: 0;
         right: 0;
         bottom: 0;
@@ -1873,11 +1899,19 @@ input:checked + .slider::before {
 
 /* Mobile Phones (max-width: 576px) */
 @media screen and (max-width: 576px) {
+    :root {
+        --nav-height: 62px;
+    }
     .admin_top_navbar {
         padding: 0 12px;
     }
+    .top_nav_logo_box,
+    .top_nav_logo_img {
+        width: 36px;
+        height: 36px;
+    }
     .top_nav_brand_title {
-        font-size: 17px;
+        font-size: 20px;
     }
     .admin_profile_details {
         display: none;
@@ -2538,14 +2572,14 @@ input:checked + .slider::before {
 /* layout alias for admin header */
 .admin_header {
     width: 100%;
-    height: 64px;
-    background: linear-gradient(90deg, #841822 0%, #9b1c26 60%, #a8202b 100%);
+    height: var(--nav-height);
+    background-color: var(--primary_red);
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -2556,7 +2590,7 @@ input:checked + .slider::before {
     display: flex;
     flex: 1;
     width: 100%;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - var(--nav-height));
     position: relative;
 }
 
