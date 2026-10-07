@@ -1453,6 +1453,16 @@ body {
     box-sizing: border-box;
 }
 
+/* form multi-line textarea */
+textarea.form_input {
+    height: auto;
+    min-height: 110px;
+    padding: 10px 14px;
+    resize: vertical;
+    line-height: 1.5;
+    font-family: inherit;
+}
+
 /* form dropdown select matching input dimensions and styling */
 .form_select,
 select.form_input {
