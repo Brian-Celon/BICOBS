@@ -163,7 +163,7 @@
                     <p class="page_subtitle">Browse, filter, and add products available across all store categories.</p>
                 </div>
                 <div class="page_header_actions">
-                    <button type="button" class="btn_primary" onclick="openModal('add_product_modal')">
+                    <button type="button" class="btn_primary" id="btn_open_add_product" onclick="openAddProductModal()">
                         <i class="fas fa-plus"></i>
                         <span>Add Product</span>
                     </button>
@@ -259,6 +259,10 @@
                         <option value="price_desc">Price: High to Low</option>
                         <option value="name_asc">Name: A to Z</option>
                     </select>
+                    <button type="button" class="btn_primary" onclick="openAddProductModal()" style="white-space: nowrap;">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
                 </div>
             </div>
 
@@ -272,7 +276,12 @@
                 <i class="fas fa-search" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px;"></i>
                 <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">No Products Found</h3>
                 <p style="font-size: 13px; color: #64748b; margin: 0 0 16px 0;">No items match the selected category or search query.</p>
-                <button type="button" class="btn_secondary" onclick="resetProductFilters()">Clear Filter</button>
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn_secondary" onclick="resetProductFilters()">Clear Filter</button>
+                    <button type="button" class="btn_primary" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
             </div>
         </main>
     </div>
@@ -323,8 +332,17 @@
                             </select>
                         </div>
                         <div class="form_group">
-                            <label for="new_product_sku" class="form_label">SKU Code *</label>
-                            <input type="text" id="new_product_sku" class="form_input" placeholder="e.g., TR-MTB-008" required>
+                            <label for="new_product_sku" class="form_label" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>SKU Code *</span>
+                                <span style="font-size: 11px; font-weight: 600; color: #16a34a;"><i class="fas fa-magic"></i> Auto-generated</span>
+                            </label>
+                            <div class="sku_input_group">
+                                <input type="text" id="new_product_sku" class="form_input" placeholder="e.g., TBS-BIC-TRK-015" required>
+                                <button type="button" class="sku_regen_btn" id="regen_new_product_sku_btn" title="Generate fresh SKU code">
+                                    <i class="fas fa-rotate"></i>
+                                </button>
+                            </div>
+                            <span class="sku_helper_text"><i class="fas fa-info-circle"></i> Automatically generated based on category & name.</span>
                         </div>
                     </div>
 

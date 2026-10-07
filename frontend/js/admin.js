@@ -353,3 +353,105 @@ function escapeHtml(str) {
         .replace(/'/g, '&#039;');
 }
 
+/**
+ * Standard Taurus Bike Store SKU Code Generator
+ * Format: TBS-[DEPT]-[NAME_OR_CODE]-[NUMBER]
+ * e.g., TBS-BIC-2021PINE-001, TBS-BIC-TRK-742, TBS-SPA-SHIM-814, TBS-ACC-SEER-084
+ */
+function generateAutoSKU(category, productName) {
+    const cat = (category || '').toLowerCase().trim();
+    let dept = 'GEN';
+
+    if (['bicycles', 'built_bikes', 'mountain_bikes', 'road_bikes', 'gravel_bikes', 'bmx_urban', 'folding_commuter'].includes(cat)) {
+        dept = 'BIC';
+    } else if (['frame', 'frames', 'fork', 'handle_bar', 'stem', 'chain', 'upgrade_kit', 'gears', 'pedals', 'brakes', 'components', 'drivetrain'].includes(cat)) {
+        dept = 'SPA';
+    } else if (['tires', 'rims', 'rims_tires', 'hubs', 'wheelset'].includes(cat)) {
+        dept = 'WHL';
+    } else if (['saddle', 'handlebars_saddles', 'handle_grip', 'accessories', 'grips'].includes(cat)) {
+        dept = 'ACC';
+    } else if (['apparel', 'shoes', 'clothing', 'helmet'].includes(cat)) {
+        dept = 'APP';
+    }
+
+    let nameCode = 'PRD';
+    if (productName && typeof productName === 'string') {
+        const cleaned = productName.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        if (cleaned.length >= 3) {
+            nameCode = cleaned.substring(0, Math.min(cleaned.length, 6));
+        } else if (cleaned.length > 0) {
+            nameCode = cleaned.padEnd(3, 'X');
+        }
+    }
+
+    const randNum = Math.floor(100 + Math.random() * 900);
+    return `TBS-${dept}-${nameCode}-${randNum}`;
+}
+window.generateAutoSKU = generateAutoSKU;
+
+/**
+ * Attach live auto-SKU generation listeners to form fields
+ * Updates SKU as the admin selects category or types product title
+ */
+function attachAutoSKUGenerator(config) {
+    const { nameInputId, catInputId, skuInputId, regenBtnId } = config;
+    const nameInput = document.getElementById(nameInputId);
+    const catInput = document.getElementById(catInputId);
+    const skuInput = document.getElementById(skuInputId);
+    const regenBtn = regenBtnId ? document.getElementById(regenBtnId) : null;
+
+    if (!skuInput) return null;
+
+    let isManuallyEdited = false;
+
+    function updateSKU(force = false) {
+        if (!force && isManuallyEdited && skuInput.value.trim() !== '') return;
+        const nameVal = nameInput ? nameInput.value : '';
+        const catVal = catInput ? catInput.value : '';
+        skuInput.value = generateAutoSKU(catVal, nameVal);
+    }
+
+    if (nameInput) {
+        nameInput.addEventListener('input', () => {
+            if (!isManuallyEdited || skuInput.value.trim() === '') {
+                updateSKU(false);
+            }
+        });
+    }
+
+    if (catInput) {
+        catInput.addEventListener('change', () => {
+            if (!isManuallyEdited || skuInput.value.trim() === '') {
+                updateSKU(false);
+            }
+        });
+    }
+
+    skuInput.addEventListener('input', () => {
+        isManuallyEdited = skuInput.value.trim().length > 0;
+    });
+
+    if (regenBtn) {
+        regenBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isManuallyEdited = false;
+            updateSKU(true);
+            skuInput.focus();
+            skuInput.select();
+            if (typeof showToast === 'function') {
+                showToast(`Generated new SKU: ${skuInput.value}`, true);
+            }
+        });
+    }
+
+    skuInput._refreshAutoSKU = function(force = false) {
+        if (force || !skuInput.value || skuInput.value.trim() === '') {
+            isManuallyEdited = false;
+            updateSKU(true);
+        }
+    };
+
+    return skuInput._refreshAutoSKU;
+}
+window.attachAutoSKUGenerator = attachAutoSKUGenerator;
+

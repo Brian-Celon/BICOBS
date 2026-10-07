@@ -38,7 +38,36 @@ let currentInvStatus = "all";
 document.addEventListener("DOMContentLoaded", () => {
     loadInventory();
     setupInventoryFilters();
+    initInventoryAutoSKU();
 });
+
+let inventoryAutoSKURefresh = null;
+
+function initInventoryAutoSKU() {
+    if (typeof attachAutoSKUGenerator === 'function') {
+        inventoryAutoSKURefresh = attachAutoSKUGenerator({
+            nameInputId: "inv_product_name",
+            catInputId: "inv_product_category",
+            skuInputId: "inv_product_sku",
+            regenBtnId: "regen_inv_product_sku_btn"
+        });
+    }
+}
+
+function openAddInventoryModal() {
+    if (typeof openModal === 'function') {
+        openModal('add_inventory_product_modal');
+    }
+    const skuInput = document.getElementById("inv_product_sku");
+    if (skuInput && (!skuInput.value || skuInput.value.trim() === '')) {
+        const cat = document.getElementById("inv_product_category")?.value || "";
+        const name = document.getElementById("inv_product_name")?.value || "";
+        if (typeof generateAutoSKU === 'function') {
+            skuInput.value = generateAutoSKU(cat, name);
+        }
+    }
+}
+window.openAddInventoryModal = openAddInventoryModal;
 
 // Load live products from backend
 async function loadInventory() {
@@ -548,6 +577,9 @@ async function handleCreateProduct(event) {
             if (typeof closeModal === 'function') closeModal("add_inventory_product_modal");
             if (typeof showToast === 'function') showToast(`Added "${name}" to inventory!`, true);
             event.target.reset();
+            if (typeof inventoryAutoSKURefresh === 'function') {
+                inventoryAutoSKURefresh(true);
+            }
             await loadInventory();
         } else {
             alert(data.message || "Failed to add product");

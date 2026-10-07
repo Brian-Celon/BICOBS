@@ -171,7 +171,7 @@
                         <i class="fas fa-tags"></i>
                         <span>Products Catalog</span>
                     </a>
-                    <button type="button" class="btn_primary" onclick="openModal('add_inventory_product_modal')">
+                    <button type="button" class="btn_primary" id="btn_open_add_inventory" onclick="openAddInventoryModal()">
                         <i class="fas fa-plus"></i>
                         <span>Add Product</span>
                     </button>
@@ -203,6 +203,10 @@
                         <option value="low_stock">Low Stock (1 - 3)</option>
                         <option value="out_of_stock">Out of Stock (0)</option>
                     </select>
+                    <button type="button" class="btn_primary" onclick="openAddInventoryModal()" style="white-space: nowrap;">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
                 </div>
             </div>
 
@@ -310,8 +314,17 @@
                         <input type="text" class="form_input" id="inv_product_name" placeholder="e.g. Shimano XT Groupset" required>
                     </div>
                     <div class="form_group">
-                        <label class="form_label" for="inv_product_sku">SKU Code</label>
-                        <input type="text" class="form_input" id="inv_product_sku" placeholder="e.g. SHM-010" required>
+                        <label class="form_label" for="inv_product_sku" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>SKU Code *</span>
+                            <span style="font-size: 11px; font-weight: 600; color: #16a34a;"><i class="fas fa-magic"></i> Auto-generated</span>
+                        </label>
+                        <div class="sku_input_group">
+                            <input type="text" class="form_input" id="inv_product_sku" placeholder="e.g. TBS-SPA-SHM-010" required>
+                            <button type="button" class="sku_regen_btn" id="regen_inv_product_sku_btn" title="Generate fresh SKU code">
+                                <i class="fas fa-rotate"></i>
+                            </button>
+                        </div>
+                        <span class="sku_helper_text"><i class="fas fa-info-circle"></i> Automatically generated based on category & name.</span>
                     </div>
                     <div class="form_group">
                         <label class="form_label" for="inv_product_category">Category</label>

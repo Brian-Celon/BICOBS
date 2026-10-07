@@ -162,10 +162,16 @@
                     <h1 class="banner_title">Good morning, Admin!</h1>
                     <p class="banner_subtitle">Here's what's happening with your store today.</p>
                 </div>
-                <div class="banner_date_card">
-                    <span class="date_card_label">Today</span>
-                    <span class="date_card_date" id="banner_date_val">Sep 22, 2025</span>
-                    <span class="date_card_day" id="banner_day_val">Monday</span>
+                <div class="banner_right_actions">
+                    <button type="button" class="btn_primary" onclick="openDashboardAddProductModal()" id="btn_dash_add_product">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
+                    <div class="banner_date_card">
+                        <span class="date_card_label">Today</span>
+                        <span class="date_card_date" id="banner_date_val">Sep 22, 2025</span>
+                        <span class="date_card_day" id="banner_day_val">Monday</span>
+                    </div>
                 </div>
             </section>
 
@@ -275,7 +281,7 @@
             <section class="quick_actions_card">
                 <h2 class="card_title">Quick Actions</h2>
                 <div class="quick_actions_row">
-                    <button type="button" class="quick_action_btn" onclick="openModal('add_product_modal')">
+                    <button type="button" class="quick_action_btn" onclick="openDashboardAddProductModal()">
                         <i class="fas fa-plus-square"></i>
                         <span>Add Product</span>
                     </button>
@@ -310,25 +316,57 @@
             <form onsubmit="handleDashboardAddProduct(event)">
                 <div class="modal_body">
                     <div class="form_group">
-                        <label class="form_label" for="dash_product_name">Product Name</label>
-                        <input type="text" class="form_input" id="dash_product_name" placeholder="e.g. Trek Marlin 7" required>
+                        <label class="form_label" for="dash_product_name">Product Name *</label>
+                        <input type="text" class="form_input" id="dash_product_name" placeholder="e.g. Trek Marlin 7 Carbon 29&quot;" required>
                     </div>
                     <div class="form_group">
-                        <label class="form_label" for="dash_product_sku">SKU Code</label>
-                        <input type="text" class="form_input" id="dash_product_sku" placeholder="e.g. TBR-009" required>
+                        <label class="form_label" for="dash_product_sku" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>SKU Code *</span>
+                            <span style="font-size: 11px; font-weight: 600; color: #16a34a;"><i class="fas fa-magic"></i> Auto-generated</span>
+                        </label>
+                        <div class="sku_input_group">
+                            <input type="text" class="form_input" id="dash_product_sku" placeholder="e.g. TBS-BIC-TRK-009" required>
+                            <button type="button" class="sku_regen_btn" id="regen_dash_product_sku_btn" title="Generate fresh SKU code">
+                                <i class="fas fa-rotate"></i>
+                            </button>
+                        </div>
+                        <span class="sku_helper_text"><i class="fas fa-info-circle"></i> Automatically generated based on category & name.</span>
                     </div>
                     <div class="form_group">
-                        <label class="form_label" for="dash_product_category">Category</label>
-                        <select class="form_input admin_select" id="dash_product_category">
-                            <option value="Bicycles">Bicycles</option>
-                            <option value="Components">Components</option>
-                            <option value="Tires">Tires</option>
-                            <option value="Accessories">Accessories</option>
+                        <label class="form_label" for="dash_product_category">Category *</label>
+                        <select class="form_input admin_select" id="dash_product_category" required>
+                            <optgroup label="Bicycles">
+                                <option value="mountain_bikes">Mountain Bikes</option>
+                                <option value="road_bikes">Road Bikes</option>
+                                <option value="gravel_bikes">Gravel Bikes</option>
+                                <option value="bmx_urban">BMX & Urban</option>
+                                <option value="folding_commuter">Folding Bikes</option>
+                            </optgroup>
+                            <optgroup label="Components & Parts">
+                                <option value="frame">Framesets</option>
+                                <option value="fork">Forks & Suspension</option>
+                                <option value="gears">Gears & Drivetrain</option>
+                                <option value="brakes">Brakes & Rotors</option>
+                                <option value="pedals">Pedals & Cleats</option>
+                                <option value="tires">Tires & Wheels</option>
+                            </optgroup>
+                            <optgroup label="Accessories & Gear">
+                                <option value="saddle">Saddles</option>
+                                <option value="handle_grip">Grips & Bartapes</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="apparel">Apparel & Shoes</option>
+                            </optgroup>
                         </select>
                     </div>
-                    <div class="form_group">
-                        <label class="form_label" for="dash_product_stock">Initial Stock Quantity</label>
-                        <input type="number" class="form_input" id="dash_product_stock" value="10" min="0" required>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label class="form_label" for="dash_product_price">Price (₱) *</label>
+                            <input type="number" class="form_input" id="dash_product_price" placeholder="e.g. 28000" min="1" required>
+                        </div>
+                        <div class="form_group">
+                            <label class="form_label" for="dash_product_stock">Initial Stock Quantity</label>
+                            <input type="number" class="form_input" id="dash_product_stock" value="10" min="0" required>
+                        </div>
                     </div>
                 </div>
                 <div class="modal_footer">
@@ -474,15 +512,6 @@
     <script src="/frontend/js/admin.js"></script>
     <script src="/frontend/js/admin_dashboard.js"></script>
     <script>
-        function handleDashboardAddProduct(e) {
-            e.preventDefault();
-            const name = document.getElementById("dash_product_name").value;
-            closeModal("add_product_modal");
-            showToast(`Product "${name}" added to inventory catalog!`);
-            document.getElementById("dash_product_name").value = "";
-            document.getElementById("dash_product_sku").value = "";
-        }
-
         function handleDashboardCreateOrder(e) {
             e.preventDefault();
             const customer = document.getElementById("order_customer_name").value;
