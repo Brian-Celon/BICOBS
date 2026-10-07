@@ -147,7 +147,7 @@ const updatePaymentStatus = async (req, res, next) => {
       });
     }
 
-    const validStatuses = ['pending', 'paid', 'failed', 'refunded'];
+    const validStatuses = ['pending', 'paid', 'failed', 'refunded', 'declined'];
     const newStatus = rawStatus.toLowerCase();
     if (!validStatuses.includes(newStatus)) {
       return res.status(400).json({
