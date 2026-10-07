@@ -55,13 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (status === 'declined') {
             const reason = (orderObj && (orderObj.declineReason || orderObj.decline_reason)) || 'Payment has not been received';
             const orderNum = (orderObj && (orderObj.orderNumber || orderObj.order_number)) || '';
+            const safeOrderNum = (orderNum || '').replace(/'/g, "\\'");
+            const safeReasonText = (reason || 'Payment has not been received').replace(/'/g, "\\'").replace(/"/g, '&quot;');
             container.innerHTML = `
                 <div style="background:#fee2e2; border:1.5px solid #fecaca; color:#991b1b; padding:12px 14px; border-radius:8px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-weight:700; display:inline-flex; align-items:center; gap:6px; color:#b91c1c;">
                             <i class="fas fa-times-circle" style="font-size:16px;"></i> Order Declined
                         </span>
-                        <button type="button" class="btn_decline_reason_trigger" data-ordernum="${orderNum}" data-reason="${reason}" style="background:#dc2626; color:#ffffff; border:none; border-radius:5px; padding:4px 10px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                        <button type="button" class="btn_decline_reason_trigger" data-ordernum="${orderNum}" data-reason="${safeReasonText}" onclick="window.openDeclineReasonModal('${safeOrderNum}', '${safeReasonText}'); event.stopPropagation();" style="background:#dc2626; color:#ffffff; border:none; border-radius:5px; padding:4px 10px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:background 0.15s ease;" onmouseover="this.style.background='#b91c1c';" onmouseout="this.style.background='#dc2626';">
                             <i class="fas fa-info-circle"></i> View Reason
                         </button>
                     </div>
@@ -173,15 +175,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const statusPill = getStatusPill(status);
             const isDeclined = status === 'declined';
             const declineReason = order.declineReason || order.decline_reason || 'Payment has not been received';
+            const safeOrderNum = (orderIdText || '').replace(/'/g, "\\'");
+            const safeReasonText = (declineReason || 'Payment has not been received').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
             const statusCell = isDeclined ? `
-                <div>
-                    ${statusPill}
-                    <div style="margin-top: 5px;">
-                        <button type="button" class="btn_decline_reason_trigger" data-ordernum="${orderIdText}" data-reason="${declineReason}" style="background:#ffffff; border:1px solid #fca5a5; color:#dc2626; border-radius:4px; padding:2px 7px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
-                            <i class="fas fa-info-circle"></i> View Reason
-                        </button>
-                    </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-start; gap:4px;">
+                    <span class="status_pill btn_decline_reason_trigger" data-ordernum="${orderIdText}" data-reason="${safeReasonText}" onclick="window.openDeclineReasonModal('${safeOrderNum}', '${safeReasonText}'); event.stopPropagation();" style="background:#fee2e2; color:#dc2626; font-weight:700; cursor:pointer;" title="Click to view why this order was declined">
+                        <i class="fas fa-times-circle" style="font-size:10px;"></i> Declined
+                    </span>
+                    <button type="button" class="btn_decline_reason_trigger" data-ordernum="${orderIdText}" data-reason="${safeReasonText}" onclick="window.openDeclineReasonModal('${safeOrderNum}', '${safeReasonText}'); event.stopPropagation();" style="background:#fff1f2; border:1px solid #fca5a5; color:#be123c; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 1px 2px rgba(0,0,0,0.06); transition:all 0.15s ease;" onmouseover="this.style.background='#ffe4e6'; this.style.borderColor='#f87171';" onmouseout="this.style.background='#fff1f2'; this.style.borderColor='#fca5a5';" title="Click to view decline reason">
+                        <i class="fas fa-info-circle" style="color:#e11d48; font-size:11px;"></i> View Reason
+                    </button>
                 </div>
             ` : statusPill;
 
@@ -331,27 +335,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Decline reason modal handler
     function openDeclineReasonModal(orderNum, reason) {
-        const modal = document.getElementById('decline_reason_modal');
-        const numEl = document.getElementById('decline_modal_ordernum');
-        const reasonEl = document.getElementById('decline_modal_reason');
-
+        let modal = document.getElementById('decline_reason_modal');
         const finalNum = orderNum || 'Order';
         const finalReason = reason || 'Payment has not been received';
 
-        if (numEl) numEl.textContent = finalNum;
-        if (reasonEl) reasonEl.textContent = finalReason;
-
-        if (modal) {
-            modal.style.display = 'flex';
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'decline_reason_modal';
+            modal.className = 'modal_overlay active';
+            modal.style.cssText = 'display:flex; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:99999; align-items:center; justify-content:center; padding:16px; opacity:1; visibility:visible; pointer-events:auto;';
+            modal.innerHTML = `
+                <div class="modal_container" style="max-width:440px; background:#ffffff; border-radius:12px; padding:24px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.25); width:100%; position:relative; text-align:center;">
+                    <button type="button" class="modal_close_btn" onclick="window.closeDeclineReasonModal()" style="position:absolute; top:14px; right:14px; background:none; border:none; font-size:18px; color:#94a3b8; cursor:pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div style="width:52px; height:52px; border-radius:50%; background:#fee2e2; color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 14px;">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3 style="margin:0 0 6px 0; color:#0f172a; font-size:18px; font-weight:700;">Order Declined</h3>
+                    <p style="color:#64748b; font-size:13px; margin:0 0 16px 0;">Reference: <strong id="decline_modal_ordernum" style="color:#8b1e28;">${finalNum}</strong></p>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; text-align:left; margin-bottom:20px;">
+                        <span style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Reason for Decline</span>
+                        <div style="display:flex; align-items:center; gap:8px; color:#b91c1c; font-weight:700; font-size:14px;">
+                            <i class="fas fa-circle-xmark"></i>
+                            <span id="decline_modal_reason">${finalReason}</span>
+                        </div>
+                        <p style="font-size:12px; color:#64748b; margin:10px 0 0 0; line-height:1.5;">
+                            Your payment could not be verified by the Taurus Bike Store administrator. If you believe this is an error, please contact customer support or submit a new order.
+                        </p>
+                    </div>
+                    <button type="button" id="ack_decline_reason_btn" onclick="window.closeDeclineReasonModal()" style="width:100%; padding:10px 16px; background:#8b1e28; color:#ffffff; border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; transition:background 0.2s;">
+                        Understood / Close
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) window.closeDeclineReasonModal();
+            });
         } else {
-            alert(`Order: ${finalNum}\nStatus: Declined\nReason: ${finalReason}\n\nYour payment has not been received or verified by the store admin.`);
+            const numEl = document.getElementById('decline_modal_ordernum');
+            const reasonEl = document.getElementById('decline_modal_reason');
+            if (numEl) numEl.textContent = finalNum;
+            if (reasonEl) reasonEl.textContent = finalReason;
+            modal.classList.add('active');
+            modal.style.display = 'flex';
+            modal.style.opacity = '1';
+            modal.style.visibility = 'visible';
+            modal.style.pointerEvents = 'auto';
         }
     }
     window.openDeclineReasonModal = openDeclineReasonModal;
 
+    function closeDeclineReasonModal() {
+        const modal = document.getElementById('decline_reason_modal');
+        if (modal) {
+            modal.classList.remove('active');
+            modal.style.display = 'none';
+            modal.style.opacity = '0';
+            modal.style.visibility = 'hidden';
+            modal.style.pointerEvents = 'none';
+        }
+    }
+    window.closeDeclineReasonModal = closeDeclineReasonModal;
+
     document.addEventListener('click', (e) => {
         const trigger = e.target.closest('.btn_decline_reason_trigger');
         if (trigger) {
+            e.preventDefault();
             e.stopPropagation();
             const num = trigger.getAttribute('data-ordernum') || '';
             const reason = trigger.getAttribute('data-reason') || 'Payment has not been received';
@@ -360,8 +411,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const closeBtn = e.target.closest('#close_decline_reason_modal_btn, #ack_decline_reason_btn');
         if (closeBtn) {
-            const modal = document.getElementById('decline_reason_modal');
-            if (modal) modal.style.display = 'none';
+            e.preventDefault();
+            closeDeclineReasonModal();
+        }
+
+        const modal = document.getElementById('decline_reason_modal');
+        if (modal && e.target === modal) {
+            closeDeclineReasonModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeDeclineReasonModal();
         }
     });
 
