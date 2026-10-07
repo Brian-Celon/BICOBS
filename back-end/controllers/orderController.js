@@ -24,6 +24,8 @@ const formatOrder = (orderRow, items = []) => ({
   order_status: orderRow.order_status,
   paymentStatus: orderRow.payment_status,
   payment_status: orderRow.payment_status,
+  declineReason: orderRow.decline_reason || '',
+  decline_reason: orderRow.decline_reason || '',
   orderItems: items.map(i => ({
     id: i.id,
     product: i.product_id,
@@ -130,29 +132,8 @@ const createOrder = async (req, res, next) => {
     }
 
     const deliveryType = fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
-    const normalizedMethod = (paymentMethod || (deliveryType === 'delivery' ? '' : 'cash')).toLowerCase().trim();
-
-    // When checking out, payment MUST be handled first when mode is delivery.
-    // Available payment methods for delivery: BPI, Maya, and GCash.
-    if (deliveryType === 'delivery') {
-      const allowedDeliveryPayments = ['bpi', 'maya', 'paymaya', 'gcash', 'card', 'credit_card', 'debit_card'];
-      if (!allowedDeliveryPayments.includes(normalizedMethod)) {
-        await client.query('ROLLBACK');
-        return res.status(400).json({
-          status: 'error',
-          message: 'Payment must be handled first for delivery orders. Available payment methods: Card, GCash, Maya, and BPI.'
-        });
-      }
-    }
-
-    const calculatedDeliveryFee = deliveryType === 'delivery' ? parseFloat(deliveryFee !== undefined ? deliveryFee : 150) : 0;
-    const discountAmount = Math.max(0, parseFloat(req.body.discount || 0));
-    const totalPrice = Math.max(0, itemsPrice - discountAmount + calculatedDeliveryFee);
-
-    // Determine payment and order status
-    const isPrepaid = ['bpi', 'maya', 'paymaya', 'gcash', 'card', 'credit_card', 'debit_card'].includes(normalizedMethod);
-    const orderPaymentStatus = (deliveryType === 'delivery' || isPrepaid) ? 'paid' : 'pending';
-    const orderStatus = (deliveryType === 'delivery' || isPrepaid) ? 'confirmed' : 'pending';
+    const calculatedDeliveryFee = deliveryType === 'delivery' ? parseFloat(deliveryFee || 100) : 0;
+    const totalPrice = itemsPrice + calculatedDeliveryFee;
 
     // Generate unique order number
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -165,7 +146,7 @@ const createOrder = async (req, res, next) => {
         order_number, user_id, customer_name, customer_email, customer_phone,
         delivery_type, delivery_address, notes, payment_method,
         subtotal, shipping_fee, total_amount, order_status, payment_status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'payment_confirmation', 'pending')
       RETURNING *;
     `;
 
@@ -178,12 +159,10 @@ const createOrder = async (req, res, next) => {
       deliveryType,
       customerAddress,
       notes || '',
-      normalizedMethod || 'cash',
+      paymentMethod || 'cash',
       itemsPrice,
       calculatedDeliveryFee,
-      totalPrice,
-      orderStatus,
-      orderPaymentStatus
+      totalPrice
     ]);
 
     const createdOrder = orderRes.rows[0];
@@ -199,12 +178,11 @@ const createOrder = async (req, res, next) => {
 
     // 5. Generate Billing Record
     const invoiceNumber = `INV-${dateStr}-${randomSuffix}`;
-    const paymentDate = orderPaymentStatus === 'paid' ? new Date() : null;
     await client.query(
       `INSERT INTO billings (
         order_id, invoice_number, customer_name, customer_email, customer_phone,
-        subtotal, shipping_fee, total_amount, payment_method, payment_status, payment_date
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`,
+        subtotal, shipping_fee, total_amount, payment_method, payment_status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'pending');`,
       [
         createdOrder.id,
         invoiceNumber,
@@ -214,9 +192,7 @@ const createOrder = async (req, res, next) => {
         itemsPrice,
         calculatedDeliveryFee,
         totalPrice,
-        normalizedMethod || 'cash',
-        orderPaymentStatus,
-        paymentDate
+        paymentMethod || 'cash'
       ]
     );
 
@@ -379,6 +355,24 @@ const updateOrderStatus = async (req, res, next) => {
     const targetStatus = rawOrderStatus ? rawOrderStatus.toLowerCase() : currentStatus;
     const newPaymentStatus = rawPaymentStatus ? rawPaymentStatus.toLowerCase() : current.payment_status;
 
+    // Delivery vs Pickup validation
+    const deliveryType = (current.delivery_type || 'delivery').toLowerCase();
+    if (deliveryType === 'delivery' && targetStatus === 'ready_for_pickup') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Cannot set status to Ready for Pickup for a delivery order. Please select Ready for Delivery or Shipped.'
+      });
+    }
+
+    if (deliveryType === 'pickup' && (targetStatus === 'ready_for_delivery' || targetStatus === 'out_for_delivery' || targetStatus === 'shipped')) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Cannot set delivery status for an in-store pickup order. Please select Ready for Pickup.'
+      });
+    }
+
     // Transition Validation
     if (currentStatus === 'completed' && targetStatus === 'cancelled') {
       await client.query('ROLLBACK');
@@ -447,10 +441,138 @@ const updateOrderStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Confirm customer payment for an order and change status from payment_confirmation to pending
+// @route   PUT /api/orders/:id/verify-payment
+// @access  Private (Admin / Staff)
+const verifyOrderPayment = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const current = existing.rows[0];
+
+    const updateSql = `
+      UPDATE orders
+      SET payment_status = 'paid', order_status = 'processing', updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const updatedRes = await client.query(updateSql, [id]);
+
+    // Sync billing record as paid
+    await client.query(
+      `UPDATE billings
+       SET payment_status = 'paid', payment_date = CURRENT_TIMESTAMP
+       WHERE order_id = $1;`,
+      [id]
+    );
+
+    await client.query('COMMIT');
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updatedRes.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Payment approved! Order status changed to Processing.',
+      data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+// @desc    Decline customer payment for an order and change status to declined with reason
+// @route   PUT /api/orders/:id/decline-payment
+// @access  Private (Admin / Staff)
+const declineOrderPayment = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    const reason = (req.body && req.body.reason) ? req.body.reason.trim() : 'Payment has not been received';
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const current = existing.rows[0];
+
+    // If order was not already cancelled or declined, restore product stock
+    if (current.order_status !== 'cancelled' && current.order_status !== 'declined') {
+      const items = await client.query('SELECT product_id, quantity FROM order_items WHERE order_id = $1', [id]);
+      for (const item of items.rows) {
+        if (item.product_id) {
+          await client.query(
+            'UPDATE products SET stock_quantity = stock_quantity + $1 WHERE id = $2',
+            [item.quantity, item.product_id]
+          );
+        }
+      }
+    }
+
+    const updateSql = `
+      UPDATE orders
+      SET payment_status = 'declined', order_status = 'declined', decline_reason = $2, notes = CASE WHEN notes IS NULL OR notes = '' THEN $2 ELSE notes || ' | ' || $2 END, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const updatedRes = await client.query(updateSql, [id, reason]);
+
+    // Sync billing record as failed
+    await client.query(
+      `UPDATE billings
+       SET payment_status = 'failed'
+       WHERE order_id = $1;`,
+      [id]
+    );
+
+    await client.query('COMMIT');
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updatedRes.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: `Payment declined. Order status marked as Declined (Reason: ${reason}).`,
+      data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   createOrder,
   getOrderById,
   getMyOrders,
   getAllOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  verifyOrderPayment,
+  declineOrderPayment
 };

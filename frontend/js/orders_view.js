@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return `<span class="status_pill status_shipped" style="background:#ebf3ff; color:#1a73e8;"><i class="fas fa-truck" style="font-size:10px;"></i> ${label}</span>`;
         } else if (status === 'cancelled') {
             return `<span class="status_pill" style="background:#fee2e2; color:#dc2626;"><i class="fas fa-times-circle" style="font-size:10px;"></i> Cancelled</span>`;
+        } else if (status === 'declined') {
+            return `<span class="status_pill" style="background:#fee2e2; color:#dc2626; font-weight:700;"><i class="fas fa-times-circle" style="font-size:10px;"></i> Declined</span>`;
         } else if (status === 'processing') {
             return `<span class="status_pill status_processing" style="background:#fef7e6; color:#b87b00;"><i class="fas fa-cogs" style="font-size:10px;"></i> Processing</span>`;
         } else {
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Helper: Render 4-step Visual Timeline Tracker
-    function renderTimeline(statusRaw) {
+    function renderTimeline(statusRaw, orderObj) {
         const container = document.getElementById('order_timeline_container');
         if (!container) return;
 
@@ -45,6 +47,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="background:#fee2e2; border:1px solid #fecaca; color:#991b1b; padding:10px 14px; border-radius:8px; font-size:13px; display:flex; align-items:center; gap:8px;">
                     <i class="fas fa-exclamation-triangle"></i>
                     <span><strong>Order Cancelled:</strong> This order has been cancelled and inventory was returned to stock.</span>
+                </div>
+            `;
+            return;
+        }
+
+        if (status === 'declined') {
+            const reason = (orderObj && (orderObj.declineReason || orderObj.decline_reason)) || 'Payment has not been received';
+            const orderNum = (orderObj && (orderObj.orderNumber || orderObj.order_number)) || '';
+            container.innerHTML = `
+                <div style="background:#fee2e2; border:1.5px solid #fecaca; color:#991b1b; padding:12px 14px; border-radius:8px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; display:inline-flex; align-items:center; gap:6px; color:#b91c1c;">
+                            <i class="fas fa-times-circle" style="font-size:16px;"></i> Order Declined
+                        </span>
+                        <button type="button" class="btn_decline_reason_trigger" data-ordernum="${orderNum}" data-reason="${reason}" style="background:#dc2626; color:#ffffff; border:none; border-radius:5px; padding:4px 10px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                            <i class="fas fa-info-circle"></i> View Reason
+                        </button>
+                    </div>
+                    <div style="color:#7f1d1d; font-size:12.5px; line-height:1.4;">
+                        Reason: <strong>${reason}</strong>. The store admin has reviewed and declined this order.
+                    </div>
                 </div>
             `;
             return;
@@ -148,6 +171,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const status = (order.orderStatus || 'pending').toLowerCase();
             const totalPrice = (order.totalPrice || order.total_amount || 0).toLocaleString();
             const statusPill = getStatusPill(status);
+            const isDeclined = status === 'declined';
+            const declineReason = order.declineReason || order.decline_reason || 'Payment has not been received';
+
+            const statusCell = isDeclined ? `
+                <div>
+                    ${statusPill}
+                    <div style="margin-top: 5px;">
+                        <button type="button" class="btn_decline_reason_trigger" data-ordernum="${orderIdText}" data-reason="${declineReason}" style="background:#ffffff; border:1px solid #fca5a5; color:#dc2626; border-radius:4px; padding:2px 7px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                            <i class="fas fa-info-circle"></i> View Reason
+                        </button>
+                    </div>
+                </div>
+            ` : statusPill;
 
             tr.setAttribute('data-status', status);
             tr.setAttribute('data-order-id', orderIdText);
@@ -160,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><span style="font-family:monospace; font-size:12px; font-weight:600; color:#475569;">${invoiceText}</span></td>
                 <td>${orderDate}</td>
                 <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${itemsSummary}">${itemsSummary}</td>
-                <td>${statusPill}</td>
+                <td>${statusCell}</td>
                 <td><strong>₱${totalPrice}</strong></td>
                 <td><button type="button" class="btn_view_order_details action_link_btn" data-id="${order._id}" style="cursor:pointer; background:none; border:none; color:#8b1e28; font-weight:600; display:inline-flex; align-items:center; gap:5px;"><i class="fas fa-eye"></i> View Details</button></td>
             `;
@@ -178,9 +214,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 const filtered = customerOrders.filter(o => {
                     const st = (o.orderStatus || 'pending').toLowerCase();
-                    if (filterVal === 'processing') return st === 'processing' || st === 'pending';
+                    if (filterVal === 'processing') return st === 'processing';
                     if (filterVal === 'shipped') return st === 'shipped' || st === 'ready_for_pickup';
                     if (filterVal === 'delivered') return st === 'delivered' || st === 'completed';
+                    if (filterVal === 'declined') return st === 'declined';
                     return st.includes(filterVal);
                 });
                 renderOrdersTable(filtered);
@@ -216,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (invoiceNumEl) invoiceNumEl.textContent = invoiceText;
 
                 // Render Timeline Tracker
-                renderTimeline(order.orderStatus || 'pending');
+                renderTimeline(order.orderStatus || 'pending', order);
 
                 // Render Delivery Details & Payment Info
                 const addressEl = document.getElementById('modal_order_address');
@@ -291,6 +328,42 @@ document.addEventListener('DOMContentLoaded', () => {
             details_modal.style.display = 'none';
         });
     }
+
+    // Decline reason modal handler
+    function openDeclineReasonModal(orderNum, reason) {
+        const modal = document.getElementById('decline_reason_modal');
+        const numEl = document.getElementById('decline_modal_ordernum');
+        const reasonEl = document.getElementById('decline_modal_reason');
+
+        const finalNum = orderNum || 'Order';
+        const finalReason = reason || 'Payment has not been received';
+
+        if (numEl) numEl.textContent = finalNum;
+        if (reasonEl) reasonEl.textContent = finalReason;
+
+        if (modal) {
+            modal.style.display = 'flex';
+        } else {
+            alert(`Order: ${finalNum}\nStatus: Declined\nReason: ${finalReason}\n\nYour payment has not been received or verified by the store admin.`);
+        }
+    }
+    window.openDeclineReasonModal = openDeclineReasonModal;
+
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.btn_decline_reason_trigger');
+        if (trigger) {
+            e.stopPropagation();
+            const num = trigger.getAttribute('data-ordernum') || '';
+            const reason = trigger.getAttribute('data-reason') || 'Payment has not been received';
+            openDeclineReasonModal(num, reason);
+        }
+
+        const closeBtn = e.target.closest('#close_decline_reason_modal_btn, #ack_decline_reason_btn');
+        if (closeBtn) {
+            const modal = document.getElementById('decline_reason_modal');
+            if (modal) modal.style.display = 'none';
+        }
+    });
 
     // Load on init
     loadMyOrders();
