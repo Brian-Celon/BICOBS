@@ -9,7 +9,7 @@ const getDashboardSummary = async (req, res, next) => {
     const totalOrdersRes = await db.query('SELECT COUNT(*) FROM orders');
     const pendingOrdersRes = await db.query("SELECT COUNT(*) FROM orders WHERE order_status = 'pending'");
     const processingOrdersRes = await db.query("SELECT COUNT(*) FROM orders WHERE order_status = 'processing'");
-    const readyOrdersRes = await db.query("SELECT COUNT(*) FROM orders WHERE order_status = 'ready_for_pickup'");
+    const readyOrdersRes = await db.query("SELECT COUNT(*) FROM orders WHERE order_status IN ('ready_for_pickup', 'ready_for_delivery', 'out_for_delivery', 'shipped')");
     const completedOrdersRes = await db.query("SELECT COUNT(*) FROM orders WHERE order_status = 'completed'");
     const cancelledOrdersRes = await db.query("SELECT COUNT(*) FROM orders WHERE order_status = 'cancelled'");
 

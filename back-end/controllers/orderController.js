@@ -144,7 +144,7 @@ const createOrder = async (req, res, next) => {
         order_number, user_id, customer_name, customer_email, customer_phone,
         delivery_type, delivery_address, notes, payment_method,
         subtotal, shipping_fee, total_amount, order_status, payment_status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'pending', 'pending')
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'payment_confirmation', 'pending')
       RETURNING *;
     `;
 
@@ -353,6 +353,24 @@ const updateOrderStatus = async (req, res, next) => {
     const targetStatus = rawOrderStatus ? rawOrderStatus.toLowerCase() : currentStatus;
     const newPaymentStatus = rawPaymentStatus ? rawPaymentStatus.toLowerCase() : current.payment_status;
 
+    // Delivery vs Pickup validation
+    const deliveryType = (current.delivery_type || 'delivery').toLowerCase();
+    if (deliveryType === 'delivery' && targetStatus === 'ready_for_pickup') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Cannot set status to Ready for Pickup for a delivery order. Please select Ready for Delivery or Shipped.'
+      });
+    }
+
+    if (deliveryType === 'pickup' && (targetStatus === 'ready_for_delivery' || targetStatus === 'out_for_delivery' || targetStatus === 'shipped')) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        status: 'error',
+        message: 'Cannot set delivery status for an in-store pickup order. Please select Ready for Pickup.'
+      });
+    }
+
     // Transition Validation
     if (currentStatus === 'completed' && targetStatus === 'cancelled') {
       await client.query('ROLLBACK');
@@ -421,10 +439,67 @@ const updateOrderStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Confirm customer payment for an order and change status from payment_confirmation to pending
+// @route   PUT /api/orders/:id/verify-payment
+// @access  Private (Admin / Staff)
+const verifyOrderPayment = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const current = existing.rows[0];
+
+    const updateSql = `
+      UPDATE orders
+      SET payment_status = 'paid', order_status = 'pending', updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const updatedRes = await client.query(updateSql, [id]);
+
+    // Sync billing record as paid
+    await client.query(
+      `UPDATE billings
+       SET payment_status = 'paid', payment_date = CURRENT_TIMESTAMP
+       WHERE order_id = $1;`,
+      [id]
+    );
+
+    await client.query('COMMIT');
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updatedRes.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Payment confirmed! Order status has been changed to Pending.',
+      data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   createOrder,
   getOrderById,
   getMyOrders,
   getAllOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  verifyOrderPayment
 };

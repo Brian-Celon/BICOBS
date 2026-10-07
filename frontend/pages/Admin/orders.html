@@ -181,8 +181,10 @@
                 <div class="toolbar_filters_group">
                     <select class="admin_select" id="order_status_filter">
                         <option value="all">All Statuses</option>
+                        <option value="payment_confirmation">Payment Confirmation</option>
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
+                        <option value="ready_for_delivery">Ready for Delivery</option>
                         <option value="ready_for_pickup">Ready for Pickup</option>
                         <option value="shipped">Shipped</option>
                         <option value="completed">Completed</option>
@@ -262,21 +264,21 @@
                     <label class="form_label">Items Ordered</label>
                     <p id="modal_order_items" style="font-size: 13px; color: #334155; padding: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;"></p>
                 </div>
-                <div class="form_group">
-                    <label class="form_label" for="modal_fulfillment_status">Update Fulfillment Status</label>
-                    <select class="form_input admin_select" id="modal_fulfillment_status">
-                        <option value="pending">Pending (Awaiting Verification)</option>
-                        <option value="processing">Processing & Preparing</option>
-                        <option value="ready_for_pickup">Ready for In-Store Pickup</option>
-                        <option value="shipped">Shipped / Out for Delivery</option>
-                        <option value="completed">Completed & Delivered</option>
-                        <option value="cancelled">Cancelled (Auto-Restore Stock)</option>
-                    </select>
+                <div class="form_group" style="margin-top: 16px;">
+                    <label class="form_label" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span><i class="fas fa-tasks" style="color: #b91c1c; margin-right: 6px;"></i>Order Actions</span>
+                        <span id="modal_current_status_badge"></span>
+                    </label>
+
+                    <!-- Payment Verification Box -->
+                    <div id="modal_payment_verification_box" style="margin-bottom: 12px;"></div>
+
+                    <!-- Action Buttons -->
+                    <div class="order_actions_button_group" id="modal_order_actions"></div>
                 </div>
             </div>
             <div class="modal_footer">
-                <button type="button" class="btn_secondary btn_modal_cancel">Close</button>
-                <button type="button" class="btn_primary" onclick="saveFulfillmentStatus()">Save Update</button>
+                <button type="button" class="btn_secondary btn_modal_cancel" onclick="closeModal('order_detail_modal')">Close</button>
             </div>
         </div>
     </div>

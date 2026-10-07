@@ -72,8 +72,9 @@ async function loadDashboardSummary() {
 
                         let pillClass = 'status_pending';
                         if (status === 'completed') pillClass = 'status_completed';
-                        else if (status === 'processing') pillClass = 'status_paid';
+                        else if (status === 'processing' || status === 'ready_for_delivery' || status === 'ready_for_pickup') pillClass = 'status_paid';
                         else if (status === 'shipped') pillClass = 'status_in_progress';
+                        const displayStatus = status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
                         return `
                             <tr>
@@ -83,7 +84,7 @@ async function loadDashboardSummary() {
                                 <td class="cell_customer_name">${name}</td>
                                 <td style="font-size: 12px; color: #64748b;">${dateFormatted}</td>
                                 <td class="cell_amount" style="font-weight: 700; color: #0f172a;">₱${total.toLocaleString()}</td>
-                                <td><span class="status_pill ${pillClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+                                <td><span class="status_pill ${pillClass}">${displayStatus}</span></td>
                             </tr>
                         `;
                     }).join('');
