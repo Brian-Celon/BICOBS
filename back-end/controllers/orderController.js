@@ -24,6 +24,8 @@ const formatOrder = (orderRow, items = []) => ({
   order_status: orderRow.order_status,
   paymentStatus: orderRow.payment_status,
   payment_status: orderRow.payment_status,
+  declineReason: orderRow.decline_reason || '',
+  decline_reason: orderRow.decline_reason || '',
   orderItems: items.map(i => ({
     id: i.id,
     product: i.product_id,
@@ -459,7 +461,7 @@ const verifyOrderPayment = async (req, res, next) => {
 
     const updateSql = `
       UPDATE orders
-      SET payment_status = 'paid', order_status = 'pending', updated_at = CURRENT_TIMESTAMP
+      SET payment_status = 'paid', order_status = 'processing', updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *;
     `;
@@ -484,7 +486,77 @@ const verifyOrderPayment = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Payment confirmed! Order status has been changed to Pending.',
+      message: 'Payment approved! Order status changed to Processing.',
+      data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+// @desc    Decline customer payment for an order and change status to declined with reason
+// @route   PUT /api/orders/:id/decline-payment
+// @access  Private (Admin / Staff)
+const declineOrderPayment = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    const reason = (req.body && req.body.reason) ? req.body.reason.trim() : 'Payment has not been received';
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const current = existing.rows[0];
+
+    // If order was not already cancelled or declined, restore product stock
+    if (current.order_status !== 'cancelled' && current.order_status !== 'declined') {
+      const items = await client.query('SELECT product_id, quantity FROM order_items WHERE order_id = $1', [id]);
+      for (const item of items.rows) {
+        if (item.product_id) {
+          await client.query(
+            'UPDATE products SET stock_quantity = stock_quantity + $1 WHERE id = $2',
+            [item.quantity, item.product_id]
+          );
+        }
+      }
+    }
+
+    const updateSql = `
+      UPDATE orders
+      SET payment_status = 'declined', order_status = 'declined', decline_reason = $2, notes = CASE WHEN notes IS NULL OR notes = '' THEN $2 ELSE notes || ' | ' || $2 END, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const updatedRes = await client.query(updateSql, [id, reason]);
+
+    // Sync billing record as failed
+    await client.query(
+      `UPDATE billings
+       SET payment_status = 'failed'
+       WHERE order_id = $1;`,
+      [id]
+    );
+
+    await client.query('COMMIT');
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updatedRes.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: `Payment declined. Order status marked as Declined (Reason: ${reason}).`,
       data: formatOrder(orderData, itemsRes.rows)
     });
   } catch (error) {
@@ -501,5 +573,6 @@ module.exports = {
   getMyOrders,
   getAllOrders,
   updateOrderStatus,
-  verifyOrderPayment
+  verifyOrderPayment,
+  declineOrderPayment
 };

@@ -3004,6 +3004,76 @@ input:checked + .slider::before {
     opacity: 0.7;
 }
 
+.btn_decline_payment {
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn_decline_payment:hover {
+    background-color: #b91c1c;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+}
+
+.btn_decline_payment:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.table_btn_decline {
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.table_btn_decline:hover {
+    background-color: #b91c1c;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25);
+}
+
+.order_action_btn.btn_action_approve {
+    border-color: #86efac;
+    color: #15803d;
+    background-color: #f0fdf4;
+}
+
+.order_action_btn.btn_action_approve:hover:not(:disabled) {
+    background-color: #dcfce7;
+    border-color: #22c55e;
+}
+
+.order_action_btn.btn_action_decline {
+    border-color: #fecaca;
+    color: #dc2626;
+    background-color: #fef2f2;
+}
+
+.order_action_btn.btn_action_decline:hover:not(:disabled) {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+}
+
 /* Modal Order Action Buttons Grid */
 .order_actions_button_group {
     display: grid;
