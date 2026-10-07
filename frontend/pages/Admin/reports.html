@@ -232,7 +232,7 @@
             <!-- 4 metric summary stat cards -->
             <section class="stat_cards_grid">
                 <!-- card 1: total sales -->
-                <article class="stat_card">
+                <article class="stat_card" onclick="switchReportTab('sales_summary')" style="cursor: pointer;" title="Click to view Sales Summary">
                     <div class="stat_card_top">
                         <span class="stat_card_label">Total Sales</span>
                         <div class="stat_card_icon_box icon_theme_red">
@@ -247,7 +247,7 @@
                 </article>
 
                 <!-- card 2: units sold -->
-                <article class="stat_card">
+                <article class="stat_card" onclick="switchReportTab('units_sold')" style="cursor: pointer;" title="Click to view Units Sold Breakdown">
                     <div class="stat_card_top">
                         <span class="stat_card_label">Units Sold</span>
                         <div class="stat_card_icon_box icon_theme_blue">
@@ -262,7 +262,7 @@
                 </article>
 
                 <!-- card 3: online orders -->
-                <article class="stat_card">
+                <article class="stat_card" onclick="switchReportTab('online_orders')" style="cursor: pointer;" title="Click to view Online Orders Breakdown">
                     <div class="stat_card_top">
                         <span class="stat_card_label">Online Orders</span>
                         <div class="stat_card_icon_box icon_theme_green">
@@ -277,7 +277,7 @@
                 </article>
 
                 <!-- card 4: completed repairs -->
-                <article class="stat_card">
+                <article class="stat_card" onclick="switchReportTab('repairs')" style="cursor: pointer;" title="Click to view Completed Repairs Breakdown">
                     <div class="stat_card_top">
                         <span class="stat_card_label">Completed Repairs</span>
                         <div class="stat_card_icon_box icon_theme_yellow">
@@ -1050,6 +1050,38 @@
     <script src="/frontend/js/admin.js"></script>
     <script>
         let currentActiveReportData = null;
+        let liveProductsData = [];
+        let liveOrdersData = [];
+        let liveRepairsData = [];
+        let liveSummaryData = null;
+
+        // SUB-TAB SWITCHING (Globally accessible)
+        function switchReportTab(tabKey) {
+            const tabs = document.querySelectorAll("#reports_tabs .filter_tab_btn");
+            tabs.forEach(t => {
+                if (t.getAttribute("data-report-tab") === tabKey) {
+                    t.classList.add("tab_active");
+                } else {
+                    t.classList.remove("tab_active");
+                }
+            });
+
+            const panels = document.querySelectorAll(".tab_panel");
+            panels.forEach(p => {
+                if (p.id === "report_panel_" + tabKey) {
+                    p.classList.add("tab_panel_active");
+                } else {
+                    p.classList.remove("tab_panel_active");
+                }
+            });
+
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set("tab", tabKey);
+                window.history.replaceState({}, '', url);
+            } catch (err) {}
+        }
+        window.switchReportTab = switchReportTab;
 
         // CHECK URL PARAMS ON LOAD (e.g. ?tab=inventory)
         document.addEventListener("DOMContentLoaded", () => {
@@ -1060,42 +1092,6 @@
             }
             loadLiveReportsMetrics();
         });
-
-        // Load live metric calculations from real backend endpoints
-        async function loadLiveReportsMetrics() {
-            const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
-            if (!token) return;
-
-            try {
-                // Fetch summary KPI
-                const summaryRes = await fetch("/api/dashboard/summary", {
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
-                const summaryData = await summaryRes.json();
-                if (summaryRes.ok && summaryData.status === "success" && summaryData.data) {
-                    const statSales = document.getElementById("stat_total_sales");
-                    if (statSales && summaryData.data.total_sales) {
-                        statSales.textContent = summaryData.data.total_sales;
-                    }
-                }
-
-                // Fetch orders for units sold and online orders count
-                const ordersRes = await fetch("/api/orders", {
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
-                const ordersData = await ordersRes.json();
-                if (ordersRes.ok && ordersData.status === "success") {
-                    const orders = ordersData.data || [];
-                    let totalUnits = 0;
-                    let onlineCount = 0;
-                    orders.forEach(o => {
-                        const type = (o.order_type || o.orderType || '').toLowerCase();
-                        if (type.includes('online')) {
-                            onlineCount++;
-        let liveProductsData = [];
-        let liveOrdersData = [];
-        let liveRepairsData = [];
-        let liveSummaryData = null;
 
         // Load live metric calculations from real backend endpoints
         async function loadLiveReportsMetrics() {
@@ -1484,26 +1480,7 @@
             }
         }
 
-        // SUB-TAB SWITCHING
-        function switchReportTab(tabKey) {
-            const tabs = document.querySelectorAll("#reports_tabs .filter_tab_btn");
-            tabs.forEach(t => {
-                if (t.getAttribute("data-report-tab") === tabKey) {
-                    t.classList.add("tab_active");
-                } else {
-                    t.classList.remove("tab_active");
-                }
-            });
 
-            const panels = document.querySelectorAll(".tab_panel");
-            panels.forEach(p => {
-                if (p.id === "report_panel_" + tabKey) {
-                    p.classList.add("tab_panel_active");
-                } else {
-                    p.classList.remove("tab_panel_active");
-                }
-            });
-        }
 
         // DATE PRESET APPLY
         function applyDatePreset(label, sales, units, orders, repairs) {
