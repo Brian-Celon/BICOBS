@@ -75,28 +75,9 @@ body {
     background-color: rgba(255, 255, 255, 0.18);
 }
 
-/* logo container holding taurus bike emblem */
+/* logo container (hidden per user preference) */
 .top_nav_logo_box {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-/* brand logo image */
-.top_nav_logo_img {
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-}
-
-/* fallback icon if logo image is not found */
-.top_nav_logo_fallback {
-    color: #ffffff;
-    font-size: 24px;
-    display: none;
+    display: none !important;
 }
 
 /* brand logo text title */
@@ -1904,11 +1885,6 @@ input:checked + .slider::before {
     }
     .admin_top_navbar {
         padding: 0 12px;
-    }
-    .top_nav_logo_box,
-    .top_nav_logo_img {
-        width: 36px;
-        height: 36px;
     }
     .top_nav_brand_title {
         font-size: 20px;
