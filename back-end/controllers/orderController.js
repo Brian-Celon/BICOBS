@@ -411,11 +411,13 @@ const updateOrderStatus = async (req, res, next) => {
 
     // Sync billing record if payment status was updated
     if (rawPaymentStatus) {
+      const allowedBillingStatuses = ['pending', 'paid', 'failed', 'refunded', 'declined'];
+      const billingStatus = allowedBillingStatuses.includes(newPaymentStatus) ? newPaymentStatus : 'pending';
       await client.query(
         `UPDATE billings
          SET payment_status = $1, payment_date = (CASE WHEN $1 = 'paid' THEN CURRENT_TIMESTAMP ELSE payment_date END)
          WHERE order_id = $2;`,
-        [newPaymentStatus, id]
+        [billingStatus, id]
       );
     }
 
@@ -537,10 +539,10 @@ const declineOrderPayment = async (req, res, next) => {
     `;
     const updatedRes = await client.query(updateSql, [id, reason]);
 
-    // Sync billing record as failed
+    // Sync billing record as declined
     await client.query(
       `UPDATE billings
-       SET payment_status = 'failed'
+       SET payment_status = 'declined'
        WHERE order_id = $1;`,
       [id]
     );
