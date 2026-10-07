@@ -1586,13 +1586,22 @@ input:checked + .slider::before {
     background-color: #ffffff;
     border-radius: 12px;
     width: 100%;
-    max-width: 540px;
+    max-width: 560px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     animation: modalSlideIn 0.2s ease-out forwards;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
+}
+
+/* ensure form inside modal_card behaves as a flexible column */
+.modal_card > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 
 /* modal dialog animation */
@@ -1614,6 +1623,7 @@ input:checked + .slider::before {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
 }
 
 /* modal title */
@@ -1640,13 +1650,31 @@ input:checked + .slider::before {
     color: #0f172a;
 }
 
-/* modal form content body */
+/* modal form content body - scrollable */
 .modal_body {
     padding: 24px;
     overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* modal footer with action buttons */
+/* custom scrollbar for modal body */
+.modal_body::-webkit-scrollbar {
+    width: 6px;
+}
+.modal_body::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+.modal_body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+.modal_body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* modal footer with action buttons - always pinned & visible */
 .modal_footer {
     padding: 16px 24px;
     border-top: 1px solid #e2e8f0;
@@ -1655,6 +1683,9 @@ input:checked + .slider::before {
     justify-content: flex-end;
     gap: 12px;
     background-color: #f8fafc;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
 }
 
 /* toast popup alert */
@@ -2411,7 +2442,7 @@ input:checked + .slider::before {
 .clean_upload_box {
     border: 2px dashed #cbd5e1;
     border-radius: 8px;
-    padding: 18px;
+    padding: 12px 14px;
     text-align: center;
     background-color: #f8fafc;
     cursor: pointer;
