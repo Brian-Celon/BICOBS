@@ -455,7 +455,7 @@ const createPosOrder = async (req, res, next) => {
       discountAmount = 0,
       discountNote = '',
       notes = '',
-      cashierName = 'Russel Lu Caisido',
+      cashierName: clientCashierName,
       orderItems = []
     } = req.body;
 
@@ -465,6 +465,10 @@ const createPosOrder = async (req, res, next) => {
         message: 'No items in order cart'
       });
     }
+
+    // Cashier identity comes from the verified JWT session, not the request body
+    const cashierName = (req.user && req.user.name) || clientCashierName || 'Store Cashier';
+    const cashierUserId = req.user.id;
 
     await client.query('BEGIN');
 
@@ -559,12 +563,6 @@ const createPosOrder = async (req, res, next) => {
     const orderNumber = `ORD-POS-${dateStr}-${randomSuffix}`;
     const invoiceNumber = `INV-POS-${dateStr}-${randomSuffix}`;
 
-    // Get default cashier user id (admin/staff)
-    let cashierUserId = 3;
-    const userCheck = await client.query("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
-    if (userCheck.rows.length > 0) {
-      cashierUserId = userCheck.rows[0].id;
-    }
 
     // 2. Insert into orders table
     const insertOrderSql = `

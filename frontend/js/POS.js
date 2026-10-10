@@ -60,6 +60,19 @@ function clearCashierSession() {
     localStorage.removeItem(POS_SESSION_KEY);
 }
 
+// Authenticated fetch for staff-only POS endpoints (attaches cashier JWT)
+async function posFetch(url, options = {}) {
+    const session = getCashierSession();
+    const headers = Object.assign({}, options.headers || {});
+    if (session && session.token) headers['Authorization'] = 'Bearer ' + session.token;
+    const res = await fetch(url, Object.assign({}, options, { headers }));
+    if (res.status === 401) {
+        clearCashierSession();
+        window.location.href = 'POS-login.html';
+    }
+    return res;
+}
+
 // Client-side route guard ensuring an active cashier session exists
 function enforceCashierAuth() {
     const session = getCashierSession();
@@ -1179,7 +1192,7 @@ function initPosMain(session) {
                     }))
                 };
 
-                const res = await fetch('/api/orders/pos', {
+                const res = await posFetch('/api/orders/pos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -1909,7 +1922,7 @@ function initPosRepairs(session) {
                     }))
                 };
 
-                const res = await fetch('/api/orders/pos', {
+                const res = await posFetch('/api/orders/pos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -2093,7 +2106,7 @@ function initPosHistory(session) {
 
     async function loadHistory() {
         try {
-            const res = await fetch('/api/orders/pos');
+            const res = await posFetch('/api/orders/pos');
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
             const json = await res.json();
             allOrders = Array.isArray(json.data) ? json.data : [];
@@ -2275,7 +2288,7 @@ function initPosHome(session) {
 
     async function loadDashboardSummary() {
         try {
-            const res = await fetch('/api/orders/pos/summary');
+            const res = await posFetch('/api/orders/pos/summary');
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
             const json = await res.json();
             const data = json.data;

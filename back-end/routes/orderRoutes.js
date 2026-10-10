@@ -12,10 +12,10 @@ const {
 } = require('../controllers/orderController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Dedicated in-store POS Terminal routes (Counter Checkout)
-router.post('/pos', createPosOrder);
-router.get('/pos/summary', getPosSummary);
-router.get('/pos', getPosOrders);
+// Dedicated in-store POS Terminal routes (Counter Checkout) - staff/admin only
+router.post('/pos', protect, authorize('admin', 'staff'), createPosOrder);
+router.get('/pos/summary', protect, authorize('admin', 'staff'), getPosSummary);
+router.get('/pos', protect, authorize('admin', 'staff'), getPosOrders);
 
 // Customer routes
 router.post('/', protect, createOrder);
