@@ -545,7 +545,8 @@ const createPosOrder = async (req, res, next) => {
       }
     }
 
-    const discount = Math.max(0, parseFloat(discountAmount || 0));
+    // Server-side guard: discount can never be negative or exceed the subtotal
+    const discount = Math.min(Math.max(0, parseFloat(discountAmount || 0)), subtotal);
     const finalTotal = Math.max(0, subtotal - discount);
 
     // Format notes with cashier and payment metadata
@@ -694,6 +695,7 @@ const getPosOrders = async (req, res, next) => {
       FROM orders o
       LEFT JOIN billings b ON b.order_id = o.id
       LEFT JOIN users u ON o.user_id = u.id
+      WHERE o.order_number LIKE 'ORD-POS-%'
       ORDER BY o.created_at DESC
       LIMIT 100
     `;
@@ -724,6 +726,7 @@ const getPosSummary = async (req, res, next) => {
         COUNT(*) AS today_orders_count
       FROM orders
       WHERE payment_status = 'paid'
+        AND order_number LIKE 'ORD-POS-%'
         AND DATE(created_at AT TIME ZONE 'Asia/Manila') = DATE(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Manila')
     `);
 
@@ -732,13 +735,14 @@ const getPosSummary = async (req, res, next) => {
         COALESCE(SUM(total_amount), 0) AS total_sales,
         COUNT(*) AS total_orders_count
       FROM orders
-      WHERE payment_status = 'paid'
+      WHERE payment_status = 'paid' AND order_number LIKE 'ORD-POS-%'
     `);
 
     const recentRes = await pool.query(`
       SELECT o.id, o.order_number, o.customer_name, o.payment_method, o.total_amount, o.created_at, b.invoice_number
       FROM orders o
       LEFT JOIN billings b ON b.order_id = o.id
+      WHERE o.order_number LIKE 'ORD-POS-%'
       ORDER BY o.created_at DESC
       LIMIT 5
     `);

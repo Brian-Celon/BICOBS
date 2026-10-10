@@ -128,17 +128,6 @@ function initPosLogin() {
         return;
     }
 
-    // Quick fill chips for store testing
-    staffChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            const email = chip.getAttribute('data-email');
-            const pass = chip.getAttribute('data-pass');
-            if (emailInput && email) emailInput.value = email;
-            if (passInput && pass) passInput.value = pass;
-            if (emailInput) emailInput.focus();
-        });
-    });
-
     // Show / hide password visibility toggle
     const btnTogglePass = document.getElementById('btn_toggle_pass');
     if (btnTogglePass && passInput) {

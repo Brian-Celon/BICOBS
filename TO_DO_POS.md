@@ -140,6 +140,9 @@ This roadmap tracks the essential, software-only functionality for the **Taurus 
   - [x] `POST/GET /api/orders/pos` and `/pos/summary` now require a staff/admin JWT (unauthenticated calls return `401`).
   - [x] Orders and repair tickets are tied to the real logged-in cashier (`req.user.id`), not the first admin account.
   - [x] Frontend sends the cashier token on every POS call via `posFetch()`; expired sessions return to `POS-login.html`.
+  - [x] Removed the "Quick Fill" staff credential buttons from `POS-login.html` (no emails/passwords in page source).
+  - [x] POS history and daily/all-time summary count counter sales only (`ORD-POS-%`); website orders are excluded.
+  - [x] Server caps discounts at the subtotal (total can never go negative, even if the client is tampered with).
 - [x] **API-level End-to-End Test (passed, test data cleaned up):**
   - [x] Staff login ➔ cash sale with product + repair labor ➔ `201` with invoice `INV-POS-...` and 1 repair ticket.
   - [x] Stock deducted correctly (8 ➔ 6) and blank customer name saved as `Walk-in Customer`.
