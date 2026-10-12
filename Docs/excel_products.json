@@ -1,0 +1,1052 @@
+[
+  {
+    "index": 1,
+    "slug": "2021_pinewood_climber_carbon_27_5",
+    "name": "2021 Pinewood Climber CARBON 27.5",
+    "category": "built_bikes",
+    "price": 40000.0
+  },
+  {
+    "index": 2,
+    "slug": "cult_odyssey_hydro_brakes_27_5",
+    "name": "Cult Odyssey Hydro Brakes 27.5",
+    "category": "built_bikes",
+    "price": 14500.0
+  },
+  {
+    "index": 3,
+    "slug": "toseek_chester_700c_disc_brake_alloy_2x9",
+    "name": "Toseek Chester 700c Disc Brake ALLOY (2x9)",
+    "category": "built_bikes",
+    "price": 11000.0
+  },
+  {
+    "index": 4,
+    "slug": "ryder_x3_27_5_2021_mt200_hydro_brakes_3x8",
+    "name": "Ryder X3 27.5 2021 MT200 Hydro Brakes (3x8)",
+    "category": "built_bikes",
+    "price": 12500.0
+  },
+  {
+    "index": 5,
+    "slug": "pinewood_trident_flux",
+    "name": "Pinewood Trident Flux",
+    "category": "built_bikes",
+    "price": 17500.0
+  },
+  {
+    "index": 6,
+    "slug": "garuda_rampage",
+    "name": "Garuda Rampage",
+    "category": "built_bikes",
+    "price": 14500.0
+  },
+  {
+    "index": 7,
+    "slug": "pinewood_challenger",
+    "name": "Pinewood Challenger",
+    "category": "built_bikes",
+    "price": 15500.0
+  },
+  {
+    "index": 8,
+    "slug": "kespor_stork_feather_cx_1_0_2022",
+    "name": "Kespor Stork Feather CX 1.0 2022",
+    "category": "built_bikes",
+    "price": 55000.0
+  },
+  {
+    "index": 9,
+    "slug": "pinewood_lancer_1_0_2022_gravel_rx_2x9",
+    "name": "Pinewood Lancer 1.0 2022 Gravel RX (2x9)",
+    "category": "built_bikes",
+    "price": 15500.0
+  },
+  {
+    "index": 10,
+    "slug": "elves_nandor",
+    "name": "ELVES NANDOR",
+    "category": "frame",
+    "price": 32000.0
+  },
+  {
+    "index": 11,
+    "slug": "ryder_x2",
+    "name": "Ryder X2",
+    "category": "frame",
+    "price": 4500.0
+  },
+  {
+    "index": 12,
+    "slug": "mountainpeak_monster",
+    "name": "MountainPeak Monster",
+    "category": "frame",
+    "price": 6500.0
+  },
+  {
+    "index": 13,
+    "slug": "mountainpeak_everest_2",
+    "name": "Mountainpeak Everest 2",
+    "category": "frame",
+    "price": 7800.0
+  },
+  {
+    "index": 14,
+    "slug": "specialized_stumpjumper",
+    "name": "Specialized Stumpjumper",
+    "category": "frame",
+    "price": 22000.0
+  },
+  {
+    "index": 15,
+    "slug": "weapon_stealth_29",
+    "name": "Weapon Stealth 29",
+    "category": "frame",
+    "price": 6500.0
+  },
+  {
+    "index": 16,
+    "slug": "weapon_spartan_29",
+    "name": "Weapon Spartan 29",
+    "category": "frame",
+    "price": 8500.0
+  },
+  {
+    "index": 17,
+    "slug": "saturn_calypso",
+    "name": "Saturn Calypso",
+    "category": "frame",
+    "price": 8800.0
+  },
+  {
+    "index": 18,
+    "slug": "saturn_dione",
+    "name": "Saturn Dione",
+    "category": "frame",
+    "price": 7000.0
+  },
+  {
+    "index": 19,
+    "slug": "sagmit_chaser",
+    "name": "Sagmit Chaser",
+    "category": "frame",
+    "price": 7500.0
+  },
+  {
+    "index": 20,
+    "slug": "cole_nx_27_5_tri_factor_2021",
+    "name": "COLE NX 27.5 TRI-FACTOR 2021",
+    "category": "frame",
+    "price": 6000.0
+  },
+  {
+    "index": 21,
+    "slug": "speedone_floater_boost",
+    "name": "Speedone Floater BOOST",
+    "category": "frame",
+    "price": 8500.0
+  },
+  {
+    "index": 22,
+    "slug": "aeroic_air_fork",
+    "name": "Aeroic AIR FORK",
+    "category": "fork",
+    "price": 2900.0
+  },
+  {
+    "index": 23,
+    "slug": "weapon_cannon35_boost",
+    "name": "Weapon Cannon35 BOOST",
+    "category": "fork",
+    "price": 7000.0
+  },
+  {
+    "index": 24,
+    "slug": "weapon_rifle",
+    "name": "Weapon Rifle",
+    "category": "fork",
+    "price": 6000.0
+  },
+  {
+    "index": 25,
+    "slug": "weapon_rocket",
+    "name": "Weapon Rocket",
+    "category": "fork",
+    "price": 6000.0
+  },
+  {
+    "index": 26,
+    "slug": "fork_weapon_tower",
+    "name": "Fork Weapon Tower",
+    "category": "fork",
+    "price": 4000.0
+  },
+  {
+    "index": 27,
+    "slug": "speedone_soldier_boost",
+    "name": "Speedone Soldier BOOST",
+    "category": "fork",
+    "price": 5900.0
+  },
+  {
+    "index": 28,
+    "slug": "manitou_markhor_boost",
+    "name": "Manitou Markhor BOOST",
+    "category": "fork",
+    "price": 12000.0
+  },
+  {
+    "index": 29,
+    "slug": "manitou_machete_comp_boost",
+    "name": "Manitou Machete Comp BOOST",
+    "category": "fork",
+    "price": 16500.0
+  },
+  {
+    "index": 30,
+    "slug": "manitou_mattoc_comp_boost",
+    "name": "Manitou Mattoc Comp Boost",
+    "category": "fork",
+    "price": 25000.0
+  },
+  {
+    "index": 31,
+    "slug": "sr_suntour_epixon_stealth",
+    "name": "SR Suntour Epixon Stealth",
+    "category": "fork",
+    "price": 8600.0
+  },
+  {
+    "index": 32,
+    "slug": "sr_suntour_raidon_boost",
+    "name": "SR Suntour Raidon BOOST",
+    "category": "fork",
+    "price": 9000.0
+  },
+  {
+    "index": 33,
+    "slug": "sr_suntour_xcr_32_boost",
+    "name": "SR Suntour XCR 32 BOOST",
+    "category": "fork",
+    "price": 52000.0
+  },
+  {
+    "index": 34,
+    "slug": "ldcnc_3_0",
+    "name": "LDCNC 3.0",
+    "category": "hubs",
+    "price": 2200.0
+  },
+  {
+    "index": 35,
+    "slug": "speedone_soldier_boost",
+    "name": "SpeedOne Soldier BOOST",
+    "category": "hubs",
+    "price": 3400.0
+  },
+  {
+    "index": 36,
+    "slug": "genova_big_dipper",
+    "name": "Genova Big Dipper",
+    "category": "hubs",
+    "price": 3000.0
+  },
+  {
+    "index": 37,
+    "slug": "weapon_animal",
+    "name": "Weapon Animal",
+    "category": "hubs",
+    "price": 4500.0
+  },
+  {
+    "index": 38,
+    "slug": "sagmit_evo3",
+    "name": "Sagmit EVO3",
+    "category": "hubs",
+    "price": 3400.0
+  },
+  {
+    "index": 39,
+    "slug": "ragusa_r100",
+    "name": "Ragusa R100",
+    "category": "hubs",
+    "price": 950.0
+  },
+  {
+    "index": 40,
+    "slug": "speedone_soldier",
+    "name": "SpeedOne Soldier",
+    "category": "hubs",
+    "price": 3000.0
+  },
+  {
+    "index": 41,
+    "slug": "speedone_pilot_carbon",
+    "name": "SpeedOne Pilot Carbon",
+    "category": "hubs",
+    "price": 3450.0
+  },
+  {
+    "index": 42,
+    "slug": "speedone_torpedo",
+    "name": "SpeedOne Torpedo",
+    "category": "hubs",
+    "price": 3600.0
+  },
+  {
+    "index": 43,
+    "slug": "origin8_non_boost",
+    "name": "Origin8 NON BOOST",
+    "category": "hubs",
+    "price": 5200.0
+  },
+  {
+    "index": 44,
+    "slug": "sagmit_edison_12spd_up_kit",
+    "name": "Sagmit edison 12spd up kit",
+    "category": "upgrade_kit",
+    "price": 5200.0
+  },
+  {
+    "index": 45,
+    "slug": "12spd_ltwoo_ax_upkit_with_ixf_crank",
+    "name": "12spd LTwoo AX Upkit with IXF crank",
+    "category": "upgrade_kit",
+    "price": 8000.0
+  },
+  {
+    "index": 46,
+    "slug": "deore_m6100_12spd_upkit_with_weapon_cogs",
+    "name": "Deore M6100 12spd Upkit with Weapon Cogs",
+    "category": "upgrade_kit",
+    "price": 9000.0
+  },
+  {
+    "index": 47,
+    "slug": "zee_m640_10spd_upkit",
+    "name": "ZEE M640 10spd Upkit",
+    "category": "upgrade_kit",
+    "price": 6800.0
+  },
+  {
+    "index": 48,
+    "slug": "sram_nx_eagle_12spd_with_bb",
+    "name": "SRAM NX Eagle 12spd WITH BB",
+    "category": "upgrade_kit",
+    "price": 13000.0
+  },
+  {
+    "index": 49,
+    "slug": "handle_post_controltech_one",
+    "name": "Handle Post Controltech ONE",
+    "category": "stem",
+    "price": 1800.0
+  },
+  {
+    "index": 50,
+    "slug": "handlepost_controltech",
+    "name": "HandlePost ControlTech",
+    "category": "stem",
+    "price": 1600.0
+  },
+  {
+    "index": 51,
+    "slug": "seatpost_controltech_one",
+    "name": "SeatPost ControlTech ONE",
+    "category": "stem",
+    "price": 1700.0
+  },
+  {
+    "index": 52,
+    "slug": "handlepost_controltech_cls",
+    "name": "HandlePost ControlTech CLS",
+    "category": "stem",
+    "price": 1800.0
+  },
+  {
+    "index": 53,
+    "slug": "weapon_fury_stem",
+    "name": "Weapon Fury stem",
+    "category": "stem",
+    "price": 850.0
+  },
+  {
+    "index": 54,
+    "slug": "weapon_ambush_stem",
+    "name": "Weapon Ambush Stem",
+    "category": "stem",
+    "price": 1000.0
+  },
+  {
+    "index": 55,
+    "slug": "weapon_savage_stem",
+    "name": "Weapon Savage Stem",
+    "category": "stem",
+    "price": 1100.0
+  },
+  {
+    "index": 56,
+    "slug": "weapon_beast_stem",
+    "name": "Weapon Beast Stem",
+    "category": "stem",
+    "price": 1200.0
+  },
+  {
+    "index": 57,
+    "slug": "weapon_animal_stem",
+    "name": "Weapon Animal Stem",
+    "category": "stem",
+    "price": 1100.0
+  },
+  {
+    "index": 58,
+    "slug": "weapon_predator_stem",
+    "name": "Weapon Predator Stem",
+    "category": "stem",
+    "price": 1000.0
+  },
+  {
+    "index": 59,
+    "slug": "handle_bar_pro_lt",
+    "name": "Handle Bar Pro LT",
+    "category": "handle_bar",
+    "price": 1800.0
+  },
+  {
+    "index": 60,
+    "slug": "handle_bar_pro_koryak",
+    "name": "Handle Bar Pro Koryak",
+    "category": "handle_bar",
+    "price": 2200.0
+  },
+  {
+    "index": 61,
+    "slug": "drop_bar_gravel_pro_lt",
+    "name": "Drop Bar Gravel Pro LT",
+    "category": "handle_bar",
+    "price": 1800.0
+  },
+  {
+    "index": 62,
+    "slug": "drop_bar_gravel_pro_discovery",
+    "name": "Drop Bar Gravel Pro Discovery",
+    "category": "handle_bar",
+    "price": 2200.0
+  },
+  {
+    "index": 63,
+    "slug": "answer_protaper_20x20",
+    "name": "Answer ProTaper 20x20",
+    "category": "handle_bar",
+    "price": 2000.0
+  },
+  {
+    "index": 64,
+    "slug": "answer_protaper",
+    "name": "Answer ProTaper",
+    "category": "handle_bar",
+    "price": 2000.0
+  },
+  {
+    "index": 65,
+    "slug": "answer_protaper_7050_series_aluminum",
+    "name": "Answer ProTaper 7050 series Aluminum",
+    "category": "handle_bar",
+    "price": 1600.0
+  },
+  {
+    "index": 66,
+    "slug": "sagmit_brooklyn_3_0",
+    "name": "Sagmit Brooklyn 3.0",
+    "category": "handle_bar",
+    "price": 550.0
+  },
+  {
+    "index": 67,
+    "slug": "sagmit_shadow",
+    "name": "Sagmit shadow",
+    "category": "handle_bar",
+    "price": 550.0
+  },
+  {
+    "index": 68,
+    "slug": "sagmit_static",
+    "name": "Sagmit Static",
+    "category": "handle_bar",
+    "price": 750.0
+  },
+  {
+    "index": 69,
+    "slug": "sagmit_redclassic_skull",
+    "name": "Sagmit RedClassic skull",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 70,
+    "slug": "genova_jupiter",
+    "name": "Genova Jupiter",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 71,
+    "slug": "giant_w_o_hole",
+    "name": "Giant w/o Hole",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 72,
+    "slug": "giant_with_hole",
+    "name": "Giant with Hole",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 73,
+    "slug": "ragusa_r_100",
+    "name": "Ragusa R-100",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 74,
+    "slug": "topgrade",
+    "name": "Topgrade",
+    "category": "saddle",
+    "price": 350.0
+  },
+  {
+    "index": 75,
+    "slug": "diamond",
+    "name": "Diamond",
+    "category": "saddle",
+    "price": 350.0
+  },
+  {
+    "index": 76,
+    "slug": "san_marco",
+    "name": "San Marco",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 77,
+    "slug": "velo_plush",
+    "name": "Velo Plush",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 78,
+    "slug": "sagmit_oilslick",
+    "name": "Sagmit Oilslick",
+    "category": "saddle",
+    "price": 550.0
+  },
+  {
+    "index": 79,
+    "slug": "genova_mars",
+    "name": "Genova Mars",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 80,
+    "slug": "specialized_black",
+    "name": "Specialized Black",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 81,
+    "slug": "specialized_m811",
+    "name": "Specialized M811",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 82,
+    "slug": "easydo_es_01",
+    "name": "Easydo ES-01",
+    "category": "saddle",
+    "price": 450.0
+  },
+  {
+    "index": 83,
+    "slug": "silicon_grip_seer_5mm",
+    "name": "Silicon Grip Seer 5mm",
+    "category": "handle_grip",
+    "price": 330.0
+  },
+  {
+    "index": 84,
+    "slug": "seer_polymer_bartape",
+    "name": "Seer Polymer Bartape",
+    "category": "handle_grip",
+    "price": 350.0
+  },
+  {
+    "index": 85,
+    "slug": "silicon_grip_seer_7mm",
+    "name": "Silicon Grip Seer 7mm",
+    "category": "handle_grip",
+    "price": 400.0
+  },
+  {
+    "index": 86,
+    "slug": "seer_art_racing_edition_bartape",
+    "name": "Seer Art Racing Edition BarTape",
+    "category": "handle_grip",
+    "price": 400.0
+  },
+  {
+    "index": 87,
+    "slug": "seer_silicon_hornet_bar_tape",
+    "name": "Seer SILICON Hornet Bar Tape",
+    "category": "handle_grip",
+    "price": 450.0
+  },
+  {
+    "index": 88,
+    "slug": "seer_polymer_hornet_bar_tape",
+    "name": "Seer POLYMER Hornet Bar Tape",
+    "category": "handle_grip",
+    "price": 450.0
+  },
+  {
+    "index": 89,
+    "slug": "seer_super_lite_bar_tape",
+    "name": "Seer Super Lite Bar tape",
+    "category": "handle_grip",
+    "price": 300.0
+  },
+  {
+    "index": 90,
+    "slug": "handle_grip_attack_dual_lock_on",
+    "name": "Handle Grip Attack Dual Lock-On",
+    "category": "handle_grip",
+    "price": 370.0
+  },
+  {
+    "index": 91,
+    "slug": "weapon_race_w_palm_rest",
+    "name": "Weapon Race w/ Palm Rest",
+    "category": "handle_grip",
+    "price": 400.0
+  },
+  {
+    "index": 92,
+    "slug": "weapon_rubix",
+    "name": "Weapon Rubix",
+    "category": "handle_grip",
+    "price": 200.0
+  },
+  {
+    "index": 93,
+    "slug": "weapon_wave",
+    "name": "Weapon Wave",
+    "category": "handle_grip",
+    "price": 350.0
+  },
+  {
+    "index": 94,
+    "slug": "speedone_soldier",
+    "name": "Speedone Soldier",
+    "category": "pedals",
+    "price": 1200.0
+  },
+  {
+    "index": 95,
+    "slug": "speedone_pilot",
+    "name": "Speedone Pilot",
+    "category": "pedals",
+    "price": 1200.0
+  },
+  {
+    "index": 96,
+    "slug": "pedal_sagmit_610",
+    "name": "Pedal Sagmit 610",
+    "category": "pedals",
+    "price": 800.0
+  },
+  {
+    "index": 97,
+    "slug": "pedal_sagmit_614",
+    "name": "Pedal Sagmit 614",
+    "category": "pedals",
+    "price": 800.0
+  },
+  {
+    "index": 98,
+    "slug": "ragusa_r700",
+    "name": "Ragusa R700",
+    "category": "pedals",
+    "price": 500.0
+  },
+  {
+    "index": 99,
+    "slug": "ragusa_cnc_sealed_bearing_712",
+    "name": "Ragusa CNC Sealed Bearing 712",
+    "category": "pedals",
+    "price": 800.0
+  },
+  {
+    "index": 100,
+    "slug": "sagmit_622_cnc_sealed_bearing",
+    "name": "Sagmit 622 CNC Sealed Bearing",
+    "category": "pedals",
+    "price": 800.0
+  },
+  {
+    "index": 101,
+    "slug": "sagmit_618_cnc_sealed_bearing",
+    "name": "Sagmit 618 CNC Sealed Bearing",
+    "category": "pedals",
+    "price": 800.0
+  },
+  {
+    "index": 102,
+    "slug": "mks_japan_gr_9",
+    "name": "MKS JAPAN GR-9",
+    "category": "pedals",
+    "price": 1200.0
+  },
+  {
+    "index": 103,
+    "slug": "mks_sylvan_touring",
+    "name": "MKS Sylvan Touring",
+    "category": "pedals",
+    "price": 1400.0
+  },
+  {
+    "index": 104,
+    "slug": "mks_bm7",
+    "name": "MKS BM7",
+    "category": "pedals",
+    "price": 1550.0
+  },
+  {
+    "index": 105,
+    "slug": "ldcnc_rs300_700c_rim_brake",
+    "name": "LDCNC RS300 700c Rim Brake",
+    "category": "rims",
+    "price": 5100.0
+  },
+  {
+    "index": 106,
+    "slug": "sagmit_aero",
+    "name": "Sagmit Aero",
+    "category": "rims",
+    "price": 1500.0
+  },
+  {
+    "index": 107,
+    "slug": "sagmit_legend_m32",
+    "name": "Sagmit Legend M32",
+    "category": "rims",
+    "price": 1600.0
+  },
+  {
+    "index": 108,
+    "slug": "kore_realm_4_2",
+    "name": "Kore Realm 4.2",
+    "category": "rims",
+    "price": 1100.0
+  },
+  {
+    "index": 109,
+    "slug": "wtb_i21_tubeless_ready",
+    "name": "WTB i21 Tubeless Ready",
+    "category": "rims",
+    "price": 1600.0
+  },
+  {
+    "index": 110,
+    "slug": "wtb_i25_tubeless_ready",
+    "name": "WTB i25 Tubeless Ready",
+    "category": "rims",
+    "price": 1600.0
+  },
+  {
+    "index": 111,
+    "slug": "american_classic_feldspar_290_tubeless_ready",
+    "name": "American Classic Feldspar 290 Tubeless Ready",
+    "category": "rims",
+    "price": 1800.0
+  },
+  {
+    "index": 112,
+    "slug": "jalco_wellington_tubeless_ready",
+    "name": "Jalco Wellington Tubeless Ready",
+    "category": "rims",
+    "price": 1400.0
+  },
+  {
+    "index": 113,
+    "slug": "speedone_pilot",
+    "name": "Speedone Pilot",
+    "category": "rims",
+    "price": 2000.0
+  },
+  {
+    "index": 114,
+    "slug": "speedone_bazooka",
+    "name": "Speedone Bazooka",
+    "category": "rims",
+    "price": 1700.0
+  },
+  {
+    "index": 115,
+    "slug": "speedone_soldier",
+    "name": "Speedone Soldier",
+    "category": "rims",
+    "price": 1900.0
+  },
+  {
+    "index": 116,
+    "slug": "sagmit_safarri",
+    "name": "Sagmit Safarri",
+    "category": "rims",
+    "price": 1700.0
+  },
+  {
+    "index": 117,
+    "slug": "jalco_maranello",
+    "name": "Jalco Maranello",
+    "category": "rims",
+    "price": 1500.0
+  },
+  {
+    "index": 118,
+    "slug": "kore_realm_2_4",
+    "name": "Kore Realm 2.4",
+    "category": "rims",
+    "price": 1200.0
+  },
+  {
+    "index": 119,
+    "slug": "maxxis_ikon_27_5_x_2_20_tanwall",
+    "name": "Maxxis Ikon 27.5 x 2.20 Tanwall",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 120,
+    "slug": "maxxis_ardent_29_x_2_25_tanwall",
+    "name": "Maxxis Ardent 29 x 2.25 Tanwall",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 121,
+    "slug": "maxxis_ikon_29_x_2_20",
+    "name": "Maxxis Ikon 29 x 2.20",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 122,
+    "slug": "maxxis_crossmark_ii_27_5_x_2_25",
+    "name": "Maxxis Crossmark II 27.5 x 2.25",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 123,
+    "slug": "maxxis_ikon_29_x_2_20_tanwall",
+    "name": "Maxxis Ikon 29 x 2.20 Tanwall",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 124,
+    "slug": "maxxis_rekon_race_27_5_x_2_25",
+    "name": "Maxxis Rekon Race 27.5 x 2.25",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 125,
+    "slug": "maxxis_ardent_27_5_x_2_25",
+    "name": "Maxxis Ardent 27.5 x 2.25",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 126,
+    "slug": "maxxis_ardent_race_27_5_x_2_20",
+    "name": "Maxxis Ardent Race 27.5 x 2.20",
+    "category": "tires",
+    "price": 1500.0
+  },
+  {
+    "index": 127,
+    "slug": "maxxis_tube",
+    "name": "MAXXIS TUBE",
+    "category": "tires",
+    "price": 250.0
+  },
+  {
+    "index": 128,
+    "slug": "sagmit_tube",
+    "name": "SAGMIT TUBE",
+    "category": "tires",
+    "price": 150.0
+  },
+  {
+    "index": 129,
+    "slug": "size_20_leo_tube",
+    "name": "SIZE 20 LEO TUBE",
+    "category": "tires",
+    "price": 85.0
+  },
+  {
+    "index": 130,
+    "slug": "size_26_leo_tube",
+    "name": "SIZE 26 LEO TUBE",
+    "category": "tires",
+    "price": 100.0
+  },
+  {
+    "index": 131,
+    "slug": "size_20_tire",
+    "name": "SIZE 20 TIRE",
+    "category": "tires",
+    "price": 380.0
+  },
+  {
+    "index": 132,
+    "slug": "size_16_tire",
+    "name": "SIZE 16 TIRE",
+    "category": "tires",
+    "price": 280.0
+  },
+  {
+    "index": 133,
+    "slug": "size_16_tube",
+    "name": "SIZE 16 TUBE",
+    "category": "tires",
+    "price": 85.0
+  },
+  {
+    "index": 134,
+    "slug": "8_speed_sumc_cp_with_missing_link",
+    "name": "8 SPEED SUMC CP With Missing link",
+    "category": "chain",
+    "price": 300.0
+  },
+  {
+    "index": 135,
+    "slug": "9_speed_sumc_cp_with_missing_link",
+    "name": "9 SPEED SUMC CP With Missing link",
+    "category": "chain",
+    "price": 380.0
+  },
+  {
+    "index": 136,
+    "slug": "10_speed_sumc_cp_with_missing_link",
+    "name": "10 SPEED SUMC CP With Missing link",
+    "category": "chain",
+    "price": 450.0
+  },
+  {
+    "index": 137,
+    "slug": "11_speed_sumc_cp_with_missing_link",
+    "name": "11 SPEED SUMC CP With Missing link",
+    "category": "chain",
+    "price": 650.0
+  },
+  {
+    "index": 138,
+    "slug": "12_speed_sumc_cp_with_missing_link",
+    "name": "12 SPEED SUMC CP With Missing link",
+    "category": "chain",
+    "price": 1050.0
+  },
+  {
+    "index": 139,
+    "slug": "8_speed_sumc_oilslick_116links_with_missing_link",
+    "name": "8 SPEED SUMC Oilslick 116Links With Missing link",
+    "category": "chain",
+    "price": 450.0
+  },
+  {
+    "index": 140,
+    "slug": "10_speed_sumc_oilslick_116links_with_missing_link",
+    "name": "10 SPEED SUMC Oilslick 116Links With Missing link",
+    "category": "chain",
+    "price": 750.0
+  },
+  {
+    "index": 141,
+    "slug": "11_speed_sumc_oilslick_116links_with_missing_link",
+    "name": "11 SPEED SUMC Oilslick 116Links With Missing link",
+    "category": "chain",
+    "price": 1200.0
+  },
+  {
+    "index": 142,
+    "slug": "12spd_kmc_chain_x_series_grey",
+    "name": "12SPD KMC Chain X Series GREY",
+    "category": "chain",
+    "price": 1500.0
+  },
+  {
+    "index": 143,
+    "slug": "11spd_kmc_chain_x_series_grey",
+    "name": "11SPD KMC Chain X Series GREY",
+    "category": "chain",
+    "price": 1100.0
+  },
+  {
+    "index": 144,
+    "slug": "10spd_kmc_chain_x_series_grey",
+    "name": "10SPD KMC Chain X Series GREY",
+    "category": "chain",
+    "price": 900.0
+  },
+  {
+    "index": 145,
+    "slug": "9spd_kmc_chain_x_series_gold",
+    "name": "9SPD KMC Chain X Series GOLD",
+    "category": "chain",
+    "price": 1800.0
+  },
+  {
+    "index": 146,
+    "slug": "10spd_kmc_chain_x_series_gold",
+    "name": "10SPD KMC Chain X Series GOLD",
+    "category": "chain",
+    "price": 1800.0
+  },
+  {
+    "index": 147,
+    "slug": "12spd_kmc_chain_x_series_gold",
+    "name": "12SPD KMC Chain X Series GOLD",
+    "category": "chain",
+    "price": 2400.0
+  },
+  {
+    "index": 148,
+    "slug": "ct_1hx_116links_heavy_duty_for_fixie",
+    "name": "CT-1HX 116links Heavy Duty for FIXIE",
+    "category": "chain",
+    "price": 350.0
+  },
+  {
+    "index": 149,
+    "slug": "gt_10_126links",
+    "name": "GT-10 126links",
+    "category": "chain",
+    "price": 500.0
+  },
+  {
+    "index": 150,
+    "slug": "gt_11_126links",
+    "name": "GT-11 126links",
+    "category": "chain",
+    "price": 700.0
+  }
+]

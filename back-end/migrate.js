@@ -61,6 +61,16 @@ async function runMigration() {
         FROM (SELECT category, COUNT(*) as cnt FROM products GROUP BY category) sub
         WHERE c.slug = sub.category;
       `);
+
+      await client.query(`
+        UPDATE categories
+        SET item_count = (
+          SELECT COUNT(*) 
+          FROM products 
+          WHERE category IN ('built_bikes', 'mountain_bikes', 'road_bikes', 'gravel_bikes')
+        )
+        WHERE slug = 'built_bikes';
+      `);
     }
 
     // 3. Count rows in products and categories tables
