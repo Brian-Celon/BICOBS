@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const { connectDB } = require('./config/db');
+const { runHealthChecks, printHealthReport } = require('./utils/systemHealth');
 
 // 1. Load environment variables
 dotenv.config({ path: path.join(__dirname, '.env') });
@@ -39,6 +40,14 @@ const healthCheckHandler = (req, res) => {
 app.get('/api/health', healthCheckHandler);
 app.get('/health', healthCheckHandler);
 
+// 5b. Detailed System Health: reports which component is working / not working
+// (environment, database, tables, email/SMTP, frontend). Returns 503 if anything is in error.
+app.get('/api/health/system', async (req, res) => {
+  const report = await runHealthChecks();
+  res.status(report.status === 'error' ? 503 : 200).json(report);
+});
+
+
 // 6. Routes
 const apiRouter = express.Router();
 apiRouter.use('/auth', require('./routes/authRoutes'));
@@ -64,11 +73,43 @@ app.use((req, res, next) => {
 
 // 8. Global Error Middleware
 app.use((err, req, res, next) => {
-  console.error('[Unhandled Error]', err);
-  res.status(err.status || 500).json({
+  console.error(`[Unhandled Error] ${req.method} ${req.originalUrl}`, err);
+
+  let status = err.status || 500;
+  let message = err.message || 'Internal Server Error';
+  let component;
+
+  if (err.type === 'entity.parse.failed') {
+    status = 400;
+    message = 'Invalid JSON in request body';
+  } else if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+    status = 401;
+    component = 'auth';
+  } else if (err.code && /^(ECONNREFUSED|ENOTFOUND|ETIMEDOUT|28P01|57P01|08\w{3})$/.test(err.code)) {
+    status = 503;
+    component = 'database';
+    message = `Database unavailable (${err.code}). Check /api/health/system`;
+  } else if (err.code === 'EAUTH' || err.code === 'ECONNECTION' || err.code === 'ESOCKET') {
+    status = 502;
+    component = 'email';
+    message = `Email service failed (${err.code}). Check /api/health/system`;
+  }
+
+  res.status(status).json({
     status: 'error',
-    message: err.message || 'Internal Server Error'
+    ...(component && { component }),
+    message: status >= 500 && process.env.NODE_ENV === 'production' && !component
+      ? 'Internal Server Error'
+      : message
   });
+});
+
+// Prevent silent crashes: log clearly which kind of failure happened
+process.on('unhandledRejection', (reason) => {
+  console.error('[Unhandled Promise Rejection]', reason);
+});
+process.on('uncaughtException', (error) => {
+  console.error('[Uncaught Exception]', error);
 });
 
 // 9. Start Server (Only listen if run directly or outside Vercel serverless environment)
@@ -76,7 +117,10 @@ const PORT = process.env.PORT || 5000;
 if (require.main === module || (!process.env.VERCEL && process.env.NODE_ENV !== 'production')) {
   app.listen(PORT, () => {
     console.log(`[Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    // Startup self-test: prints exactly what is (not) working
+    runHealthChecks().then(printHealthReport).catch((e) => console.error('[System Check] Failed to run:', e.message));
   });
 }
 
 module.exports = app;
+

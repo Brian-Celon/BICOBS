@@ -132,6 +132,35 @@ async function sendVerificationOtpEmail(toEmail, toName, otpCode) {
   }
 }
 
+/**
+ * Verifies the SMTP configuration by connecting and authenticating (no email sent).
+ * @returns {Promise<{configured: boolean, ok: boolean, error?: string, hint?: string}>}
+ */
+async function verifyEmailService() {
+  const transporter = createTransporter();
+  if (!transporter) {
+    return {
+      configured: false,
+      ok: false,
+      error: 'EMAIL_USER and/or EMAIL_PASS are not set',
+      hint: 'Verification codes are only printed to the server console (simulator mode).'
+    };
+  }
+  try {
+    await transporter.verify();
+    return { configured: true, ok: true };
+  } catch (error) {
+    let hint = 'Check EMAIL_HOST / EMAIL_PORT / EMAIL_SECURE / EMAIL_SERVICE settings.';
+    if (error.code === 'EAUTH') {
+      hint = 'Login rejected. For Gmail use a 16-character App Password (not your normal password).';
+    } else if (error.code === 'ECONNECTION' || error.code === 'ESOCKET' || error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
+      hint = 'Cannot reach the SMTP server. Check host/port, or whether the host blocks outbound SMTP ports.';
+    }
+    return { configured: true, ok: false, error: `${error.code || 'ERROR'}: ${error.message}`, hint };
+  }
+}
+
 module.exports = {
-  sendVerificationOtpEmail
+  sendVerificationOtpEmail,
+  verifyEmailService
 };
