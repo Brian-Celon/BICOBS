@@ -1,0 +1,118 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/pages/Admin/dashboard.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/frontend/pages/Admin/dashboard.html"
+    },
+    {
+      "source": "/dashboard.html",
+      "destination": "/frontend/pages/Admin/dashboard.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/frontend/pages/Admin/login.html"
+    },
+    {
+      "source": "/login.html",
+      "destination": "/frontend/pages/Admin/login.html"
+    },
+    {
+      "source": "/inventory",
+      "destination": "/frontend/pages/Admin/inventory.html"
+    },
+    {
+      "source": "/inventory.html",
+      "destination": "/frontend/pages/Admin/inventory.html"
+    },
+    {
+      "source": "/products",
+      "destination": "/frontend/pages/Admin/products.html"
+    },
+    {
+      "source": "/products.html",
+      "destination": "/frontend/pages/Admin/products.html"
+    },
+    {
+      "source": "/orders",
+      "destination": "/frontend/pages/Admin/orders.html"
+    },
+    {
+      "source": "/orders.html",
+      "destination": "/frontend/pages/Admin/orders.html"
+    },
+    {
+      "source": "/billing",
+      "destination": "/frontend/pages/Admin/billing.html"
+    },
+    {
+      "source": "/billing.html",
+      "destination": "/frontend/pages/Admin/billing.html"
+    },
+    {
+      "source": "/repairs",
+      "destination": "/frontend/pages/Admin/repairs.html"
+    },
+    {
+      "source": "/repairs.html",
+      "destination": "/frontend/pages/Admin/repairs.html"
+    },
+    {
+      "source": "/reports",
+      "destination": "/frontend/pages/Admin/reports.html"
+    },
+    {
+      "source": "/reports.html",
+      "destination": "/frontend/pages/Admin/reports.html"
+    },
+    {
+      "source": "/users",
+      "destination": "/frontend/pages/Admin/users.html"
+    },
+    {
+      "source": "/users.html",
+      "destination": "/frontend/pages/Admin/users.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/frontend/pages/Admin/settings.html"
+    },
+    {
+      "source": "/settings.html",
+      "destination": "/frontend/pages/Admin/settings.html"
+    },
+    {
+      "source": "/Admin/:path*",
+      "destination": "/frontend/pages/Admin/:path*"
+    },
+    {
+      "source": "/pages/Admin/:path*",
+      "destination": "/frontend/pages/Admin/:path*"
+    },
+    {
+      "source": "/css/:path*",
+      "destination": "/frontend/css/:path*"
+    },
+    {
+      "source": "/js/:path*",
+      "destination": "/frontend/js/:path*"
+    },
+    {
+      "source": "/Pictures/:path*",
+      "destination": "/frontend/Pictures/:path*"
+    }
+  ]
+}
