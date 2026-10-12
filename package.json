@@ -1,0 +1,25 @@
+{
+  "name": "bicobs",
+  "version": "1.0.0",
+  "description": "Taurus Bike - Bike Customization & Ordering Business System (BICOBS)",
+  "private": true,
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node back-end/server.js",
+    "dev": "nodemon back-end/server.js",
+    "migrate": "node back-end/migrate.js",
+    "seed": "node back-end/migrate.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^10.0.15",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

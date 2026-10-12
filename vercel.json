@@ -1,0 +1,62 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/pages/index.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/frontend/pages/index.html"
+    },
+    {
+      "source": "/shop",
+      "destination": "/frontend/pages/shop.html"
+    },
+    {
+      "source": "/cart",
+      "destination": "/frontend/pages/cart.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/frontend/pages/about.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/frontend/pages/login.html"
+    },
+    {
+      "source": "/service",
+      "destination": "/frontend/pages/service.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/frontend/pages/Dashboard/dashboard.html"
+    },
+    {
+      "source": "/pages/:path*",
+      "destination": "/frontend/pages/:path*"
+    },
+    {
+      "source": "/css/:path*",
+      "destination": "/frontend/css/:path*"
+    },
+    {
+      "source": "/js/:path*",
+      "destination": "/frontend/js/:path*"
+    },
+    {
+      "source": "/Pictures/:path*",
+      "destination": "/frontend/Pictures/:path*"
+    }
+  ]
+}

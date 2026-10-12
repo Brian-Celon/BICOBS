@@ -5,7 +5,7 @@ const path = require('path');
 const { connectDB } = require('./config/db');
 
 // 1. Load environment variables
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 // 2. Connect to PostgreSQL (Supabase)
 connectDB();
@@ -29,23 +29,30 @@ app.get('/', (req, res) => {
 });
 
 // 5. Health Check Route
-app.get('/api/health', (req, res) => {
+const healthCheckHandler = (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'BICOBS Backend API is operational',
     timestamp: new Date().toISOString()
   });
-});
+};
+app.get('/api/health', healthCheckHandler);
+app.get('/health', healthCheckHandler);
 
 // 6. Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/categories', require('./routes/categoryRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-app.use('/api/billing', require('./routes/billingRoutes'));
-app.use('/api/dashboard', require('./routes/dashboardRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/repairs', require('./routes/repairRoutes'));
+const apiRouter = express.Router();
+apiRouter.use('/auth', require('./routes/authRoutes'));
+apiRouter.use('/products', require('./routes/productRoutes'));
+apiRouter.use('/categories', require('./routes/categoryRoutes'));
+apiRouter.use('/orders', require('./routes/orderRoutes'));
+apiRouter.use('/billing', require('./routes/billingRoutes'));
+apiRouter.use('/dashboard', require('./routes/dashboardRoutes'));
+apiRouter.use('/users', require('./routes/userRoutes'));
+apiRouter.use('/repairs', require('./routes/repairRoutes'));
+
+// Mount routes on /api and root router for Vercel serverless rewrite compatibility
+app.use('/api', apiRouter);
+app.use(apiRouter);
 
 // 7. 404 Route Handler
 app.use((req, res, next) => {
@@ -64,8 +71,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 9. Start Server
+// 9. Start Server (Only listen if run directly or outside Vercel serverless environment)
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`[Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-});
+if (require.main === module || (!process.env.VERCEL && process.env.NODE_ENV !== 'production')) {
+  app.listen(PORT, () => {
+    console.log(`[Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  });
+}
+
+module.exports = app;
