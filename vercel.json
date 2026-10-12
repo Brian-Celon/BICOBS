@@ -1,0 +1,78 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/pages/POS/POS-login.html"
+    },
+    {
+      "source": "/POS-login.html",
+      "destination": "/frontend/pages/POS/POS-login.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/frontend/pages/POS/POS-login.html"
+    },
+    {
+      "source": "/POS-home.html",
+      "destination": "/frontend/pages/POS/POS-home.html"
+    },
+    {
+      "source": "/home",
+      "destination": "/frontend/pages/POS/POS-home.html"
+    },
+    {
+      "source": "/POS-main.html",
+      "destination": "/frontend/pages/POS/POS-main.html"
+    },
+    {
+      "source": "/main",
+      "destination": "/frontend/pages/POS/POS-main.html"
+    },
+    {
+      "source": "/POS-repairs.html",
+      "destination": "/frontend/pages/POS/POS-repairs.html"
+    },
+    {
+      "source": "/repairs",
+      "destination": "/frontend/pages/POS/POS-repairs.html"
+    },
+    {
+      "source": "/POS-history.html",
+      "destination": "/frontend/pages/POS/POS-history.html"
+    },
+    {
+      "source": "/history",
+      "destination": "/frontend/pages/POS/POS-history.html"
+    },
+    {
+      "source": "/POS/:path*",
+      "destination": "/frontend/pages/POS/:path*"
+    },
+    {
+      "source": "/pages/POS/:path*",
+      "destination": "/frontend/pages/POS/:path*"
+    },
+    {
+      "source": "/css/:path*",
+      "destination": "/frontend/css/:path*"
+    },
+    {
+      "source": "/js/:path*",
+      "destination": "/frontend/js/:path*"
+    },
+    {
+      "source": "/Pictures/:path*",
+      "destination": "/frontend/Pictures/:path*"
+    }
+  ]
+}
