@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = getRedirectUrl();
           }, 600);
         } else {
-          showAuthAlert('sign_in_alert', result.message || 'Invalid email/username or password. Please try again.', 'error');
+          showAuthAlert('sign_in_alert', (result.message || 'Invalid email/username or password. Please try again.') + (result.hint ? ` — ${result.hint}` : ''), 'error');
         }
       } catch (err) {
         console.error('Sign in error:', err);
@@ -540,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = getRedirectUrl();
           }, 700);
         } else {
-          showAuthAlert('sign_up_alert', result.message || 'Registration failed. Please check your information.', 'error');
+          showAuthAlert('sign_up_alert', (result.message || 'Registration failed. Please check your information.') + (result.hint ? ` — ${result.hint}` : ''), 'error');
         }
       } catch (err) {
         console.error('Sign up error:', err);
@@ -791,12 +791,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok && result.status === 'success') {
           showOtpAlert('A new verification code has been dispatched to your email!', 'success');
           startResendTimer();
-          if (otpDevHint && result.devOtp) {
-            otpDevHint.innerHTML = `🔑 <strong>Dev Preview:</strong> Code is <span style="font-family: monospace; font-weight: 800; font-size: 16px; letter-spacing: 2px; color: #8b1e1e; margin-left: 4px;">${result.devOtp}</span> (also logged in server terminal)`;
-            otpDevHint.style.display = 'flex';
-          }
         } else {
-          showOtpAlert(result.message || 'Could not resend code. Please try again.', 'error');
+          showOtpAlert((result.message || 'Could not resend code. Please try again.') + (result.hint ? ` — ${result.hint}` : ''), 'error');
           btnResendOtp.disabled = false;
         }
       } catch (err) {

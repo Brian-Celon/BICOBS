@@ -72,8 +72,7 @@ const registerUser = async (req, res, next) => {
         status: 'success',
         requiresVerification: true,
         email: cleanEmail,
-        message: 'A 6-digit verification code has been sent to your email. Please verify to activate your account.',
-        devOtp: emailResult.simulated ? otpCode : undefined
+        message: 'A 6-digit verification code has been sent to your email. Please verify to activate your account.'
       });
     }
 
@@ -101,8 +100,7 @@ const registerUser = async (req, res, next) => {
       status: 'success',
       requiresVerification: true,
       email: cleanEmail,
-      message: 'Account created! A 6-digit verification code has been sent to your email.',
-      devOtp: emailResult.simulated ? otpCode : undefined
+      message: 'Account created! A 6-digit verification code has been sent to your email.'
     });
   } catch (error) {
     next(error);
@@ -253,8 +251,7 @@ const resendOtp = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       message: 'A new 6-digit verification code has been sent to your email.',
-      email: cleanEmail,
-      devOtp: emailResult.simulated ? otpCode : undefined
+      email: cleanEmail
     });
   } catch (error) {
     next(error);
@@ -316,8 +313,7 @@ const loginUser = async (req, res, next) => {
         status: 'unverified',
         requiresVerification: true,
         email: user.email,
-        message: 'Your email address is not verified yet. We have sent a 6-digit verification code to your email.',
-        devOtp: emailResult.simulated ? otpCode : undefined
+        message: 'Your email address is not verified yet. We have sent a 6-digit verification code to your email.'
       });
     }
 

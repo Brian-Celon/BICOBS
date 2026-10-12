@@ -94,20 +94,14 @@ async function sendVerificationOtpEmail(toEmail, toName, otpCode) {
 
   const textContent = `Hello ${toName || 'Rider'},\n\nYour Taurus Bike 6-digit verification code is: ${otpCode}\n\nThis code will expire in 10 minutes.\n\nIf you did not request this, please disregard.`;
 
-  // Development Fallback: If no SMTP credentials are configured, log to server console
+  // No fallback/simulator: if email can't be sent, the real reason is thrown and shown to the user.
   if (!transporter) {
-    console.log('\n' + '='.repeat(64));
-    console.log('📨 [BICOBS EMAIL SERVICE - SIMULATOR]');
-    console.log(`To: ${toEmail} (${toName})`);
-    console.log(`Subject: ${subject}`);
-    console.log(`🔑 6-Digit OTP Code: >>> ${otpCode} <<<`);
-    console.log('⏱️ Valid for 10 minutes');
-    console.log('💡 To send real emails, add EMAIL_USER and EMAIL_PASS to your .env');
-    console.log('='.repeat(64) + '\n');
-    return { success: true, simulated: true, otp: otpCode };
+    const err = new Error('Email service is not configured: EMAIL_USER and/or EMAIL_PASS are missing');
+    err.code = 'EMAIL_NOT_CONFIGURED';
+    err.hint = 'Set EMAIL_USER and EMAIL_PASS (Gmail needs a 16-character App Password) in the environment settings.';
+    throw err;
   }
 
-  // Real Email Dispatch via SMTP
   try {
     const fromAddress = process.env.EMAIL_FROM || `"Taurus Bike Shop" <${process.env.EMAIL_USER}>`;
     const info = await transporter.sendMail({
@@ -118,18 +112,27 @@ async function sendVerificationOtpEmail(toEmail, toName, otpCode) {
       html: htmlContent
     });
 
-    console.log(`[EmailService] Real verification email sent to ${toEmail}. MessageId: ${info.messageId}`);
+    console.log(`[EmailService] Verification email sent to ${toEmail}. MessageId: ${info.messageId}`);
     return { success: true, simulated: false, messageId: info.messageId };
   } catch (error) {
-    console.error('[EmailService Error] Failed to send real email via SMTP:', error.message);
-    // Fall back to terminal logging if SMTP fails so the customer/dev is not locked out!
-    console.log('\n' + '!'.repeat(64));
-    console.log('⚠️ [SMTP SEND FAILED - FALLBACK CONSOLE OTP]');
-    console.log(`Recipient: ${toEmail}`);
-    console.log(`🔑 6-Digit OTP Code: >>> ${otpCode} <<<`);
-    console.log('!'.repeat(64) + '\n');
-    return { success: true, simulated: true, otp: otpCode, warning: 'SMTP delivery failed; code logged to terminal' };
+    console.error('[EmailService Error] Failed to send email via SMTP:', error.message);
+    error.hint = smtpHint(error);
+    throw error;
   }
+}
+
+/** Human-readable fix suggestion for common SMTP failures. */
+function smtpHint(error) {
+  if (error.code === 'EAUTH') {
+    return 'Login rejected. For Gmail use a 16-character App Password (not your normal password).';
+  }
+  if (['ECONNECTION', 'ESOCKET', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNREFUSED'].includes(error.code)) {
+    return 'Cannot reach the SMTP server. Check host/port, or whether the host blocks outbound SMTP ports.';
+  }
+  if (error.code === 'EENVELOPE') {
+    return 'The recipient or sender email address is invalid.';
+  }
+  return 'Check EMAIL_HOST / EMAIL_PORT / EMAIL_SECURE / EMAIL_SERVICE / EMAIL_FROM settings.';
 }
 
 /**

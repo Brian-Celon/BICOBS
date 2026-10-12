@@ -79,30 +79,33 @@ app.use((err, req, res, next) => {
   let message = err.message || 'Internal Server Error';
   let component;
 
+  let hint = err.hint;
+
   if (err.type === 'entity.parse.failed') {
     status = 400;
     message = 'Invalid JSON in request body';
   } else if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
     status = 401;
     component = 'auth';
+  } else if (err.code === 'EMAIL_NOT_CONFIGURED' || err.command || err.code === 'EAUTH' || err.code === 'EENVELOPE' || err.code === 'ESOCKET') {
+    status = 502;
+    component = 'email';
+    message = `Email service error${err.code ? ` (${err.code})` : ''}: ${err.message}`;
   } else if (err.code && /^(ECONNREFUSED|ENOTFOUND|ETIMEDOUT|28P01|57P01|08\w{3})$/.test(err.code)) {
     status = 503;
     component = 'database';
-    message = `Database unavailable (${err.code}). Check /api/health/system`;
-  } else if (err.code === 'EAUTH' || err.code === 'ECONNECTION' || err.code === 'ESOCKET') {
-    status = 502;
-    component = 'email';
-    message = `Email service failed (${err.code}). Check /api/health/system`;
+    message = `Database error (${err.code}): ${err.message}`;
+    hint = hint || 'Check DATABASE_URL and that the database is running. See /api/health/system';
   }
 
   res.status(status).json({
     status: 'error',
     ...(component && { component }),
-    message: status >= 500 && process.env.NODE_ENV === 'production' && !component
-      ? 'Internal Server Error'
-      : message
+    message,
+    ...(hint && { hint })
   });
 });
+
 
 // Prevent silent crashes: log clearly which kind of failure happened
 process.on('unhandledRejection', (reason) => {
