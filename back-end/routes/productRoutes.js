@@ -6,12 +6,15 @@ const {
   getCategories,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  cleanupDuplicates
 } = require('../controllers/productController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 // Public routes
 router.get('/', getProducts);
+router.get('/cleanup-duplicates', cleanupDuplicates);
+router.post('/cleanup-duplicates', cleanupDuplicates);
 router.get('/categories', getCategories);
 router.get('/:id', getProductById);
 

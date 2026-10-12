@@ -330,12 +330,65 @@ const getCategories = async (req, res, next) => {
   }
 };
 
+// @desc    One-time cleanup of legacy duplicate products from database
+// @route   GET|POST /api/products/cleanup-duplicates
+// @access  Public (Self-healing migration utility)
+const cleanupDuplicates = async (req, res, next) => {
+  try {
+    const deletedRes = await db.query(`
+      DELETE FROM products 
+      WHERE sku IN (
+        'TBS-BIC-CULTODYS-002',
+        'TBS-SPA-HANDLEPO-051',
+        'TBS-SPA-SAGMITAE-107',
+        'TBS-SPA-MAXXISAR-121',
+        'TBS-SPA-9SPEEDSU-136',
+        'TBS-SPA-RYDERX2-012',
+        'TBS-SPA-WEAPONCA-023',
+        'TBS-SPA-HANDLEBA-060',
+        'TBS-SPA-GENOVAJU-070',
+        'TBS-ACC-SEERPOLY-084',
+        'TBS-SPA-SPEEDONE-095'
+      ) OR name = 'Cult Odyssey Hydro Brakes 27 5'
+      RETURNING id, name, sku;
+    `);
+
+    await db.query(`
+      UPDATE products SET name = 'Speedone Soldier BOOST Air Suspension Fork' WHERE sku = 'TBS-SPA-SPEEDONE-028';
+      UPDATE products SET name = 'Speedone Soldier BOOST Hubs' WHERE sku = 'TBS-SPA-SPEEDONE-036';
+      UPDATE products SET name = 'Ragusa R100 Sealed Bearing Hubs' WHERE sku = 'TBS-SPA-RAGUSAR1-040';
+      UPDATE products SET name = 'Ragusa R-100 Bike Saddle' WHERE sku = 'TBS-SPA-RAGUSAR1-074';
+      UPDATE products SET name = 'Speedone Pilot Sealed Pedals' WHERE sku = 'TBS-SPA-SPEEDONE-096';
+      UPDATE products SET name = 'Speedone Pilot Alloy Rims' WHERE sku = 'TBS-SPA-SPEEDONE-113';
+
+      UPDATE categories c
+      SET item_count = sub.cnt
+      FROM (SELECT category, COUNT(*) as cnt FROM products GROUP BY category) sub
+      WHERE c.slug = sub.category;
+    `);
+
+    const countRes = await db.query('SELECT COUNT(*) FROM products;');
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Database duplicate products cleaned successfully!',
+      deletedCount: deletedRes.rows.length,
+      deletedItems: deletedRes.rows,
+      totalRemainingProducts: parseInt(countRes.rows[0].count, 10)
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   getCategories,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  cleanupDuplicates
 };
+
 

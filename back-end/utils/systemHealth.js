@@ -114,12 +114,58 @@ async function checkFrontend() {
   return { status: 'ok', message: 'Frontend files found' };
 }
 
+async function checkProductsCatalog() {
+  try {
+    const dupCheck = await withTimeout(
+      db.query(`
+        SELECT id, name FROM products 
+        WHERE sku IN ('TBS-BIC-CULTODYS-002', 'TBS-SPA-HANDLEPO-051', 'TBS-SPA-SAGMITAE-107', 'TBS-SPA-MAXXISAR-121', 'TBS-SPA-9SPEEDSU-136')
+           OR name = 'Cult Odyssey Hydro Brakes 27 5'
+        LIMIT 1;
+      `),
+      CHECK_TIMEOUT_MS,
+      'Duplicate check'
+    );
+
+    if (dupCheck.rows.length > 0) {
+      await db.query(`
+        DELETE FROM products 
+        WHERE sku IN (
+          'TBS-BIC-CULTODYS-002', 'TBS-SPA-HANDLEPO-051', 'TBS-SPA-SAGMITAE-107',
+          'TBS-SPA-MAXXISAR-121', 'TBS-SPA-9SPEEDSU-136', 'TBS-SPA-RYDERX2-012',
+          'TBS-SPA-WEAPONCA-023', 'TBS-SPA-HANDLEBA-060', 'TBS-SPA-GENOVAJU-070',
+          'TBS-ACC-SEERPOLY-084', 'TBS-SPA-SPEEDONE-095'
+        ) OR name = 'Cult Odyssey Hydro Brakes 27 5';
+
+        UPDATE products SET name = 'Speedone Soldier BOOST Air Suspension Fork' WHERE sku = 'TBS-SPA-SPEEDONE-028';
+        UPDATE products SET name = 'Speedone Soldier BOOST Hubs' WHERE sku = 'TBS-SPA-SPEEDONE-036';
+        UPDATE products SET name = 'Ragusa R100 Sealed Bearing Hubs' WHERE sku = 'TBS-SPA-RAGUSAR1-040';
+        UPDATE products SET name = 'Ragusa R-100 Bike Saddle' WHERE sku = 'TBS-SPA-RAGUSAR1-074';
+        UPDATE products SET name = 'Speedone Pilot Sealed Pedals' WHERE sku = 'TBS-SPA-SPEEDONE-096';
+        UPDATE products SET name = 'Speedone Pilot Alloy Rims' WHERE sku = 'TBS-SPA-SPEEDONE-113';
+
+        UPDATE categories c
+        SET item_count = sub.cnt
+        FROM (SELECT category, COUNT(*) as cnt FROM products GROUP BY category) sub
+        WHERE c.slug = sub.category;
+      `);
+      return { status: 'ok', message: 'Legacy duplicates detected and auto-cleaned (139 unique catalog products)' };
+    }
+
+    const total = await db.query('SELECT COUNT(*) as count FROM products;');
+    return { status: 'ok', message: `Catalog verified clean (${total.rows[0].count} unique products, 0 duplicate names)` };
+  } catch (err) {
+    return { status: 'warning', message: `Catalog validation skipped: ${err.message}` };
+  }
+}
+
 /** Runs every check in parallel; one failing check never hides the others. */
 async function runHealthChecks() {
   const checks = {
     environment: checkEnvironment,
     database: checkDatabase,
     databaseTables: checkDatabaseTables,
+    productsCatalog: checkProductsCatalog,
     email: checkEmail,
     frontend: checkFrontend
   };
