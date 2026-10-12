@@ -1,13 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
+if (!process.env.DATABASE_URL) {
+  console.error('[Migration Error] DATABASE_URL is not set in back-end/.env.');
+  console.error('Please open back-end/.env and set DATABASE_URL=your_render_external_database_url');
+  process.exit(1);
+}
+
+const isLocalhost = process.env.DATABASE_URL.includes('localhost') || process.env.DATABASE_URL.includes('127.0.0.1');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: isLocalhost ? false : { rejectUnauthorized: false }
 });
 
 async function runMigration() {
