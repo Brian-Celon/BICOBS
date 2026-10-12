@@ -149,6 +149,32 @@ const createProduct = async (req, res, next) => {
       });
     }
 
+    // Guard against duplicate product names to prevent price adjustment conflicts
+    const existingName = await db.query(
+      'SELECT id, name, price, category FROM products WHERE LOWER(TRIM(name)) = LOWER(TRIM($1)) LIMIT 1',
+      [name]
+    );
+    if (existingName.rows.length > 0) {
+      const match = existingName.rows[0];
+      return res.status(409).json({
+        status: 'error',
+        message: `Product "${match.name}" already exists (ID: ${match.id}, Category: ${match.category}, Price: ₱${parseFloat(match.price).toLocaleString()}). Please edit the existing product or use a distinct name to prevent price conflicts.`
+      });
+    }
+
+    if (sku && sku.trim() !== '') {
+      const existingSku = await db.query(
+        'SELECT id, name FROM products WHERE UPPER(TRIM(sku)) = UPPER(TRIM($1)) LIMIT 1',
+        [sku.trim()]
+      );
+      if (existingSku.rows.length > 0) {
+        return res.status(409).json({
+          status: 'error',
+          message: `SKU "${sku.trim()}" is already assigned to "${existingSku.rows[0].name}" (ID: ${existingSku.rows[0].id}).`
+        });
+      }
+    }
+
     const sql = `
       INSERT INTO products (name, description, category, price, stock_quantity, sku, image_url, is_available, is_featured)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -156,12 +182,12 @@ const createProduct = async (req, res, next) => {
     `;
 
     const values = [
-      name,
+      name.trim(),
       description || '',
       category.toLowerCase(),
       parseFloat(price),
       parseInt(finalStock, 10),
-      sku || null,
+      sku ? sku.trim() : null,
       finalImage,
       finalAvailable,
       finalFeatured
@@ -198,12 +224,41 @@ const updateProduct = async (req, res, next) => {
     const current = existing.rows[0];
     const b = req.body;
 
-    const name = b.name !== undefined ? b.name : current.name;
+    // Guard against renaming to another existing product's name
+    if (b.name !== undefined && b.name.trim() !== '') {
+      const dupCheck = await db.query(
+        'SELECT id, name, category, price FROM products WHERE LOWER(TRIM(name)) = LOWER(TRIM($1)) AND id != $2 LIMIT 1',
+        [b.name.trim(), id]
+      );
+      if (dupCheck.rows.length > 0) {
+        const match = dupCheck.rows[0];
+        return res.status(409).json({
+          status: 'error',
+          message: `Another product already exists with the name "${match.name}" (ID: ${match.id}, Category: ${match.category}, Price: ₱${parseFloat(match.price).toLocaleString()}). Product names must be distinct to prevent price conflicts.`
+        });
+      }
+    }
+
+    // Guard against duplicate SKU on update
+    if (b.sku !== undefined && b.sku.trim() !== '') {
+      const skuCheck = await db.query(
+        'SELECT id, name FROM products WHERE UPPER(TRIM(sku)) = UPPER(TRIM($1)) AND id != $2 LIMIT 1',
+        [b.sku.trim(), id]
+      );
+      if (skuCheck.rows.length > 0) {
+        return res.status(409).json({
+          status: 'error',
+          message: `SKU "${b.sku.trim()}" is already used by "${skuCheck.rows[0].name}" (ID: ${skuCheck.rows[0].id}).`
+        });
+      }
+    }
+
+    const name = b.name !== undefined ? b.name.trim() : current.name;
     const description = b.description !== undefined ? b.description : current.description;
     const category = b.category !== undefined ? b.category.toLowerCase() : current.category;
     const price = b.price !== undefined ? parseFloat(b.price) : current.price;
     const stockQuantity = b.stockQuantity !== undefined ? parseInt(b.stockQuantity, 10) : (b.stock_quantity !== undefined ? parseInt(b.stock_quantity, 10) : current.stock_quantity);
-    const sku = b.sku !== undefined ? b.sku : current.sku;
+    const sku = b.sku !== undefined ? b.sku.trim() : current.sku;
     const imageUrl = b.imageUrl !== undefined ? b.imageUrl : (b.image_url !== undefined ? b.image_url : current.image_url);
     const isAvailable = b.isAvailable !== undefined ? b.isAvailable : (b.is_available !== undefined ? b.is_available : (stockQuantity > 0));
     const isFeatured = b.isFeatured !== undefined ? b.isFeatured : (b.is_featured !== undefined ? b.is_featured : current.is_featured);
