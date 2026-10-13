@@ -12,10 +12,8 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
 
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || 'fallback_secret'
-      );
+      const secret = process.env.JWT_SECRET || 'bicobs_dev_secret_key_2026';
+      const decoded = jwt.verify(token, secret);
 
       const result = await db.query(
         'SELECT id, full_name, email, role, phone_number, address FROM users WHERE id = $1',
@@ -60,6 +58,41 @@ const protect = async (req, res, next) => {
   }
 };
 
+// Optional protect middleware - sets req.user if valid token, but does not block if unauthenticated
+const optionalProtect = async (req, res, next) => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const secret = process.env.JWT_SECRET || 'bicobs_dev_secret_key_2026';
+      const decoded = jwt.verify(token, secret);
+      const result = await db.query(
+        'SELECT id, full_name, email, role, phone_number, address FROM users WHERE id = $1',
+        [decoded.id]
+      );
+      if (result.rows.length > 0) {
+        const userRow = result.rows[0];
+        req.user = {
+          _id: userRow.id,
+          id: userRow.id,
+          name: userRow.full_name,
+          full_name: userRow.full_name,
+          email: userRow.email,
+          role: userRow.role,
+          phone: userRow.phone_number,
+          phone_number: userRow.phone_number,
+          address: userRow.address
+        };
+      }
+    } catch (err) {
+      req.user = null;
+    }
+  }
+  return next();
+};
+
 // Grant access to specific roles (e.g., 'admin', 'staff')
 const authorize = (...roles) => {
   return (req, res, next) => {
@@ -73,4 +106,4 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { protect, authorize };
+module.exports = { protect, optionalProtect, authorize };

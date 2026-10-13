@@ -8,10 +8,10 @@ const {
   getAllTickets,
   updateTicketStatus
 } = require('../controllers/ticketController');
-const { protect, authorize } = require('../middleware/authMiddleware');
+const { protect, optionalProtect, authorize } = require('../middleware/authMiddleware');
 
 // Customer ticket routes
-router.post('/', protect, createTicket);
+router.post('/', optionalProtect, createTicket);
 router.get('/my-tickets', protect, getMyTickets);
 router.get('/:id/messages', protect, getTicketMessages);
 router.post('/:id/messages', protect, addTicketMessage);

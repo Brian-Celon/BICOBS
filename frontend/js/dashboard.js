@@ -815,7 +815,16 @@ function setup_ticket_modal() {
             e.preventDefault();
 
             const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
-            if (!token) {
+            let storedUser = null;
+            try {
+                const uStr = localStorage.getItem('user');
+                if (uStr) storedUser = JSON.parse(uStr);
+            } catch (e) {}
+
+            const customerName = (storedUser ? (storedUser.name || storedUser.fullName || storedUser.full_name) : localStorage.getItem('tb_user_name')) || 'Customer';
+            const customerEmail = (storedUser ? storedUser.email : localStorage.getItem('tb_user_email')) || '';
+
+            if (!token && !customerEmail) {
                 if (window.BICOBS_Auth) {
                     window.BICOBS_Auth.showLoginModal('Please sign in to submit a ticket');
                 } else {
@@ -841,13 +850,17 @@ function setup_ticket_modal() {
             }
 
             try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
                 const res = await fetch('/api/tickets', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ category, subject, description })
+                    headers,
+                    body: JSON.stringify({ category, subject, description, customerName, customerEmail })
                 });
 
                 const data = await res.json();
