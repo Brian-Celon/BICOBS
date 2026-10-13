@@ -2,8 +2,10 @@ const { Pool } = require('pg');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
+const connectionString = process.env.DATABASE_URL || 'postgresql://bicobs_db_user:SSaPsJ8gHkhLuIml9KMiHlAlr94lwJr5@dpg-db6cred9fdbs73fmlohg-a.singapore-postgres.render.com/bicobs_db';
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
   ssl: {
     rejectUnauthorized: false
   },
