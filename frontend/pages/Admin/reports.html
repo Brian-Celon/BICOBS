@@ -1100,7 +1100,8 @@
 
             try {
                 // 1. Fetch summary KPI
-                const summaryRes = await fetch("/api/dashboard/summary", {
+                const summaryApiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/dashboard/summary") : "/api/dashboard/summary";
+                const summaryRes = await fetch(summaryApiUrl, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 const summaryData = await summaryRes.json();
@@ -1113,7 +1114,8 @@
                 }
 
                 // 2. Fetch orders for units sold, online orders, and monthly breakdown
-                const ordersRes = await fetch("/api/orders", {
+                const ordersApiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/orders") : "/api/orders";
+                const ordersRes = await fetch(ordersApiUrl, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 const ordersData = await ordersRes.json();
@@ -1399,7 +1401,8 @@
                 }
 
                 // 4. Fetch products for inventory valuation and table
-                const productsRes = await fetch("/api/products", {
+                const productsApiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+                const productsRes = await fetch(productsApiUrl, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 const productsData = await productsRes.json();

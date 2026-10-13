@@ -14,13 +14,48 @@ function getAdminUser() {
     }
 }
 
-// Resolve backend API URL (supports port 5000 directly, as well as Live Server on port 5500, file:///, or Vercel serverless)
+// Dynamic Deployed Backend Base URL Configuration (e.g. Render, Railway, Vercel)
+function getBackendBaseUrl() {
+    return (window.TAURUS_API_BASE_URL || localStorage.getItem("taurus_api_base_url") || "").trim().replace(/\/$/, '');
+}
+window.getBackendBaseUrl = getBackendBaseUrl;
+
+function setBackendBaseUrl(url) {
+    if (url) {
+        const clean = url.trim().replace(/\/$/, '');
+        localStorage.setItem("taurus_api_base_url", clean);
+        window.TAURUS_API_BASE_URL = clean;
+    } else {
+        localStorage.removeItem("taurus_api_base_url");
+        window.TAURUS_API_BASE_URL = "";
+    }
+}
+window.setBackendBaseUrl = setBackendBaseUrl;
+
+function getBackendFallbackUrl(endpoint) {
+    const base = getBackendBaseUrl() || "http://localhost:5000";
+    const clean = (endpoint || '').startsWith('/') ? endpoint : `/${endpoint || ''}`;
+    return `${base}${clean}`;
+}
+window.getBackendFallbackUrl = getBackendFallbackUrl;
+
+// Resolve backend API URL (supports deployed live URLs, local port 5000, Live Server 5500, or Vercel serverless)
 function getApiUrl(endpoint) {
     if (!endpoint) return '';
     const clean = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+    // 1. If a custom deployed backend URL is configured (e.g. on Render/Railway), use it
+    const configuredBase = getBackendBaseUrl();
+    if (configuredBase) {
+        return `${configuredBase}${clean}`;
+    }
+
+    // 2. If running locally via file:/// or dev servers (like port 5500 Live Server, 3000), route to port 5000
     if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '5000')) {
         return `http://localhost:5000${clean}`;
     }
+
+    // 3. Otherwise (running on port 5000 directly or monorepo production on Vercel), use relative path
     return clean;
 }
 window.getApiUrl = getApiUrl;

@@ -14,6 +14,8 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 // Customer routes
 router.post('/', protect, createOrder);
 router.get('/myorders', protect, getMyOrders);
+router.get('/my-orders', protect, getMyOrders);
+router.get('/track/:orderNumber', getOrderById);
 router.get('/:id', protect, getOrderById);
 
 // Staff / Admin routes

@@ -47,9 +47,9 @@ async function loadRepairs() {
                 }
             });
         } catch (fetchErr) {
-            // Secondary fallback attempt directly to localhost:5000 if running from Live Server or file
-            if (!apiUrl.includes("http://localhost:5000")) {
-                res = await fetch("http://localhost:5000/api/repairs", {
+            const fallbackUrl = typeof getBackendFallbackUrl === 'function' ? getBackendFallbackUrl("/api/repairs") : "http://localhost:5000/api/repairs";
+            if (apiUrl !== fallbackUrl) {
+                res = await fetch(fallbackUrl, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -408,8 +408,9 @@ async function saveRepairStatus() {
                 })
             });
         } catch (fetchErr) {
-            if (!apiUrl.includes("http://localhost:5000")) {
-                res = await fetch(`http://localhost:5000/api/repairs/${id}`, {
+            const fallbackUrl = typeof getBackendFallbackUrl === 'function' ? getBackendFallbackUrl(`/api/repairs/${id}`) : `http://localhost:5000/api/repairs/${id}`;
+            if (apiUrl !== fallbackUrl) {
+                res = await fetch(fallbackUrl, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -491,8 +492,9 @@ async function handleCreateRepair(event) {
                 })
             });
         } catch (fetchErr) {
-            if (!apiUrl.includes("http://localhost:5000")) {
-                res = await fetch("http://localhost:5000/api/repairs", {
+            const fallbackUrl = typeof getBackendFallbackUrl === 'function' ? getBackendFallbackUrl("/api/repairs") : "http://localhost:5000/api/repairs";
+            if (apiUrl !== fallbackUrl) {
+                res = await fetch(fallbackUrl, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

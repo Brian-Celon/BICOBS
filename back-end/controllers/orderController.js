@@ -220,19 +220,23 @@ const createOrder = async (req, res, next) => {
   }
 };
 
-// @desc    Get order details by ID
-// @route   GET /api/orders/:id
-// @access  Private
+// @desc    Get order details by ID or order number (supports public tracking)
+// @route   GET /api/orders/:id, GET /api/orders/track/:orderNumber
+// @access  Public for tracking / Private for customer dashboard
 const getOrderById = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const rawParam = req.params.orderNumber || req.params.id;
+    if (!rawParam) {
+      return res.status(400).json({ status: 'error', message: 'Order reference required' });
+    }
 
+    const isNumeric = /^\d+$/.test(rawParam);
     const orderRes = await pool.query(
       `SELECT o.*, b.invoice_number 
        FROM orders o 
        LEFT JOIN billings b ON b.order_id = o.id 
-       WHERE o.id = $1`,
-      [id]
+       WHERE ${isNumeric ? 'o.id = $1 OR o.order_number = $1' : 'o.order_number = $1'}`,
+      [rawParam]
     );
 
     if (orderRes.rows.length === 0) {
@@ -241,8 +245,8 @@ const getOrderById = async (req, res, next) => {
 
     const order = orderRes.rows[0];
 
-    // Authorization check
-    if (req.user.role === 'customer' && order.user_id !== req.user.id) {
+    // Authorization check: if authenticated as customer, only restrict when viewing by raw ID (not public tracking)
+    if (req.user && req.user.role === 'customer' && !req.params.orderNumber && order.user_id && order.user_id !== req.user.id) {
       return res.status(403).json({ status: 'error', message: 'Not authorized to view this order' });
     }
 

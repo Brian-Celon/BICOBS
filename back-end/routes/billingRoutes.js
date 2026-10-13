@@ -10,6 +10,7 @@ const {
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.get('/mybilling', protect, getMyBillings);
+router.get('/my-billing', protect, getMyBillings);
 router.get('/order/:orderId', protect, getBillingByOrder);
 router.get('/invoice/:invoiceNumber', protect, getBillingByInvoiceNumber);
 router.get('/', protect, authorize('admin', 'staff'), getAllBillings);
