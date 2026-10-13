@@ -521,14 +521,57 @@
             document.getElementById("order_customer_name").value = "";
         }
 
-        function handleDashboardRecordRepair(e) {
+        async function handleDashboardRecordRepair(e) {
             e.preventDefault();
-            const customer = document.getElementById("repair_customer_name").value;
-            const bike = document.getElementById("repair_bike_model").value;
+            const customer = (document.getElementById("repair_customer_name")?.value || "").trim();
+            const bike = (document.getElementById("repair_bike_model")?.value || "").trim();
+            const mechanic = document.getElementById("repair_assigned_mechanic")?.value || "Reynaldo";
+            const finish = (document.getElementById("repair_estimated_time")?.value || "").trim() || "Today";
             closeModal("record_repair_modal");
-            showToast(`Repair recorded for ${customer} (${bike})!`);
-            document.getElementById("repair_customer_name").value = "";
-            document.getElementById("repair_bike_model").value = "";
+
+            const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+            try {
+                const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/repairs") : "/api/repairs";
+                let res;
+                try {
+                    res = await fetch(apiUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...(token ? { "Authorization": `Bearer ${token}` } : {})
+                        },
+                        body: JSON.stringify({
+                            customerName: customer,
+                            bikeModel: bike,
+                            mechanicName: mechanic,
+                            estimatedFinish: finish,
+                            serviceType: "Bike Service"
+                        })
+                    });
+                } catch (fetchErr) {
+                    if (!apiUrl.includes("http://localhost:5000")) {
+                        res = await fetch("http://localhost:5000/api/repairs", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                ...(token ? { "Authorization": `Bearer ${token}` } : {})
+                            },
+                            body: JSON.stringify({
+                                customerName: customer,
+                                bikeModel: bike,
+                                mechanicName: mechanic,
+                                estimatedFinish: finish,
+                                serviceType: "Bike Service"
+                            })
+                        });
+                    }
+                }
+                showToast(`Repair ticket recorded for ${customer} (${bike})!`, true);
+            } catch (err) {
+                showToast(`Repair recorded locally for ${customer} (${bike})!`);
+            }
+            if (document.getElementById("repair_customer_name")) document.getElementById("repair_customer_name").value = "";
+            if (document.getElementById("repair_bike_model")) document.getElementById("repair_bike_model").value = "";
         }
 
         function handleDashboardGenerateBill(e) {

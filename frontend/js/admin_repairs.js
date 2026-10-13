@@ -36,13 +36,28 @@ async function loadRepairs() {
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
     if (!token) return;
 
+    let res;
+    let data;
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/repairs") : "/api/repairs";
-        const res = await fetch(apiUrl, {
-            headers: {
-                "Authorization": `Bearer ${token}`
+        try {
+            res = await fetch(apiUrl, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+        } catch (fetchErr) {
+            // Secondary fallback attempt directly to localhost:5000 if running from Live Server or file
+            if (!apiUrl.includes("http://localhost:5000")) {
+                res = await fetch("http://localhost:5000/api/repairs", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+            } else {
+                throw fetchErr;
             }
-        });
+        }
 
         if (res.status === 401 || res.status === 403) {
             if (typeof handleAdminSessionExpired === 'function') handleAdminSessionExpired();
@@ -50,23 +65,7 @@ async function loadRepairs() {
             return;
         }
 
-        const data = await res.json();
-        if (res.ok && data.status === "success") {
-            repairTickets = data.data || [];
-            updateRepairTabCounters();
-            applyRepairFilters();
-        } else {
-            if (tbody) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 36px; color: #ef4444;">
-                            <i class="fas fa-triangle-exclamation" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>
-                            Failed to load repairs: ${data.message || 'Unknown error'}
-                        </td>
-                    </tr>
-                `;
-            }
-        }
+        data = await res.json();
     } catch (err) {
         console.error("Repairs load error:", err);
         if (tbody) {
@@ -81,6 +80,24 @@ async function loadRepairs() {
                         <button type="button" onclick="loadRepairs()" class="btn_primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; cursor: pointer;">
                             <i class="fas fa-rotate-right"></i> Retry Connection
                         </button>
+                    </td>
+                </tr>
+            `;
+        }
+        return;
+    }
+
+    if (res && res.ok && data && data.status === "success") {
+        repairTickets = data.data || [];
+        updateRepairTabCounters();
+        applyRepairFilters();
+    } else {
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 36px; color: #ef4444;">
+                        <i class="fas fa-triangle-exclamation" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>
+                        Failed to load repairs: ${(data && data.message) || 'Unknown error'}
                     </td>
                 </tr>
             `;
@@ -271,6 +288,7 @@ function renderRepairsPagination() {
     const startIdx = total === 0 ? 0 : (currentRepairPage - 1) * REPAIR_PAGE_SIZE + 1;
     const endIdx = Math.min(currentRepairPage * REPAIR_PAGE_SIZE, total);
 
+    const infoEl = document.getElementById("repairs_pagination_info");
     if (infoEl) {
         if (total === 0) {
             infoEl.textContent = "Showing 0 of 0 repairs";
@@ -377,16 +395,34 @@ async function saveRepairStatus() {
 
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/repairs/${id}`) : `/api/repairs/${id}`;
-        const res = await fetch(apiUrl, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                status: newStatus
-            })
-        });
+        let res;
+        try {
+            res = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    status: newStatus
+                })
+            });
+        } catch (fetchErr) {
+            if (!apiUrl.includes("http://localhost:5000")) {
+                res = await fetch(`http://localhost:5000/api/repairs/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                });
+            } else {
+                throw fetchErr;
+            }
+        }
 
         const data = await res.json();
         if (res.ok && data.status === "success") {
@@ -437,21 +473,44 @@ async function handleCreateRepair(event) {
 
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/repairs") : "/api/repairs";
-        const res = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                customerName: customer,
-                bikeModel: bike,
-                mechanicName: mechanic,
-                problemDescription: notes,
-                estimatedFinish: finish || "Today",
-                serviceType: "Bike Service"
-            })
-        });
+        let res;
+        try {
+            res = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    customerName: customer,
+                    bikeModel: bike,
+                    mechanicName: mechanic,
+                    problemDescription: notes,
+                    estimatedFinish: finish || "Today",
+                    serviceType: "Bike Service"
+                })
+            });
+        } catch (fetchErr) {
+            if (!apiUrl.includes("http://localhost:5000")) {
+                res = await fetch("http://localhost:5000/api/repairs", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        customerName: customer,
+                        bikeModel: bike,
+                        mechanicName: mechanic,
+                        problemDescription: notes,
+                        estimatedFinish: finish || "Today",
+                        serviceType: "Bike Service"
+                    })
+                });
+            } else {
+                throw fetchErr;
+            }
+        }
 
         const data = await res.json();
         if (res.ok && data.status === "success") {

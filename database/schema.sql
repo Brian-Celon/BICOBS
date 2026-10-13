@@ -161,7 +161,32 @@ CREATE INDEX idx_billings_invoice_number ON billings(invoice_number);
 CREATE INDEX idx_billings_order_id ON billings(order_id);
 
 -- =============================================================================
--- 8. AUTOMATIC UPDATED_AT TRIGGER FUNCTION
+-- 8. REPAIRS / WORKSHOP SERVICE QUEUE TABLE
+-- Stores bicycle repair, service, and maintenance tickets
+-- =============================================================================
+CREATE TABLE repairs (
+    id SERIAL PRIMARY KEY,
+    ticket_number VARCHAR(50) UNIQUE NOT NULL,
+    order_id INTEGER REFERENCES orders(id) ON DELETE SET NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    customer_name VARCHAR(150) NOT NULL,
+    customer_phone VARCHAR(30) DEFAULT '',
+    bike_model VARCHAR(150) NOT NULL,
+    mechanic_name VARCHAR(100) DEFAULT 'Reynaldo',
+    service_type VARCHAR(100) DEFAULT 'General Tune-Up',
+    problem_description TEXT DEFAULT '',
+    status VARCHAR(50) DEFAULT 'in-progress' CHECK (status IN ('pending', 'in-progress', 'waiting', 'completed', 'cancelled')),
+    estimated_cost NUMERIC(10, 2) DEFAULT 0.00 CHECK (estimated_cost >= 0),
+    estimated_finish VARCHAR(100) DEFAULT 'Today',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_repairs_ticket_number ON repairs(ticket_number);
+CREATE INDEX idx_repairs_status ON repairs(status);
+
+-- =============================================================================
+-- 9. AUTOMATIC UPDATED_AT TRIGGER FUNCTION
 -- =============================================================================
 CREATE OR REPLACE FUNCTION update_timestamp_column()
 RETURNS TRIGGER AS $$
@@ -182,3 +207,8 @@ CREATE TRIGGER trigger_update_products_timestamp
 CREATE TRIGGER trigger_update_orders_timestamp
     BEFORE UPDATE ON orders
     FOR EACH ROW EXECUTE FUNCTION update_timestamp_column();
+
+CREATE TRIGGER trigger_update_repairs_timestamp
+    BEFORE UPDATE ON repairs
+    FOR EACH ROW EXECUTE FUNCTION update_timestamp_column();
+

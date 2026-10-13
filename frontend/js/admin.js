@@ -14,14 +14,11 @@ function getAdminUser() {
     }
 }
 
-// Resolve backend API URL (supports port 5000 directly, port 5500, as well as Live Server or file:///)
+// Resolve backend API URL (supports port 5000 directly, as well as Live Server on port 5500, file:///, or Vercel serverless)
 function getApiUrl(endpoint) {
     if (!endpoint) return '';
     const clean = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    if (window.location.port === '5500' || window.location.port === '5000') {
-        return clean;
-    }
-    if (window.location.protocol === 'file:' || window.location.port) {
+    if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '5000')) {
         return `http://localhost:5000${clean}`;
     }
     return clean;

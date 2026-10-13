@@ -1345,9 +1345,21 @@
                 }
 
                 // 3. Fetch repairs for completed count and report table
-                const repairsRes = await fetch("/api/repairs", {
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
+                const repairsApiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/repairs") : "/api/repairs";
+                let repairsRes;
+                try {
+                    repairsRes = await fetch(repairsApiUrl, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                } catch (rErr) {
+                    if (!repairsApiUrl.includes("http://localhost:5000")) {
+                        repairsRes = await fetch("http://localhost:5000/api/repairs", {
+                            headers: { "Authorization": `Bearer ${token}` }
+                        });
+                    } else {
+                        throw rErr;
+                    }
+                }
                 const repairsData = await repairsRes.json();
                 if (repairsRes.ok && repairsData.status === "success") {
                     liveRepairsData = repairsData.data || [];
