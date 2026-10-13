@@ -107,16 +107,12 @@ CREATE TABLE orders (
     delivery_address TEXT DEFAULT '',
     notes TEXT DEFAULT '',
     payment_method VARCHAR(50) NOT NULL, -- 'gcash', 'cod', 'card'
-    payment_reference VARCHAR(100) DEFAULT '',
-    payment_proof TEXT DEFAULT '',
     subtotal NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     total_amount NUMERIC(10, 2) NOT NULL CHECK (total_amount >= 0),
-    order_status VARCHAR(50) DEFAULT 'payment_confirmation' CHECK (order_status IN ('payment_confirmation', 'pending', 'payment_confirmed', 'confirmed', 'processing', 'ready_for_deliver', 'ready_for_delivery', 'ready_for_pickup', 'out_for_delivery', 'shipped', 'delivered', 'completed', 'cancelled', 'declined', 'rejected')),
-    payment_status VARCHAR(50) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded', 'declined', 'rejected')),
+    order_status VARCHAR(50) DEFAULT 'payment_confirmation' CHECK (order_status IN ('payment_confirmation', 'pending', 'confirmed', 'processing', 'ready_for_pickup', 'ready_for_delivery', 'out_for_delivery', 'shipped', 'completed', 'cancelled', 'declined')),
+    payment_status VARCHAR(50) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded', 'declined')),
     decline_reason TEXT DEFAULT '',
-    customer_confirmed BOOLEAN DEFAULT false,
-    customer_confirmed_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -165,32 +161,7 @@ CREATE INDEX idx_billings_invoice_number ON billings(invoice_number);
 CREATE INDEX idx_billings_order_id ON billings(order_id);
 
 -- =============================================================================
--- 8. REPAIRS / WORKSHOP SERVICE QUEUE TABLE
--- Stores bicycle repair, service, and maintenance tickets
--- =============================================================================
-CREATE TABLE repairs (
-    id SERIAL PRIMARY KEY,
-    ticket_number VARCHAR(50) UNIQUE NOT NULL,
-    order_id INTEGER REFERENCES orders(id) ON DELETE SET NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    customer_name VARCHAR(150) NOT NULL,
-    customer_phone VARCHAR(30) DEFAULT '',
-    bike_model VARCHAR(150) NOT NULL,
-    mechanic_name VARCHAR(100) DEFAULT 'Reynaldo',
-    service_type VARCHAR(100) DEFAULT 'General Tune-Up',
-    problem_description TEXT DEFAULT '',
-    status VARCHAR(50) DEFAULT 'in-progress' CHECK (status IN ('pending', 'in-progress', 'waiting', 'completed', 'cancelled')),
-    estimated_cost NUMERIC(10, 2) DEFAULT 0.00 CHECK (estimated_cost >= 0),
-    estimated_finish VARCHAR(100) DEFAULT 'Today',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_repairs_ticket_number ON repairs(ticket_number);
-CREATE INDEX idx_repairs_status ON repairs(status);
-
--- =============================================================================
--- 9. AUTOMATIC UPDATED_AT TRIGGER FUNCTION
+-- 8. AUTOMATIC UPDATED_AT TRIGGER FUNCTION
 -- =============================================================================
 CREATE OR REPLACE FUNCTION update_timestamp_column()
 RETURNS TRIGGER AS $$
@@ -212,7 +183,41 @@ CREATE TRIGGER trigger_update_orders_timestamp
     BEFORE UPDATE ON orders
     FOR EACH ROW EXECUTE FUNCTION update_timestamp_column();
 
-CREATE TRIGGER trigger_update_repairs_timestamp
-    BEFORE UPDATE ON repairs
+-- =============================================================================
+-- 9. CUSTOMER SUPPORT TICKETS TABLE
+-- Stores inquiries and support tickets opened by customers
+-- =============================================================================
+CREATE TABLE support_tickets (
+    id SERIAL PRIMARY KEY,
+    ticket_number VARCHAR(50) UNIQUE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    customer_name VARCHAR(150) NOT NULL,
+    customer_email VARCHAR(150),
+    category VARCHAR(100) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    status VARCHAR(50) DEFAULT 'Open' CHECK (status IN ('Open', 'In Progress', 'Resolved', 'Closed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_support_tickets_user_id ON support_tickets(user_id);
+CREATE INDEX idx_support_tickets_ticket_number ON support_tickets(ticket_number);
+
+CREATE TRIGGER trigger_update_support_tickets_timestamp
+    BEFORE UPDATE ON support_tickets
     FOR EACH ROW EXECUTE FUNCTION update_timestamp_column();
 
+-- =============================================================================
+-- 10. SUPPORT TICKET MESSAGES TABLE
+-- Stores conversation messages and updates within a support ticket
+-- =============================================================================
+CREATE TABLE ticket_messages (
+    id SERIAL PRIMARY KEY,
+    ticket_id INTEGER NOT NULL REFERENCES support_tickets(id) ON DELETE CASCADE,
+    sender_type VARCHAR(20) NOT NULL DEFAULT 'user' CHECK (sender_type IN ('user', 'support', 'admin')),
+    sender_name VARCHAR(150) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_ticket_messages_ticket_id ON ticket_messages(ticket_id);

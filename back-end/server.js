@@ -51,6 +51,7 @@ apiRouter.use('/billing', require('./routes/billingRoutes'));
 apiRouter.use('/dashboard', require('./routes/dashboardRoutes'));
 apiRouter.use('/users', require('./routes/userRoutes'));
 apiRouter.use('/repairs', require('./routes/repairRoutes'));
+apiRouter.use('/tickets', require('./routes/ticketRoutes'));
 // Direct aliases so /api/login, /api/register, /api/verify-otp, /api/me work directly
 apiRouter.use('/', require('./routes/authRoutes'));
 
