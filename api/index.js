@@ -1,3 +1,20 @@
 const app = require('../back-end/server');
 
-module.exports = app;
+// Vercel rewrites /api/* to /api/index.js, which hides the real path from Express.
+// vercel.json forwards it as ?__path=..., so restore req.url and req.originalUrl before routing.
+module.exports = (req, res) => {
+  try {
+    const url = new URL(req.url, 'http://localhost');
+    const originalPath = url.searchParams.get('__path');
+    if (originalPath) {
+      url.searchParams.delete('__path');
+      const query = url.searchParams.toString();
+      const reconstructed = originalPath + (query ? `?${query}` : '');
+      req.url = reconstructed;
+      req.originalUrl = reconstructed;
+    }
+  } catch (e) {
+    // Fall back to original req.url if URL parsing fails
+  }
+  return app(req, res);
+};
