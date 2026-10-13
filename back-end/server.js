@@ -30,6 +30,11 @@ app.get('/', (req, res) => {
   res.redirect('/frontend/pages/Admin/dashboard.html');
 });
 
+// Convenient page route for tickets
+app.get(['/tickets', '/tickets.html'], (req, res) => {
+  res.sendFile(path.join(frontendPath, 'pages/Admin/tickets.html'));
+});
+
 // 5. Health Check Route
 const healthCheckHandler = (req, res) => {
   res.status(200).json({
