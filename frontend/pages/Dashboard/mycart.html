@@ -69,7 +69,7 @@
             </button>
         </div>
         <a href="/frontend/pages/index.html" class="nav_link">HOME</a>
-        <a href="/frontend/pages/index.html#promo_section" class="nav_link">ABOUT</a>
+        <a href="/frontend/pages/about.html" class="nav_link">ABOUT</a>
         <a href="/frontend/pages/shop.html" class="nav_link">SHOP</a>
         <a href="/frontend/pages/service.html" class="nav_link">SERVICES</a>
         <a href="/frontend/pages/Dashboard/dashboard.html" class="nav_link active" aria-current="page">DASHBOARD</a>
@@ -241,10 +241,6 @@
                     <span>Discount</span>
                     <span class="summary_value discount_text" id="cart_discount_amount">-₱0</span>
                 </div>
-                <div class="summary_row">
-                    <span>Estimated Shipping</span>
-                    <span class="summary_value" id="cart_shipping">₱0.00</span>
-                </div>
                 <div class="summary_row total_row">
                     <span>Total Amount</span>
                     <span class="summary_value total_price" id="cart_total_price">₱0</span>
@@ -347,7 +343,7 @@
                         <i class="fas fa-truck-moving" style="color: #dc2626;"></i> 1. Fulfillment Mode
                     </label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" id="fulfillment_mode_group">
-                        <label class="mode_card active" id="card_mode_delivery" style="border: 2px solid #dc2626; background: #fff5f5; border-radius: 10px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
+                        <label class="mode_card active" id="card_mode_delivery" style="border: 1px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
                             <input type="radio" name="fulfillment_mode" id="mode_delivery" value="delivery" checked style="accent-color: #dc2626;">
                             <strong style="font-size: 14px; color: #0f172a;">🚚 Delivery</strong>
                         </label>
@@ -466,8 +462,11 @@
                                 <div id="checkout_proof_dropzone" onclick="document.getElementById('checkout_payment_proof').click();" style="border: 1px dashed #94a3b8; border-radius: 6px; padding: 12px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s ease;">
                                     <i class="fas fa-camera" style="font-size: 20px; color: #8b1e28; margin-bottom: 4px; display: block;"></i>
                                     <span style="font-size: 12.5px; font-weight: 600; color: #1e293b; display: block;">Click to Upload Screenshot / Receipt</span>
-                                    <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo for instant verification</span>
+                                    <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo, or press Ctrl+V to paste a screenshot</span>
                                 </div>
+                                <button type="button" id="checkout_proof_paste_btn" style="margin-top: 8px; width: 100%; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; border-radius: 6px; padding: 8px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#dc2626'; this.style.color='#dc2626';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#334155';">
+                                    <i class="fas fa-paste"></i> Paste Screenshot from Clipboard
+                                </button>
 
                                 <!-- Preview Box (shown after file selected) -->
                                 <div id="checkout_proof_preview_container" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: #f1f5f9; border-radius: 6px; padding: 8px 10px;">
@@ -520,10 +519,6 @@
                     <div class="summary_row" id="modal_discount_row" style="display: none; justify-content: space-between; margin-bottom: 6px; font-size: 13px;">
                         <span>Discount:</span>
                         <strong id="modal_discount_amount" class="discount_text">-₱0</strong>
-                    </div>
-                    <div class="summary_row" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px;">
-                        <span>Shipping Fee:</span>
-                        <strong id="modal_shipping">₱0.00</strong>
                     </div>
                     <div class="summary_row total_row" style="display: flex; justify-content: space-between; font-size: 16px; border-top: 1px solid #cbd5e1; padding-top: 8px; color: #0f172a;">
                         <span style="font-weight: 700;">Total Amount Ordered:</span>

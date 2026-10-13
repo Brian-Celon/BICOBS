@@ -899,9 +899,11 @@ document.addEventListener('DOMContentLoaded', () => {
             dropzone.innerHTML = `
                 <i class="fas fa-camera" style="font-size: 20px; color: #8b1e28; margin-bottom: 4px; display: block;"></i>
                 <span style="font-size: 12.5px; font-weight: 600; color: #1e293b; display: block;">Click to Upload Screenshot / Receipt</span>
-                <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo for instant verification</span>
+                <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo, or press Ctrl+V to paste a screenshot</span>
             `;
         }
+        const pasteBtn = document.getElementById('checkout_proof_paste_btn');
+        if (pasteBtn) pasteBtn.style.display = 'inline-flex';
     }
 
     function initProofOfPaymentUpload() {
@@ -912,13 +914,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileNameEl = document.getElementById('checkout_proof_file_name');
         const removeBtn = document.getElementById('checkout_proof_remove_btn');
 
+        const pasteBtn = document.getElementById('checkout_proof_paste_btn');
+
         if (!fileInput) return;
 
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files && e.target.files[0];
+        // Shared handler for picked files AND pasted screenshots
+        const processProofFile = async (file, displayName) => {
             if (!file) return;
 
-            if (!file.type.startsWith('image/')) {
+            if (!file.type || !file.type.startsWith('image/')) {
                 alert('Please upload an image file (PNG, JPG, or WEBP).');
                 fileInput.value = '';
                 return;
@@ -930,15 +934,80 @@ document.addEventListener('DOMContentLoaded', () => {
                 uploadedProofBase64 = base64;
 
                 if (previewImg) previewImg.src = base64;
-                if (fileNameEl) fileNameEl.textContent = file.name;
+                if (fileNameEl) fileNameEl.textContent = displayName || file.name || 'screenshot.png';
                 if (previewContainer) previewContainer.style.display = 'flex';
                 if (dropzone) dropzone.style.display = 'none';
+                if (pasteBtn) pasteBtn.style.display = 'none';
             } catch (err) {
                 console.error('Failed to process proof of payment image:', err);
                 alert('Could not process this image. Please select a valid photo.');
                 resetProofOfPayment();
             }
+        };
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            processProofFile(file, file ? file.name : '');
         });
+
+        // Ctrl+V / Cmd+V: paste a screenshot anywhere while the checkout modal is open
+        document.addEventListener('paste', (e) => {
+            const modalOpen = checkout_modal && (checkout_modal.classList.contains('active') || checkout_modal.style.display === 'flex');
+            if (!modalOpen) return;
+
+            const section = document.getElementById('proof_upload_section');
+            if (!section || section.offsetParent === null) return; // proof upload not shown (e.g. cash pickup)
+
+            const cd = e.clipboardData;
+            if (!cd) return;
+
+            // Never hijack normal text pasting into address/notes fields
+            const t = e.target;
+            const isTextField = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
+            if (isTextField && cd.getData('text/plain')) return;
+
+            let imageFile = null;
+            for (const item of (cd.items || [])) {
+                if (item.kind === 'file' && item.type && item.type.startsWith('image/')) {
+                    imageFile = item.getAsFile();
+                    break;
+                }
+            }
+            if (!imageFile) return;
+
+            e.preventDefault();
+            processProofFile(imageFile, `pasted-screenshot-${Date.now()}.png`);
+        });
+
+        // "Paste" button: read an image from the clipboard on click
+        if (pasteBtn) {
+            pasteBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!navigator.clipboard || !navigator.clipboard.read) {
+                    alert('Your browser does not allow pasting from a button. Click anywhere in this window and press Ctrl+V (Cmd+V on Mac) to paste your screenshot.');
+                    return;
+                }
+
+                try {
+                    const items = await navigator.clipboard.read();
+                    for (const item of items) {
+                        const imgType = item.types.find(type => type.startsWith('image/'));
+                        if (imgType) {
+                            const blob = await item.getType(imgType);
+                            const name = `pasted-screenshot-${Date.now()}.png`;
+                            await processProofFile(new File([blob], name, { type: imgType }), name);
+                            return;
+                        }
+                    }
+                    alert('No image found in your clipboard. Copy or screenshot your payment receipt first, then try again.');
+                } catch (err) {
+                    console.warn('Clipboard read failed:', err);
+                    alert('Could not access your clipboard. Please press Ctrl+V (Cmd+V on Mac) to paste your screenshot instead.');
+                }
+            });
+        }
 
         if (removeBtn) {
             removeBtn.addEventListener('click', (e) => {

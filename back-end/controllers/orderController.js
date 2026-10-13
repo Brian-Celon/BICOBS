@@ -148,7 +148,8 @@ const createOrder = async (req, res, next) => {
     }
 
     const deliveryType = fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
-    const calculatedDeliveryFee = deliveryType === 'delivery' ? parseFloat(deliveryFee || 100) : 0;
+    // No shipping fee is charged
+    const calculatedDeliveryFee = 0;
     const totalPrice = itemsPrice + calculatedDeliveryFee;
 
     // Generate unique order number

@@ -165,11 +165,6 @@
                         <span class="summary_value" id="cart_subtotal" style="font-weight: 700; color: #1e293b;">₱0</span>
                     </div>
 
-                    <div class="summary_row" style="display: flex; justify-content: space-between; font-size: 13.5px; color: #64748b; margin-bottom: 10px;">
-                        <span>Estimated Shipping</span>
-                        <span class="summary_value" id="cart_shipping" style="font-weight: 700; color: #059669;">Free / Arranged</span>
-                    </div>
-
                     <div class="summary_row" id="cart_discount_row" style="display: none; justify-content: space-between; font-size: 13.5px; color: #dc2626; margin-bottom: 10px;">
                         <span>Discount Applied</span>
                         <span class="summary_value discount_text" id="cart_discount_amount" style="font-weight: 700;">-₱0</span>
@@ -301,7 +296,7 @@
                 <div style="margin-bottom: 20px;">
                     <label style="font-size: 13px; font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px;">1. Fulfillment Option</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div class="mode_card active" id="card_mode_delivery" style="border: 2px solid #b91c1c; border-radius: 8px; padding: 12px; cursor: pointer; background: #fff5f5; display: flex; align-items: center; gap: 10px;">
+                        <div class="mode_card active" id="card_mode_delivery" style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; cursor: pointer; background: #ffffff; display: flex; align-items: center; gap: 10px;">
                             <input type="radio" name="fulfillment_mode" id="mode_delivery" value="delivery" checked style="accent-color: #b91c1c;">
                             <div>
                                 <strong style="font-size: 13.5px; color: #0f172a; display: block;">Delivery</strong>
@@ -416,8 +411,11 @@
                             <div id="checkout_proof_dropzone" onclick="document.getElementById('checkout_payment_proof').click();" style="border: 1px dashed #94a3b8; border-radius: 6px; padding: 12px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s ease;">
                                 <i class="fas fa-camera" style="font-size: 20px; color: #8b1e28; margin-bottom: 4px; display: block;"></i>
                                 <span style="font-size: 12.5px; font-weight: 600; color: #1e293b; display: block;">Click to Upload Screenshot / Receipt</span>
-                                <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo for instant verification</span>
+                                <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo, or press Ctrl+V to paste a screenshot</span>
                             </div>
+                            <button type="button" id="checkout_proof_paste_btn" style="margin-top: 8px; width: 100%; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; border-radius: 6px; padding: 8px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#b91c1c'; this.style.color='#b91c1c';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#334155';">
+                                <i class="fas fa-paste"></i> Paste Screenshot from Clipboard
+                            </button>
 
                             <!-- Preview Box (shown after file selected) -->
                             <div id="checkout_proof_preview_container" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: #f1f5f9; border-radius: 6px; padding: 8px 10px;">
