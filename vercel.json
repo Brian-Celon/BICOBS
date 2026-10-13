@@ -71,6 +71,14 @@
       "destination": "/frontend/pages/Admin/repairs.html"
     },
     {
+      "source": "/tickets",
+      "destination": "/frontend/pages/Admin/tickets.html"
+    },
+    {
+      "source": "/tickets.html",
+      "destination": "/frontend/pages/Admin/tickets.html"
+    },
+    {
       "source": "/reports",
       "destination": "/frontend/pages/Admin/reports.html"
     },

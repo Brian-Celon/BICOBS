@@ -185,44 +185,44 @@
             </div>
 
             <!-- metric summary cards row -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 20px;">
-                <div class="order_summary_card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="width: 46px; height: 46px; border-radius: 10px; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <div class="tickets_kpi_grid">
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_red">
                         <i class="fas fa-headset"></i>
                     </div>
                     <div>
-                        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Tickets</div>
-                        <div style="font-size: 24px; font-weight: 800; color: #0f172a;" id="kpi_total_tickets">0</div>
+                        <div class="ticket_kpi_label">Total Inquiries</div>
+                        <div class="ticket_kpi_val" id="kpi_total_tickets">0</div>
                     </div>
                 </div>
 
-                <div class="order_summary_card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="width: 46px; height: 46px; border-radius: 10px; background-color: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                        <i class="fas fa-envelope-open-text"></i>
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_amber">
+                        <i class="fas fa-clock"></i>
                     </div>
                     <div>
-                        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Open</div>
-                        <div style="font-size: 24px; font-weight: 800; color: #b45309;" id="kpi_open_tickets">0</div>
+                        <div class="ticket_kpi_label">Open Tickets</div>
+                        <div class="ticket_kpi_val" style="color: #b45309;" id="kpi_open_tickets">0</div>
                     </div>
                 </div>
 
-                <div class="order_summary_card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="width: 46px; height: 46px; border-radius: 10px; background-color: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_blue">
                         <i class="fas fa-spinner"></i>
                     </div>
                     <div>
-                        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">In Progress</div>
-                        <div style="font-size: 24px; font-weight: 800; color: #1d4ed8;" id="kpi_inprogress_tickets">0</div>
+                        <div class="ticket_kpi_label">In Progress</div>
+                        <div class="ticket_kpi_val" style="color: #1d4ed8;" id="kpi_inprogress_tickets">0</div>
                     </div>
                 </div>
 
-                <div class="order_summary_card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="width: 46px; height: 46px; border-radius: 10px; background-color: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_green">
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div>
-                        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Resolved / Closed</div>
-                        <div style="font-size: 24px; font-weight: 800; color: #15803d;" id="kpi_resolved_tickets">0</div>
+                        <div class="ticket_kpi_label">Resolved / Closed</div>
+                        <div class="ticket_kpi_val" style="color: #15803d;" id="kpi_resolved_tickets">0</div>
                     </div>
                 </div>
             </div>
@@ -237,52 +237,52 @@
             </div>
 
             <!-- search and category filter toolbar -->
-            <div class="orders_toolbar" style="margin-bottom: 16px;">
+            <div class="filter_toolbar">
                 <div class="toolbar_search_box">
                     <i class="fas fa-search toolbar_search_icon"></i>
                     <input type="text" class="toolbar_search_input" id="ticket_search_input" placeholder="Search by ticket #, customer name, subject...">
                 </div>
 
                 <div class="toolbar_filters_group">
-                    <div class="custom_select_wrapper">
-                        <select class="toolbar_select" id="ticket_category_filter">
-                            <option value="all">All Categories</option>
-                            <option value="Warranty / Repairs">Warranty / Repairs</option>
-                            <option value="Shipping / Delivery">Shipping / Delivery</option>
-                            <option value="Product Information">Product Information</option>
-                            <option value="Billing & Payment">Billing & Payment</option>
-                            <option value="Technical Support">Technical Support</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
+                    <select class="admin_select" id="ticket_category_filter">
+                        <option value="all">All Categories</option>
+                        <option value="Warranty / Repairs">Warranty / Repairs</option>
+                        <option value="Shipping / Delivery">Shipping / Delivery</option>
+                        <option value="Product Information">Product Information</option>
+                        <option value="Billing & Payment">Billing & Payment</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
             </div>
 
             <!-- support tickets table card -->
-            <div class="admin_table_container">
-                <table class="admin_table" id="tickets_table">
-                    <thead>
-                        <tr>
-                            <th style="width: 120px;">Ticket No.</th>
-                            <th>Customer</th>
-                            <th>Category</th>
-                            <th>Subject</th>
-                            <th style="width: 130px; text-align: center;">Status</th>
-                            <th style="width: 100px; text-align: center;">Messages</th>
-                            <th style="width: 130px;">Created</th>
-                            <th style="width: 130px; text-align: right;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tickets_tbody">
-                        <tr>
-                            <td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">
-                                <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
-                                Loading customer support tickets...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <article class="admin_card">
+                <div class="table_responsive">
+                    <table class="admin_table" id="tickets_table">
+                        <thead>
+                            <tr>
+                                <th style="width: 130px;">Ticket No.</th>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Subject</th>
+                                <th style="width: 140px; text-align: center;">Status</th>
+                                <th style="width: 100px; text-align: center;">Messages</th>
+                                <th style="width: 130px;">Created</th>
+                                <th style="width: 140px; text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets_tbody">
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading customer support tickets...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
 
             <!-- pagination row -->
             <div class="table_pagination_bar" style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">

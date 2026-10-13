@@ -253,9 +253,9 @@ const getAllTickets = async (req, res, next) => {
     `;
     const params = [];
 
-    if (status && status !== 'All') {
+    if (status && status !== 'All' && status !== 'all') {
       params.push(status);
-      sql += ` AND t.status = $${params.length}`;
+      sql += ` AND LOWER(t.status) = LOWER($${params.length})`;
     }
 
     if (search) {

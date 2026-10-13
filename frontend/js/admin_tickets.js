@@ -13,6 +13,13 @@ let currentTicketPage = 1;
 const TICKET_PAGE_SIZE = 10;
 let activeModalTicketId = null;
 
+function getValidToken() {
+    return (typeof getAdminToken === 'function' ? getAdminToken() : null) ||
+        localStorage.getItem("taurus_admin_token") ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("bicobs_token");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     loadSupportTickets();
     setupTicketEventListeners();
@@ -32,8 +39,24 @@ async function loadSupportTickets() {
         `;
     }
 
-    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
-    if (!token) return;
+    const token = getValidToken();
+    if (!token) {
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 48px; color: #b45309;">
+                        <i class="fas fa-lock" style="font-size: 28px; margin-bottom: 10px; display: block;"></i>
+                        <strong style="color: #0f172a; display: block; font-size: 15px; margin-bottom: 6px;">Sign-In Required</strong>
+                        <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;">Please sign in to the administrator portal to review customer inquiries.</p>
+                        <a href="login.html" class="btn_primary" style="display: inline-flex; padding: 8px 20px;">
+                            <i class="fas fa-sign-in-alt"></i> <span>Sign In to Admin</span>
+                        </a>
+                    </td>
+                </tr>
+            `;
+        }
+        return;
+    }
 
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/tickets") : "/api/tickets";
@@ -51,6 +74,24 @@ async function loadSupportTickets() {
             } else {
                 throw fetchErr;
             }
+        }
+
+        if (res.status === 401 || res.status === 403) {
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 48px; color: #b45309;">
+                            <i class="fas fa-user-lock" style="font-size: 28px; margin-bottom: 10px; display: block;"></i>
+                            <strong style="color: #0f172a; display: block; font-size: 15px; margin-bottom: 6px;">Session Expired or Unauthorized</strong>
+                            <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;">Please log in with an administrator account to access tickets.</p>
+                            <a href="login.html" class="btn_primary" style="display: inline-flex; padding: 8px 20px;">
+                                <i class="fas fa-sign-in-alt"></i> <span>Re-Authenticate</span>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            }
+            return;
         }
 
         if (!res.ok) {
@@ -204,7 +245,7 @@ function renderTicketsTable() {
                 <td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">
                     <div style="font-size: 32px; color: #94a3b8; margin-bottom: 8px;"><i class="fas fa-inbox"></i></div>
                     <strong style="color: #1e293b; display: block; margin-bottom: 4px;">No support tickets found</strong>
-                    <span>No inquiries match the current search or filters.</span>
+                    <span>No customer inquiries match the current filter or search criteria.</span>
                 </td>
             </tr>
         `;
@@ -220,13 +261,13 @@ function renderTicketsTable() {
         const status = t.status || "Open";
         let statusBadge = "";
         if (status.toLowerCase() === "open") {
-            statusBadge = `<span style="background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;"><i class="fas fa-clock" style="font-size: 10px;"></i> Open</span>`;
+            statusBadge = `<span class="ticket_status_pill pill_open"><i class="fas fa-clock"></i> Open</span>`;
         } else if (status.toLowerCase() === "in progress") {
-            statusBadge = `<span style="background: #dbeafe; color: #1d4ed8; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;"><i class="fas fa-spinner" style="font-size: 10px;"></i> In Progress</span>`;
+            statusBadge = `<span class="ticket_status_pill pill_inprogress"><i class="fas fa-spinner"></i> In Progress</span>`;
         } else if (status.toLowerCase() === "resolved") {
-            statusBadge = `<span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;"><i class="fas fa-check" style="font-size: 10px;"></i> Resolved</span>`;
+            statusBadge = `<span class="ticket_status_pill pill_resolved"><i class="fas fa-check"></i> Resolved</span>`;
         } else {
-            statusBadge = `<span style="background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">Closed</span>`;
+            statusBadge = `<span class="ticket_status_pill pill_closed">Closed</span>`;
         }
 
         const dateStr = t.createdAt ? new Date(t.createdAt).toLocaleDateString("en-US", {
@@ -239,26 +280,26 @@ function renderTicketsTable() {
 
         return `
             <tr>
-                <td style="font-weight: 700; color: #0f172a;">${escapeHtml(t.ticketNumber)}</td>
+                <td style="font-weight: 700; color: #0f172a; font-family: monospace; font-size: 13px;">${escapeHtml(t.ticketNumber)}</td>
                 <td>
-                    <strong style="color: #1e293b; display: block;">${escapeHtml(t.customerName || "Customer")}</strong>
-                    <span style="font-size: 12px; color: #64748b;">${escapeHtml(t.customerEmail || "")}</span>
+                    <strong style="color: #1e293b; display: block; font-size: 13px;">${escapeHtml(t.customerName || "Customer")}</strong>
+                    <span style="font-size: 12px; color: #64748b;">${escapeHtml(t.customerEmail || "No email")}</span>
                 </td>
                 <td>
-                    <span style="background: #f1f5f9; color: #334155; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                    <span style="background: #f1f5f9; color: #334155; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;">
                         ${escapeHtml(t.category)}
                     </span>
                 </td>
-                <td style="max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; color: #1e293b;" title="${escapeHtml(t.subject)}">
+                <td style="max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; color: #0f172a;" title="${escapeHtml(t.subject)}">
                     ${escapeHtml(t.subject)}
                 </td>
                 <td style="text-align: center;">${statusBadge}</td>
                 <td style="text-align: center;">
-                    <span style="font-weight: 700; color: #475569;"><i class="fas fa-comment-dots" style="color: #94a3b8; font-size: 11px;"></i> ${msgCount}</span>
+                    <span style="font-weight: 700; color: #475569; font-size: 12px;"><i class="fas fa-comment-dots" style="color: #94a3b8; font-size: 11px; margin-right: 3px;"></i> ${msgCount}</span>
                 </td>
-                <td style="font-size: 12px; color: #64748b;">${dateStr}</td>
-                <td style="text-align: right;">
-                    <button type="button" class="btn_secondary btn_sm" onclick="openTicketModal(${t.id})" style="font-weight: 600; padding: 5px 12px;">
+                <td style="font-size: 12px; color: #64748b; white-space: nowrap;">${dateStr}</td>
+                <td style="text-align: right; white-space: nowrap;">
+                    <button type="button" class="btn_secondary btn_sm" onclick="openTicketModal(${t.id})" style="font-weight: 600; padding: 6px 12px;">
                         <i class="fas fa-comments"></i> <span>View & Reply</span>
                     </button>
                 </td>
@@ -333,7 +374,7 @@ async function openTicketModal(ticketId) {
         `;
     }
 
-    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    const token = getValidToken();
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/tickets/${ticketId}/messages`) : `/api/tickets/${ticketId}/messages`;
         let res;
@@ -355,7 +396,7 @@ async function openTicketModal(ticketId) {
         if (titleEl) titleEl.textContent = `${ticket.ticketNumber || '#TCK'}: ${ticket.subject || 'Support Ticket'}`;
         if (subtitleEl) subtitleEl.textContent = `Category: ${ticket.category || 'General'} • Status: ${ticket.status || 'Open'}`;
         if (custName) custName.textContent = ticket.customerName || (allTickets.find(x => x.id === ticketId)?.customerName) || 'Customer';
-        if (custEmail) custEmail.textContent = ticket.customerEmail || (allTickets.find(x => x.id === ticketId)?.customerEmail) || '';
+        if (custEmail) custEmail.textContent = ticket.customerEmail || (allTickets.find(x => x.id === ticketId)?.customerEmail) || 'No email provided';
         if (custCat) custCat.textContent = ticket.category || 'General';
         if (custCreated) {
             custCreated.textContent = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString("en-US", {
@@ -397,13 +438,12 @@ function renderChatMessages(messages) {
         const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
         const dateStr = m.createdAt ? new Date(m.createdAt).toLocaleDateString([], { month: "short", day: "numeric" }) : "";
 
-        const alignStyle = isSupport ? "align-self: flex-end; background-color: #b91c1c; color: #ffffff;" : "align-self: flex-start; background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1;";
-        const authorColor = isSupport ? "#fecaca" : "#64748b";
+        const bubbleClass = isSupport ? "ticket_chat_bubble chat_bubble_support" : "ticket_chat_bubble chat_bubble_user";
 
         return `
-            <div style="max-width: 82%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.04); ${alignStyle}">
-                <div style="font-size: 11px; font-weight: 700; color: ${authorColor}; margin-bottom: 4px; display: flex; justify-content: space-between; gap: 12px;">
-                    <span>${escapeHtml(sender)}</span>
+            <div class="${bubbleClass}">
+                <div class="chat_bubble_header">
+                    <span><i class="fas fa-${isSupport ? 'user-shield' : 'user'}"></i> ${escapeHtml(sender)}</span>
                     <span style="opacity: 0.85;">${dateStr} ${timeStr}</span>
                 </div>
                 <div style="white-space: pre-wrap; word-break: break-word;">${escapeHtml(m.message)}</div>
@@ -430,7 +470,7 @@ async function sendAdminTicketReply(e) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
     }
 
-    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    const token = getValidToken();
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/tickets/${activeModalTicketId}/messages`) : `/api/tickets/${activeModalTicketId}/messages`;
         let res;
@@ -488,7 +528,7 @@ async function updateTicketStatusFromModal() {
     const btn = document.getElementById("btn_update_status");
     if (btn) btn.disabled = true;
 
-    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    const token = getValidToken();
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/tickets/${activeModalTicketId}/status`) : `/api/tickets/${activeModalTicketId}/status`;
         let res;
