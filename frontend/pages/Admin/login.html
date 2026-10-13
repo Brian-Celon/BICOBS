@@ -27,21 +27,10 @@
                 <p class="admin_login_subtitle">Sign in to access your TaurOS store operations panel.</p>
             </div>
 
-            <!-- sign out alert message -->
+            <!-- sign out / alert message -->
             <div class="admin_login_alert" id="login_status_alert" style="display: none;">
                 <i class="fas fa-check-circle" style="color: #16a34a; font-size: 16px;"></i>
                 <span id="login_status_text">You have successfully signed out.</span>
-            </div>
-
-            <!-- deployed site backend URL required notice -->
-            <div id="deployed_config_warning" style="display: none; background: rgba(234, 179, 8, 0.15); border: 1px solid rgba(234, 179, 8, 0.4); border-radius: 8px; padding: 12px 14px; margin-bottom: 18px; color: #fef08a; font-size: 12px; line-height: 1.5;">
-                <div style="font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: #facc15;">
-                    <i class="fas fa-triangle-exclamation"></i> Deployed Backend URL Required
-                </div>
-                <span>This frontend is deployed, but it needs your Render backend URL to authenticate. Click below to enter your Render URL once.</span>
-                <button type="button" onclick="openApiConfigModal()" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; background: #eab308; color: #0f172a; border: none; padding: 6px 14px; border-radius: 4px; font-weight: 700; font-size: 11.5px; cursor: pointer;">
-                    <i class="fas fa-plug"></i> Enter Render Backend URL
-                </button>
             </div>
 
             <!-- login form -->
@@ -79,48 +68,11 @@
                 </button>
             </form>
 
-            <div id="backend_connection_status" style="margin-top: 14px; padding: 8px 12px; border-radius: 6px; font-size: 11.5px; display: flex; align-items: center; justify-content: space-between; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); color: #94a3b8;">
-                <span id="backend_status_badge"><i class="fas fa-circle-notch fa-spin" style="margin-right: 6px;"></i>Checking backend connection...</span>
-                <button type="button" onclick="openApiConfigModal()" style="background: none; border: none; color: #f87171; cursor: pointer; font-size: 11.5px; text-decoration: underline; font-weight: 500;">Server Settings</button>
-            </div>
-
             <div class="admin_login_card_footer">
                 <p>Taurus Bike Store &bull; TaurOS Admin Panel v1.0</p>
             </div>
         </div>
     </main>
-
-    <!-- Backend API URL Settings Modal -->
-    <div class="modal_backdrop" id="api_config_modal">
-        <div class="modal_card" style="max-width: 440px;">
-            <div class="modal_header">
-                <h3 class="modal_title"><i class="fas fa-network-wired" style="color: #b91c1c; margin-right: 8px;"></i>Backend API Settings</h3>
-                <button type="button" class="modal_close_btn" onclick="closeModal('api_config_modal')" aria-label="Close dialog">&times;</button>
-            </div>
-            <div class="modal_body" style="padding: 20px;">
-                <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
-                    Configure your backend API destination (e.g. for Render deployment or local development).
-                </p>
-                <div class="form_group" style="margin-bottom: 14px;">
-                    <label class="form_label" for="custom_api_url_input">Backend Base URL</label>
-                    <input type="text" class="form_input" id="custom_api_url_input" placeholder="http://localhost:5000 or https://your-backend.onrender.com" style="font-size: 12.5px; width: 100%;">
-                    <small style="color: #94a3b8; font-size: 11px; display: block; margin-top: 4px;">Leave empty to auto-detect localhost:5000 or relative domain.</small>
-                </div>
-                <div id="api_test_result_msg" style="font-size: 12px; margin-bottom: 10px; display: none;"></div>
-                <div style="display: flex; gap: 8px;">
-                    <button type="button" class="btn_secondary" onclick="testCustomApiConnection()" style="flex: 1; justify-content: center; font-size: 12px;">
-                        <i class="fas fa-plug"></i> Test Connection
-                    </button>
-                    <button type="button" class="btn_primary" onclick="saveCustomApiUrl()" style="flex: 1; justify-content: center; font-size: 12px; background: #b91c1c; border-color: #b91c1c;">
-                        <i class="fas fa-save"></i> Save & Apply
-                    </button>
-                </div>
-            </div>
-            <div class="modal_footer">
-                <button type="button" class="btn_secondary" onclick="closeModal('api_config_modal')">Close</button>
-            </div>
-        </div>
-    </div>
 
     <!-- script logic -->
     <script src="/frontend/js/config.js"></script>
@@ -146,119 +98,10 @@
                 alertText.textContent = "Please sign in to continue.";
             }
 
-            // Check live backend connection on load
-            checkBackendConnectionOnLoad();
-
-            // remove query params so a refresh doesn't re-show the notice
             if (window.location.search) {
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
-
-        // Test backend server health on page load
-        async function checkBackendConnectionOnLoad() {
-            const badge = document.getElementById("backend_status_badge");
-            const warningBanner = document.getElementById("deployed_config_warning");
-            if (!badge) return;
-
-            const primaryUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/health") : "/api/health";
-            try {
-                const res = await fetch(primaryUrl, { cache: 'no-store' });
-                if (res.ok) {
-                    if (warningBanner) warningBanner.style.display = 'none';
-                    badge.innerHTML = `<span style="color: #22c55e;"><i class="fas fa-circle-check" style="margin-right: 5px;"></i>Backend Online (${cleanUrlDisplay(primaryUrl)})</span>`;
-                    return;
-                }
-            } catch (e) {
-                // Primary failed, test local port 5000 fallback
-            }
-
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            if (isLocal && !primaryUrl.includes("localhost:5000")) {
-                try {
-                    const fallback = await fetch("http://localhost:5000/api/health", { cache: 'no-store' });
-                    if (fallback.ok) {
-                        badge.innerHTML = `<span style="color: #22c55e;"><i class="fas fa-circle-check" style="margin-right: 5px;"></i>Local Server Online (port 5000)</span>`;
-                        return;
-                    }
-                } catch (err) {}
-            }
-
-            if (!isLocal) {
-                if (warningBanner) warningBanner.style.display = 'block';
-                badge.innerHTML = `<span style="color: #f87171;"><i class="fas fa-triangle-exclamation" style="margin-right: 5px;"></i>Backend Offline: Check Render / API Settings</span>`;
-            } else {
-                badge.innerHTML = `<span style="color: #f87171;"><i class="fas fa-triangle-exclamation" style="margin-right: 5px;"></i>Server Offline: Start backend on port 5000</span>`;
-            }
-        }
-
-        function cleanUrlDisplay(url) {
-            try {
-                if (url.startsWith('http')) {
-                    const u = new URL(url);
-                    return u.host;
-                }
-                return 'same-origin';
-            } catch (e) {
-                return url;
-            }
-        }
-
-        function openApiConfigModal() {
-            const input = document.getElementById("custom_api_url_input");
-            const current = (window.TAURUS_API_BASE_URL || localStorage.getItem("taurus_api_base_url") || "").trim();
-            if (input) input.value = current;
-            const resBox = document.getElementById("api_test_result_msg");
-            if (resBox) resBox.style.display = "none";
-            const modal = document.getElementById("api_config_modal");
-            if (modal) modal.classList.add("modal_active");
-        }
-
-        async function testCustomApiConnection() {
-            const input = document.getElementById("custom_api_url_input");
-            const resBox = document.getElementById("api_test_result_msg");
-            if (!input || !resBox) return;
-
-            let raw = (input.value || "").trim().replace(/\/$/, "");
-            if (raw && !raw.startsWith("http://") && !raw.startsWith("https://")) {
-                raw = "https://" + raw;
-                input.value = raw;
-            }
-            const testUrl = (raw ? `${raw}/api/health` : "/api/health");
-
-            resBox.style.display = "block";
-            resBox.innerHTML = '<span style="color: #3b82f6;"><i class="fas fa-spinner fa-spin"></i> Testing connection to ' + escapeHtml(testUrl) + '...</span>';
-
-            try {
-                const res = await fetch(testUrl, { cache: 'no-store' });
-                if (res.ok) {
-                    resBox.innerHTML = '<span style="color: #16a34a; font-weight: 600;"><i class="fas fa-check-circle"></i> Connection successful! Server responded OK.</span>';
-                } else {
-                    resBox.innerHTML = `<span style="color: #dc2626;"><i class="fas fa-times-circle"></i> Server responded with HTTP ${res.status}.</span>`;
-                }
-            } catch (err) {
-                resBox.innerHTML = '<span style="color: #dc2626;"><i class="fas fa-plug-circle-xmark"></i> Connection failed: Unable to reach ' + escapeHtml(testUrl) + '.</span>';
-            }
-        }
-
-        function saveCustomApiUrl() {
-            const input = document.getElementById("custom_api_url_input");
-            let url = (input?.value || "").trim().replace(/\/$/, "");
-            if (url && !url.startsWith("http://") && !url.startsWith("https://")) {
-                url = "https://" + url;
-            }
-            if (typeof setBackendBaseUrl === 'function') {
-                setBackendBaseUrl(url);
-            } else {
-                if (url) localStorage.setItem("taurus_api_base_url", url);
-                else localStorage.removeItem("taurus_api_base_url");
-                window.TAURUS_API_BASE_URL = url;
-            }
-            const modal = document.getElementById("api_config_modal");
-            if (modal) modal.classList.remove("modal_active");
-            showToast("Backend API URL saved! Re-testing connection...", true);
-            checkBackendConnectionOnLoad();
-        }
 
         // toggle password view
         function togglePasswordVisibility() {
@@ -275,7 +118,7 @@
             }
         }
 
-        // authenticate and redirect via real API with smart fallbacks
+        // authenticate and redirect
         async function handleAdminLogin(e) {
             e.preventDefault();
             const btn = document.getElementById("btn_admin_login");
@@ -294,17 +137,17 @@
 
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Authenticating...</span>';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Signing in...</span>';
             }
 
-            let usedUrl = "";
+            if (alertEl) alertEl.style.display = "none";
+
             const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
             try {
-                // Try /api/login first (direct alias), with fallback to /api/auth/login
+                // Try /api/login first, with fallback to /api/auth/login
                 let primaryUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/login") : "/api/login";
                 let res;
-                usedUrl = primaryUrl;
 
                 try {
                     res = await fetch(primaryUrl, {
@@ -313,42 +156,23 @@
                         body: JSON.stringify({ email, password })
                     });
 
-                    // If 404 on /api/login, try /api/auth/login
                     if (res.status === 404) {
-                        const authUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/auth/login") : "/api/auth/login";
-                        usedUrl = authUrl;
-                        res = await fetch(authUrl, {
+                        const fallbackUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/auth/login") : "/api/auth/login";
+                        res = await fetch(fallbackUrl, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ email, password })
                         });
                     }
                 } catch (netErr) {
-                    // Smart fallback: If network failed on local dev, try localhost:5000
                     if (isLocal && !primaryUrl.includes("http://localhost:5000")) {
-                        try {
-                            usedUrl = "http://localhost:5000/api/login";
-                            res = await fetch(usedUrl, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ email, password })
-                            });
-                        } catch (secondErr) {
-                            throw netErr;
-                        }
+                        res = await fetch("http://localhost:5000/api/login", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email, password })
+                        });
                     } else {
-                        // Check if a saved backend URL exists
-                        const savedBase = localStorage.getItem("taurus_api_base_url");
-                        if (savedBase && !primaryUrl.startsWith(savedBase)) {
-                            usedUrl = `${savedBase.replace(/\/$/, '')}/api/login`;
-                            res = await fetch(usedUrl, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ email, password })
-                            });
-                        } else {
-                            throw netErr;
-                        }
+                        throw netErr;
                     }
                 }
 
@@ -357,7 +181,7 @@
                 try {
                     data = JSON.parse(rawText);
                 } catch (parseErr) {
-                    throw new Error(`Server returned non-JSON response (HTTP ${res.status}). Expected backend API, received HTML.`);
+                    throw new Error("Invalid response from server");
                 }
 
                 if (res.ok && data.status === "success") {
@@ -388,7 +212,7 @@
                     showToast(`Welcome back, ${user.full_name || user.name || 'Admin'}!`, true);
                     setTimeout(() => {
                         window.location.href = "dashboard.html";
-                    }, 800);
+                    }, 500);
                 } else {
                     showToast(data.message || "Invalid email or password", false);
                     if (alertEl && alertText) {
@@ -406,36 +230,18 @@
                 }
             } catch (err) {
                 console.error("Admin login error:", err);
-                showToast("Connection error: Unable to reach backend server.", false);
+                showToast("Connection error: Unable to reach server.", false);
                 if (alertEl && alertText) {
                     alertEl.style.display = "flex";
                     alertEl.style.backgroundColor = "#fee2e2";
                     alertEl.style.borderColor = "#fca5a5";
                     const icon = alertEl.querySelector("i");
                     if (icon) {
-                        icon.className = "fas fa-plug-circle-xmark";
+                        icon.className = "fas fa-exclamation-circle";
                         icon.style.color = "#dc2626";
                     }
                     alertText.style.color = "#991b1b";
-                    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                    if (!isLocal) {
-                        alertText.innerHTML = `
-                            <strong>Unable to connect to backend server.</strong>
-                            <div style="margin-top: 6px; font-size: 11.5px; line-height: 1.5; color: #7f1d1d;">
-                                Attempted destination: <code>${escapeHtml(usedUrl || 'backend')}</code><br>
-                                &bull; <strong>Render Cold Starts:</strong> If your Render backend was idle, it sleeps and takes <strong>30–50 seconds to wake up</strong>. Please wait a moment and try again.<br>
-                                &bull; <strong>Check URL:</strong> Click <a href="javascript:void(0)" onclick="openApiConfigModal()" style="color: #b91c1c; font-weight: bold; text-decoration: underline;">Server Settings</a> below to verify your Render service URL.
-                            </div>
-                        `;
-                    } else {
-                        alertText.innerHTML = `
-                            <strong>Unable to connect to backend server.</strong>
-                            <div style="margin-top: 4px; font-size: 11px; font-weight: normal; color: #7f1d1d;">
-                                Make sure <code>npm start</code> or <code>node back-end/server.js</code> is running on port 5000.<br>
-                                If using Render: Click <strong>Server Settings</strong> below to verify your deployed Render URL.
-                            </div>
-                        `;
-                    }
+                    alertText.textContent = "Unable to connect to server. Please try again.";
                 }
             } finally {
                 if (btn) {
