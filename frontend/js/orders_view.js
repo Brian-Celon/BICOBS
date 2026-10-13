@@ -361,7 +361,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         const refNum = order.paymentReference || order.payment_reference || '';
 
                         if (proofRefBadgeEl) {
-                            proofRefBadgeEl.textContent = refNum ? `Ref: ${refNum}` : 'Ref: Not provided';
+                            if (refNum && refNum !== 'PROOF_UPLOADED' && refNum !== 'CASH_ON_PICKUP') {
+                                proofRefBadgeEl.textContent = `Ref: ${refNum}`;
+                            } else if (proofImg) {
+                                proofRefBadgeEl.textContent = 'Proof Attached';
+                            } else {
+                                proofRefBadgeEl.textContent = 'Ref: Not provided';
+                            }
                         }
 
                         if (proofContentEl) {

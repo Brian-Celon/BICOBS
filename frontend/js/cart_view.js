@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             accountNumber: '0917-828-7871',
             rawNumber: '09178287871',
             badgeBg: '#005ce6',
-            instructions: 'Send money via GCash Express Send. Enter the exact total amount, then copy the 13-digit Reference Number from your receipt below.'
+            instructions: 'Send money via GCash Express Send. Enter the exact total amount, then upload your payment receipt screenshot below.'
         },
         maya: {
             title: 'Maya (PayMaya) Transfer',
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             accountNumber: '0918-912-3456',
             rawNumber: '09189123456',
             badgeBg: '#047857',
-            instructions: 'Send money via Maya Send Money. Enter the exact total amount, then enter your Maya Reference Number below.'
+            instructions: 'Send money via Maya Send Money. Enter the exact total amount, then upload your payment receipt screenshot below.'
         },
         bpi: {
             title: 'Bank of the Philippine Islands (BPI)',
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             accountNumber: '0443-1289-55',
             rawNumber: '0443128955',
             badgeBg: '#b91c1c',
-            instructions: 'Transfer via BPI Online / Mobile App to the account above. Enter the exact total, then copy your BPI Confirmation / Reference Number below.'
+            instructions: 'Transfer via BPI Online / Mobile App to the account above. Enter the exact total, then upload your transfer receipt screenshot below.'
         },
         cash: {
             title: 'Cash / In-Store Counter Payment',
@@ -1006,22 +1006,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (pay_verification_inputs) pay_verification_inputs.style.display = 'flex';
 
-        // Update placeholder and label of verification input based on account type
-        const refLabel = document.querySelector('label[for="checkout_payment_ref"]') || document.querySelector('#pay_verification_inputs label');
-        if (refLabel) {
-            if (isCard) {
-                refLabel.innerHTML = '<span style="color: #dc2626;">*</span> Card Security Code (CVV)';
-            } else {
-                refLabel.innerHTML = '<span style="color: #dc2626;">*</span> Transaction / Reference Number (From Receipt)';
-            }
-        }
-        if (checkout_payment_ref) {
-            checkout_payment_ref.placeholder = isCard ? 'Enter 3-digit CVV on back of card' : 'e.g. 13-digit GCash/Maya reference number';
-        }
-        if (checkout_payment_sender) {
-            const defaultSender = currentAccount.accountName || localStorage.getItem('tb_user_name') || '';
-            checkout_payment_sender.value = defaultSender;
-            checkout_payment_sender.placeholder = 'Account Holder Name';
+        // Update placeholder/values if elements exist (backwards compatibility)
+        if (checkout_payment_sender && !checkout_payment_sender.value) {
+            checkout_payment_sender.value = currentAccount.accountName || localStorage.getItem('tb_user_name') || '';
         }
 
         const proofSection = document.getElementById('proof_upload_section');
@@ -1048,7 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <strong style="font-size: 16px; color: #dc2626;">₱${total.toLocaleString()}</strong>
                     </div>
                     <p style="margin: 0; color: #64748b; font-size: 11.5px; line-height: 1.4;">
-                        <i class="fas fa-lock"></i> Your linked card will be charged upon order confirmation. Please enter your 3-digit CVV below for security authorization.
+                        <i class="fas fa-lock"></i> Your linked card will be charged automatically upon order confirmation.
                     </p>
                 </div>
             `;
@@ -1081,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <strong style="font-size: 16px; color: #dc2626;">₱${total.toLocaleString()}</strong>
                     </div>
                     <p style="margin: 0; color: #64748b; font-size: 11.5px; line-height: 1.4;">
-                        <i class="fas fa-info-circle"></i> Send payment from your registered account above to Taurus Bike. Enter the transaction reference number from your receipt below.
+                        <i class="fas fa-info-circle"></i> Send payment from your registered account above to Taurus Bike, then upload your payment receipt screenshot below.
                     </p>
                 </div>
             `;
@@ -1346,33 +1333,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                if (activeProvider === 'card') {
-                    if (!paymentRef || paymentRef.length < 3) {
-                        if (payment_error_msg) {
-                            payment_error_msg.textContent = '⚠️ Please enter your 3-digit Card CVV / security authorization code.';
-                            payment_error_msg.style.display = 'block';
-                        }
-                        if (checkout_payment_ref) checkout_payment_ref.focus();
-                        return;
-                    }
-                } else {
-                    if ((!paymentRef || paymentRef.length < 5) && !uploadedProofBase64) {
-                        if (payment_error_msg) {
-                            payment_error_msg.textContent = '⚠️ Payment must be handled first for delivery orders. Please enter your valid payment reference number or upload your screenshot proof of payment.';
-                            payment_error_msg.style.display = 'block';
-                        }
-                        if (checkout_payment_ref) checkout_payment_ref.focus();
-                        return;
-                    }
-                }
-            } else if (fulfillmentType === 'pickup' && activeProvider !== 'cash') {
-                // If customer is doing store pickup but chose to pay upfront via e-wallet or card
-                if (!paymentRef && !uploadedProofBase64) {
+                if (activeProvider !== 'card' && !uploadedProofBase64) {
                     if (payment_error_msg) {
-                        payment_error_msg.textContent = '⚠️ Please enter your payment reference / CVV code, or select "Cash on Pick-up" to pay at the counter.';
+                        payment_error_msg.textContent = '⚠️ Please upload your proof of payment screenshot receipt before confirming your order.';
                         payment_error_msg.style.display = 'block';
                     }
-                    if (checkout_payment_ref) checkout_payment_ref.focus();
+                    const dropzone = document.getElementById('checkout_proof_dropzone');
+                    if (dropzone) dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            } else if (fulfillmentType === 'pickup' && activeProvider !== 'cash') {
+                // If customer is doing store pickup but chose to pay upfront via e-wallet
+                if (!uploadedProofBase64 && activeProvider !== 'card') {
+                    if (payment_error_msg) {
+                        payment_error_msg.textContent = '⚠️ Please upload your proof of payment screenshot, or select "Cash on Pick-up" to pay at the counter.';
+                        payment_error_msg.style.display = 'block';
+                    }
+                    const dropzone = document.getElementById('checkout_proof_dropzone');
+                    if (dropzone) dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
             }
@@ -1388,13 +1366,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const finalPaymentRef = (fulfillmentType === 'pickup' && activeProvider === 'cash')
                 ? 'CASH_ON_PICKUP'
-                : (paymentRef || (uploadedProofBase64 ? 'PROOF_UPLOADED' : ''));
+                : (uploadedProofBase64 ? 'PROOF_UPLOADED' : (paymentRef || ''));
 
             const paymentSummaryNote = (fulfillmentType === 'pickup' && activeProvider === 'cash')
                 ? 'Payment Method: Cash on Store Pick-up (Pay at counter upon claim)'
                 : (selectedUserPaymentAccount
-                    ? `Paid via ${selectedUserPaymentAccount.provider.toUpperCase()} (${selectedUserPaymentAccount.accountNumber}) | Holder: ${selectedUserPaymentAccount.accountName} | Ref/Auth: ${finalPaymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`
-                    : `Paid via ${(activeProvider || 'Cash').toUpperCase()} | Ref: ${finalPaymentRef}${paymentSender ? ` | Sender: ${paymentSender}` : ''}`);
+                    ? `Paid via ${selectedUserPaymentAccount.provider.toUpperCase()} (${selectedUserPaymentAccount.accountNumber}) | Holder: ${selectedUserPaymentAccount.accountName} | Proof: ${uploadedProofBase64 ? 'Receipt Screenshot Attached' : 'None'}`
+                    : `Paid via ${(activeProvider || 'Cash').toUpperCase()} | Proof: ${uploadedProofBase64 ? 'Receipt Screenshot Attached' : 'None'}`);
 
             const orderPayload = {
                 orderItems: selectedItems.map(item => ({
