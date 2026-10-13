@@ -34,36 +34,28 @@
                     <i class="fas fa-bell"></i>
                     <span class="notification_badge_dot" style="display: none;"></span>
                 </button>
-                <div class="dropdown_menu_card" id="notification_menu">
-                    <div class="dropdown_header">
-                        <span class="dropdown_title">Notifications</span>
-                        <span class="badge_counter" id="notif_counter">0 New</span>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
                     </div>
-                    <ul class="dropdown_list" id="notif_list">
-                        <li class="dropdown_empty_msg">No unread notifications</li>
+                    <ul class="notification_box_list" id="notification_list">
+                        <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
                     </ul>
                 </div>
             </div>
 
-            <!-- user profile dropdown wrapper -->
+            <!-- admin profile dropdown wrapper -->
             <div class="dropdown_menu_wrapper">
-                <button type="button" class="top_user_profile_btn" id="top_user_profile_btn" onclick="toggleDropdown('profile_menu')">
-                    <div class="user_avatar_circle">
-                        <i class="fas fa-user-shield"></i>
+                <div class="admin_profile_pill" id="admin_profile_trigger" onclick="toggleDropdown('admin_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
                     </div>
-                    <div class="user_text_group">
-                        <span class="user_name" id="admin_nav_username">Taurus Admin</span>
-                        <span class="user_role_label" id="admin_nav_role">Store Manager</span>
-                    </div>
-                    <i class="fas fa-chevron-down user_chevron"></i>
-                </button>
-                <div class="dropdown_menu_card" id="profile_menu">
-                    <div class="dropdown_header user_dropdown_header">
-                        <div class="user_header_text">
-                            <span class="user_header_name" id="menu_user_name">Taurus Admin</span>
-                            <span class="user_header_email" id="menu_user_email">admin@taurusbike.ph</span>
-                        </div>
-                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="admin_profile_menu">
                     <a href="settings.html" class="dropdown_menu_item">
                         <i class="fas fa-user-cog"></i> Profile Settings
                     </a>

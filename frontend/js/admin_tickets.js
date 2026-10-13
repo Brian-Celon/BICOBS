@@ -211,7 +211,7 @@ function applyTicketFilters() {
 
         // Category match
         if (currentCategoryFilter !== "all") {
-            if (t.category !== currentCategoryFilter) return false;
+            if ((t.category || "").toLowerCase().trim() !== currentCategoryFilter.toLowerCase().trim()) return false;
         }
 
         // Search match
@@ -423,6 +423,9 @@ async function openTicketModal(ticketId) {
             custCreated.textContent = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString("en-US", {
                 month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit"
             }) : '—';
+        }
+        if (statusSelect && ticket.status) {
+            statusSelect.value = ticket.status;
         }
         const counterEl = document.getElementById("modal_message_counter");
         if (counterEl) {
