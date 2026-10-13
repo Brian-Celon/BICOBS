@@ -13,8 +13,9 @@ const ITEMS_PER_PAGE = 8;
 let selectedOrder = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initial orders fetch
+    // 1. Initial orders fetch & live synchronization
     loadAdminOrders();
+    startLiveOrderSync();
 
     // 2. Tab filter listener
     const tabButtons = document.querySelectorAll("#order_tabs_bar .filter_tab_btn");
@@ -237,15 +238,15 @@ function renderOrdersTable() {
                 <td>
                     <div class="table_actions_cell">
                         ${(paymentStatus !== 'paid' && orderStatus.toLowerCase() !== 'declined' && orderStatus.toLowerCase() !== 'cancelled') ? `
-                            <button type="button" class="table_btn_verify" onclick="verifyOrderPayment('${orderId}')" title="Approve payment (moves to Processing)">
-                                <i class="fas fa-check-circle"></i> Approve
+                            <button type="button" class="table_btn_verify" onclick="verifyOrderPayment('${orderId}')" title="Confirm payment">
+                                <i class="fas fa-check-circle"></i> Confirm Payment
                             </button>
-                            <button type="button" class="table_btn_decline" onclick="declineOrderPayment('${orderId}')" title="Decline payment if not received">
-                                <i class="fas fa-times-circle"></i> Decline
+                            <button type="button" class="table_btn_decline" onclick="declineOrderPayment('${orderId}')" title="Reject payment (returns stock)">
+                                <i class="fas fa-times-circle"></i> Reject
                             </button>
                         ` : ''}
-                        ${(paymentStatus === 'paid' && (orderStatus === 'ready_for_delivery' || orderStatus === 'ready_for_pickup' || orderStatus === 'shipped')) ? `
-                            <button type="button" class="table_btn_complete" onclick="quickCompleteOrder('${orderId}')" title="Complete Order">
+                        ${(paymentStatus === 'paid' && (orderStatus === 'ready_for_deliver' || orderStatus === 'ready_for_delivery' || orderStatus === 'out_for_delivery' || orderStatus === 'shipped' || orderStatus === 'ready_for_pickup')) ? `
+                            <button type="button" class="table_btn_complete" onclick="handleAdminMarkCompleted('${orderId}')" title="Complete Order">
                                 <i class="fas fa-check"></i> Complete
                             </button>
                         ` : ''}
@@ -266,17 +267,19 @@ function getStatusBadge(status, payStatus) {
     const s = (status || '').toLowerCase();
     if (s === 'completed') {
         return '<span class="status_pill status_completed"><i class="fas fa-check-circle"></i> Completed</span>';
-    } else if (s === 'ready_for_delivery') {
-        return '<span class="status_pill" style="background: #e0f2fe; color: #0284c7; font-weight: 600;"><i class="fas fa-shipping-fast"></i> Ready for Delivery</span>';
-    } else if (s === 'shipped' || s === 'out_for_delivery') {
-        return '<span class="status_pill" style="background: #e0e7ff; color: #4338ca;"><i class="fas fa-truck"></i> Shipped</span>';
+    } else if (s === 'ready_for_deliver' || s === 'ready_for_delivery') {
+        return '<span class="status_pill" style="background: #e0f2fe; color: #0284c7; font-weight: 600;"><i class="fas fa-shipping-fast"></i> Ready for Deliver</span>';
+    } else if (s === 'out_for_delivery' || s === 'shipped') {
+        return '<span class="status_pill" style="background: #e0e7ff; color: #4338ca; font-weight: 600;"><i class="fas fa-truck"></i> Out for Delivery</span>';
     } else if (s === 'ready_for_pickup') {
         return '<span class="status_pill" style="background: #ede9fe; color: #7c3aed; font-weight: 600;"><i class="fas fa-box"></i> Ready for Pickup</span>';
+    } else if (s === 'payment_confirmed') {
+        return '<span class="status_pill" style="background: #dcfce7; color: #15803d; font-weight: 700;"><i class="fas fa-check-circle"></i> Payment Confirmed</span>';
     } else if (s === 'processing') {
         return '<span class="status_pill status_paid"><i class="fas fa-cog fa-spin"></i> Processing</span>';
     } else if (s === 'payment_confirmation') {
         return '<span class="status_pill" style="background: #fef3c7; color: #b45309; font-weight: 600;"><i class="fas fa-receipt"></i> Payment Confirmation</span>';
-    } else if (s === 'declined') {
+    } else if (s === 'declined' || s === 'rejected') {
         return '<span class="status_pill" style="background: #fee2e2; color: #dc2626; font-weight: 700;"><i class="fas fa-times-circle"></i> Declined</span>';
     } else if (s === 'cancelled') {
         return '<span class="status_pill" style="background: #fee2e2; color: #dc2626;"><i class="fas fa-ban"></i> Cancelled</span>';
@@ -375,7 +378,52 @@ function openOrderModal(orderId) {
     const totalEl = document.getElementById("modal_order_total");
     if (totalEl) totalEl.textContent = `₱${total.toLocaleString()}`;
 
-    // Itemized table list
+    // 1. Render Proof of Payment Screenshot & Reference Section
+    const proofBodyEl = document.getElementById("modal_payment_proof_body");
+    const refBadgeEl = document.getElementById("modal_payment_proof_ref_badge");
+    const proofImg = selectedOrder.paymentProof || selectedOrder.payment_proof || '';
+    const refNum = selectedOrder.paymentReference || selectedOrder.payment_reference || selectedOrder.referenceNumber || '';
+
+    if (refBadgeEl) {
+        refBadgeEl.textContent = refNum ? `Ref: ${refNum}` : 'Ref: Not provided';
+    }
+
+    if (proofBodyEl) {
+        if (proofImg) {
+            proofBodyEl.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <div style="position: relative; max-width: 100%; cursor: pointer;" onclick="openPaymentProofLightbox('${orderId}')" title="Click to view full screenshot">
+                        <img src="${proofImg}" alt="Payment Proof" style="max-height: 160px; max-width: 100%; border-radius: 6px; border: 1.5px solid #cbd5e1; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                            <i class="fas fa-search-plus"></i> View Full Screenshot
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap; justify-content: center;">
+                        <button type="button" class="btn_secondary" onclick="openPaymentProofLightbox('${orderId}')" style="font-size: 11.5px; padding: 5px 12px;">
+                            <i class="fas fa-eye"></i> Enlarge Screenshot
+                        </button>
+                        <label class="btn_secondary" style="font-size: 11.5px; padding: 5px 12px; cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-upload"></i> Replace Image
+                            <input type="file" accept="image/*" style="display: none;" onchange="handleAdminProofUpload(event, '${orderId}')">
+                        </label>
+                    </div>
+                </div>
+            `;
+        } else {
+            proofBodyEl.innerHTML = `
+                <div style="padding: 16px; border: 1.5px dashed #cbd5e1; border-radius: 6px; text-align: center; background: #f8fafc;">
+                    <i class="fas fa-receipt" style="font-size: 28px; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
+                    <span style="font-size: 12.5px; color: #64748b; display: block; margin-bottom: 8px;">No proof of payment screenshot uploaded yet</span>
+                    <label class="btn_primary" style="font-size: 12px; padding: 6px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; background: #b91c1c; border-color: #b91c1c; margin: 0;">
+                        <i class="fas fa-file-upload"></i> Upload Proof of Payment Screenshot
+                        <input type="file" accept="image/*" style="display: none;" onchange="handleAdminProofUpload(event, '${orderId}')">
+                    </label>
+                </div>
+            `;
+        }
+    }
+
+    // 2. Itemized table list
     const items = selectedOrder.orderItems || selectedOrder.items || [];
     const itemsEl = document.getElementById("modal_order_items");
     if (itemsEl) {
@@ -421,30 +469,57 @@ function openOrderModal(orderId) {
         }
     }
 
-    // Render Status Badge in Order Actions Header
+    // 3. Render Customer Confirmation Status Banner
+    const bannerEl = document.getElementById("modal_customer_confirmation_banner");
+    if (bannerEl) {
+        const isCustomerConfirmed = !!(selectedOrder.customerConfirmed || selectedOrder.customer_confirmed);
+        const confirmedAt = selectedOrder.customerConfirmedAt || selectedOrder.customer_confirmed_at;
+
+        if (isCustomerConfirmed) {
+            bannerEl.innerHTML = `
+                <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="color: #15803d; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-check-double" style="font-size: 16px; color: #16a34a;"></i> Receipt Confirmed by Customer on Web
+                    </span>
+                    <span style="font-size: 11px; color: #166534; font-weight: 600;">${formatDate(confirmedAt) || 'Confirmed'}</span>
+                </div>
+            `;
+        } else {
+            bannerEl.innerHTML = `
+                <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="color: #b45309; font-weight: 600; font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-clock" style="font-size: 15px; color: #d97706;"></i> Awaiting Customer Delivery Confirmation on Web
+                    </span>
+                    <span style="font-size: 11px; color: #92400e; font-weight: 500;">Pending Customer</span>
+                </div>
+            `;
+        }
+    }
+
+    // 4. Render Status Badge in Order Actions Header
     const statusBadgeEl = document.getElementById("modal_current_status_badge");
     if (statusBadgeEl) {
         statusBadgeEl.innerHTML = getStatusBadge(orderStatus, paymentStatus);
     }
 
-    // Render Payment Verification Box
+    // 5. Render Payment Verification Box
     const verifyBoxEl = document.getElementById("modal_payment_verification_box");
     if (verifyBoxEl) {
-        if (orderStatus === 'declined') {
+        if (orderStatus === 'declined' || orderStatus === 'rejected') {
             const reason = selectedOrder.declineReason || selectedOrder.decline_reason || 'Payment has not been received';
             verifyBoxEl.innerHTML = `
                 <div class="order_verify_card" style="background:#fee2e2; border-color:#fecaca;">
                     <div class="order_verify_info">
                         <i class="fas fa-times-circle order_verify_icon" style="color:#dc2626;"></i>
                         <div>
-                            <div class="order_verify_title" style="color:#991b1b;">Order Declined</div>
-                            <div class="order_verify_sub" style="color:#b91c1c;">Payment was declined: <strong>${escapeHtml(reason)}</strong></div>
+                            <div class="order_verify_title" style="color:#991b1b;">Order Declined / Rejected</div>
+                            <div class="order_verify_sub" style="color:#b91c1c;">Payment declined: <strong>${escapeHtml(reason)}</strong>. Items returned to inventory stock.</div>
                         </div>
                     </div>
                     <span class="status_pill" style="background:#dc2626; color:#ffffff; font-weight:700;"><i class="fas fa-times"></i> Declined</span>
                 </div>
             `;
-        } else if (paymentStatus === 'paid') {
+        } else if (paymentStatus === 'paid' || orderStatus === 'payment_confirmed') {
             verifyBoxEl.innerHTML = `
                 <div class="order_verify_card">
                     <div class="order_verify_info">
@@ -464,15 +539,15 @@ function openOrderModal(orderId) {
                         <i class="fas fa-receipt order_verify_icon"></i>
                         <div>
                             <div class="order_verify_title">Payment Verification Required</div>
-                            <div class="order_verify_sub">Verify if customer payment of ₱${total.toLocaleString()} was received via ${paymentMethod}. If received, click Approve (moves to Processing). If not, click Decline.</div>
+                            <div class="order_verify_sub">Verify if customer payment of ₱${total.toLocaleString()} was received via ${paymentMethod} (${refNum ? 'Ref: ' + refNum : 'No ref'}).</div>
                         </div>
                     </div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <button type="button" class="btn_verify_payment" id="btn_modal_verify_${orderId}" onclick="verifyOrderPayment('${orderId}')" title="Approve Payment - moves to Processing stage">
-                            <i class="fas fa-check-circle"></i> Approve Payment
+                        <button type="button" class="btn_verify_payment" id="btn_modal_verify_${orderId}" onclick="verifyOrderPayment('${orderId}')" title="Confirm Payment Received">
+                            <i class="fas fa-check-circle"></i> Confirm Payment
                         </button>
-                        <button type="button" class="btn_decline_payment" id="btn_modal_decline_${orderId}" onclick="declineOrderPayment('${orderId}')" title="Decline Payment if not received">
-                            <i class="fas fa-times-circle"></i> Decline Payment
+                        <button type="button" class="btn_decline_payment" id="btn_modal_decline_${orderId}" onclick="declineOrderPayment('${orderId}')" title="Reject Payment - Restores stock">
+                            <i class="fas fa-times-circle"></i> Reject Payment
                         </button>
                     </div>
                 </div>
@@ -480,23 +555,25 @@ function openOrderModal(orderId) {
         }
     }
 
-    // Render Order Action Buttons (Replacing dropdown)
+    // 6. Render Order Action Buttons (Exact Progression: Payment Confirmed > Ready for Deliver > Out for Delivery > Mark Completed)
     renderModalOrderActions(orderId, deliveryType, orderStatus, paymentStatus);
 
     if (typeof openModal === 'function') openModal("order_detail_modal");
 }
 
-// Render the action buttons grid inside modal based on delivery type & status
+// Render the exact workflow progression requested:
+// payment confirmed > ready for deliver > out for delivery > mark completed(this should be confirmed by the customer too)
 function renderModalOrderActions(orderId, deliveryType, orderStatus, paymentStatus) {
     const actionsContainer = document.getElementById("modal_order_actions");
     if (!actionsContainer) return;
 
     const isDelivery = deliveryType === 'delivery';
     const isPickup = deliveryType === 'pickup';
+    const isPaid = paymentStatus === 'paid' || orderStatus === 'payment_confirmed';
+    const isCustomerConfirmed = !!(selectedOrder?.customerConfirmed || selectedOrder?.customer_confirmed);
     const isCompleted = orderStatus === 'completed';
     const isCancelled = orderStatus === 'cancelled';
-    const isDeclined = orderStatus === 'declined';
-    const isPaid = paymentStatus === 'paid';
+    const isDeclined = orderStatus === 'declined' || orderStatus === 'rejected';
 
     if (isDeclined) {
         const reason = selectedOrder?.declineReason || selectedOrder?.decline_reason || 'Payment has not been received';
@@ -506,87 +583,109 @@ function renderModalOrderActions(orderId, deliveryType, orderStatus, paymentStat
                     <i class="fas fa-times-circle" style="color: #dc2626;"></i> Order Declined
                 </div>
                 <div style="font-size: 12.5px; color: #b91c1c;">
-                    Reason: <strong>${escapeHtml(reason)}</strong>. Product inventory has been restored.
+                    Reason: <strong>${escapeHtml(reason)}</strong>. All deducted items have been returned to inventory stock.
                 </div>
             </div>
         `;
         return;
     }
 
-    let paymentActionButtons = '';
-    if (!isPaid && !isCancelled) {
-        paymentActionButtons = `
-            <!-- Payment Action: Approve Payment -->
-            <button type="button" 
-                    class="order_action_btn btn_action_approve"
-                    onclick="verifyOrderPayment('${orderId}')"
-                    title="Approve payment has been received (moves order to Processing stage)">
-                <span class="action_btn_main"><i class="fas fa-check-circle"></i> Approve Payment</span>
-                <span class="action_tag_hint" style="color: #16a34a;">(Moves to Processing stage)</span>
-            </button>
+    if (isCancelled) {
+        actionsContainer.innerHTML = `
+            <div style="grid-column: span 2; background: #fee2e2; border: 1.5px solid #fecaca; border-radius: 8px; padding: 14px; text-align: center; color: #991b1b;">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px;">
+                    <i class="fas fa-ban" style="color: #dc2626;"></i> Order Cancelled
+                </div>
+                <div style="font-size: 12.5px; color: #b91c1c;">
+                    This order was cancelled. Deducted product items have been restored to inventory stock.
+                </div>
+            </div>
+        `;
+        return;
+    }
 
-            <!-- Payment Action: Decline Payment -->
+    // Step 1: Payment Confirmed
+    const isStep1Active = orderStatus === 'payment_confirmed';
+    const step1Disabled = isPaid || isCompleted || isCancelled;
+
+    // Step 2: Ready for Deliver (or Ready for Pickup)
+    const isStep2Active = orderStatus === 'ready_for_deliver' || orderStatus === 'ready_for_delivery' || orderStatus === 'ready_for_pickup';
+    const step2Disabled = !isPaid || isCompleted || isCancelled;
+
+    // Step 3: Out for Delivery
+    const isStep3Active = orderStatus === 'out_for_delivery' || orderStatus === 'shipped';
+    const step3Disabled = !isPaid || isCompleted || isCancelled;
+
+    // Step 4: Mark Completed (Customer Confirmed)
+    const isStep4Active = isCompleted;
+    const step4Disabled = !isPaid || isCancelled;
+
+    actionsContainer.innerHTML = `
+        <!-- Step 1: Payment Confirmed -->
+        <button type="button" 
+                class="order_action_btn btn_action_approve ${isStep1Active ? 'is_active' : ''} ${step1Disabled && !isStep1Active ? 'is_disabled' : ''}"
+                ${step1Disabled ? 'disabled' : `onclick="verifyOrderPayment('${orderId}')"`}
+                title="Step 1: Confirm Payment Received">
+            <span class="action_btn_main"><i class="fas fa-check-circle"></i> 1. Payment Confirmed</span>
+            ${isPaid ? '<span class="action_tag_hint" style="color: #16a34a;">(Confirmed & Verified ✓)</span>' : '<span class="action_tag_hint" style="color: #d97706;">(Click to Confirm Payment)</span>'}
+        </button>
+
+        <!-- Step 2: Ready for Deliver (or Ready for Pickup) -->
+        <button type="button" 
+                class="order_action_btn btn_delivery_ready ${isStep2Active ? 'is_active' : ''} ${step2Disabled ? 'is_disabled' : ''}"
+                ${step2Disabled ? 'disabled' : `onclick="updateOrderStatusDirect('${orderId}', '${isPickup ? 'ready_for_pickup' : 'ready_for_delivery'}')"`}
+                title="${!isPaid ? 'Payment must be confirmed first' : (isPickup ? 'Mark Ready for Pickup' : 'Step 2: Mark Ready for Deliver')}">
+            <span class="action_btn_main"><i class="fas ${isPickup ? 'fa-box' : 'fa-shipping-fast'}"></i> 2. ${isPickup ? 'Ready for Pickup' : 'Ready for Deliver'}</span>
+            ${!isPaid ? '<span class="action_tag_hint">(Requires Payment Confirmed)</span>' : (isStep2Active ? '<span class="action_tag_hint" style="color: #0284c7;">(Current Status)</span>' : '')}
+        </button>
+
+        <!-- Step 3: Out for Delivery (Active for delivery, shows Counter Ready for pickup) -->
+        <button type="button" 
+                class="order_action_btn ${isStep3Active ? 'is_active' : ''} ${step3Disabled ? 'is_disabled' : ''}"
+                ${step3Disabled ? 'disabled' : `onclick="updateOrderStatusDirect('${orderId}', 'out_for_delivery')"`}
+                title="${!isPaid ? 'Payment must be confirmed first' : (isPickup ? 'Available at Store Counter' : 'Step 3: Mark Out for Delivery')}">
+            <span class="action_btn_main"><i class="fas ${isPickup ? 'fa-store' : 'fa-truck'}"></i> 3. ${isPickup ? 'Counter Ready' : 'Out for Delivery'}</span>
+            ${!isPaid ? '<span class="action_tag_hint">(Requires Payment Confirmed)</span>' : (isStep3Active ? '<span class="action_tag_hint" style="color: #4338ca;">(Out for Delivery)</span>' : '')}
+        </button>
+
+        <!-- Step 4: Mark Completed (Customer Confirmed too) -->
+        <button type="button" 
+                class="order_action_btn btn_complete ${isStep4Active ? 'is_active' : ''} ${step4Disabled ? 'is_disabled' : ''}"
+                ${(step4Disabled || isCompleted) ? 'disabled' : `onclick="handleAdminMarkCompleted('${orderId}')"`}
+                title="${!isPaid ? 'Payment must be confirmed first' : 'Step 4: Mark Completed (Customer Confirmed)'}">
+            <span class="action_btn_main">
+                <i class="fas ${isCustomerConfirmed ? 'fa-check-double' : 'fa-check-circle'}"></i> 4. Mark Completed
+            </span>
+            ${isCompleted ? 
+                '<span class="action_tag_hint" style="color: #16a34a;">(Completed ✓)</span>' : 
+                (isCustomerConfirmed ? 
+                    '<span class="action_tag_hint" style="color: #16a34a; font-weight: 700;">(Customer Confirmed ✓)</span>' : 
+                    '<span class="action_tag_hint" style="color: #d97706;">(Awaiting Customer Confirmation)</span>')}
+        </button>
+
+        <!-- Decline Payment (Only if not paid) -->
+        ${!isPaid ? `
             <button type="button" 
                     class="order_action_btn btn_action_decline"
                     onclick="declineOrderPayment('${orderId}')"
-                    title="Decline payment if not received">
-                <span class="action_btn_main"><i class="fas fa-times-circle"></i> Decline Payment</span>
-                <span class="action_tag_hint" style="color: #dc2626;">(Payment not received)</span>
+                    title="Reject payment & return stock">
+                <span class="action_btn_main"><i class="fas fa-times-circle"></i> Reject / Decline Payment</span>
+                <span class="action_tag_hint" style="color: #dc2626;">(Returns items to stock)</span>
             </button>
-        `;
-    }
+        ` : ''}
 
-    actionsContainer.innerHTML = `
-        ${paymentActionButtons}
-
-        <!-- Action 1: Ready for Delivery (Active for delivery, strictly DISABLED for pickup) -->
+        <!-- Cancel Order (Restores product inventory) -->
         <button type="button" 
-                class="order_action_btn btn_delivery_ready ${orderStatus === 'ready_for_delivery' ? 'is_active' : ''} ${(!isDelivery || !isPaid) ? 'is_disabled' : ''}"
-                ${(!isDelivery || !isPaid || isCompleted || isCancelled) ? 'disabled' : `onclick="updateOrderStatusDirect('${orderId}', 'ready_for_delivery')"`}
-                title="${!isPaid ? 'Payment must be approved first' : (!isDelivery ? 'Disabled: In-Store Pickup order' : 'Mark Ready for Delivery')}">
-            <span class="action_btn_main"><i class="fas fa-shipping-fast"></i> Ready for Delivery</span>
-            ${!isPaid ? '<span class="action_tag_hint">(Requires Approved Payment)</span>' : (!isDelivery ? '<span class="action_tag_hint">(Disabled: Pickup order)</span>' : (orderStatus === 'ready_for_delivery' ? '<span class="action_tag_hint" style="color: #0284c7;">(Current Status)</span>' : ''))}
-        </button>
-
-        <!-- Action 2: Ready for Pickup (Active for pickup, strictly DISABLED for delivery) -->
-        <button type="button" 
-                class="order_action_btn btn_pickup_ready ${orderStatus === 'ready_for_pickup' ? 'is_active' : ''} ${(isDelivery || !isPaid) ? 'is_disabled' : ''}"
-                ${(isDelivery || !isPaid || isCompleted || isCancelled) ? 'disabled' : `onclick="updateOrderStatusDirect('${orderId}', 'ready_for_pickup')"`}
-                title="${!isPaid ? 'Payment must be approved first' : (isDelivery ? 'Disabled: Delivery order' : 'Mark Ready for Pickup')}">
-            <span class="action_btn_main"><i class="fas fa-box"></i> Ready for Pickup</span>
-            ${!isPaid ? '<span class="action_tag_hint">(Requires Approved Payment)</span>' : (isDelivery ? '<span class="action_tag_hint">(Disabled: Delivery order)</span>' : (orderStatus === 'ready_for_pickup' ? '<span class="action_tag_hint" style="color: #7c3aed;">(Current Status)</span>' : ''))}
-        </button>
-
-        <!-- Action 3: Shipped / Out for Delivery (Active for delivery, DISABLED for pickup) -->
-        <button type="button" 
-                class="order_action_btn ${orderStatus === 'shipped' ? 'is_active' : ''} ${(!isDelivery || !isPaid) ? 'is_disabled' : ''}"
-                ${(!isDelivery || !isPaid || isCompleted || isCancelled) ? 'disabled' : `onclick="updateOrderStatusDirect('${orderId}', 'shipped')"`}
-                title="${!isPaid ? 'Payment must be approved first' : (!isDelivery ? 'Disabled for Pickup order' : 'Mark Out for Delivery')}">
-            <span class="action_btn_main"><i class="fas fa-truck"></i> Out for Delivery</span>
-            ${!isPaid ? '<span class="action_tag_hint">(Requires Approved Payment)</span>' : (!isDelivery ? '<span class="action_tag_hint">(Disabled: Pickup order)</span>' : (orderStatus === 'shipped' ? '<span class="action_tag_hint" style="color: #4338ca;">(Current Status)</span>' : ''))}
-        </button>
-
-        <!-- Action 4: Mark Completed -->
-        <button type="button" 
-                class="order_action_btn btn_complete ${orderStatus === 'completed' ? 'is_active' : ''} ${!isPaid ? 'is_disabled' : ''}"
-                ${(!isPaid || isCancelled) ? 'disabled' : `onclick="updateOrderStatusDirect('${orderId}', 'completed')"`}
-                title="${!isPaid ? 'Payment must be approved first' : 'Mark order completed'}">
-            <span class="action_btn_main"><i class="fas fa-check-circle"></i> Mark Completed</span>
-            ${!isPaid ? '<span class="action_tag_hint">(Requires Approved Payment)</span>' : (orderStatus === 'completed' ? '<span class="action_tag_hint" style="color: #16a34a;">(Completed)</span>' : '')}
-        </button>
-
-        <!-- Action 5: Cancel Order (Span 2 columns if grid) -->
-        <button type="button" 
-                class="order_action_btn btn_action_danger ${orderStatus === 'cancelled' ? 'is_active' : ''}"
-                style="grid-column: span 2;"
-                ${(isCompleted || isCancelled) ? 'disabled' : `onclick="cancelOrderDirect('${orderId}')"`}>
-            <span class="action_btn_main"><i class="fas fa-ban"></i> Cancel Order (Restore Stock)</span>
-            ${orderStatus === 'cancelled' ? '<span class="action_tag_hint" style="color: #dc2626;">(Cancelled)</span>' : ''}
+                class="order_action_btn btn_action_danger"
+                style="${isPaid ? 'grid-column: span 2;' : ''}"
+                ${isCompleted ? 'disabled' : `onclick="cancelOrderDirect('${orderId}')"`}>
+            <span class="action_btn_main"><i class="fas fa-ban"></i> Cancel Order (Return Stock)</span>
+            <span class="action_tag_hint">Restores items back to inventory</span>
         </button>
     `;
 }
 
-// 1. Payment Confirmation: Admin approves payment received -> moves to Processing stage
+// 1. Payment Confirmation: Admin approves payment received -> moves to payment_confirmed
 async function verifyOrderPayment(orderId) {
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
     if (!token) return;
@@ -594,7 +693,7 @@ async function verifyOrderPayment(orderId) {
     const modalBtn = document.getElementById(`btn_modal_verify_${orderId}`);
     if (modalBtn) {
         modalBtn.disabled = true;
-        modalBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving...';
+        modalBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming...';
     }
 
     try {
@@ -610,43 +709,42 @@ async function verifyOrderPayment(orderId) {
         const data = await res.json();
         if (res.ok && data.status === 'success') {
             if (typeof showToast === 'function') {
-                showToast(data.message || 'Payment approved! Order moved to Processing stage.', true);
+                showToast(data.message || 'Payment confirmed successfully!', true);
             }
             await loadAdminOrders();
-            // If modal is open, refresh its content
             if (selectedOrder && String(selectedOrder.id || selectedOrder._id) === String(orderId)) {
                 openOrderModal(orderId);
             }
         } else {
-            alert(data.message || 'Failed to approve payment');
+            alert(data.message || 'Failed to confirm payment');
             if (modalBtn) {
                 modalBtn.disabled = false;
-                modalBtn.innerHTML = '<i class="fas fa-check-circle"></i> Approve Payment';
+                modalBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Payment';
             }
         }
     } catch (err) {
-        console.error("Payment approval error:", err);
-        alert('Server communication error while approving payment.');
+        console.error("Payment confirmation error:", err);
+        alert('Server communication error while confirming payment.');
         if (modalBtn) {
             modalBtn.disabled = false;
-            modalBtn.innerHTML = '<i class="fas fa-check-circle"></i> Approve Payment';
+            modalBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Payment';
         }
     }
 }
 window.verifyOrderPayment = verifyOrderPayment;
 
-// 2. Decline Payment: Admin declines payment -> marks as Declined with reason 'Payment has not been received'
+// 2. Decline / Reject Payment: Admin declines payment -> marks as Declined & returns stock
 async function declineOrderPayment(orderId) {
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
     if (!token) return;
 
-    const confirmDecline = confirm("Decline this order because payment has not been received?\n\nThis will mark the order as Declined for the customer and restore product inventory.");
+    const confirmDecline = confirm("Reject this order because payment has not been received?\n\nThis will mark the order as Declined and automatically restore the ordered item stock back into inventory.");
     if (!confirmDecline) return;
 
     const modalBtn = document.getElementById(`btn_modal_decline_${orderId}`);
     if (modalBtn) {
         modalBtn.disabled = true;
-        modalBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Declining...';
+        modalBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rejecting...';
     }
 
     try {
@@ -663,17 +761,17 @@ async function declineOrderPayment(orderId) {
         const data = await res.json();
         if (res.ok && data.status === 'success') {
             if (typeof showToast === 'function') {
-                showToast(data.message || 'Payment declined. Status updated to Declined.', true);
+                showToast(data.message || 'Order rejected and inventory stock restored.', true);
             }
             await loadAdminOrders();
             if (selectedOrder && String(selectedOrder.id || selectedOrder._id) === String(orderId)) {
                 openOrderModal(orderId);
             }
         } else {
-            alert(data.message || 'Failed to decline order');
+            alert(data.message || 'Failed to reject order');
             if (modalBtn) {
                 modalBtn.disabled = false;
-                modalBtn.innerHTML = '<i class="fas fa-times-circle"></i> Decline Payment';
+                modalBtn.innerHTML = '<i class="fas fa-times-circle"></i> Reject Payment';
             }
         }
     } catch (err) {
@@ -681,28 +779,51 @@ async function declineOrderPayment(orderId) {
         alert('Server communication error while declining payment.');
         if (modalBtn) {
             modalBtn.disabled = false;
-            modalBtn.innerHTML = '<i class="fas fa-times-circle"></i> Decline Payment';
+            modalBtn.innerHTML = '<i class="fas fa-times-circle"></i> Reject Payment';
         }
     }
 }
 window.declineOrderPayment = declineOrderPayment;
 
-// 2. Direct Status Update via Action Buttons
-async function updateOrderStatusDirect(orderId, newStatus) {
+// 3. Handle Mark Completed (with customer confirmation check)
+async function handleAdminMarkCompleted(orderId) {
+    const order = allOrders.find(o => String(o.id || o._id) === String(orderId)) || selectedOrder;
+    const isCustomerConfirmed = order && (order.customerConfirmed || order.customer_confirmed);
+
+    if (!isCustomerConfirmed) {
+        const proceed = confirm(
+            "Customer has not yet confirmed receiving the delivery on the web.\n\n" +
+            "Do you want to confirm delivery completion on the customer's behalf and mark this order completed?"
+        );
+        if (!proceed) return;
+
+        // Admin confirms on customer behalf, passing customerConfirmed: true
+        await updateOrderStatusDirect(orderId, 'completed', true);
+    } else {
+        await updateOrderStatusDirect(orderId, 'completed');
+    }
+}
+window.handleAdminMarkCompleted = handleAdminMarkCompleted;
+
+// 4. Direct Status Update via Action Buttons
+async function updateOrderStatusDirect(orderId, newStatus, customerConfirmedFlag) {
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
     if (!token) return;
 
     try {
         const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/orders/${orderId}/status`) : `/api/orders/${orderId}/status`;
+        const bodyPayload = { order_status: newStatus };
+        if (customerConfirmedFlag !== undefined) {
+            bodyPayload.customerConfirmed = customerConfirmedFlag;
+        }
+
         const res = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-                order_status: newStatus
-            })
+            body: JSON.stringify(bodyPayload)
         });
 
         const data = await res.json();
@@ -723,16 +844,176 @@ async function updateOrderStatusDirect(orderId, newStatus) {
         alert('Server communication error.');
     }
 }
+window.updateOrderStatusDirect = updateOrderStatusDirect;
 
-// 3. Quick Complete Order from Table
-async function quickCompleteOrder(orderId) {
-    await updateOrderStatusDirect(orderId, 'completed');
-}
-
-// 4. Cancel Order with stock restoration confirmation
+// 5. Cancel Order with stock restoration
 async function cancelOrderDirect(orderId) {
-    const confirmed = confirm("Are you sure you want to cancel this order? This will automatically restore deducted product inventory in PostgreSQL.");
+    const order = allOrders.find(o => String(o.id || o._id) === String(orderId)) || selectedOrder;
+    const items = order ? (order.orderItems || order.items || []) : [];
+    const itemCount = items.reduce((sum, it) => sum + (it.quantity || 1), 0);
+
+    const confirmed = confirm(
+        `Are you sure you want to cancel this order?\n\n` +
+        `This will automatically return the ${itemCount} ordered item(s) back to inventory stock in PostgreSQL.`
+    );
     if (!confirmed) return;
 
-    await updateOrderStatusDirect(orderId, 'cancelled');
+    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    if (!token) return;
+
+    try {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/orders/${orderId}/cancel`) : `/api/orders/${orderId}/cancel`;
+        const res = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ reason: 'Order cancelled by admin. Product items returned to stock.' })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+            if (typeof showToast === 'function') {
+                showToast(data.message || 'Order cancelled and stock inventory restored!', true);
+            }
+            await loadAdminOrders();
+            if (selectedOrder && String(selectedOrder.id || selectedOrder._id) === String(orderId)) {
+                openOrderModal(orderId);
+            }
+        } else {
+            alert(data.message || 'Failed to cancel order');
+        }
+    } catch (err) {
+        console.error("Cancel order error:", err);
+        alert('Server communication error while cancelling order.');
+    }
 }
+window.cancelOrderDirect = cancelOrderDirect;
+
+// 6. Open Lightbox modal to view full resolution proof of payment screenshot
+function openPaymentProofLightbox(orderId) {
+    const order = allOrders.find(o => String(o.id || o._id) === String(orderId)) || selectedOrder;
+    if (!order) return;
+
+    const proof = order.paymentProof || order.payment_proof || '';
+    const ref = order.paymentReference || order.payment_reference || order.referenceNumber || 'N/A';
+    const orderNum = order.orderNumber || order.order_number || `ORD-${orderId}`;
+
+    const imgEl = document.getElementById("lightbox_proof_img");
+    const captionEl = document.getElementById("lightbox_proof_caption");
+    const downloadBtn = document.getElementById("lightbox_download_btn");
+
+    if (imgEl) imgEl.src = proof;
+    if (captionEl) captionEl.textContent = `Order: ${orderNum} | Payment Reference: ${ref}`;
+    if (downloadBtn) {
+        downloadBtn.href = proof;
+        downloadBtn.download = `payment-proof-${orderNum}.png`;
+    }
+
+    if (typeof openModal === 'function') openModal('payment_proof_lightbox_modal');
+}
+window.openPaymentProofLightbox = openPaymentProofLightbox;
+
+// 7. Handle Screenshot of Proof of Payment Upload from Admin modal
+async function handleAdminProofUpload(event, orderId) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please upload a valid image file (PNG, JPG, JPEG, WEBP).');
+        return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+        alert('Image file size too large. Please select an image under 20MB.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        const base64Data = e.target.result;
+        const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+        if (!token) return;
+
+        try {
+            const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/orders/${orderId}/payment-proof`) : `/api/orders/${orderId}/payment-proof`;
+            const res = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    paymentProof: base64Data
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                if (typeof showToast === 'function') {
+                    showToast('Proof of payment screenshot uploaded successfully!', true);
+                }
+                await loadAdminOrders();
+                openOrderModal(orderId);
+            } else {
+                alert(data.message || 'Failed to upload payment proof');
+            }
+        } catch (err) {
+            console.error("Proof upload error:", err);
+            alert('Server communication error while uploading proof.');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+window.handleAdminProofUpload = handleAdminProofUpload;
+
+// 8. Live Background Polling to keep Admin and Web synchronised in real time
+let liveOrderPollInterval = null;
+function startLiveOrderSync() {
+    if (liveOrderPollInterval) clearInterval(liveOrderPollInterval);
+    liveOrderPollInterval = setInterval(async () => {
+        if (!document.hidden) {
+            await silentRefreshOrders();
+        }
+    }, 6000);
+}
+
+// Background refresh without resetting UI scroll or modal
+async function silentRefreshOrders() {
+    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    if (!token) return;
+
+    try {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/orders") : "/api/orders";
+        const res = await fetch(apiUrl, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            if (data.status === "success" && Array.isArray(data.data)) {
+                allOrders = data.data;
+                updateTabBadges();
+                renderOrdersTable();
+
+                // If modal is currently open, refresh selectedOrder in place
+                if (selectedOrder) {
+                    const fresh = allOrders.find(o => String(o.id || o._id) === String(selectedOrder.id || selectedOrder._id));
+                    if (fresh) {
+                        const statusChanged = (fresh.orderStatus || fresh.order_status) !== (selectedOrder.orderStatus || selectedOrder.order_status) ||
+                                              (fresh.paymentStatus || fresh.payment_status) !== (selectedOrder.paymentStatus || selectedOrder.payment_status) ||
+                                              (fresh.customerConfirmed || fresh.customer_confirmed) !== (selectedOrder.customerConfirmed || selectedOrder.customer_confirmed);
+                        if (statusChanged) {
+                            openOrderModal(fresh.id || fresh._id);
+                        }
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        // Silent catch for background polling
+    }
+}
+window.silentRefreshOrders = silentRefreshOrders;
+

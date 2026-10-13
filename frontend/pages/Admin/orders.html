@@ -181,13 +181,14 @@
                 <div class="toolbar_filters_group">
                     <select class="admin_select" id="order_status_filter">
                         <option value="all">All Statuses</option>
+                        <option value="payment_confirmed">Payment Confirmed</option>
+                        <option value="ready_for_deliver">Ready for Deliver</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="completed">Completed</option>
+                        <option value="ready_for_pickup">Ready for Pickup</option>
                         <option value="payment_confirmation">Payment Confirmation</option>
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
-                        <option value="ready_for_delivery">Ready for Delivery</option>
-                        <option value="ready_for_pickup">Ready for Pickup</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                         <option value="declined">Declined</option>
                     </select>
@@ -261,20 +262,38 @@
                         <strong id="modal_order_total" style="font-size: 15px; color: #b91c1c;">₱0.00</strong>
                     </div>
                 </div>
+
+                <!-- Proof of Payment Screenshot & Reference Section -->
+                <div id="modal_payment_proof_section" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+                        <span style="font-size: 13px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-receipt" style="color: #b91c1c;"></i> Proof of Payment Screenshot
+                        </span>
+                        <span id="modal_payment_proof_ref_badge" style="font-size: 11.5px; font-family: monospace; background: #f1f5f9; padding: 3px 8px; border-radius: 4px; color: #334155; font-weight: 600;">Ref: None</span>
+                    </div>
+                    <div id="modal_payment_proof_body">
+                        <!-- Dynamic preview or upload button -->
+                    </div>
+                </div>
+
                 <div class="form_group">
                     <label class="form_label">Items Ordered</label>
                     <p id="modal_order_items" style="font-size: 13px; color: #334155; padding: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;"></p>
                 </div>
+
+                <!-- Customer Confirmation Status Banner -->
+                <div id="modal_customer_confirmation_banner" style="margin-top: 14px;"></div>
+
                 <div class="form_group" style="margin-top: 16px;">
                     <label class="form_label" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                        <span><i class="fas fa-tasks" style="color: #b91c1c; margin-right: 6px;"></i>Order Actions</span>
+                        <span><i class="fas fa-tasks" style="color: #b91c1c; margin-right: 6px;"></i>Order Progression Actions</span>
                         <span id="modal_current_status_badge"></span>
                     </label>
 
                     <!-- Payment Verification Box -->
                     <div id="modal_payment_verification_box" style="margin-bottom: 12px;"></div>
 
-                    <!-- Action Buttons -->
+                    <!-- Action Buttons Sequence: Payment Confirmed > Ready for Deliver > Out for Delivery > Mark Completed -->
                     <div class="order_actions_button_group" id="modal_order_actions"></div>
                 </div>
             </div>
@@ -336,7 +355,28 @@
         </div>
     </div>
 
+    <!-- payment proof image lightbox modal -->
+    <div class="modal_backdrop" id="payment_proof_lightbox_modal">
+        <div class="modal_card" style="max-width: 680px; max-height: 90vh;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-receipt" style="color: #b91c1c; margin-right: 8px;"></i>Proof of Payment Screenshot</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('payment_proof_lightbox_modal')" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; min-height: 320px;">
+                <img id="lightbox_proof_img" src="" alt="Proof of Payment" style="max-width: 100%; max-height: 65vh; object-fit: contain; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                <div id="lightbox_proof_caption" style="margin-top: 12px; color: #e2e8f0; font-size: 12px; font-family: monospace;"></div>
+            </div>
+            <div class="modal_footer" style="justify-content: space-between;">
+                <a id="lightbox_download_btn" href="#" download="proof-of-payment.png" target="_blank" class="btn_secondary">
+                    <i class="fas fa-download"></i> View / Download Full Resolution
+                </a>
+                <button type="button" class="btn_secondary" onclick="closeModal('payment_proof_lightbox_modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- script logic -->
+    <script src="/frontend/js/config.js"></script>
     <script src="/frontend/js/admin.js"></script>
     <script src="/frontend/js/admin_orders.js"></script>
 </body>

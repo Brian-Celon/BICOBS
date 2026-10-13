@@ -7,21 +7,29 @@ const {
   getAllOrders,
   updateOrderStatus,
   verifyOrderPayment,
-  declineOrderPayment
+  declineOrderPayment,
+  uploadPaymentProof,
+  confirmCustomerDelivery,
+  cancelOrder
 } = require('../controllers/orderController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Customer routes
+// Customer & Shared routes
 router.post('/', protect, createOrder);
 router.get('/myorders', protect, getMyOrders);
-router.get('/my-orders', protect, getMyOrders);
-router.get('/track/:orderNumber', getOrderById);
 router.get('/:id', protect, getOrderById);
+router.put('/:id/payment-proof', protect, uploadPaymentProof);
+router.post('/:id/payment-proof', protect, uploadPaymentProof);
+router.put('/:id/confirm-receipt', protect, confirmCustomerDelivery);
+router.put('/:id/complete', protect, confirmCustomerDelivery);
+router.put('/:id/cancel', protect, cancelOrder);
 
 // Staff / Admin routes
 router.get('/', protect, authorize('admin', 'staff'), getAllOrders);
 router.put('/:id/status', protect, authorize('admin', 'staff'), updateOrderStatus);
+router.put('/:id', protect, authorize('admin', 'staff'), updateOrderStatus);
 router.put('/:id/verify-payment', protect, authorize('admin', 'staff'), verifyOrderPayment);
 router.put('/:id/decline-payment', protect, authorize('admin', 'staff'), declineOrderPayment);
 
 module.exports = router;
+

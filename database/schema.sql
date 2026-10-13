@@ -107,12 +107,16 @@ CREATE TABLE orders (
     delivery_address TEXT DEFAULT '',
     notes TEXT DEFAULT '',
     payment_method VARCHAR(50) NOT NULL, -- 'gcash', 'cod', 'card'
+    payment_reference VARCHAR(100) DEFAULT '',
+    payment_proof TEXT DEFAULT '',
     subtotal NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     total_amount NUMERIC(10, 2) NOT NULL CHECK (total_amount >= 0),
-    order_status VARCHAR(50) DEFAULT 'payment_confirmation' CHECK (order_status IN ('payment_confirmation', 'pending', 'confirmed', 'processing', 'ready_for_pickup', 'ready_for_delivery', 'out_for_delivery', 'shipped', 'completed', 'cancelled', 'declined')),
-    payment_status VARCHAR(50) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded', 'declined')),
+    order_status VARCHAR(50) DEFAULT 'payment_confirmation' CHECK (order_status IN ('payment_confirmation', 'pending', 'payment_confirmed', 'confirmed', 'processing', 'ready_for_deliver', 'ready_for_delivery', 'ready_for_pickup', 'out_for_delivery', 'shipped', 'delivered', 'completed', 'cancelled', 'declined', 'rejected')),
+    payment_status VARCHAR(50) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded', 'declined', 'rejected')),
     decline_reason TEXT DEFAULT '',
+    customer_confirmed BOOLEAN DEFAULT false,
+    customer_confirmed_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

@@ -16,6 +16,10 @@ const formatOrder = (orderRow, items = []) => ({
   deliveryAddress: orderRow.delivery_address,
   notes: orderRow.notes,
   paymentMethod: orderRow.payment_method,
+  paymentReference: orderRow.payment_reference || '',
+  payment_reference: orderRow.payment_reference || '',
+  paymentProof: orderRow.payment_proof || '',
+  payment_proof: orderRow.payment_proof || '',
   subtotal: parseFloat(orderRow.subtotal || 0),
   shippingFee: parseFloat(orderRow.shipping_fee || 0),
   totalPrice: parseFloat(orderRow.total_amount),
@@ -26,6 +30,10 @@ const formatOrder = (orderRow, items = []) => ({
   payment_status: orderRow.payment_status,
   declineReason: orderRow.decline_reason || '',
   decline_reason: orderRow.decline_reason || '',
+  customerConfirmed: !!orderRow.customer_confirmed,
+  customer_confirmed: !!orderRow.customer_confirmed,
+  customerConfirmedAt: orderRow.customer_confirmed_at || null,
+  customer_confirmed_at: orderRow.customer_confirmed_at || null,
   orderItems: items.map(i => ({
     id: i.id,
     product: i.product_id,
@@ -58,8 +66,16 @@ const createOrder = async (req, res, next) => {
       fulfillmentType,
       paymentMethod,
       deliveryFee,
-      notes
+      notes,
+      paymentReference,
+      payment_reference,
+      referenceNumber,
+      paymentProof,
+      payment_proof
     } = req.body;
+
+    const finalPaymentRef = (paymentReference || payment_reference || referenceNumber || '').trim();
+    const finalPaymentProof = (paymentProof || payment_proof || '').trim();
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({
@@ -126,7 +142,7 @@ const createOrder = async (req, res, next) => {
 
       // 2. Deduct product stock in PostgreSQL
       await client.query(
-        'UPDATE products SET stock_quantity = stock_quantity - $1 WHERE id = $2',
+        'UPDATE products SET stock_quantity = stock_quantity - $1, is_available = CASE WHEN stock_quantity - $1 <= 0 THEN false ELSE is_available END WHERE id = $2',
         [reqQty, product.id]
       );
     }
@@ -145,8 +161,9 @@ const createOrder = async (req, res, next) => {
       INSERT INTO orders (
         order_number, user_id, customer_name, customer_email, customer_phone,
         delivery_type, delivery_address, notes, payment_method,
-        subtotal, shipping_fee, total_amount, order_status, payment_status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'payment_confirmation', 'pending')
+        subtotal, shipping_fee, total_amount, order_status, payment_status,
+        payment_reference, payment_proof
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'payment_confirmation', 'pending', $13, $14)
       RETURNING *;
     `;
 
@@ -162,7 +179,9 @@ const createOrder = async (req, res, next) => {
       paymentMethod || 'cash',
       itemsPrice,
       calculatedDeliveryFee,
-      totalPrice
+      totalPrice,
+      finalPaymentRef,
+      finalPaymentProof
     ]);
 
     const createdOrder = orderRes.rows[0];
@@ -220,23 +239,19 @@ const createOrder = async (req, res, next) => {
   }
 };
 
-// @desc    Get order details by ID or order number (supports public tracking)
-// @route   GET /api/orders/:id, GET /api/orders/track/:orderNumber
-// @access  Public for tracking / Private for customer dashboard
+// @desc    Get order details by ID
+// @route   GET /api/orders/:id
+// @access  Private
 const getOrderById = async (req, res, next) => {
   try {
-    const rawParam = req.params.orderNumber || req.params.id;
-    if (!rawParam) {
-      return res.status(400).json({ status: 'error', message: 'Order reference required' });
-    }
+    const { id } = req.params;
 
-    const isNumeric = /^\d+$/.test(rawParam);
     const orderRes = await pool.query(
       `SELECT o.*, b.invoice_number 
        FROM orders o 
        LEFT JOIN billings b ON b.order_id = o.id 
-       WHERE ${isNumeric ? 'o.id = $1 OR o.order_number = $1' : 'o.order_number = $1'}`,
-      [rawParam]
+       WHERE o.id = $1`,
+      [id]
     );
 
     if (orderRes.rows.length === 0) {
@@ -245,8 +260,8 @@ const getOrderById = async (req, res, next) => {
 
     const order = orderRes.rows[0];
 
-    // Authorization check: if authenticated as customer, only restrict when viewing by raw ID (not public tracking)
-    if (req.user && req.user.role === 'customer' && !req.params.orderNumber && order.user_id && order.user_id !== req.user.id) {
+    // Authorization check
+    if (req.user.role === 'customer' && order.user_id !== req.user.id) {
       return res.status(403).json({ status: 'error', message: 'Not authorized to view this order' });
     }
 
@@ -345,6 +360,7 @@ const updateOrderStatus = async (req, res, next) => {
     const { id } = req.params;
     const rawOrderStatus = req.body.orderStatus || req.body.status || req.body.order_status;
     const rawPaymentStatus = req.body.paymentStatus || req.body.payment_status;
+    const customerConfirmed = req.body.customerConfirmed !== undefined ? !!req.body.customerConfirmed : undefined;
 
     await client.query('BEGIN');
 
@@ -356,8 +372,19 @@ const updateOrderStatus = async (req, res, next) => {
 
     const current = existing.rows[0];
     const currentStatus = (current.order_status || 'pending').toLowerCase();
-    const targetStatus = rawOrderStatus ? rawOrderStatus.toLowerCase() : currentStatus;
-    const newPaymentStatus = rawPaymentStatus ? rawPaymentStatus.toLowerCase() : current.payment_status;
+    let targetStatus = rawOrderStatus ? rawOrderStatus.toLowerCase().replace(/\s+/g, '_') : currentStatus;
+
+    // Normalize status names to lifecycle standards
+    if (targetStatus === 'ready_for_deliver') targetStatus = 'ready_for_delivery';
+    if (targetStatus === 'shipped') targetStatus = 'out_for_delivery';
+    if (targetStatus === 'confirmed') targetStatus = 'payment_confirmed';
+
+    let newPaymentStatus = rawPaymentStatus ? rawPaymentStatus.toLowerCase() : current.payment_status;
+    if (targetStatus === 'payment_confirmed' && !rawPaymentStatus) {
+      newPaymentStatus = 'paid';
+    } else if ((targetStatus === 'declined' || targetStatus === 'rejected') && !rawPaymentStatus) {
+      newPaymentStatus = 'declined';
+    }
 
     // Delivery vs Pickup validation
     const deliveryType = (current.delivery_type || 'delivery').toLowerCase();
@@ -365,11 +392,11 @@ const updateOrderStatus = async (req, res, next) => {
       await client.query('ROLLBACK');
       return res.status(400).json({
         status: 'error',
-        message: 'Cannot set status to Ready for Pickup for a delivery order. Please select Ready for Delivery or Shipped.'
+        message: 'Cannot set status to Ready for Pickup for a delivery order. Please select Ready for Delivery or Out for Delivery.'
       });
     }
 
-    if (deliveryType === 'pickup' && (targetStatus === 'ready_for_delivery' || targetStatus === 'out_for_delivery' || targetStatus === 'shipped')) {
+    if (deliveryType === 'pickup' && (targetStatus === 'ready_for_delivery' || targetStatus === 'out_for_delivery')) {
       await client.query('ROLLBACK');
       return res.status(400).json({
         status: 'error',
@@ -378,43 +405,58 @@ const updateOrderStatus = async (req, res, next) => {
     }
 
     // Transition Validation
-    if (currentStatus === 'completed' && targetStatus === 'cancelled') {
+    if (currentStatus === 'completed' && (targetStatus === 'cancelled' || targetStatus === 'declined' || targetStatus === 'rejected')) {
       await client.query('ROLLBACK');
       return res.status(400).json({
         status: 'error',
-        message: 'Cannot cancel an order that has already been completed'
+        message: 'Cannot cancel or reject an order that has already been completed'
       });
     }
 
-    if (currentStatus === 'cancelled' && targetStatus !== 'cancelled') {
+    const wasCancelledOrRejected = ['cancelled', 'declined', 'rejected'].includes(currentStatus);
+    const isNowCancelledOrRejected = ['cancelled', 'declined', 'rejected'].includes(targetStatus);
+
+    if (wasCancelledOrRejected && !isNowCancelledOrRejected) {
       await client.query('ROLLBACK');
       return res.status(400).json({
         status: 'error',
-        message: 'Cannot change status of an already cancelled order'
+        message: 'Cannot reactivate an order that was cancelled or rejected'
       });
     }
 
-    // Automatic Stock Rollback if cancelling
-    if (targetStatus === 'cancelled' && currentStatus !== 'cancelled') {
+    // Automatic Stock Rollback when order is cancelled, declined, or rejected
+    if (isNowCancelledOrRejected && !wasCancelledOrRejected) {
       const itemsRes = await client.query('SELECT product_id, quantity FROM order_items WHERE order_id = $1', [id]);
       for (const item of itemsRes.rows) {
-        await client.query(
-          'UPDATE products SET stock_quantity = stock_quantity + $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
-          [item.quantity, item.product_id]
-        );
+        if (item.product_id) {
+          await client.query(
+            'UPDATE products SET stock_quantity = stock_quantity + $1, is_available = true, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+            [item.quantity, item.product_id]
+          );
+        }
       }
     }
 
+    // Handle customer confirmation flag update
+    const updateParams = [targetStatus, newPaymentStatus];
+    let customerConfirmSql = '';
+    if (customerConfirmed !== undefined) {
+      updateParams.push(customerConfirmed);
+      customerConfirmSql = `, customer_confirmed = $${updateParams.length}, customer_confirmed_at = ${customerConfirmed ? 'CURRENT_TIMESTAMP' : 'NULL'}`;
+    }
+    updateParams.push(id);
+    const whereIdParamIndex = updateParams.length;
+
     const updateSql = `
       UPDATE orders
-      SET order_status = $1, payment_status = $2, updated_at = CURRENT_TIMESTAMP
-      WHERE id = $3
+      SET order_status = $1, payment_status = $2${customerConfirmSql}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${whereIdParamIndex}
       RETURNING *;
     `;
-    const updatedRes = await client.query(updateSql, [targetStatus, newPaymentStatus, id]);
+    const updatedRes = await client.query(updateSql, updateParams);
 
     // Sync billing record if payment status was updated
-    if (rawPaymentStatus) {
+    if (newPaymentStatus) {
       const allowedBillingStatuses = ['pending', 'paid', 'failed', 'refunded', 'declined'];
       const billingStatus = allowedBillingStatuses.includes(newPaymentStatus) ? newPaymentStatus : 'pending';
       await client.query(
@@ -447,7 +489,7 @@ const updateOrderStatus = async (req, res, next) => {
   }
 };
 
-// @desc    Confirm customer payment for an order and change status from payment_confirmation to pending
+// @desc    Confirm customer payment for an order and change status to payment_confirmed / processing
 // @route   PUT /api/orders/:id/verify-payment
 // @access  Private (Admin / Staff)
 const verifyOrderPayment = async (req, res, next) => {
@@ -463,11 +505,9 @@ const verifyOrderPayment = async (req, res, next) => {
       return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
-    const current = existing.rows[0];
-
     const updateSql = `
       UPDATE orders
-      SET payment_status = 'paid', order_status = 'processing', updated_at = CURRENT_TIMESTAMP
+      SET payment_status = 'paid', order_status = 'payment_confirmed', updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *;
     `;
@@ -492,7 +532,7 @@ const verifyOrderPayment = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Payment approved! Order status changed to Processing.',
+      message: 'Payment confirmed! Order status moved to Payment Confirmed.',
       data: formatOrder(orderData, itemsRes.rows)
     });
   } catch (error) {
@@ -503,14 +543,14 @@ const verifyOrderPayment = async (req, res, next) => {
   }
 };
 
-// @desc    Decline customer payment for an order and change status to declined with reason
+// @desc    Decline/reject customer payment and return stock quantity to inventory
 // @route   PUT /api/orders/:id/decline-payment
 // @access  Private (Admin / Staff)
 const declineOrderPayment = async (req, res, next) => {
   const client = await pool.connect();
   try {
     const { id } = req.params;
-    const reason = (req.body && req.body.reason) ? req.body.reason.trim() : 'Payment has not been received';
+    const reason = (req.body && req.body.reason) ? req.body.reason.trim() : 'Payment was not verified or rejected';
 
     await client.query('BEGIN');
 
@@ -522,13 +562,13 @@ const declineOrderPayment = async (req, res, next) => {
 
     const current = existing.rows[0];
 
-    // If order was not already cancelled or declined, restore product stock
-    if (current.order_status !== 'cancelled' && current.order_status !== 'declined') {
+    // If order was not already cancelled or declined, restore product stock quantity to inventory
+    if (current.order_status !== 'cancelled' && current.order_status !== 'declined' && current.order_status !== 'rejected') {
       const items = await client.query('SELECT product_id, quantity FROM order_items WHERE order_id = $1', [id]);
       for (const item of items.rows) {
         if (item.product_id) {
           await client.query(
-            'UPDATE products SET stock_quantity = stock_quantity + $1 WHERE id = $2',
+            'UPDATE products SET stock_quantity = stock_quantity + $1, is_available = true, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
             [item.quantity, item.product_id]
           );
         }
@@ -562,8 +602,211 @@ const declineOrderPayment = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: `Payment declined. Order status marked as Declined (Reason: ${reason}).`,
+      message: `Payment rejected. Order status marked as Declined and stock quantity returned to inventory.`,
       data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+// @desc    Upload or update screenshot of proof of payment & reference number
+// @route   PUT /api/orders/:id/payment-proof
+// @access  Private (Customer / Admin / Staff)
+const uploadPaymentProof = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    const paymentProof = (req.body.paymentProof || req.body.payment_proof || '').trim();
+    const paymentReference = (req.body.paymentReference || req.body.payment_reference || req.body.referenceNumber || req.body.reference || '').trim();
+
+    if (!paymentProof && !paymentReference) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Please provide either a screenshot of proof of payment or a reference number'
+      });
+    }
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const order = existing.rows[0];
+
+    // Customer can only upload proof for their own order
+    if (req.user && req.user.role === 'customer' && order.user_id !== req.user.id) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ status: 'error', message: 'Not authorized to upload payment proof for this order' });
+    }
+
+    const newProof = paymentProof || order.payment_proof || '';
+    const newRef = paymentReference || order.payment_reference || '';
+
+    const updateSql = `
+      UPDATE orders
+      SET payment_proof = $1, payment_reference = $2, order_status = CASE WHEN order_status IN ('pending', 'payment_confirmation') THEN 'payment_confirmation' ELSE order_status END, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $3
+      RETURNING *;
+    `;
+    const updated = await client.query(updateSql, [newProof, newRef, id]);
+
+    await client.query('COMMIT');
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updated.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Proof of payment screenshot and reference updated successfully',
+      data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+// @desc    Customer confirms order received & completed
+// @route   PUT /api/orders/:id/confirm-receipt
+// @access  Private (Customer / Admin / Staff)
+const confirmCustomerDelivery = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const order = existing.rows[0];
+
+    // Customer can only confirm their own order
+    if (req.user && req.user.role === 'customer' && order.user_id !== req.user.id) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ status: 'error', message: 'Not authorized to confirm this order' });
+    }
+
+    const updateSql = `
+      UPDATE orders
+      SET customer_confirmed = true, customer_confirmed_at = CURRENT_TIMESTAMP, order_status = 'completed', updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const updated = await client.query(updateSql, [id]);
+
+    await client.query('COMMIT');
+
+    const itemsRes = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updated.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Order delivery confirmed and marked completed! Thank you.',
+      data: formatOrder(orderData, itemsRes.rows)
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+// @desc    Cancel order and automatically restore stock inventory
+// @route   PUT /api/orders/:id/cancel
+// @access  Private (Customer / Admin / Staff)
+const cancelOrder = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    const reason = (req.body && req.body.reason ? req.body.reason.trim() : 'Order cancelled by customer');
+
+    await client.query('BEGIN');
+
+    const existing = await client.query('SELECT * FROM orders WHERE id = $1 FOR UPDATE', [id]);
+    if (existing.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ status: 'error', message: 'Order not found' });
+    }
+
+    const order = existing.rows[0];
+
+    // Customer can only cancel their own order
+    if (req.user && req.user.role === 'customer' && order.user_id !== req.user.id) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ status: 'error', message: 'Not authorized to cancel this order' });
+    }
+
+    const currentStatus = (order.order_status || '').toLowerCase();
+    if (currentStatus === 'completed') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ status: 'error', message: 'Cannot cancel an order that has already been completed' });
+    }
+
+    if (currentStatus === 'cancelled' || currentStatus === 'declined' || currentStatus === 'rejected') {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ status: 'error', message: 'Order is already cancelled or rejected' });
+    }
+
+    // Restore stock quantity to inventory
+    const itemsRes = await client.query('SELECT product_id, quantity FROM order_items WHERE order_id = $1', [id]);
+    for (const item of itemsRes.rows) {
+      if (item.product_id) {
+        await client.query(
+          'UPDATE products SET stock_quantity = stock_quantity + $1, is_available = true, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+          [item.quantity, item.product_id]
+        );
+      }
+    }
+
+    const updateSql = `
+      UPDATE orders
+      SET order_status = 'cancelled', decline_reason = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING *;
+    `;
+    const updated = await client.query(updateSql, [reason, id]);
+
+    // Sync billing record
+    await client.query(
+      `UPDATE billings SET payment_status = 'failed' WHERE order_id = $1`,
+      [id]
+    );
+
+    await client.query('COMMIT');
+
+    const items = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [id]);
+    const billingRes = await pool.query('SELECT invoice_number FROM billings WHERE order_id = $1', [id]);
+    const orderData = updated.rows[0];
+    if (billingRes.rows.length > 0) {
+      orderData.invoice_number = billingRes.rows[0].invoice_number;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Order cancelled successfully and product inventory has been restored.',
+      data: formatOrder(orderData, items.rows)
     });
   } catch (error) {
     await client.query('ROLLBACK');
@@ -580,5 +823,8 @@ module.exports = {
   getAllOrders,
   updateOrderStatus,
   verifyOrderPayment,
-  declineOrderPayment
+  declineOrderPayment,
+  uploadPaymentProof,
+  confirmCustomerDelivery,
+  cancelOrder
 };
