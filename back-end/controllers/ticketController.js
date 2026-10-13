@@ -14,24 +14,45 @@ const createTicket = async (req, res, next) => {
       });
     }
 
-    const userId = req.user ? req.user.id : null;
-    const customerName = req.user ? (req.user.full_name || req.user.name) : (req.body.customerName || 'Customer');
-    const customerEmail = req.user ? req.user.email : (req.body.customerEmail || '');
+    let userId = req.user ? req.user.id : null;
+    let customerName = req.user ? (req.user.full_name || req.user.name) : (req.body.customerName || 'Customer');
+    const customerEmail = req.user ? req.user.email : (req.body.customerEmail ? req.body.customerEmail.trim() : '');
 
-    // Generate next ticket number #TCK-XXXX
-    const lastTicketRes = await db.query(
-      'SELECT id, ticket_number FROM support_tickets ORDER BY id DESC LIMIT 1'
-    );
-    let nextNum = 1001;
-    if (lastTicketRes.rows.length > 0) {
-      const match = (lastTicketRes.rows[0].ticket_number || '').match(/\d+/);
-      if (match) {
-        nextNum = parseInt(match[0], 10) + 1;
-      } else {
-        nextNum = lastTicketRes.rows[0].id + 1001;
+    // Auto-resolve userId from users table if unauthenticated but email provided
+    if (!userId && customerEmail) {
+      try {
+        const userLookup = await db.query('SELECT id, full_name FROM users WHERE LOWER(email) = LOWER($1)', [customerEmail]);
+        if (userLookup.rows.length > 0) {
+          userId = userLookup.rows[0].id;
+          if (!req.body.customerName || customerName === 'Customer') {
+            customerName = userLookup.rows[0].full_name;
+          }
+        }
+      } catch (lookupErr) {
+        // Continue with null userId if lookup fails
       }
     }
-    const ticketNumber = `#TCK-${nextNum}`;
+
+    // Generate guaranteed unique ticket number #TCK-XXXX
+    let nextNum = 1001;
+    try {
+      const maxNumRes = await db.query(
+        "SELECT COALESCE(MAX(NULLIF(regexp_replace(ticket_number, '\\D', '', 'g'), '')::integer), 1000) AS max_num FROM support_tickets"
+      );
+      if (maxNumRes.rows.length > 0 && maxNumRes.rows[0].max_num) {
+        nextNum = parseInt(maxNumRes.rows[0].max_num, 10) + 1;
+      }
+    } catch (e) {
+      nextNum = Date.now() % 9000 + 1000;
+    }
+
+    let ticketNumber = `#TCK-${nextNum}`;
+    let exists = await db.query('SELECT id FROM support_tickets WHERE ticket_number = $1', [ticketNumber]);
+    while (exists.rows.length > 0) {
+      nextNum++;
+      ticketNumber = `#TCK-${nextNum}`;
+      exists = await db.query('SELECT id FROM support_tickets WHERE ticket_number = $1', [ticketNumber]);
+    }
 
     // Insert ticket
     const ticketInsertRes = await db.query(
@@ -76,7 +97,7 @@ const createTicket = async (req, res, next) => {
 const getMyTickets = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const userEmail = req.user.email;
+    const userEmail = (req.user.email || '').trim().toLowerCase();
 
     const query = `
       SELECT 
@@ -97,7 +118,7 @@ const getMyTickets = async (req, res, next) => {
         ) AS "latestMessage"
       FROM support_tickets t
       LEFT JOIN ticket_messages m ON m.ticket_id = t.id
-      WHERE t.user_id = $1 OR (t.customer_email = $2 AND t.user_id IS NULL)
+      WHERE t.user_id = $1 OR (t.customer_email IS NOT NULL AND LOWER(TRIM(t.customer_email)) = $2)
       GROUP BY t.id
       ORDER BY t.created_at DESC;
     `;
@@ -133,7 +154,10 @@ const getTicketMessages = async (req, res, next) => {
     }
 
     const ticket = ticketRes.rows[0];
-    if (userRole !== 'admin' && userRole !== 'staff' && ticket.user_id !== userId && ticket.customer_email !== req.user.email) {
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const ticketEmail = (ticket.customer_email || '').trim().toLowerCase();
+
+    if (userRole !== 'admin' && userRole !== 'staff' && ticket.user_id !== userId && ticketEmail !== userEmail) {
       return res.status(403).json({
         status: 'error',
         message: 'You are not authorized to view this ticket'
@@ -154,6 +178,8 @@ const getTicketMessages = async (req, res, next) => {
         ticket: {
           id: ticket.id,
           ticketNumber: ticket.ticket_number,
+          customerName: ticket.customer_name,
+          customerEmail: ticket.customer_email,
           category: ticket.category,
           subject: ticket.subject,
           status: ticket.status,

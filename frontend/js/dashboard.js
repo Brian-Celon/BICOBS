@@ -697,6 +697,38 @@ function setup_payment_modal() {
     }
 }
 
+/* Universal API endpoint resolver with automatic localhost:5000 fallback */
+function getDashboardApiUrl(endpoint) {
+    const base = window.TAURUS_API_BASE_URL || localStorage.getItem('taurus_api_base_url') || '';
+    if (base) {
+        return `${base.replace(/\/$/, '')}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+    }
+    const origin = window.location.origin;
+    if (origin.includes(':5500') || origin.includes(':3000') || origin.includes(':5173') || window.location.protocol === 'file:') {
+        return `http://localhost:5000${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+    }
+    return endpoint;
+}
+
+async function dashboardApiFetch(endpoint, options = {}) {
+    const primaryUrl = getDashboardApiUrl(endpoint);
+    try {
+        const res = await fetch(primaryUrl, options);
+        if (!res.ok && res.status === 404 && !primaryUrl.startsWith('http://localhost:5000')) {
+            const fallbackUrl = `http://localhost:5000${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+            const fallbackRes = await fetch(fallbackUrl, options);
+            return fallbackRes;
+        }
+        return res;
+    } catch (err) {
+        if (!primaryUrl.startsWith('http://localhost:5000')) {
+            const fallbackUrl = `http://localhost:5000${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+            return await fetch(fallbackUrl, options);
+        }
+        throw err;
+    }
+}
+
 /* load customer support tickets from backend */
 async function load_my_support_tickets() {
     const ticketList = document.getElementById('tickets_list');
@@ -715,7 +747,7 @@ async function load_my_support_tickets() {
     }
 
     try {
-        const res = await fetch('/api/tickets/my-tickets', {
+        const res = await dashboardApiFetch('/api/tickets/my-tickets', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -857,7 +889,7 @@ function setup_ticket_modal() {
                     headers['Authorization'] = `Bearer ${token}`;
                 }
 
-                const res = await fetch('/api/tickets', {
+                const res = await dashboardApiFetch('/api/tickets', {
                     method: 'POST',
                     headers,
                     body: JSON.stringify({ category, subject, description, customerName, customerEmail })
@@ -1659,7 +1691,7 @@ function setup_ticket_chat_modal() {
 
         const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
         try {
-            const res = await fetch(`/api/tickets/${ticketId}/messages`, {
+            const res = await dashboardApiFetch(`/api/tickets/${ticketId}/messages`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -1730,7 +1762,7 @@ function setup_ticket_chat_modal() {
             if (submitBtn) submitBtn.disabled = true;
 
             try {
-                const res = await fetch(`/api/tickets/${currentChatTicketId}/messages`, {
+                const res = await dashboardApiFetch(`/api/tickets/${currentChatTicketId}/messages`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

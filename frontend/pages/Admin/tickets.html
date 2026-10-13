@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Customer Support Tickets</title>
+    <!-- Google Fonts: Inter matching web version -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search tickets...">
+            </div>
+
+            <!-- notifications dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot" style="display: none;"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="notification_list">
+                        <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="admin_profile_trigger" onclick="toggleDropdown('admin_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="admin_profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="users.html" class="dropdown_menu_item">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="openLogoutModal()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="tickets.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-headset"></i>
+                                <span>Support Tickets</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <button type="button" class="sidebar_nav_link sidebar_nav_logout_btn" onclick="openLogoutModal()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Customer Support Tickets</h1>
+                    <p class="page_subtitle">Manage customer inquiries, reply to support threads, and track issue resolution.</p>
+                </div>
+                <div class="page_header_actions">
+                    <button type="button" class="btn_secondary" onclick="loadSupportTickets()">
+                        <i class="fas fa-rotate"></i>
+                        <span>Refresh Tickets</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- metric summary cards row -->
+            <div class="tickets_kpi_grid">
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_red">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div>
+                        <div class="ticket_kpi_label">Total Inquiries</div>
+                        <div class="ticket_kpi_val" id="kpi_total_tickets">0</div>
+                    </div>
+                </div>
+
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_amber">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="ticket_kpi_label">Open Tickets</div>
+                        <div class="ticket_kpi_val" style="color: #b45309;" id="kpi_open_tickets">0</div>
+                    </div>
+                </div>
+
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_blue">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                    <div>
+                        <div class="ticket_kpi_label">In Progress</div>
+                        <div class="ticket_kpi_val" style="color: #1d4ed8;" id="kpi_inprogress_tickets">0</div>
+                    </div>
+                </div>
+
+                <div class="ticket_kpi_card">
+                    <div class="ticket_kpi_icon kpi_icon_green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <div class="ticket_kpi_label">Resolved / Closed</div>
+                        <div class="ticket_kpi_val" style="color: #15803d;" id="kpi_resolved_tickets">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- status filter tabs bar -->
+            <div class="filter_tabs_bar" id="ticket_tabs_bar">
+                <button type="button" class="filter_tab_btn tab_active" data-status-filter="all" id="tab_all_tickets">All Inquiries (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="Open">Open (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="In Progress">In Progress (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="Resolved">Resolved (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="Closed">Closed (0)</button>
+            </div>
+
+            <!-- search and category filter toolbar -->
+            <div class="filter_toolbar">
+                <div class="toolbar_search_box">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="ticket_search_input" placeholder="Search by ticket #, customer name, subject...">
+                </div>
+
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="ticket_category_filter">
+                        <option value="all">All Categories</option>
+                        <option value="Warranty / Repairs">Warranty / Repairs</option>
+                        <option value="Shipping / Delivery">Shipping / Delivery</option>
+                        <option value="Product Information">Product Information</option>
+                        <option value="Billing & Payment">Billing & Payment</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- support tickets table card -->
+            <article class="admin_card">
+                <div class="table_responsive">
+                    <table class="admin_table" id="tickets_table">
+                        <thead>
+                            <tr>
+                                <th style="width: 130px;">Ticket No.</th>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Subject</th>
+                                <th style="width: 140px; text-align: center;">Status</th>
+                                <th style="width: 100px; text-align: center;">Messages</th>
+                                <th style="width: 130px;">Created</th>
+                                <th style="width: 140px; text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets_tbody">
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading customer support tickets...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- pagination wrapper inside card matching other admin tables -->
+                <div class="pagination_wrapper">
+                    <span class="pagination_info" id="tickets_pagination_info">Showing 0 of 0 tickets</span>
+                    <div class="pagination_controls" id="tickets_pagination_controls"></div>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- Ticket Detail & Conversation Modal -->
+    <div class="modal_backdrop" id="admin_ticket_modal">
+        <div class="modal_card ticket_modal_card">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="modal_ticket_title">#TCK-1001: Support Ticket</h3>
+                    <p class="modal_subtitle" id="modal_ticket_subtitle">Customer Inquiry & Response Thread</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('admin_ticket_modal')" aria-label="Close modal">&times;</button>
+            </div>
+
+            <div class="modal_body">
+                <!-- Ticket Metadata Info Card -->
+                <div class="ticket_meta_card">
+                    <div class="ticket_meta_grid">
+                        <div class="ticket_meta_item">
+                            <span class="ticket_meta_label"><i class="fas fa-user" style="margin-right: 4px; color: #94a3b8;"></i> Customer</span>
+                            <span class="ticket_meta_val" id="modal_cust_name">—</span>
+                            <span style="color: #64748b; font-size: 12px;" id="modal_cust_email">—</span>
+                        </div>
+                        <div class="ticket_meta_item">
+                            <span class="ticket_meta_label"><i class="fas fa-tag" style="margin-right: 4px; color: #94a3b8;"></i> Category</span>
+                            <div>
+                                <span class="ticket_category_tag" id="modal_cust_category">—</span>
+                            </div>
+                        </div>
+                        <div class="ticket_meta_item">
+                            <span class="ticket_meta_label"><i class="fas fa-calendar-alt" style="margin-right: 4px; color: #94a3b8;"></i> Date Created</span>
+                            <span class="ticket_meta_val" id="modal_cust_created" style="font-size: 12.5px; color: #475569;">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Status change control -->
+                    <div class="ticket_status_row">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label for="modal_status_select" style="font-size: 12px; font-weight: 700; color: #475569;">Ticket Status:</label>
+                            <select id="modal_status_select" class="admin_select" style="min-width: 140px; padding: 5px 28px 5px 10px; font-size: 12px; height: 32px;">
+                                <option value="Open">Open</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn_secondary" id="btn_update_status" onclick="updateTicketStatusFromModal()" style="padding: 5px 12px; font-size: 12px;">
+                            <i class="fas fa-check" style="color: #16a34a;"></i> <span>Update Status</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Conversation History Box -->
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4 style="font-size: 13px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
+                            <i class="fas fa-comments" style="color: #b91c1c; margin-right: 5px;"></i> Conversation Thread
+                        </h4>
+                        <span id="modal_message_counter" style="font-size: 11px; color: #64748b; font-weight: 600;"></span>
+                    </div>
+                    <div id="modal_chat_messages_box" class="ticket_chat_thread">
+                        <!-- Messages dynamically rendered -->
+                    </div>
+                </div>
+
+                <!-- Reply Form -->
+                <form id="modal_reply_form" onsubmit="sendAdminTicketReply(event)">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="modal_reply_input" style="font-size: 12px; font-weight: 700; color: #475569;">
+                            Reply as <span style="color: #b91c1c; font-weight: 800;">Taurus Support Rep</span>:
+                        </label>
+                        <textarea id="modal_reply_input" rows="3" placeholder="Type a helpful response to the customer..." required style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: inherit; resize: vertical; line-height: 1.5;"></textarea>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn_secondary" onclick="closeModal('admin_ticket_modal')">Close</button>
+                        <button type="submit" class="btn_primary" id="btn_send_reply">
+                            <i class="fas fa-paper-plane"></i> <span>Send Reply</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- logout confirmation modal -->
+    <div class="modal_backdrop" id="logout_confirm_modal">
+        <div class="modal_card" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-sign-out-alt" style="color: #b91c1c; margin-right: 8px;"></i>Confirm Sign Out</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('logout_confirm_modal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Sign out of Taurus Admin?</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">You are about to end your current administrative session. Any unsaved edits will be discarded.</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn_secondary" onclick="closeModal('logout_confirm_modal')" style="flex: 1; justify-content: center;">Cancel</button>
+                    <button type="button" class="btn_primary" onclick="executeAdminLogout()" style="flex: 1; justify-content: center; background-color: #b91c1c; border-color: #b91c1c;">
+                        <i class="fas fa-sign-out-alt"></i> <span>Yes, Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/config.js"></script>
+    <script src="/frontend/js/admin.js"></script>
+    <script src="/frontend/js/admin_tickets.js"></script>
+</body>
+</html>

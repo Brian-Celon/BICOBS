@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Repair Queue</title>
+    <!-- Google Fonts: Inter matching web version -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+
+            <!-- notifications dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot" style="display: none;"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="notification_list">
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
+                </div>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="admin_profile_trigger" onclick="toggleDropdown('admin_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="admin_profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="users.html" class="dropdown_menu_item">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="openLogoutModal()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="tickets.html" class="sidebar_nav_link">
+                                <i class="fas fa-headset"></i>
+                                <span>Support Tickets</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <button type="button" class="sidebar_nav_link sidebar_nav_logout_btn" onclick="openLogoutModal()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Repair Queue</h1>
+                    <p class="page_subtitle">Manage bike repairs, track status, and assign to mechanics.</p>
+                </div>
+                <div class="page_header_actions">
+                    <button type="button" class="btn_primary" onclick="openModal('new_repair_modal')">
+                        <i class="fas fa-plus"></i>
+                        <span>New Repair</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- repair status filter tabs bar -->
+            <div class="filter_tabs_bar" id="repair_tabs_bar">
+                <button type="button" class="filter_tab_btn tab_active" data-status-filter="all" id="tab_all_repairs">All Repairs (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="in-progress">In Progress (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="waiting">Waiting (0)</button>
+                <button type="button" class="filter_tab_btn" data-status-filter="completed">Completed (0)</button>
+            </div>
+
+            <!-- search and toolbar filters -->
+            <div class="filter_toolbar">
+                <div class="toolbar_search_box">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="repair_search_input" placeholder="Search by ticket number, customer name...">
+                </div>
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="repair_status_select">
+                        <option value="all">All Statuses</option>
+                        <option value="In-Progress">In-Progress</option>
+                        <option value="Waiting">Waiting</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    <select class="admin_select" id="repair_mechanic_select">
+                        <option value="all">All Mechanics</option>
+                        <option value="Reynaldo">Reynaldo</option>
+                        <option value="Mark">Mark</option>
+                        <option value="Jun">Jun</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- repairs data table card -->
+            <article class="admin_card">
+                <div class="table_responsive">
+                    <table class="admin_table" id="repairs_table">
+                        <thead>
+                            <tr>
+                                <th>Ticket No.</th>
+                                <th>Customer</th>
+                                <th>Bike / Item</th>
+                                <th>Mechanic</th>
+                                <th>Status</th>
+                                <th>Estimated Finish</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repairs_tbody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 48px; color: #64748b;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #b91c1c; margin-bottom: 8px; display: block;"></i>
+                                    Loading bike service and repair queue...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- pagination controls -->
+                <div class="pagination_wrapper">
+                    <span class="pagination_info" id="repairs_pagination_info">Showing 0 of 0 repairs</span>
+                    <div class="pagination_controls" id="repairs_pagination_controls">
+
+
+
+
+                    </div>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- new repair modal dialog -->
+    <div class="modal_backdrop" id="new_repair_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title">Create New Repair Ticket</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <form onsubmit="handleCreateRepair(event)">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_customer">Customer Name</label>
+                        <input type="text" class="form_input" id="new_repair_customer" placeholder="e.g. Daniel Santos" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_bike">Bike Model / Type</label>
+                        <input type="text" class="form_input" id="new_repair_bike" placeholder="e.g. Mountain Bike (Trinx M100)" required>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_mechanic">Assigned Mechanic</label>
+                        <select class="form_input admin_select" id="new_repair_mechanic">
+                            <option value="Reynaldo">Reynaldo Santos</option>
+                            <option value="Mark">Mark Javier</option>
+                            <option value="Jun">Jun Dela Rosa</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_notes">Problem Description</label>
+                        <textarea class="form_input" id="new_repair_notes" rows="3" style="height: auto; padding: 10px;" placeholder="Describe issue (e.g. slipping gears, noisy bottom bracket)..."></textarea>
+                    </div>
+                    <div class="form_group">
+                        <label class="form_label" for="new_repair_est">Estimated Finish Time</label>
+                        <input type="text" class="form_input" id="new_repair_est" placeholder="e.g. 3:30 PM" required>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn_primary">Create Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- repair detail modal dialog -->
+    <div class="modal_backdrop" id="repair_detail_modal">
+        <div class="modal_card">
+            <div class="modal_header">
+                <h3 class="modal_title" id="repair_modal_title">Repair Ticket</h3>
+                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal_body">
+                <input type="hidden" id="modal_repair_row_id">
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Customer:</span>
+                        <strong id="modal_repair_customer" style="font-size: 13px; color: #0f172a;"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Bike / Item:</span>
+                        <strong id="modal_repair_bike" style="font-size: 13px; color: #0f172a;"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #64748b;">Mechanic:</span>
+                        <strong id="modal_repair_mech" style="font-size: 13px; color: #0f172a;"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-size: 13px; color: #64748b;">Estimated Finish:</span>
+                        <strong id="modal_repair_finish" style="font-size: 13px; color: #b91c1c;"></strong>
+                    </div>
+                </div>
+                <div class="form_group">
+                    <label class="form_label">Service Notes & Diagnosis</label>
+                    <p id="modal_repair_notes" style="font-size: 13px; color: #334155; padding: 10px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;"></p>
+                </div>
+                <div class="form_group">
+                    <label class="form_label" for="modal_update_repair_status">Change Status</label>
+                    <select class="form_input admin_select" id="modal_update_repair_status">
+                        <option value="In-Progress">In-Progress</option>
+                        <option value="Waiting">Waiting</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button type="button" class="btn_secondary btn_modal_cancel">Close</button>
+                <button type="button" class="btn_primary" onclick="saveRepairStatus()">Update Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- logout confirmation modal -->
+    <div class="modal_backdrop" id="logout_confirm_modal">
+        <div class="modal_card" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-sign-out-alt" style="color: #b91c1c; margin-right: 8px;"></i>Confirm Sign Out</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('logout_confirm_modal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Sign out of Taurus Admin?</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">You are about to end your current administrative session. Any unsaved edits will be discarded.</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn_secondary" onclick="closeModal('logout_confirm_modal')" style="flex: 1; justify-content: center;">Cancel</button>
+                    <button type="button" class="btn_primary" onclick="executeAdminLogout()" style="flex: 1; justify-content: center; background-color: #b91c1c; border-color: #b91c1c;">
+                        <i class="fas fa-sign-out-alt"></i> <span>Yes, Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- script logic -->
+    <script src="/frontend/js/config.js"></script>
+    <script src="/frontend/js/admin.js"></script>
+    <script src="/frontend/js/admin_repairs.js"></script>
+</body>
+</html>

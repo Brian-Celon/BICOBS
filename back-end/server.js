@@ -48,6 +48,14 @@ app.get('/api/health/system', async (req, res) => {
 });
 
 
+// Convenient page route for tickets and admin
+app.get(['/tickets', '/tickets.html'], (req, res) => {
+  res.sendFile(path.join(frontendPath, 'pages/Admin/tickets.html'));
+});
+app.get(['/admin', '/admin.html'], (req, res) => {
+  res.sendFile(path.join(frontendPath, 'pages/Admin/dashboard.html'));
+});
+
 // 6. Routes
 const apiRouter = express.Router();
 apiRouter.use('/auth', require('./routes/authRoutes'));
@@ -59,6 +67,8 @@ apiRouter.use('/dashboard', require('./routes/dashboardRoutes'));
 apiRouter.use('/users', require('./routes/userRoutes'));
 apiRouter.use('/repairs', require('./routes/repairRoutes'));
 apiRouter.use('/tickets', require('./routes/ticketRoutes'));
+// Direct aliases so /api/login, /api/register, /api/verify-otp, /api/me work directly
+apiRouter.use('/', require('./routes/authRoutes'));
 
 // Mount routes on /api and root router for Vercel serverless rewrite compatibility
 app.use('/api', apiRouter);

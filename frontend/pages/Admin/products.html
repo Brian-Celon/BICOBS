@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taurus Bike Store - Products</title>
+    <!-- Google Fonts: Inter matching web version -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- link to scoped admin stylesheet -->
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <!-- external fontawesome for iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- top navigation bar -->
+    <header class="admin_top_navbar">
+        <div class="top_nav_left">
+            <button type="button" class="sidebar_toggle_btn" id="sidebar_toggle_btn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="dashboard.html" class="top_nav_brand_title">Taurus Bike</a>
+        </div>
+        <div class="top_nav_right">
+            <div class="top_search_container">
+                <i class="fas fa-search top_search_icon"></i>
+                <input type="text" class="top_search_input" id="top_search_input" placeholder="Search...">
+            </div>
+
+            <!-- notifications dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <button type="button" class="top_notification_btn" id="top_notification_btn" aria-label="Notifications" onclick="toggleDropdown('notification_menu')">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification_badge_dot" style="display: none;"></span>
+                </button>
+                <div class="dropdown_menu notification_dropdown_box" id="notification_menu">
+                    <div class="notification_box_header">
+                        <span>Notifications</span>
+                        <button type="button" class="notification_clear_btn" onclick="clearNotifications()">Mark all as read</button>
+                    </div>
+                    <ul class="notification_box_list" id="notification_list">
+                    <li style="padding: 16px; text-align: center; color: #94a3b8; font-size: 12px;">No unread notifications</li>
+                </ul>
+                </div>
+            </div>
+
+            <!-- admin profile dropdown wrapper -->
+            <div class="dropdown_menu_wrapper">
+                <div class="admin_profile_pill" id="admin_profile_trigger" onclick="toggleDropdown('admin_profile_menu')">
+                    <div class="admin_profile_avatar">A</div>
+                    <div class="admin_profile_details">
+                        <span class="admin_user_name">Admin</span>
+                        <span class="admin_user_role">Administrator</span>
+                    </div>
+                    <i class="fas fa-chevron-down admin_dropdown_arrow"></i>
+                </div>
+                <div class="dropdown_menu" id="admin_profile_menu">
+                    <a href="settings.html" class="dropdown_menu_item">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                    <a href="users.html" class="dropdown_menu_item">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </a>
+                    <button type="button" class="dropdown_menu_item" onclick="openLogoutModal()">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- mobile sidebar backdrop overlay -->
+    <div class="sidebar_backdrop" id="sidebar_backdrop"></div>
+
+    <!-- main admin workspace layout -->
+    <div class="admin_workspace_layout">
+        <!-- left admin sidebar navigation -->
+        <aside class="admin_sidebar" id="admin_sidebar">
+            <div class="sidebar_top_section">
+                <span class="sidebar_section_heading">Admin Panel</span>
+                <nav>
+                    <ul class="sidebar_nav_list">
+                        <li class="sidebar_nav_item">
+                            <a href="dashboard.html" class="sidebar_nav_link">
+                                <i class="fas fa-th-large"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="inventory.html" class="sidebar_nav_link">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <span>Inventory</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html" class="sidebar_nav_link nav_link_active">
+                                <i class="fas fa-tags"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="orders.html" class="sidebar_nav_link">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="repairs.html" class="sidebar_nav_link">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repairs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="tickets.html" class="sidebar_nav_link">
+                                <i class="fas fa-headset"></i>
+                                <span>Support Tickets</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="billing.html" class="sidebar_nav_link">
+                                <i class="fas fa-receipt"></i>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="reports.html" class="sidebar_nav_link">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="users.html" class="sidebar_nav_link">
+                                <i class="fas fa-users-cog"></i>
+                                <span>Users & Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="settings.html" class="sidebar_nav_link">
+                                <i class="fas fa-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <button type="button" class="sidebar_nav_link sidebar_nav_logout_btn" onclick="openLogoutModal()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- bottom sidebar branding -->
+            <div class="sidebar_footer">
+                <i class="fas fa-shield-alt sidebar_footer_icon"></i>
+                <div class="sidebar_footer_info">
+                    <span class="sidebar_footer_brand">Taurus Bike Store</span>
+                    <span class="sidebar_footer_version">Admin Panel v1.0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- main page content -->
+        <main class="admin_main_content">
+            <!-- page title header bar -->
+            <div class="page_header">
+                <div class="page_title_group">
+                    <h1 class="page_title">Products</h1>
+                    <p class="page_subtitle">Browse, filter, and add products available across all store categories.</p>
+                </div>
+                <div class="page_header_actions">
+                    <button type="button" class="btn_primary" id="btn_open_add_product" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- categories horizontal filter navigation bar -->
+            <nav class="products_tabs_bar" id="category_tabs_bar" aria-label="Product categories navigation">
+                <button type="button" class="products_tab_btn tab_active" data-cat="all" onclick="selectCategoryTab('all', this)">
+                    <span>All Products</span>
+                    <span class="category_count_badge" id="count_all">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="bicycles" onclick="selectCategoryTab('bicycles', this)">
+                    <span>All Bikes</span>
+                    <span class="category_count_badge" id="count_bicycles">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="mountain_bikes" onclick="selectCategoryTab('mountain_bikes', this)">
+                    <span>Mountain Bikes</span>
+                    <span class="category_count_badge" id="count_mountain_bikes">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="road_bikes" onclick="selectCategoryTab('road_bikes', this)">
+                    <span>Road Bikes</span>
+                    <span class="category_count_badge" id="count_road_bikes">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="gravel_bikes" onclick="selectCategoryTab('gravel_bikes', this)">
+                    <span>Gravel Bikes</span>
+                    <span class="category_count_badge" id="count_gravel_bikes">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="bmx_urban" onclick="selectCategoryTab('bmx_urban', this)">
+                    <span>BMX & Urban</span>
+                    <span class="category_count_badge" id="count_bmx_urban">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="folding_commuter" onclick="selectCategoryTab('folding_commuter', this)">
+                    <span>Folding Bikes</span>
+                    <span class="category_count_badge" id="count_folding_commuter">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="frames" onclick="selectCategoryTab('frames', this)">
+                    <span>Frames & Forks</span>
+                    <span class="category_count_badge" id="count_frames">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="gears" onclick="selectCategoryTab('gears', this)">
+                    <span>Gears & Drivetrain</span>
+                    <span class="category_count_badge" id="count_gears">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="brakes" onclick="selectCategoryTab('brakes', this)">
+                    <span>Brakes & Rotors</span>
+                    <span class="category_count_badge" id="count_brakes">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="pedals" onclick="selectCategoryTab('pedals', this)">
+                    <span>Pedals & Cleats</span>
+                    <span class="category_count_badge" id="count_pedals">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="rims_tires" onclick="selectCategoryTab('rims_tires', this)">
+                    <span>Rims & Tires</span>
+                    <span class="category_count_badge" id="count_rims_tires">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="handlebars_saddles" onclick="selectCategoryTab('handlebars_saddles', this)">
+                    <span>Handlebars & Saddles</span>
+                    <span class="category_count_badge" id="count_handlebars_saddles">(...)</span>
+                </button>
+                <button type="button" class="products_tab_btn" data-cat="apparel" onclick="selectCategoryTab('apparel', this)">
+                    <span>Apparel & Shoes</span>
+                    <span class="category_count_badge" id="count_apparel">(...)</span>
+                </button>
+            </nav>
+
+            <!-- search and toolbar filters -->
+            <div class="filter_toolbar" style="margin-bottom: 20px;">
+                <div class="toolbar_search_box" style="flex: 1; max-width: 400px;">
+                    <i class="fas fa-search toolbar_search_icon"></i>
+                    <input type="text" class="toolbar_search_input" id="product_search_input" placeholder="Search by product name or SKU..." oninput="filterProducts()">
+                </div>
+                <div class="toolbar_filters_group">
+                    <select class="admin_select" id="product_category_select" onchange="handleCategorySelectChange(this.value)">
+                        <option value="all">All Categories</option>
+                        <option value="bicycles">All Bikes</option>
+                        <option value="mountain_bikes">Mountain Bikes</option>
+                        <option value="road_bikes">Road Bikes</option>
+                        <option value="gravel_bikes">Gravel Bikes</option>
+                        <option value="bmx_urban">BMX & Urban</option>
+                        <option value="folding_commuter">Folding Bikes</option>
+                        <option value="frames">Frames & Forks</option>
+                        <option value="gears">Gears & Drivetrain</option>
+                        <option value="brakes">Brakes & Rotors</option>
+                        <option value="pedals">Pedals & Cleats</option>
+                        <option value="rims_tires">Rims & Tires</option>
+                        <option value="handlebars_saddles">Handlebars & Saddles</option>
+                        <option value="apparel">Apparel & Shoes</option>
+                    </select>
+                    <select class="admin_select" id="product_sort_select" onchange="filterProducts()">
+                        <option value="default">Default Order</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="name_asc">Name: A to Z</option>
+                    </select>
+                    <button type="button" class="btn_primary" onclick="openAddProductModal()" style="white-space: nowrap;">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- products clean grid showcase -->
+            <section id="products_grid" class="products_grid">
+                <!-- INJECTED BY JAVASCRIPT -->
+            </section>
+
+            <!-- empty search state -->
+            <div id="empty_products_state" style="display: none; padding: 48px 20px; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; margin-top: 10px;">
+                <i class="fas fa-search" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px;"></i>
+                <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">No Products Found</h3>
+                <p style="font-size: 13px; color: #64748b; margin: 0 0 16px 0;">No items match the selected category or search query.</p>
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn_secondary" onclick="resetProductFilters()">Clear Filter</button>
+                    <button type="button" class="btn_primary" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- modal dialog: add product -->
+    <div class="modal_backdrop" id="add_product_modal" role="dialog" aria-modal="true" aria-labelledby="add_product_title">
+        <div class="modal_card">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="add_product_title">Add New Product</h3>
+                    <p class="modal_subtitle" style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Enter product details and select or upload a product image.</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('add_product_modal')" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="add_product_form" onsubmit="handleAddProductSubmit(event)">
+                <div class="modal_body">
+                    <!-- product title -->
+                    <div class="form_group">
+                        <label for="new_product_title" class="form_label">Product Name *</label>
+                        <input type="text" id="new_product_title" class="form_input" placeholder="e.g., Taurus Stealth Carbon MTB 29&quot;" required>
+                    </div>
+
+                    <!-- category and sku -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label for="new_product_category" class="form_label" style="display: flex; align-items: center; min-height: 20px;">Category *</label>
+                            <select id="new_product_category" class="form_select" required>
+                                <option value="" disabled selected>Select category...</option>
+                                <optgroup label="Bicycles">
+                                    <option value="mountain_bikes">Mountain Bikes</option>
+                                    <option value="road_bikes">Road Bikes</option>
+                                    <option value="gravel_bikes">Gravel Bikes</option>
+                                    <option value="bmx_urban">BMX & Urban</option>
+                                    <option value="folding_commuter">Folding Bikes</option>
+                                </optgroup>
+                                <optgroup label="Components & Gear">
+                                    <option value="frames">Frames & Forks</option>
+                                    <option value="gears">Gears & Drivetrain</option>
+                                    <option value="brakes">Brakes & Rotors</option>
+                                    <option value="pedals">Pedals & Cleats</option>
+                                    <option value="rims_tires">Rims & Tires</option>
+                                    <option value="handlebars_saddles">Handlebars & Saddles</option>
+                                    <option value="apparel">Apparel & Shoes</option>
+                                </optgroup>
+                            </select>
+                            <span class="sku_helper_text"><i class="fas fa-tag"></i> Select the primary catalog category.</span>
+                        </div>
+                        <div class="form_group">
+                            <label for="new_product_sku" class="form_label" style="display: flex; justify-content: space-between; align-items: center; min-height: 20px;">
+                                <span>SKU Code *</span>
+                                <span style="font-size: 11px; font-weight: 600; color: #16a34a;"><i class="fas fa-magic"></i> Auto-generated</span>
+                            </label>
+                            <div class="sku_input_group">
+                                <input type="text" id="new_product_sku" class="form_input" placeholder="e.g., TBS-BIC-TRK-015" required>
+                                <button type="button" class="sku_regen_btn" id="regen_new_product_sku_btn" title="Generate fresh SKU code">
+                                    <i class="fas fa-rotate"></i>
+                                </button>
+                            </div>
+                            <span class="sku_helper_text"><i class="fas fa-info-circle"></i> Automatically generated based on category & name.</span>
+                        </div>
+                    </div>
+
+                    <!-- price and stock -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label for="new_product_price" class="form_label">Price (₱) *</label>
+                            <input type="number" id="new_product_price" class="form_input" min="1" placeholder="e.g., 24500" required>
+                        </div>
+                        <div class="form_group">
+                            <label for="new_product_stock" class="form_label">Initial Stock</label>
+                            <input type="number" id="new_product_stock" class="form_input" min="0" value="10">
+                        </div>
+                    </div>
+
+                    <!-- image insertion section -->
+                    <div class="form_group">
+                        <label class="form_label">Product Image</label>
+                        <!-- hidden file input -->
+                        <input type="file" id="new_product_file" accept="image/*" style="display: none;" onchange="handleProductImageFile(event)">
+                        <!-- chosen value -->
+                        <input type="hidden" id="new_product_image_val" value="/frontend/Pictures/placeholder.png">
+
+                        <!-- upload click box -->
+                        <div class="clean_upload_box" id="clean_upload_dropzone" onclick="document.getElementById('new_product_file').click()">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 26px; color: #94a3b8; margin-bottom: 6px;"></i>
+                            <p style="font-size: 13px; font-weight: 600; color: #334155; margin: 0;">Upload product photo</p>
+                            <span style="font-size: 11px; color: #94a3b8;">PNG, JPG, or WEBP</span>
+                        </div>
+
+                        <!-- image preview -->
+                        <div id="new_product_preview_wrap" style="display: none; margin-top: 10px; align-items: center; gap: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <img src="" id="new_product_preview_img" alt="Preview" style="width: 50px; height: 50px; object-fit: contain; background: #fff; border-radius: 6px; padding: 2px;">
+                            <div style="flex: 1;">
+                                <span style="font-size: 12px; font-weight: 600; color: #0f172a;">Image selected</span>
+                                <p style="font-size: 11px; color: #64748b; margin: 0;">Ready to save with product</p>
+                            </div>
+                            <button type="button" class="btn_secondary" style="padding: 4px 8px; font-size: 11px;" onclick="resetProductImage()">Remove</button>
+                        </div>
+
+                        <!-- or quick select preset -->
+                        <div style="margin-top: 10px;">
+                            <span style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase;">Or select from store assets:</span>
+                            <div class="clean_preset_row" id="clean_preset_container">
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/frame.png', this)" title="MTB Frame">
+                                    <img src="/frontend/Pictures/frame.png" alt="Frame">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/shimano-slx.png', this)" title="Groupset">
+                                    <img src="/frontend/Pictures/shimano-slx.png" alt="Groupset">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/shoes.png', this)" title="Shoes">
+                                    <img src="/frontend/Pictures/shoes.png" alt="Shoes">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/tire.png', this)" title="Tire">
+                                    <img src="/frontend/Pictures/tire.png" alt="Tire">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/bike&frames.jpg', this)" title="Bicycle">
+                                    <img src="/frontend/Pictures/bike&frames.jpg" alt="Bicycle">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/bestseller.jpg', this)" title="Road Bike">
+                                    <img src="/frontend/Pictures/bestseller.jpg" alt="Road Bike">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/rims&tiles.jpg', this)" title="Wheelset">
+                                    <img src="/frontend/Pictures/rims&tiles.jpg" alt="Wheelset">
+                                </div>
+                                <div class="clean_preset_thumb" onclick="pickPresetAsset('/frontend/Pictures/shoes&pedals.jpg', this)" title="Pedals">
+                                    <img src="/frontend/Pictures/shoes&pedals.jpg" alt="Pedals">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- short description -->
+                    <div class="form_group">
+                        <label for="new_product_desc" class="form_label">Description</label>
+                        <textarea id="new_product_desc" class="form_input" rows="4" placeholder="Brief product description or specifications..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary" onclick="closeModal('add_product_modal')">Cancel</button>
+                    <button type="submit" class="btn_primary">
+                        <i class="fas fa-plus"></i> <span>Add Product</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- modal dialog: edit product -->
+    <div class="modal_backdrop" id="edit_product_modal" role="dialog" aria-modal="true" aria-labelledby="edit_modal_title">
+        <div class="modal_card">
+            <div class="modal_header">
+                <div>
+                    <h3 class="modal_title" id="edit_modal_title">Edit Product</h3>
+                    <p class="modal_subtitle" style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Update product information and pricing.</p>
+                </div>
+                <button type="button" class="modal_close_btn" onclick="closeModal('edit_product_modal')" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="edit_product_form" onsubmit="handleEditProductSubmit(event)">
+                <input type="hidden" id="edit_item_id">
+                <div class="modal_body">
+                    <div class="form_group">
+                        <label for="edit_item_title" class="form_label">Product Name</label>
+                        <input type="text" id="edit_item_title" class="form_input" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form_group">
+                            <label for="edit_item_price" class="form_label">Price (₱) *</label>
+                            <input type="number" id="edit_item_price" class="form_input" required>
+                        </div>
+                        <div class="form_group">
+                            <label for="edit_item_stock" class="form_label">Stock Quantity *</label>
+                            <input type="number" id="edit_item_stock" class="form_input" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form_group">
+                        <label for="edit_item_category" class="form_label">Category *</label>
+                        <select id="edit_item_category" class="form_select" required>
+                            <optgroup label="Bicycles">
+                                <option value="mountain_bikes">Mountain Bikes</option>
+                                <option value="road_bikes">Road Bikes</option>
+                                <option value="gravel_bikes">Gravel Bikes</option>
+                                <option value="bmx_urban">BMX & Urban</option>
+                                <option value="folding_commuter">Folding Bikes</option>
+                                <option value="built_bikes">Complete Bicycles</option>
+                            </optgroup>
+                            <optgroup label="Frames & Steering">
+                                <option value="frame">Framesets</option>
+                                <option value="fork">Forks & Suspension</option>
+                                <option value="handle_bar">Handlebars</option>
+                                <option value="stem">Stems</option>
+                            </optgroup>
+                            <optgroup label="Drivetrain & Components">
+                                <option value="chain">Chains</option>
+                                <option value="upgrade_kit">Upgrade Kits & Groupsets</option>
+                                <option value="pedals">Pedals & Cleats</option>
+                            </optgroup>
+                            <optgroup label="Wheels & Tires">
+                                <option value="tires">Tires</option>
+                                <option value="rims">Rims & Wheelsets</option>
+                                <option value="hubs">Sealed Hubs</option>
+                            </optgroup>
+                            <optgroup label="Saddles & Grips">
+                                <option value="saddle">Saddles</option>
+                                <option value="handle_grip">Grips & Bartapes</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form_group">
+                        <label for="edit_item_desc" class="form_label">Description</label>
+                        <textarea id="edit_item_desc" class="form_input" rows="4" placeholder="Product description..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal_footer">
+                    <button type="button" class="btn_secondary" onclick="closeModal('edit_product_modal')">Cancel</button>
+                    <button type="submit" class="btn_primary">
+                        <i class="fas fa-save"></i> <span>Save Changes</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- logout confirmation modal -->
+    <div class="modal_backdrop" id="logout_confirm_modal">
+        <div class="modal_card" style="max-width: 440px;">
+            <div class="modal_header">
+                <h3 class="modal_title"><i class="fas fa-sign-out-alt" style="color: #b91c1c; margin-right: 8px;"></i>Confirm Sign Out</h3>
+                <button type="button" class="modal_close_btn" onclick="closeModal('logout_confirm_modal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal_body" style="padding: 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Sign out of Taurus Admin?</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">You are about to end your current administrative session. Any unsaved edits will be discarded.</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button type="button" class="btn_secondary" onclick="closeModal('logout_confirm_modal')" style="flex: 1; justify-content: center;">Cancel</button>
+                    <button type="button" class="btn_primary" onclick="executeAdminLogout()" style="flex: 1; justify-content: center; background-color: #b91c1c; border-color: #b91c1c;">
+                        <i class="fas fa-sign-out-alt"></i> <span>Yes, Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- toast notification container -->
+    <div class="toast_container" id="toast_container"></div>
+
+    <!-- client controller script -->
+    <script src="/frontend/js/config.js"></script>
+    <script src="/frontend/js/admin.js"></script>
+    <script src="/frontend/js/admin_products.js"></script>
+</body>
+</html>
