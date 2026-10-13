@@ -19,12 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
     setup_logout_modal();
     setup_products_catalog();
 
+    // Load support tickets if on support page
+    if (document.getElementById('tickets_list')) {
+        load_my_support_tickets();
+    }
+
     // Check auth status and gate all dashboard fields if unauthenticated
     apply_dashboard_auth_visibility();
 
     // Listen for auth state changes so dashboard dynamically locks/unlocks
     window.addEventListener('bicobs_auth_changed', () => {
         apply_dashboard_auth_visibility();
+        if (document.getElementById('tickets_list')) {
+            load_my_support_tickets();
+        }
     });
 });
 
@@ -141,6 +149,9 @@ function apply_dashboard_auth_visibility() {
         load_user_orders_from_backend();
         load_user_payments_from_backend();
         load_recommended_products_from_backend();
+        if (document.getElementById('tickets_list')) {
+            load_my_support_tickets();
+        }
     }
 }
 
@@ -686,6 +697,79 @@ function setup_payment_modal() {
     }
 }
 
+/* load customer support tickets from backend */
+async function load_my_support_tickets() {
+    const ticketList = document.getElementById('tickets_list');
+    const noTickets = document.getElementById('no_tickets_found');
+    if (!ticketList) return;
+
+    const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+    if (!token) {
+        ticketList.innerHTML = '';
+        if (noTickets) {
+            noTickets.style.display = 'block';
+            const noteP = noTickets.querySelector('p');
+            if (noteP) noteP.innerHTML = 'Please sign in to view and create your support tickets.';
+        }
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/tickets/my-tickets', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to load tickets');
+        }
+
+        const json = await res.json();
+        const tickets = json.data || [];
+
+        if (tickets.length === 0) {
+            ticketList.innerHTML = '';
+            if (noTickets) noTickets.style.display = 'block';
+            return;
+        }
+
+        if (noTickets) noTickets.style.display = 'none';
+
+        ticketList.innerHTML = tickets.map(t => {
+            const status = t.status || 'Open';
+            let badgeClass = 'ticket_status_open';
+            if (status.toLowerCase() === 'resolved') badgeClass = 'ticket_status_resolved';
+            else if (status.toLowerCase() === 'in progress') badgeClass = 'ticket_status_inprogress';
+            else if (status.toLowerCase() === 'closed') badgeClass = 'ticket_status_closed';
+
+            const createdDate = t.createdAt ? new Date(t.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }) : 'Recently';
+
+            const msgCount = t.messageCount || 1;
+            const msgLabel = msgCount === 1 ? '1 message in thread' : `${msgCount} messages in thread`;
+
+            return `
+                <li class="ticket_card" data-ticket-id="${t.id}">
+                    <div class="ticket_info">
+                        <div class="ticket_title_row">
+                            <h4 class="ticket_title">${escapeHTML(t.ticketNumber)}: ${escapeHTML(t.subject)} (${escapeHTML(t.category)})</h4>
+                            <span class="${badgeClass}">${escapeHTML(status)}</span>
+                        </div>
+                        <p class="ticket_meta">Created on ${createdDate} • ${msgLabel}</p>
+                    </div>
+                    <a href="#" class="btn_open_chat" data-ticket-id="${t.id}" data-ticket-number="${escapeHTML(t.ticketNumber)}" data-ticket-title="${escapeHTML(t.subject)}" data-ticket-category="${escapeHTML(t.category)}" data-ticket-status="${escapeHTML(status)}">Open Chat</a>
+                </li>
+            `;
+        }).join('');
+    } catch (err) {
+        console.error('[Load Tickets Error]', err);
+    }
+}
+
 /* setup support ticket modal popup */
 function setup_ticket_modal() {
     const modal = document.getElementById('ticket_modal');
@@ -727,37 +811,63 @@ function setup_ticket_modal() {
 
     // Handle Form Submit
     if (form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const subject = document.getElementById('ticket_subject')?.value || 'General Inquiry';
-            const category = document.getElementById('ticket_category')?.value || 'Support';
-            const ticketList = document.getElementById('tickets_list') || document.querySelector('.ticket_list');
-            const noTickets = document.getElementById('no_tickets_found');
-
-            if (ticketList) {
-                const randomId = Math.floor(1000 + Math.random() * 9000);
-                const todayStr = new Date().toISOString().split('T')[0];
-
-                const newTicket = document.createElement('li');
-                newTicket.className = 'ticket_card';
-                newTicket.innerHTML = `
-                    <div class="ticket_info">
-                        <div class="ticket_title_row">
-                            <h4 class="ticket_title">#TCK-${randomId}: ${subject} (${category})</h4>
-                            <span class="ticket_status_open">Open</span>
-                        </div>
-                        <p class="ticket_meta">Created on ${todayStr} • 1 message in thread</p>
-                    </div>
-                    <a href="#" class="btn_open_chat">Open Chat</a>
-                `;
-
-                if (noTickets) noTickets.style.display = 'none';
-                ticketList.prepend(newTicket);
+            const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+            if (!token) {
+                if (window.BICOBS_Auth) {
+                    window.BICOBS_Auth.showLoginModal('Please sign in to submit a ticket');
+                } else {
+                    alert('Please sign in to submit a support ticket.');
+                }
+                return;
             }
 
-            form.reset();
-            closeModal();
+            const subject = document.getElementById('ticket_subject')?.value.trim();
+            const category = document.getElementById('ticket_category')?.value.trim();
+            const description = document.getElementById('ticket_description')?.value.trim();
+
+            if (!subject || !category || !description) {
+                alert('Please fill out all required fields.');
+                return;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Submit Ticket';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            }
+
+            try {
+                const res = await fetch('/api/tickets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ category, subject, description })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.message || 'Failed to create support ticket');
+                }
+
+                form.reset();
+                closeModal();
+                showDashboardToast(`Ticket ${data.data?.ticketNumber || ''} created successfully!`, true);
+                load_my_support_tickets();
+            } catch (err) {
+                console.error('[Ticket Create Error]', err);
+                alert(err.message || 'Unable to submit ticket. Please check your connection.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            }
         });
     }
 }
@@ -1486,67 +1596,170 @@ function setup_order_details_modal() {
 }
 
 /* Ticket Chat Conversation Modal Popup (support.html) */
+let currentChatTicketId = null;
+
 function setup_ticket_chat_modal() {
     const modal = document.getElementById('ticket_chat_modal');
     const closeBtn = document.getElementById('close_chat_modal');
     const replyForm = document.getElementById('chat_reply_form');
     const replyInput = document.getElementById('chat_reply_input');
     const chatBox = document.getElementById('chat_messages_box');
+    const subtitleEl = document.getElementById('chat_modal_subtitle');
 
     if (!modal) return;
 
-    const closeModal = () => modal.classList.remove('active');
+    const closeModal = () => {
+        modal.classList.remove('active');
+        currentChatTicketId = null;
+    };
+
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
 
-    document.body.addEventListener('click', (e) => {
+    document.body.addEventListener('click', async (e) => {
         const btn = e.target.closest('.btn_open_chat');
-        if (btn) {
-            e.preventDefault();
-            const card = btn.closest('.ticket_card');
-            const titleEl = card ? card.querySelector('.ticket_title') : null;
-            const subtitleEl = document.getElementById('chat_modal_subtitle');
-            if (titleEl && subtitleEl) {
-                subtitleEl.textContent = titleEl.textContent.trim();
+        if (!btn) return;
+        e.preventDefault();
+
+        const ticketId = btn.dataset.ticketId || btn.closest('.ticket_card')?.dataset.ticketId;
+        if (!ticketId) return;
+
+        currentChatTicketId = ticketId;
+        modal.classList.add('active');
+
+        const ticketNum = btn.dataset.ticketNumber || '';
+        const ticketTitle = btn.dataset.ticketTitle || '';
+        if (subtitleEl) {
+            subtitleEl.textContent = ticketNum ? `${ticketNum}: ${ticketTitle}` : 'Loading ticket thread...';
+        }
+
+        if (chatBox) {
+            chatBox.innerHTML = `
+                <div style="text-align: center; color: #64748b; padding: 24px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 20px; margin-bottom: 8px; display: block; color: #8b1e28;"></i>
+                    <span>Loading conversation...</span>
+                </div>
+            `;
+        }
+
+        const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+        try {
+            const res = await fetch(`/api/tickets/${ticketId}/messages`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.message || 'Failed to load conversation');
             }
-            modal.classList.add('active');
+
+            const json = await res.json();
+            const ticket = json.data?.ticket || {};
+            const messages = json.data?.messages || [];
+
+            if (subtitleEl) {
+                subtitleEl.textContent = `${ticket.ticketNumber || ''}: ${ticket.subject || ''} (${ticket.category || ''}) [${ticket.status || 'Open'}]`;
+            }
+
+            if (chatBox) {
+                if (messages.length === 0) {
+                    chatBox.innerHTML = `
+                        <div style="text-align: center; color: #94a3b8; padding: 24px;">
+                            No messages in this ticket yet.
+                        </div>
+                    `;
+                } else {
+                    chatBox.innerHTML = messages.map(m => {
+                        const isUser = m.senderType === 'user';
+                        const author = isUser ? (m.senderName || 'You') : (m.senderName || 'Taurus Support Rep');
+                        const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+                        return `
+                            <div class="chat_message ${isUser ? 'message_user' : 'message_support'}">
+                                <div class="chat_msg_author">${escapeHTML(author)}</div>
+                                <div class="chat_msg_text">${escapeHTML(m.message)}</div>
+                                <div style="font-size: 10px; opacity: 0.7; margin-top: 4px; text-align: ${isUser ? 'right' : 'left'};">${timeStr}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        } catch (err) {
+            console.error('[Load Messages Error]', err);
+            if (chatBox) {
+                chatBox.innerHTML = `
+                    <div style="text-align: center; color: #dc2626; padding: 20px;">
+                        <i class="fas fa-exclamation-circle"></i> ${escapeHTML(err.message)}
+                    </div>
+                `;
+            }
         }
     });
 
     if (replyForm) {
-        replyForm.addEventListener('submit', (e) => {
+        replyForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const text = replyInput.value.trim();
-            if (!text) return;
+            const text = replyInput ? replyInput.value.trim() : '';
+            if (!text || !currentChatTicketId) return;
 
-            if (chatBox) {
-                const userMsg = document.createElement('div');
-                userMsg.className = 'chat_message message_user';
-                const authorName = localStorage.getItem('tb_user_name') || 'You';
-                userMsg.innerHTML = `
-                    <div class="chat_msg_author">${escapeHTML(authorName)}</div>
-                    <div class="chat_msg_text">${escapeHTML(text)}</div>
-                `;
-                chatBox.appendChild(userMsg);
-                chatBox.scrollTop = chatBox.scrollHeight;
+            const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
+            if (!token) {
+                alert('Please sign in to send a reply');
+                return;
             }
 
-            replyInput.value = '';
+            const submitBtn = replyForm.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
 
-            setTimeout(() => {
+            try {
+                const res = await fetch(`/api/tickets/${currentChatTicketId}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ message: text })
+                });
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.message || 'Failed to send message');
+                }
+
+                const json = await res.json();
+                const newMsg = json.data;
+
+                if (replyInput) replyInput.value = '';
+
                 if (chatBox) {
-                    const supportMsg = document.createElement('div');
-                    supportMsg.className = 'chat_message message_support';
-                    supportMsg.innerHTML = `
-                        <div class="chat_msg_author">Taurus Support Rep</div>
-                        <div class="chat_msg_text">Thank you for your update! Our team has received your message and is processing your request.</div>
+                    const isUser = newMsg.senderType === 'user';
+                    const author = isUser ? (newMsg.senderName || 'You') : (newMsg.senderName || 'Taurus Support Rep');
+                    const timeStr = newMsg.createdAt ? new Date(newMsg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+                    const msgEl = document.createElement('div');
+                    msgEl.className = `chat_message ${isUser ? 'message_user' : 'message_support'}`;
+                    msgEl.innerHTML = `
+                        <div class="chat_msg_author">${escapeHTML(author)}</div>
+                        <div class="chat_msg_text">${escapeHTML(newMsg.message)}</div>
+                        <div style="font-size: 10px; opacity: 0.7; margin-top: 4px; text-align: ${isUser ? 'right' : 'left'};">${timeStr}</div>
                     `;
-                    chatBox.appendChild(supportMsg);
+                    chatBox.appendChild(msgEl);
                     chatBox.scrollTop = chatBox.scrollHeight;
                 }
-            }, 1000);
+
+                // Refresh ticket list in background to update message count / activity
+                load_my_support_tickets();
+            } catch (err) {
+                console.error('[Send Message Error]', err);
+                alert(err.message || 'Failed to send message');
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
         });
     }
 }
@@ -1844,6 +2057,39 @@ function setup_add_to_cart_buttons() {
             }
         }
     });
+}
+
+/* Helper utilities: escapeHTML and toast notification */
+function escapeHTML(str) {
+    if (!str && str !== 0) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function showDashboardToast(message, isSuccess = true) {
+    let container = document.querySelector('.toast_container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast_container';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast_msg';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '8px';
+    if (!isSuccess) toast.style.backgroundColor = '#dc2626';
+    toast.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}" style="color: ${isSuccess ? '#22c55e' : '#fca5a5'};"></i> <span>${escapeHTML(message)}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => toast.remove(), 400);
+    }, 3500);
 }
 
 

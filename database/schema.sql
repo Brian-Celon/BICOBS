@@ -182,3 +182,42 @@ CREATE TRIGGER trigger_update_products_timestamp
 CREATE TRIGGER trigger_update_orders_timestamp
     BEFORE UPDATE ON orders
     FOR EACH ROW EXECUTE FUNCTION update_timestamp_column();
+
+-- =============================================================================
+-- 9. CUSTOMER SUPPORT TICKETS TABLE
+-- Stores inquiries and support tickets opened by customers
+-- =============================================================================
+CREATE TABLE support_tickets (
+    id SERIAL PRIMARY KEY,
+    ticket_number VARCHAR(50) UNIQUE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    customer_name VARCHAR(150) NOT NULL,
+    customer_email VARCHAR(150),
+    category VARCHAR(100) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    status VARCHAR(50) DEFAULT 'Open' CHECK (status IN ('Open', 'In Progress', 'Resolved', 'Closed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_support_tickets_user_id ON support_tickets(user_id);
+CREATE INDEX idx_support_tickets_ticket_number ON support_tickets(ticket_number);
+
+CREATE TRIGGER trigger_update_support_tickets_timestamp
+    BEFORE UPDATE ON support_tickets
+    FOR EACH ROW EXECUTE FUNCTION update_timestamp_column();
+
+-- =============================================================================
+-- 10. SUPPORT TICKET MESSAGES TABLE
+-- Stores conversation messages and updates within a support ticket
+-- =============================================================================
+CREATE TABLE ticket_messages (
+    id SERIAL PRIMARY KEY,
+    ticket_id INTEGER NOT NULL REFERENCES support_tickets(id) ON DELETE CASCADE,
+    sender_type VARCHAR(20) NOT NULL DEFAULT 'user' CHECK (sender_type IN ('user', 'support', 'admin')),
+    sender_name VARCHAR(150) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_ticket_messages_ticket_id ON ticket_messages(ticket_id);
