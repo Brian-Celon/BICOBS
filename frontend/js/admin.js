@@ -51,7 +51,8 @@ function getApiUrl(endpoint) {
     }
 
     // 2. If running locally via file:/// or dev servers (like port 5500 Live Server, 3000), route to port 5000
-    if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '5000')) {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (window.location.protocol === 'file:' || (isLocalhost && window.location.port !== '5000')) {
         return `http://localhost:5000${clean}`;
     }
 
