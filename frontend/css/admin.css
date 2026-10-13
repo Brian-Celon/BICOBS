@@ -3474,4 +3474,91 @@ input:checked + .slider::before {
     color: #fecaca;
 }
 
+/* Ticket Modal Specific Elements */
+.modal_card.ticket_modal_card {
+    max-width: 760px;
+    width: 95%;
+}
+
+.ticket_meta_card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+}
+
+.ticket_meta_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.ticket_meta_item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ticket_meta_label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ticket_meta_val {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.ticket_status_row {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ticket_chat_empty {
+    text-align: center;
+    padding: 36px 20px;
+    color: #94a3b8;
+}
+
+.ticket_chat_empty_icon {
+    font-size: 32px;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.ticket_category_tag {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.ticket_no_pill {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-weight: 700;
+    color: #b91c1c;
+    background: #fee2e2;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    letter-spacing: 0.2px;
+    display: inline-block;
+}
+
 

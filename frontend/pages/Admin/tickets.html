@@ -282,78 +282,74 @@
                         </tbody>
                     </table>
                 </div>
-            </article>
 
-            <!-- pagination row -->
-            <div class="table_pagination_bar" style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <div class="pagination_info" id="ticket_pagination_info" style="font-size: 13px; color: #64748b;">
-                    Showing 0 of 0 tickets
+                <!-- pagination wrapper inside card matching other admin tables -->
+                <div class="pagination_wrapper">
+                    <span class="pagination_info" id="tickets_pagination_info">Showing 0 of 0 tickets</span>
+                    <div class="pagination_controls" id="tickets_pagination_controls"></div>
                 </div>
-                <div class="pagination_controls" style="display: flex; gap: 8px;">
-                    <button type="button" class="btn_secondary btn_sm" id="btn_prev_page" onclick="prevTicketPage()" disabled>
-                        <i class="fas fa-chevron-left"></i> Previous
-                    </button>
-                    <button type="button" class="btn_secondary btn_sm" id="btn_next_page" onclick="nextTicketPage()" disabled>
-                        Next <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
+            </article>
         </main>
     </div>
 
     <!-- Ticket Detail & Conversation Modal -->
     <div class="modal_backdrop" id="admin_ticket_modal">
-        <div class="modal_card" style="max-width: 720px; width: 95%;">
-            <div class="modal_header" style="border-bottom: 1px solid #e2e8f0; padding: 18px 24px;">
+        <div class="modal_card ticket_modal_card">
+            <div class="modal_header">
                 <div>
-                    <h3 class="modal_title" id="modal_ticket_title" style="font-size: 18px; font-weight: 700; color: #0f172a;">#TCK-1001: Support Ticket</h3>
-                    <p class="modal_subtitle" id="modal_ticket_subtitle" style="font-size: 12px; color: #64748b; margin-top: 2px;">Customer Inquiry & Response Thread</p>
+                    <h3 class="modal_title" id="modal_ticket_title">#TCK-1001: Support Ticket</h3>
+                    <p class="modal_subtitle" id="modal_ticket_subtitle">Customer Inquiry & Response Thread</p>
                 </div>
                 <button type="button" class="modal_close_btn" onclick="closeModal('admin_ticket_modal')" aria-label="Close modal">&times;</button>
             </div>
 
-            <div class="modal_body" style="padding: 20px 24px; max-height: calc(85vh - 120px); overflow-y: auto;">
+            <div class="modal_body">
                 <!-- Ticket Metadata Info Card -->
-                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 18px;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 13px;">
-                        <div>
-                            <span style="color: #64748b; font-size: 11px; text-transform: uppercase; font-weight: 700; display: block;">Customer</span>
-                            <strong style="color: #0f172a;" id="modal_cust_name">—</strong>
-                            <div style="color: #64748b; font-size: 12px;" id="modal_cust_email">—</div>
+                <div class="ticket_meta_card">
+                    <div class="ticket_meta_grid">
+                        <div class="ticket_meta_item">
+                            <span class="ticket_meta_label"><i class="fas fa-user" style="margin-right: 4px; color: #94a3b8;"></i> Customer</span>
+                            <span class="ticket_meta_val" id="modal_cust_name">—</span>
+                            <span style="color: #64748b; font-size: 12px;" id="modal_cust_email">—</span>
                         </div>
-                        <div>
-                            <span style="color: #64748b; font-size: 11px; text-transform: uppercase; font-weight: 700; display: block;">Category</span>
-                            <span id="modal_cust_category" style="font-weight: 600; color: #1e293b;">—</span>
+                        <div class="ticket_meta_item">
+                            <span class="ticket_meta_label"><i class="fas fa-tag" style="margin-right: 4px; color: #94a3b8;"></i> Category</span>
+                            <div>
+                                <span class="ticket_category_tag" id="modal_cust_category">—</span>
+                            </div>
                         </div>
-                        <div>
-                            <span style="color: #64748b; font-size: 11px; text-transform: uppercase; font-weight: 700; display: block;">Opened Date</span>
-                            <span id="modal_cust_created" style="color: #475569;">—</span>
+                        <div class="ticket_meta_item">
+                            <span class="ticket_meta_label"><i class="fas fa-calendar-alt" style="margin-right: 4px; color: #94a3b8;"></i> Date Created</span>
+                            <span class="ticket_meta_val" id="modal_cust_created" style="font-size: 12.5px; color: #475569;">—</span>
                         </div>
                     </div>
 
                     <!-- Status change control -->
-                    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                    <div class="ticket_status_row">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-size: 12px; font-weight: 700; color: #475569;">Ticket Status:</span>
-                            <select id="modal_status_select" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-weight: 600; background: #ffffff; color: #0f172a;">
+                            <label for="modal_status_select" style="font-size: 12px; font-weight: 700; color: #475569;">Ticket Status:</label>
+                            <select id="modal_status_select" class="admin_select" style="min-width: 140px; padding: 5px 28px 5px 10px; font-size: 12px; height: 32px;">
                                 <option value="Open">Open</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Resolved">Resolved</option>
                                 <option value="Closed">Closed</option>
                             </select>
                         </div>
-                        <button type="button" class="btn_secondary btn_sm" id="btn_update_status" onclick="updateTicketStatusFromModal()">
-                            <i class="fas fa-check"></i> Update Status
+                        <button type="button" class="btn_secondary" id="btn_update_status" onclick="updateTicketStatusFromModal()" style="padding: 5px 12px; font-size: 12px;">
+                            <i class="fas fa-check" style="color: #16a34a;"></i> <span>Update Status</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Conversation History Box -->
-                <div style="margin-bottom: 16px;">
-                    <h4 style="font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
-                        <i class="fas fa-comments" style="color: #b91c1c;"></i> Conversation Thread
-                    </h4>
-                    <div id="modal_chat_messages_box" style="max-height: 280px; overflow-y: auto; background-color: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4 style="font-size: 13px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
+                            <i class="fas fa-comments" style="color: #b91c1c; margin-right: 5px;"></i> Conversation Thread
+                        </h4>
+                        <span id="modal_message_counter" style="font-size: 11px; color: #64748b; font-weight: 600;"></span>
+                    </div>
+                    <div id="modal_chat_messages_box" class="ticket_chat_thread">
                         <!-- Messages dynamically rendered -->
                     </div>
                 </div>
@@ -362,11 +358,11 @@
                 <form id="modal_reply_form" onsubmit="sendAdminTicketReply(event)">
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <label for="modal_reply_input" style="font-size: 12px; font-weight: 700; color: #475569;">
-                            Reply as <span style="color: #b91c1c;">Taurus Support Rep</span>:
+                            Reply as <span style="color: #b91c1c; font-weight: 800;">Taurus Support Rep</span>:
                         </label>
-                        <textarea id="modal_reply_input" rows="3" placeholder="Type a helpful response to the customer..." required style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 12px; font-size: 13px; resize: vertical;"></textarea>
+                        <textarea id="modal_reply_input" rows="3" placeholder="Type a helpful response to the customer..." required style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: inherit; resize: vertical; line-height: 1.5;"></textarea>
                     </div>
-                    <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <div style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
                         <button type="button" class="btn_secondary" onclick="closeModal('admin_ticket_modal')">Close</button>
                         <button type="submit" class="btn_primary" id="btn_send_reply">
                             <i class="fas fa-paper-plane"></i> <span>Send Reply</span>

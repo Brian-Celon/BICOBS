@@ -258,16 +258,16 @@ function renderTicketsTable() {
     const paged = filteredTickets.slice(startIndex, startIndex + TICKET_PAGE_SIZE);
 
     tbody.innerHTML = paged.map(t => {
-        const status = t.status || "Open";
+        const sLower = (t.status || "open").toLowerCase();
         let statusBadge = "";
-        if (status.toLowerCase() === "open") {
-            statusBadge = `<span class="ticket_status_pill pill_open"><i class="fas fa-clock"></i> Open</span>`;
-        } else if (status.toLowerCase() === "in progress") {
-            statusBadge = `<span class="ticket_status_pill pill_inprogress"><i class="fas fa-spinner"></i> In Progress</span>`;
-        } else if (status.toLowerCase() === "resolved") {
-            statusBadge = `<span class="ticket_status_pill pill_resolved"><i class="fas fa-check"></i> Resolved</span>`;
+        if (sLower === "open") {
+            statusBadge = `<span class="status_pill status_pending">Open</span>`;
+        } else if (sLower === "in progress") {
+            statusBadge = `<span class="status_pill status_in_progress">In Progress</span>`;
+        } else if (sLower === "resolved") {
+            statusBadge = `<span class="status_pill status_completed">Resolved</span>`;
         } else {
-            statusBadge = `<span class="ticket_status_pill pill_closed">Closed</span>`;
+            statusBadge = `<span class="status_pill status_cancelled">Closed</span>`;
         }
 
         const dateStr = t.createdAt ? new Date(t.createdAt).toLocaleDateString("en-US", {
@@ -280,13 +280,13 @@ function renderTicketsTable() {
 
         return `
             <tr>
-                <td style="font-weight: 700; color: #0f172a; font-family: monospace; font-size: 13px;">${escapeHtml(t.ticketNumber)}</td>
+                <td><span class="ticket_no_pill">${escapeHtml(t.ticketNumber)}</span></td>
                 <td>
                     <strong style="color: #1e293b; display: block; font-size: 13px;">${escapeHtml(t.customerName || "Customer")}</strong>
                     <span style="font-size: 12px; color: #64748b;">${escapeHtml(t.customerEmail || "No email")}</span>
                 </td>
                 <td>
-                    <span style="background: #f1f5f9; color: #334155; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;">
+                    <span class="ticket_category_tag">
                         ${escapeHtml(t.category)}
                     </span>
                 </td>
@@ -299,7 +299,7 @@ function renderTicketsTable() {
                 </td>
                 <td style="font-size: 12px; color: #64748b; white-space: nowrap;">${dateStr}</td>
                 <td style="text-align: right; white-space: nowrap;">
-                    <button type="button" class="btn_secondary btn_sm" onclick="openTicketModal(${t.id})" style="font-weight: 600; padding: 6px 12px;">
+                    <button type="button" class="table_action_link" onclick="openTicketModal(${t.id})" style="font-weight: 600;">
                         <i class="fas fa-comments"></i> <span>View & Reply</span>
                     </button>
                 </td>
@@ -310,25 +310,46 @@ function renderTicketsTable() {
     updatePaginationBar(total);
 }
 
-// Pagination
+// Standard TaurOS Pagination Bar
 function updatePaginationBar(total) {
-    const info = document.getElementById("ticket_pagination_info");
-    const btnPrev = document.getElementById("btn_prev_page");
-    const btnNext = document.getElementById("btn_next_page");
+    const info = document.getElementById("tickets_pagination_info") || document.getElementById("ticket_pagination_info");
+    const controls = document.getElementById("tickets_pagination_controls") || document.getElementById("ticket_pagination_controls");
+    if (!info || !controls) return;
 
     if (total === 0) {
-        if (info) info.textContent = "Showing 0 of 0 tickets";
-        if (btnPrev) btnPrev.disabled = true;
-        if (btnNext) btnNext.disabled = true;
+        info.textContent = "Showing 0 tickets";
+        controls.innerHTML = "";
         return;
     }
 
+    const totalPages = Math.ceil(total / TICKET_PAGE_SIZE) || 1;
     const start = (currentTicketPage - 1) * TICKET_PAGE_SIZE + 1;
     const end = Math.min(currentTicketPage * TICKET_PAGE_SIZE, total);
-    if (info) info.textContent = `Showing ${start}–${end} of ${total} tickets`;
+    info.textContent = `Showing ${start}–${end} of ${total} tickets`;
 
-    if (btnPrev) btnPrev.disabled = currentTicketPage === 1;
-    if (btnNext) btnNext.disabled = end >= total;
+    let html = `
+        <button type="button" class="pagination_btn" ${currentTicketPage === 1 ? 'disabled style="opacity: 0.4; cursor: not-allowed;"' : `onclick="changeTicketPage(${currentTicketPage - 1})"`}>
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    `;
+
+    for (let p = 1; p <= totalPages; p++) {
+        html += `
+            <button type="button" class="pagination_btn ${p === currentTicketPage ? 'page_active' : ''}" onclick="changeTicketPage(${p})">${p}</button>
+        `;
+    }
+
+    html += `
+        <button type="button" class="pagination_btn" ${currentTicketPage === totalPages ? 'disabled style="opacity: 0.4; cursor: not-allowed;"' : `onclick="changeTicketPage(${currentTicketPage + 1})"`}>
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    `;
+    controls.innerHTML = html;
+}
+
+function changeTicketPage(page) {
+    currentTicketPage = page;
+    renderTicketsTable();
 }
 
 function prevTicketPage() {
@@ -403,7 +424,10 @@ async function openTicketModal(ticketId) {
                 month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit"
             }) : '—';
         }
-        if (statusSelect) statusSelect.value = ticket.status || 'Open';
+        const counterEl = document.getElementById("modal_message_counter");
+        if (counterEl) {
+            counterEl.textContent = messages.length ? `${messages.length} ${messages.length === 1 ? 'message' : 'messages'}` : '';
+        }
 
         renderChatMessages(messages);
     } catch (err) {
@@ -425,8 +449,9 @@ function renderChatMessages(messages) {
 
     if (!messages || messages.length === 0) {
         chatBox.innerHTML = `
-            <div style="text-align: center; color: #94a3b8; padding: 24px;">
-                No messages recorded in this ticket.
+            <div class="ticket_chat_empty">
+                <i class="fas fa-comment-slash ticket_chat_empty_icon"></i>
+                <span style="font-weight: 600; font-size: 13px;">No messages recorded in this inquiry yet.</span>
             </div>
         `;
         return;

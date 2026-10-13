@@ -154,6 +154,8 @@ const getTicketMessages = async (req, res, next) => {
         ticket: {
           id: ticket.id,
           ticketNumber: ticket.ticket_number,
+          customerName: ticket.customer_name,
+          customerEmail: ticket.customer_email,
           category: ticket.category,
           subject: ticket.subject,
           status: ticket.status,
