@@ -16,6 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let customerOrders = [];
 
+    // Helper: Identify if an order originated from Point of Sale (POS)
+    function isOrderFromPOS(order) {
+        if (!order) return false;
+        const num = (order.orderNumber || order.order_number || '').toUpperCase();
+        if (num.includes('POS')) return true;
+        const notes = order.notes || '';
+        if (notes.includes('Counter Checkout') || notes.includes('Cashier:') || notes.includes('Shift:')) return true;
+        return false;
+    }
+
     // Helper: Generate status pill badge HTML
     function getStatusPill(statusRaw) {
         const status = (statusRaw || 'pending').toLowerCase();
@@ -189,6 +199,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             ` : statusPill;
 
+            const isPos = isOrderFromPOS(order);
+            const isConfirmed = !!(order.customerConfirmed || order.customer_confirmed);
+            const canConfirmReceipt = !isPos && !isConfirmed && status !== 'cancelled' && status !== 'declined' && status !== 'completed';
+
+            const confirmReceiptBtn = canConfirmReceipt ? `
+                <button type="button" class="btn_quick_confirm_receipt" data-id="${order._id || order.id}" data-num="${orderIdText}" style="cursor:pointer; background:#16a34a; border:none; color:#ffffff; font-weight:700; padding:4px 8px; border-radius:4px; font-size:11px; display:inline-flex; align-items:center; gap:3px; margin-left:6px; box-shadow:0 1px 3px rgba(22,163,74,0.25); transition:background 0.2s;" onmouseover="this.style.background='#15803d';" onmouseout="this.style.background='#16a34a';" title="Confirm that you have received this order">
+                    <i class="fas fa-check"></i> Received
+                </button>
+            ` : '';
+
             tr.setAttribute('data-status', status);
             tr.setAttribute('data-order-id', orderIdText);
             tr.setAttribute('data-date', orderDate);
@@ -202,7 +222,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${itemsSummary}">${itemsSummary}</td>
                 <td>${statusCell}</td>
                 <td><strong>₱${totalPrice}</strong></td>
-                <td><button type="button" class="btn_view_order_details action_link_btn" data-id="${order._id}" style="cursor:pointer; background:none; border:none; color:#8b1e28; font-weight:600; display:inline-flex; align-items:center; gap:5px;"><i class="fas fa-eye"></i> View Details</button></td>
+                <td>
+                    <div style="display:flex; align-items:center;">
+                        <button type="button" class="btn_view_order_details action_link_btn" data-id="${order._id || order.id}" style="cursor:pointer; background:none; border:none; color:#8b1e28; font-weight:600; display:inline-flex; align-items:center; gap:5px;"><i class="fas fa-eye"></i> View Details</button>
+                        ${confirmReceiptBtn}
+                    </div>
+                </td>
             `;
 
             table_body.appendChild(tr);
@@ -232,6 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal interactions
     if (table_body) {
         table_body.addEventListener('click', (e) => {
+            const quickConfirmBtn = e.target.closest('.btn_quick_confirm_receipt');
+            if (quickConfirmBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const oId = quickConfirmBtn.getAttribute('data-id');
+                const oNum = quickConfirmBtn.getAttribute('data-num');
+                window.confirmCustomerDelivery(oId, oNum);
+                return;
+            }
+
             const viewBtn = e.target.closest('.btn_view_order_details');
             if (!viewBtn) return;
 
@@ -308,6 +343,91 @@ document.addEventListener('DOMContentLoaded', () => {
                 const statusBadgeEl = document.getElementById('modal_order_status_badge');
                 if (statusBadgeEl) {
                     statusBadgeEl.innerHTML = getStatusPill(order.orderStatus || 'pending');
+                }
+
+                // Proof of Payment Section
+                const proofSectionEl = document.getElementById('modal_proof_section');
+                const proofRefBadgeEl = document.getElementById('modal_proof_ref_badge');
+                const proofContentEl = document.getElementById('modal_proof_content');
+                const isPos = isOrderFromPOS(order);
+
+                if (proofSectionEl) {
+                    if (isPos) {
+                        // POS orders do not need proof of payment!
+                        proofSectionEl.style.display = 'none';
+                    } else {
+                        proofSectionEl.style.display = 'block';
+                        const proofImg = order.paymentProof || order.payment_proof || '';
+                        const refNum = order.paymentReference || order.payment_reference || '';
+
+                        if (proofRefBadgeEl) {
+                            proofRefBadgeEl.textContent = refNum ? `Ref: ${refNum}` : 'Ref: Not provided';
+                        }
+
+                        if (proofContentEl) {
+                            if (proofImg) {
+                                proofContentEl.innerHTML = `
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                        <div style="cursor: pointer; position: relative;" onclick="window.openCustomerProofLightbox('${proofImg}')" title="Click to view full screenshot">
+                                            <img src="${proofImg}" alt="Proof of Payment" style="max-height: 140px; max-width: 100%; border-radius: 6px; border: 1.5px solid #cbd5e1; object-fit: contain; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                                            <span style="position: absolute; bottom: 6px; right: 6px; background: rgba(15,23,42,0.85); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10.5px; font-weight: 600;">
+                                                <i class="fas fa-search-plus"></i> View Full
+                                            </span>
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                proofContentEl.innerHTML = `
+                                    <div style="padding: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; font-size: 12px; color: #64748b;">
+                                        <i class="fas fa-info-circle"></i> No proof of payment screenshot uploaded for this order.
+                                    </div>
+                                `;
+                            }
+                        }
+                    }
+                }
+
+                // Customer Delivery Confirmation Action Banner
+                const confirmationSectionEl = document.getElementById('modal_customer_confirmation_section');
+                if (confirmationSectionEl) {
+                    const isConfirmed = !!(order.customerConfirmed || order.customer_confirmed);
+                    const confirmedAt = order.customerConfirmedAt || order.customer_confirmed_at;
+
+                    if (isPos) {
+                        // POS orders do not need customer delivery confirmation on web!
+                        confirmationSectionEl.innerHTML = '';
+                    } else if (isConfirmed) {
+                        const dateFormatted = confirmedAt ? new Date(confirmedAt).toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        }) : 'Confirmed';
+                        confirmationSectionEl.innerHTML = `
+                            <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+                                <span style="color: #15803d; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-check-double" style="font-size: 16px; color: #16a34a;"></i> You Confirmed Receipt of this Order
+                                </span>
+                                <span style="font-size: 11px; color: #166534; font-weight: 600;">${dateFormatted}</span>
+                            </div>
+                        `;
+                    } else if (status !== 'cancelled' && status !== 'declined') {
+                        confirmationSectionEl.innerHTML = `
+                            <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span style="font-size: 12.5px; font-weight: 700; color: #92400e; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fas fa-box-open" style="color: #d97706;"></i> Delivery / Order Receipt Confirmation
+                                    </span>
+                                    <span style="font-size: 11px; color: #b45309; font-weight: 600;">Action Required upon arrival</span>
+                                </div>
+                                <p style="margin: 0; font-size: 12px; color: #78350f; line-height: 1.4;">
+                                    Have you received your order in good condition? Confirming receipt marks your order as completed.
+                                </p>
+                                <button type="button" class="btn_confirm_received_action" onclick="window.confirmCustomerDelivery('${order._id || order.id}', '${orderIdText}')" style="background: #16a34a; color: #ffffff; border: none; border-radius: 6px; padding: 10px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(22,163,74,0.3); transition: background 0.2s;" onmouseover="this.style.background='#15803d';" onmouseout="this.style.background='#16a34a';">
+                                    <i class="fas fa-check-circle"></i> Confirm Order Received
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        confirmationSectionEl.innerHTML = '';
+                    }
                 }
 
                 if (details_modal) {
@@ -421,9 +541,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    async function confirmCustomerDelivery(orderId, orderNum) {
+        const token = localStorage.getItem('bicobs_token') || localStorage.getItem('token');
+        if (!token) {
+            alert('Please sign in to confirm order receipt.');
+            return;
+        }
+
+        const msg = orderNum ? `Did you receive order ${orderNum} and are you satisfied with the items?` : 'Confirm that you have received this order?';
+        if (!confirm(msg)) return;
+
+        try {
+            const res = await fetch(`/api/orders/${orderId}/confirm-receipt`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                alert('Thank you! Your order has been marked as received and completed.');
+                if (details_modal) {
+                    details_modal.classList.remove('active');
+                    details_modal.style.display = 'none';
+                }
+                await loadMyOrders();
+            } else {
+                alert(data.message || 'Could not confirm order receipt.');
+            }
+        } catch (err) {
+            console.error('Confirm receipt error:', err);
+            alert('Connection error. Please try again.');
+        }
+    }
+    window.confirmCustomerDelivery = confirmCustomerDelivery;
+
+    function openCustomerProofLightbox(imgUrl) {
+        const modal = document.getElementById('customer_proof_lightbox_modal');
+        const img = document.getElementById('customer_lightbox_img');
+        if (modal && img) {
+            img.src = imgUrl;
+            modal.style.display = 'flex';
+        }
+    }
+    window.openCustomerProofLightbox = openCustomerProofLightbox;
+
+    function closeCustomerProofLightbox() {
+        const modal = document.getElementById('customer_proof_lightbox_modal');
+        if (modal) modal.style.display = 'none';
+    }
+    window.closeCustomerProofLightbox = closeCustomerProofLightbox;
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeDeclineReasonModal();
+            closeCustomerProofLightbox();
         }
     });
 

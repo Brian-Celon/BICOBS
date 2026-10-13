@@ -7,7 +7,10 @@ const {
   getAllOrders,
   updateOrderStatus,
   verifyOrderPayment,
-  declineOrderPayment
+  declineOrderPayment,
+  uploadPaymentProof,
+  confirmCustomerDelivery,
+  cancelOrder
 } = require('../controllers/orderController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -15,6 +18,9 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 router.post('/', protect, createOrder);
 router.get('/myorders', protect, getMyOrders);
 router.get('/:id', protect, getOrderById);
+router.put('/:id/confirm-receipt', protect, confirmCustomerDelivery);
+router.put('/:id/payment-proof', protect, uploadPaymentProof);
+router.put('/:id/cancel', protect, cancelOrder);
 
 // Staff / Admin routes
 router.get('/', protect, authorize('admin', 'staff'), getAllOrders);

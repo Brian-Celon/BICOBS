@@ -71,6 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkout_payment_sender = document.getElementById('checkout_payment_sender');
     const payment_error_msg = document.getElementById('payment_error_msg');
     const pay_verification_inputs = document.getElementById('pay_verification_inputs');
+    const checkout_payment_proof = document.getElementById('checkout_payment_proof');
+    const checkout_proof_dropzone = document.getElementById('checkout_proof_dropzone');
+    const checkout_proof_preview_container = document.getElementById('checkout_proof_preview_container');
+    const checkout_proof_preview_img = document.getElementById('checkout_proof_preview_img');
+    const checkout_proof_file_name = document.getElementById('checkout_proof_file_name');
+    const checkout_proof_remove_btn = document.getElementById('checkout_proof_remove_btn');
+    const proof_upload_section = document.getElementById('proof_upload_section');
+    let uploadedProofBase64 = '';
 
     // Checkout Summary Elements
     const modal_total_items = document.getElementById('modal_total_items');
@@ -845,6 +853,102 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Proof of Payment Upload Helpers (Client-side Canvas Image Compression)
+    function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.82) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth || height > maxHeight) {
+                        if (width > height) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        } else {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                    resolve(compressedDataUrl);
+                };
+                img.onerror = (err) => reject(err);
+            };
+            reader.onerror = (err) => reject(err);
+        });
+    }
+
+    function resetProofOfPayment() {
+        uploadedProofBase64 = '';
+        const fileInput = document.getElementById('checkout_payment_proof');
+        if (fileInput) fileInput.value = '';
+        const previewContainer = document.getElementById('checkout_proof_preview_container');
+        if (previewContainer) previewContainer.style.display = 'none';
+        const dropzone = document.getElementById('checkout_proof_dropzone');
+        if (dropzone) {
+            dropzone.style.display = 'block';
+            dropzone.innerHTML = `
+                <i class="fas fa-camera" style="font-size: 20px; color: #8b1e28; margin-bottom: 4px; display: block;"></i>
+                <span style="font-size: 12.5px; font-weight: 600; color: #1e293b; display: block;">Click to Upload Screenshot / Receipt</span>
+                <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo for instant verification</span>
+            `;
+        }
+    }
+
+    function initProofOfPaymentUpload() {
+        const fileInput = document.getElementById('checkout_payment_proof');
+        const dropzone = document.getElementById('checkout_proof_dropzone');
+        const previewContainer = document.getElementById('checkout_proof_preview_container');
+        const previewImg = document.getElementById('checkout_proof_preview_img');
+        const fileNameEl = document.getElementById('checkout_proof_file_name');
+        const removeBtn = document.getElementById('checkout_proof_remove_btn');
+
+        if (!fileInput) return;
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file (PNG, JPG, or WEBP).');
+                fileInput.value = '';
+                return;
+            }
+
+            try {
+                if (dropzone) dropzone.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:20px; color:#8b1e28;"></i><span style="font-size:12px; font-weight:600; margin-top:4px; display:block;">Processing image...</span>';
+                const base64 = await compressImageFile(file);
+                uploadedProofBase64 = base64;
+
+                if (previewImg) previewImg.src = base64;
+                if (fileNameEl) fileNameEl.textContent = file.name;
+                if (previewContainer) previewContainer.style.display = 'flex';
+                if (dropzone) dropzone.style.display = 'none';
+            } catch (err) {
+                console.error('Failed to process proof of payment image:', err);
+                alert('Could not process this image. Please select a valid photo.');
+                resetProofOfPayment();
+            }
+        });
+
+        if (removeBtn) {
+            removeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                resetProofOfPayment();
+            });
+        }
+    }
+
     // Render interactive payment receiving instructions & details for selected added account
     function renderPaymentAccountDetails() {
         if (!pay_details_content) return;
@@ -918,6 +1022,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const defaultSender = currentAccount.accountName || localStorage.getItem('tb_user_name') || '';
             checkout_payment_sender.value = defaultSender;
             checkout_payment_sender.placeholder = 'Account Holder Name';
+        }
+
+        const proofSection = document.getElementById('proof_upload_section');
+        if (proofSection) {
+            proofSection.style.display = isCard ? 'none' : 'block';
         }
 
         if (isCard) {
@@ -996,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open Checkout Modal
     function openCheckoutModal() {
+        resetProofOfPayment();
         populateCheckoutPreview();
         updateCheckoutModalSummary();
 
@@ -1246,9 +1356,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                 } else {
-                    if (!paymentRef || paymentRef.length < 5) {
+                    if ((!paymentRef || paymentRef.length < 5) && !uploadedProofBase64) {
                         if (payment_error_msg) {
-                            payment_error_msg.textContent = '⚠️ Payment must be handled first for delivery orders. Please enter your valid payment reference / transaction number.';
+                            payment_error_msg.textContent = '⚠️ Payment must be handled first for delivery orders. Please enter your valid payment reference number or upload your screenshot proof of payment.';
                             payment_error_msg.style.display = 'block';
                         }
                         if (checkout_payment_ref) checkout_payment_ref.focus();
@@ -1257,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else if (fulfillmentType === 'pickup' && activeProvider !== 'cash') {
                 // If customer is doing store pickup but chose to pay upfront via e-wallet or card
-                if (!paymentRef) {
+                if (!paymentRef && !uploadedProofBase64) {
                     if (payment_error_msg) {
                         payment_error_msg.textContent = '⚠️ Please enter your payment reference / CVV code, or select "Cash on Pick-up" to pay at the counter.';
                         payment_error_msg.style.display = 'block';
@@ -1278,7 +1388,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const finalPaymentRef = (fulfillmentType === 'pickup' && activeProvider === 'cash')
                 ? 'CASH_ON_PICKUP'
-                : paymentRef;
+                : (paymentRef || (uploadedProofBase64 ? 'PROOF_UPLOADED' : ''));
 
             const paymentSummaryNote = (fulfillmentType === 'pickup' && activeProvider === 'cash')
                 ? 'Payment Method: Cash on Store Pick-up (Pay at counter upon claim)'
@@ -1302,6 +1412,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 deliveryFee: 0,
                 discount: discount,
                 paymentReference: finalPaymentRef,
+                paymentProof: uploadedProofBase64 || '',
                 notes: customerNotes ? `${customerNotes} [${paymentSummaryNote}]` : paymentSummaryNote
             };
 
@@ -1350,6 +1461,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Clean up selection state
                     orderedIds.forEach(id => selectedItemIds.delete(id));
+                    resetProofOfPayment();
                     renderCart();
 
                     if (window.BICOBS_Cart) {
@@ -1383,6 +1495,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize fulfillment and payment handlers
     setupFulfillmentAndPayment();
+    initProofOfPaymentUpload();
 
     // Initial render
     renderCart();

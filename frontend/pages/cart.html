@@ -399,13 +399,50 @@
                         <!-- Updated dynamically by cart_view.js -->
                     </div>
 
-                    <!-- Payment Verification Reference Number -->
-                    <div id="pay_verification_inputs">
-                        <label style="font-size: 12px; font-weight: 700; color: #1e293b; display: block; margin-bottom: 4px;">Payment Reference / Transaction Number</label>
-                        <input type="text" id="checkout_payment_ref" placeholder="e.g. 13-digit GCash ref or BPI confirmation" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box; margin-bottom: 6px;">
-                        <input type="text" id="checkout_payment_sender" placeholder="Sender Name or Account Name" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box;">
+                    <!-- Payment Verification Reference Number & Proof of Payment Upload -->
+                    <div id="pay_verification_inputs" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 12px; font-weight: 700; color: #0f172a; text-transform: uppercase;">
+                                <span style="color: #dc2626;">*</span> Transaction / Reference Number
+                            </label>
+                            <span style="font-size: 11px; color: #64748b;">From payment receipt</span>
+                        </div>
+                        <input type="text" id="checkout_payment_ref" placeholder="e.g. 13-digit GCash/Maya reference number" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box; margin-bottom: 2px;">
+                        <input type="text" id="checkout_payment_sender" placeholder="Sender Name or Account Name" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box; margin-bottom: 6px;">
+
+                        <!-- Customer Proof of Payment Screenshot Upload Box -->
+                        <div id="proof_upload_section" style="background: #ffffff; border: 1.5px dashed #cbd5e1; border-radius: 8px; padding: 12px; transition: border-color 0.2s;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <label style="font-size: 12px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px; margin: 0;">
+                                    <i class="fas fa-receipt" style="color: #b91c1c;"></i> Proof of Payment Screenshot
+                                </label>
+                                <span style="font-size: 10.5px; color: #64748b;">PNG, JPG up to 10MB</span>
+                            </div>
+
+                            <input type="file" id="checkout_payment_proof" accept="image/*" style="display: none;">
+
+                            <!-- Upload trigger dropzone / button -->
+                            <div id="checkout_proof_dropzone" onclick="document.getElementById('checkout_payment_proof').click();" style="border: 1px dashed #94a3b8; border-radius: 6px; padding: 12px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s ease;">
+                                <i class="fas fa-camera" style="font-size: 20px; color: #8b1e28; margin-bottom: 4px; display: block;"></i>
+                                <span style="font-size: 12.5px; font-weight: 600; color: #1e293b; display: block;">Click to Upload Screenshot / Receipt</span>
+                                <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Attach GCash/Maya confirmation photo for instant verification</span>
+                            </div>
+
+                            <!-- Preview Box (shown after file selected) -->
+                            <div id="checkout_proof_preview_container" style="display: none; margin-top: 8px; align-items: center; gap: 10px; background: #f1f5f9; border-radius: 6px; padding: 8px 10px;">
+                                <img id="checkout_proof_preview_img" src="" alt="Proof Preview" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1;">
+                                <div style="flex: 1; min-width: 0;">
+                                    <div id="checkout_proof_file_name" style="font-size: 12px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">proof.jpg</div>
+                                    <span style="font-size: 11px; color: #16a34a; font-weight: 600;"><i class="fas fa-check-circle"></i> Screenshot attached</span>
+                                </div>
+                                <button type="button" id="checkout_proof_remove_btn" style="background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+
+                        <p id="payment_error_msg" style="display: none; color: #dc2626; font-size: 12px; font-weight: 600; margin-top: 4px;"></p>
                     </div>
-                    <p id="payment_error_msg" style="display: none; color: #dc2626; font-size: 12px; font-weight: 600; margin-top: 6px;"></p>
                 </div>
 
                 <!-- Selected Items Preview -->
