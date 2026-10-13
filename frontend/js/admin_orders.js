@@ -358,6 +358,8 @@ function openOrderModal(orderId) {
     const subtotal = parseFloat(selectedOrder.subtotal || 0);
     const shipping = parseFloat(selectedOrder.shippingFee || selectedOrder.shipping_fee || 0);
     const total = parseFloat(selectedOrder.totalPrice || selectedOrder.total_amount || 0);
+    const proofImg = selectedOrder.paymentProof || selectedOrder.payment_proof || '';
+    const refNum = selectedOrder.paymentReference || selectedOrder.payment_reference || selectedOrder.referenceNumber || '';
 
     // Populate modal elements
     const rowIdInput = document.getElementById("modal_order_row_id");
@@ -395,11 +397,17 @@ function openOrderModal(orderId) {
     } else {
         if (proofSectionEl) proofSectionEl.style.display = 'block';
 
-        const proofImg = selectedOrder.paymentProof || selectedOrder.payment_proof || '';
-        const refNum = selectedOrder.paymentReference || selectedOrder.payment_reference || selectedOrder.referenceNumber || '';
-
         if (refBadgeEl) {
-            refBadgeEl.textContent = refNum ? `Ref: ${refNum}` : 'Ref: Not provided';
+            if (refNum && refNum !== 'PROOF_UPLOADED' && refNum !== 'CASH_ON_PICKUP') {
+                refBadgeEl.textContent = `Ref: ${refNum}`;
+                refBadgeEl.style.display = 'inline-block';
+            } else if (proofImg) {
+                refBadgeEl.textContent = 'Proof Attached';
+                refBadgeEl.style.display = 'inline-block';
+            } else {
+                refBadgeEl.textContent = 'Ref: Not provided';
+                refBadgeEl.style.display = 'inline-block';
+            }
         }
 
         if (proofBodyEl) {
@@ -407,7 +415,7 @@ function openOrderModal(orderId) {
                 proofBodyEl.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
                         <div style="position: relative; max-width: 100%; cursor: pointer;" onclick="openPaymentProofLightbox('${orderId}')" title="Click to view full screenshot">
-                            <img src="${proofImg}" alt="Payment Proof" style="max-height: 160px; max-width: 100%; border-radius: 6px; border: 1.5px solid #cbd5e1; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                            <img src="${proofImg}" alt="Payment Proof" style="max-height: 180px; max-width: 100%; border-radius: 6px; border: 1.5px solid #cbd5e1; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                             <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
                                 <i class="fas fa-search-plus"></i> View Full Screenshot
                             </span>
@@ -539,13 +547,14 @@ function openOrderModal(orderId) {
                 </div>
             `;
         } else {
+            const refDetail = proofImg ? 'Proof Screenshot Attached' : (refNum && refNum !== 'PROOF_UPLOADED' && refNum !== 'CASH_ON_PICKUP' ? `Ref: ${refNum}` : 'No ref');
             verifyBoxEl.innerHTML = `
                 <div class="order_verify_card is_pending">
                     <div class="order_verify_info">
                         <i class="fas fa-receipt order_verify_icon"></i>
                         <div>
                             <div class="order_verify_title">Payment Verification Required</div>
-                            <div class="order_verify_sub">Verify if customer payment of ₱${total.toLocaleString()} was received via ${paymentMethod} (${refNum ? 'Ref: ' + refNum : 'No ref'}).</div>
+                            <div class="order_verify_sub">Verify customer payment of ₱${total.toLocaleString()} received via ${paymentMethod} (${refDetail}).</div>
                         </div>
                     </div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -564,8 +573,17 @@ function openOrderModal(orderId) {
     // 6. Render Order Action Buttons (Exact Progression: Payment Confirmed > Ready for Deliver > Out for Delivery > Mark Completed)
     renderModalOrderActions(orderId, deliveryType, orderStatus, paymentStatus);
 
-    if (typeof openModal === 'function') openModal("order_detail_modal");
+    if (typeof openModal === 'function') {
+        openModal("order_detail_modal");
+    } else {
+        const modal = document.getElementById("order_detail_modal");
+        if (modal) {
+            modal.classList.add("modal_active");
+            document.body.style.overflow = "hidden";
+        }
+    }
 }
+window.openOrderModal = openOrderModal;
 
 // Render the exact workflow progression requested:
 // payment confirmed > ready for deliver > out for delivery > mark completed(this should be confirmed by the customer too)

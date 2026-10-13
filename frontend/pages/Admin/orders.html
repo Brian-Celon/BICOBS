@@ -240,7 +240,7 @@
         <div class="modal_card">
             <div class="modal_header">
                 <h3 class="modal_title" id="order_modal_title">Order Details</h3>
-                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+                <button type="button" class="modal_close_btn" onclick="closeModal('order_detail_modal')" aria-label="Close dialog">&times;</button>
             </div>
             <div class="modal_body">
                 <input type="hidden" id="modal_order_row_id">
@@ -308,7 +308,7 @@
         <div class="modal_card">
             <div class="modal_header">
                 <h3 class="modal_title">Filter Orders by Date</h3>
-                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
+                <button type="button" class="modal_close_btn" onclick="closeModal('order_date_modal')" aria-label="Close dialog">&times;</button>
             </div>
             <div class="modal_body">
                 <div class="date_presets_group">
