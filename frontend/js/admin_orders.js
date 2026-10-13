@@ -378,48 +378,55 @@ function openOrderModal(orderId) {
     const totalEl = document.getElementById("modal_order_total");
     if (totalEl) totalEl.textContent = `₱${total.toLocaleString()}`;
 
+    // Check if order is from Point of Sale (POS)
+    const isPosOrder = (orderNumber && orderNumber.toUpperCase().includes('POS'))
+      || (selectedOrder.notes && (selectedOrder.notes.includes('Counter Checkout') || selectedOrder.notes.includes('Cashier:') || selectedOrder.notes.includes('Shift:')));
+
     // 1. Render Proof of Payment Screenshot & Reference Section
+    const proofSectionEl = document.getElementById("modal_payment_proof_section");
     const proofBodyEl = document.getElementById("modal_payment_proof_body");
     const refBadgeEl = document.getElementById("modal_payment_proof_ref_badge");
-    const proofImg = selectedOrder.paymentProof || selectedOrder.payment_proof || '';
-    const refNum = selectedOrder.paymentReference || selectedOrder.payment_reference || selectedOrder.referenceNumber || '';
+    const bannerEl = document.getElementById("modal_customer_confirmation_banner");
 
-    if (refBadgeEl) {
-        refBadgeEl.textContent = refNum ? `Ref: ${refNum}` : 'Ref: Not provided';
-    }
+    if (isPosOrder) {
+        // POS orders do not need proof of payment, nor web delivery confirmation
+        if (proofSectionEl) proofSectionEl.style.display = 'none';
+        if (bannerEl) bannerEl.innerHTML = '';
+    } else {
+        if (proofSectionEl) proofSectionEl.style.display = 'block';
 
-    if (proofBodyEl) {
-        if (proofImg) {
-            proofBodyEl.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                    <div style="position: relative; max-width: 100%; cursor: pointer;" onclick="openPaymentProofLightbox('${orderId}')" title="Click to view full screenshot">
-                        <img src="${proofImg}" alt="Payment Proof" style="max-height: 160px; max-width: 100%; border-radius: 6px; border: 1.5px solid #cbd5e1; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                        <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
-                            <i class="fas fa-search-plus"></i> View Full Screenshot
-                        </span>
+        const proofImg = selectedOrder.paymentProof || selectedOrder.payment_proof || '';
+        const refNum = selectedOrder.paymentReference || selectedOrder.payment_reference || selectedOrder.referenceNumber || '';
+
+        if (refBadgeEl) {
+            refBadgeEl.textContent = refNum ? `Ref: ${refNum}` : 'Ref: Not provided';
+        }
+
+        if (proofBodyEl) {
+            if (proofImg) {
+                proofBodyEl.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div style="position: relative; max-width: 100%; cursor: pointer;" onclick="openPaymentProofLightbox('${orderId}')" title="Click to view full screenshot">
+                            <img src="${proofImg}" alt="Payment Proof" style="max-height: 160px; max-width: 100%; border-radius: 6px; border: 1.5px solid #cbd5e1; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                <i class="fas fa-search-plus"></i> View Full Screenshot
+                            </span>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap; justify-content: center;">
+                            <button type="button" class="btn_secondary" onclick="openPaymentProofLightbox('${orderId}')" style="font-size: 11.5px; padding: 5px 14px; font-weight: 600;">
+                                <i class="fas fa-eye"></i> Enlarge Screenshot
+                            </button>
+                        </div>
                     </div>
-                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap; justify-content: center;">
-                        <button type="button" class="btn_secondary" onclick="openPaymentProofLightbox('${orderId}')" style="font-size: 11.5px; padding: 5px 12px;">
-                            <i class="fas fa-eye"></i> Enlarge Screenshot
-                        </button>
-                        <label class="btn_secondary" style="font-size: 11.5px; padding: 5px 12px; cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 5px;">
-                            <i class="fas fa-upload"></i> Replace Image
-                            <input type="file" accept="image/*" style="display: none;" onchange="handleAdminProofUpload(event, '${orderId}')">
-                        </label>
+                `;
+            } else {
+                proofBodyEl.innerHTML = `
+                    <div style="padding: 16px; border: 1.5px dashed #cbd5e1; border-radius: 6px; text-align: center; background: #f8fafc;">
+                        <i class="fas fa-receipt" style="font-size: 28px; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
+                        <span style="font-size: 12.5px; color: #64748b; font-weight: 500; display: block;">No proof of payment screenshot uploaded yet by customer</span>
                     </div>
-                </div>
-            `;
-        } else {
-            proofBodyEl.innerHTML = `
-                <div style="padding: 16px; border: 1.5px dashed #cbd5e1; border-radius: 6px; text-align: center; background: #f8fafc;">
-                    <i class="fas fa-receipt" style="font-size: 28px; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
-                    <span style="font-size: 12.5px; color: #64748b; display: block; margin-bottom: 8px;">No proof of payment screenshot uploaded yet</span>
-                    <label class="btn_primary" style="font-size: 12px; padding: 6px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; background: #b91c1c; border-color: #b91c1c; margin: 0;">
-                        <i class="fas fa-file-upload"></i> Upload Proof of Payment Screenshot
-                        <input type="file" accept="image/*" style="display: none;" onchange="handleAdminProofUpload(event, '${orderId}')">
-                    </label>
-                </div>
-            `;
+                `;
+            }
         }
     }
 
@@ -469,9 +476,8 @@ function openOrderModal(orderId) {
         }
     }
 
-    // 3. Render Customer Confirmation Status Banner
-    const bannerEl = document.getElementById("modal_customer_confirmation_banner");
-    if (bannerEl) {
+    // 3. Render Customer Confirmation Status Banner (Only for non-POS web orders)
+    if (bannerEl && !isPosOrder) {
         const isCustomerConfirmed = !!(selectedOrder.customerConfirmed || selectedOrder.customer_confirmed);
         const confirmedAt = selectedOrder.customerConfirmedAt || selectedOrder.customer_confirmed_at;
 
