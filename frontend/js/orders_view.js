@@ -26,20 +26,37 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     }
 
+    function isOrderOutForDelivery(order) {
+        if (!order) return false;
+        const status = (order.orderStatus || order.order_status || '').toLowerCase();
+        const deliveryType = (order.deliveryType || order.delivery_type || 'delivery').toLowerCase();
+        if (deliveryType === 'pickup') {
+            return status === 'ready_for_pickup' || status === 'out_for_delivery' || status === 'shipped';
+        }
+        return status === 'out_for_delivery' || status === 'shipped';
+    }
+
     // Helper: Generate status pill badge HTML
     function getStatusPill(statusRaw) {
         const status = (statusRaw || 'pending').toLowerCase();
         if (status === 'completed' || status === 'delivered') {
             return `<span class="status_pill status_delivered" style="background:#e6f9ed; color:#137333;"><i class="fas fa-check-circle" style="font-size:10px;"></i> Completed</span>`;
-        } else if (status === 'shipped' || status === 'ready_for_pickup') {
-            const label = status === 'shipped' ? 'Out for Delivery' : 'Ready for Store Pickup';
-            return `<span class="status_pill status_shipped" style="background:#ebf3ff; color:#1a73e8;"><i class="fas fa-truck" style="font-size:10px;"></i> ${label}</span>`;
+        } else if (status === 'out_for_delivery' || status === 'shipped') {
+            return `<span class="status_pill status_shipped" style="background:#ebf3ff; color:#1a73e8; font-weight:700;"><i class="fas fa-truck" style="font-size:10px;"></i> Out for Delivery</span>`;
+        } else if (status === 'ready_for_pickup') {
+            return `<span class="status_pill" style="background:#ede9fe; color:#7c3aed; font-weight:600;"><i class="fas fa-store" style="font-size:10px;"></i> Ready for Pickup</span>`;
+        } else if (status === 'ready_for_deliver' || status === 'ready_for_delivery') {
+            return `<span class="status_pill" style="background:#e0f2fe; color:#0284c7; font-weight:600;"><i class="fas fa-box" style="font-size:10px;"></i> Ready for Delivery</span>`;
+        } else if (status === 'payment_confirmed') {
+            return `<span class="status_pill" style="background:#dcfce7; color:#15803d; font-weight:700;"><i class="fas fa-check-circle" style="font-size:10px;"></i> Payment Confirmed</span>`;
         } else if (status === 'cancelled') {
             return `<span class="status_pill" style="background:#fee2e2; color:#dc2626;"><i class="fas fa-times-circle" style="font-size:10px;"></i> Cancelled</span>`;
         } else if (status === 'declined') {
             return `<span class="status_pill" style="background:#fee2e2; color:#dc2626; font-weight:700;"><i class="fas fa-times-circle" style="font-size:10px;"></i> Declined</span>`;
         } else if (status === 'processing') {
             return `<span class="status_pill status_processing" style="background:#fef7e6; color:#b87b00;"><i class="fas fa-cogs" style="font-size:10px;"></i> Processing</span>`;
+        } else if (status === 'payment_confirmation') {
+            return `<span class="status_pill" style="background:#fef3c7; color:#b45309; font-weight:600;"><i class="fas fa-receipt" style="font-size:10px;"></i> Payment Confirmation</span>`;
         } else {
             return `<span class="status_pill" style="background:#f1f5f9; color:#475569;"><i class="fas fa-clock" style="font-size:10px;"></i> Placed (Pending)</span>`;
         }
@@ -201,7 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const isPos = isOrderFromPOS(order);
             const isConfirmed = !!(order.customerConfirmed || order.customer_confirmed);
-            const canConfirmReceipt = !isPos && !isConfirmed && status !== 'cancelled' && status !== 'declined' && status !== 'completed';
+            const isOutForDelivery = isOrderOutForDelivery(order);
+            const canConfirmReceipt = !isPos && !isConfirmed && isOutForDelivery && status !== 'cancelled' && status !== 'declined' && status !== 'completed' && status !== 'delivered';
 
             const confirmReceiptBtn = canConfirmReceipt ? `
                 <button type="button" class="btn_quick_confirm_receipt" data-id="${order._id || order.id}" data-num="${orderIdText}" style="cursor:pointer; background:#16a34a; border:none; color:#ffffff; font-weight:700; padding:4px 8px; border-radius:4px; font-size:11px; display:inline-flex; align-items:center; gap:3px; margin-left:6px; box-shadow:0 1px 3px rgba(22,163,74,0.25); transition:background 0.2s;" onmouseover="this.style.background='#15803d';" onmouseout="this.style.background='#16a34a';" title="Confirm that you have received this order">
@@ -414,23 +432,43 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span style="font-size: 11px; color: #166534; font-weight: 600;">${dateFormatted}</span>
                             </div>
                         `;
-                    } else if (status !== 'cancelled' && status !== 'declined') {
-                        confirmationSectionEl.innerHTML = `
-                            <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
-                                <div style="display: flex; align-items: center; justify-content: space-between;">
-                                    <span style="font-size: 12.5px; font-weight: 700; color: #92400e; display: flex; align-items: center; gap: 6px;">
-                                        <i class="fas fa-box-open" style="color: #d97706;"></i> Delivery / Order Receipt Confirmation
-                                    </span>
-                                    <span style="font-size: 11px; color: #b45309; font-weight: 600;">Action Required upon arrival</span>
+                    } else if (status !== 'cancelled' && status !== 'declined' && status !== 'completed') {
+                        const isOutForDelivery = isOrderOutForDelivery(order);
+                        if (isOutForDelivery) {
+                            confirmationSectionEl.innerHTML = `
+                                <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span style="font-size: 12.5px; font-weight: 700; color: #92400e; display: flex; align-items: center; gap: 6px;">
+                                            <i class="fas fa-box-open" style="color: #d97706;"></i> Delivery / Order Receipt Confirmation
+                                        </span>
+                                        <span style="font-size: 11px; color: #b45309; font-weight: 600; background: #fef3c7; padding: 2px 8px; border-radius: 4px;">Out for Delivery</span>
+                                    </div>
+                                    <p style="margin: 0; font-size: 12px; color: #78350f; line-height: 1.4;">
+                                        Your order is on the way! Once you receive your items in good condition, confirm receipt below to complete your order.
+                                    </p>
+                                    <button type="button" class="btn_confirm_received_action" onclick="window.confirmCustomerDelivery('${order._id || order.id}', '${orderIdText}')" style="background: #16a34a; color: #ffffff; border: none; border-radius: 6px; padding: 10px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(22,163,74,0.3); transition: background 0.2s;" onmouseover="this.style.background='#15803d';" onmouseout="this.style.background='#16a34a';">
+                                        <i class="fas fa-check-circle"></i> Confirm Order Received
+                                    </button>
                                 </div>
-                                <p style="margin: 0; font-size: 12px; color: #78350f; line-height: 1.4;">
-                                    Have you received your order in good condition? Confirming receipt marks your order as completed.
-                                </p>
-                                <button type="button" class="btn_confirm_received_action" onclick="window.confirmCustomerDelivery('${order._id || order.id}', '${orderIdText}')" style="background: #16a34a; color: #ffffff; border: none; border-radius: 6px; padding: 10px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(22,163,74,0.3); transition: background 0.2s;" onmouseover="this.style.background='#15803d';" onmouseout="this.style.background='#16a34a';">
-                                    <i class="fas fa-check-circle"></i> Confirm Order Received
-                                </button>
-                            </div>
-                        `;
+                            `;
+                        } else {
+                            confirmationSectionEl.innerHTML = `
+                                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span style="font-size: 12.5px; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 6px;">
+                                            <i class="fas fa-truck-loading" style="color: #64748b;"></i> Order Receipt Confirmation
+                                        </span>
+                                        <span style="font-size: 11px; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">Preparing Order</span>
+                                    </div>
+                                    <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">
+                                        Receipt confirmation will unlock once your package is dispatched and marked <strong>Out for Delivery</strong>.
+                                    </p>
+                                    <button type="button" disabled style="background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; border-radius: 6px; padding: 9px 14px; font-size: 12.5px; font-weight: 600; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <i class="fas fa-lock"></i> Confirm Order Received (Locked until Out for Delivery)
+                                    </button>
+                                </div>
+                            `;
+                        }
                     } else {
                         confirmationSectionEl.innerHTML = '';
                     }
@@ -548,6 +586,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function confirmCustomerDelivery(orderId, orderNum) {
+        const order = customerOrders.find(o => String(o._id || o.id) === String(orderId));
+        if (order && !isOrderOutForDelivery(order)) {
+            alert('⚠️ You cannot confirm receipt of this order yet because it is not yet out for delivery.');
+            return;
+        }
+
         const token = localStorage.getItem('bicobs_token') || localStorage.getItem('token');
         if (!token) {
             alert('Please sign in to confirm order receipt.');

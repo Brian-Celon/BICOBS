@@ -672,10 +672,22 @@ const confirmCustomerDelivery = async (req, res, next) => {
 
     const order = existing.rows[0];
 
-    // Customer can only confirm their own order
-    if (req.user && req.user.role === 'customer' && order.user_id !== req.user.id) {
-      await client.query('ROLLBACK');
-      return res.status(403).json({ status: 'error', message: 'Not authorized to confirm this order' });
+    // Customer can only confirm their own order and only when it is out for delivery or ready for pickup
+    if (req.user && req.user.role === 'customer') {
+      if (order.user_id !== req.user.id) {
+        await client.query('ROLLBACK');
+        return res.status(403).json({ status: 'error', message: 'Not authorized to confirm this order' });
+      }
+
+      const allowedStatuses = ['out_for_delivery', 'shipped', 'ready_for_pickup', 'delivered', 'completed'];
+      const currentStatus = (order.order_status || '').toLowerCase();
+      if (!allowedStatuses.includes(currentStatus)) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({
+          status: 'error',
+          message: 'Order cannot be confirmed as received yet because it is not yet out for delivery.'
+        });
+      }
     }
 
     const updateSql = `
