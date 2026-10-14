@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { connectDB } = require('./config/db');
 const { runHealthChecks, printHealthReport } = require('./utils/systemHealth');
 
@@ -24,9 +25,17 @@ const frontendPath = path.join(__dirname, '../frontend');
 app.use('/frontend', express.static(frontendPath, { dotfiles: 'allow' }));
 app.use(express.static(frontendPath, { dotfiles: 'allow' }));
 
-// Root redirect to landing page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'pages/index.html'), { dotfiles: 'allow' });
+// Root and index redirects
+app.get(['/', '/index', '/index.html'], (req, res) => {
+  const adminDashboard = path.join(frontendPath, 'pages/Admin/dashboard.html');
+  const indexPage = path.join(frontendPath, 'pages/index.html');
+  if (fs.existsSync(adminDashboard)) {
+    return res.sendFile(adminDashboard, { dotfiles: 'allow' });
+  }
+  if (fs.existsSync(indexPage)) {
+    return res.sendFile(indexPage, { dotfiles: 'allow' });
+  }
+  return res.redirect('/frontend/pages/Admin/dashboard.html');
 });
 
 // 5. Health Check Route

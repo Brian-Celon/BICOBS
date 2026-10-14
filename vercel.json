@@ -15,6 +15,10 @@
       "destination": "/frontend/pages/Admin/dashboard.html"
     },
     {
+      "source": "/index.html",
+      "destination": "/frontend/pages/Admin/dashboard.html"
+    },
+    {
       "source": "/dashboard",
       "destination": "/frontend/pages/Admin/dashboard.html"
     },

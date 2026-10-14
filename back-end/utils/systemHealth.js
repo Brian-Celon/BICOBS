@@ -105,11 +105,12 @@ async function checkEmail() {
 async function checkFrontend() {
   const frontendPath = path.join(__dirname, '../../frontend');
   const indexFile = path.join(frontendPath, 'pages/index.html');
+  const adminFile = path.join(frontendPath, 'pages/Admin/dashboard.html');
   if (!fs.existsSync(frontendPath)) {
     return { status: 'error', message: 'frontend/ folder not found next to back-end/' };
   }
-  if (!fs.existsSync(indexFile)) {
-    return { status: 'error', message: 'frontend/pages/index.html is missing' };
+  if (!fs.existsSync(indexFile) && !fs.existsSync(adminFile)) {
+    return { status: 'error', message: 'Frontend pages not found' };
   }
   return { status: 'ok', message: 'Frontend files found' };
 }
