@@ -295,8 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let badgeHTML = '';
             if (isOutOfStock) {
                 badgeHTML = '<span class="card_tag_badge badge_sale">Out of Stock</span>';
-            } else if (prodStock <= 3 && prodStock > 0) {
-                badgeHTML = `<span class="card_tag_badge badge_new">Low Stock (${prodStock})</span>`;
             } else if (item.isFeatured || item.is_featured) {
                 badgeHTML = '<span class="card_tag_badge badge_bestseller">FEATURED</span>';
             }
@@ -390,25 +388,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pdp_product_desc) pdp_product_desc.textContent = prodDesc;
         if (pdp_spec_category) pdp_spec_category.textContent = prodCategory;
 
-        // Stock status: STRICTLY NO STOCK COUNT NUMBER!
+        // Stock status: Do not show In Stock; only show badge if Out of Stock
         const isInStock = prodStock > 0;
         if (pdp_stock_badge) {
             if (isInStock) {
-                pdp_stock_badge.className = 'pdp_stock_badge in_stock';
-                pdp_stock_badge.innerHTML = '<i class="fas fa-check-circle"></i> In Stock';
+                pdp_stock_badge.style.display = 'none';
             } else {
+                pdp_stock_badge.style.display = 'inline-flex';
                 pdp_stock_badge.className = 'pdp_stock_badge out_of_stock';
                 pdp_stock_badge.innerHTML = '<i class="fas fa-times-circle"></i> Out of Stock';
-            }
-        }
-
-        if (pdp_spec_availability) {
-            if (isInStock) {
-                pdp_spec_availability.style.color = '#16a34a';
-                pdp_spec_availability.textContent = 'In Stock';
-            } else {
-                pdp_spec_availability.style.color = '#dc2626';
-                pdp_spec_availability.textContent = 'Out of Stock';
             }
         }
 
