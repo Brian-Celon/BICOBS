@@ -337,164 +337,254 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // Product Focused Mode Controller
     // =========================================================================
-    const focus_modal = document.getElementById('product_focus_modal');
-    const focus_card = document.getElementById('product_focus_card');
-    const focus_close_btn = document.getElementById('focus_close_btn');
-    const focus_product_img = document.getElementById('focus_product_img');
-    const focus_product_title = document.getElementById('focus_product_title');
-    const focus_product_sku = document.getElementById('focus_product_sku');
-    const focus_stock_badge = document.getElementById('focus_stock_badge');
-    const focus_product_price = document.getElementById('focus_product_price');
-    const focus_product_desc = document.getElementById('focus_product_desc');
-    const focus_spec_category = document.getElementById('focus_spec_category');
-    const focus_spec_stock = document.getElementById('focus_spec_stock');
-    const focus_category_crumb = document.getElementById('focus_category_crumb');
-    const focus_back_link = document.getElementById('focus_back_link');
-    const focus_qty_minus = document.getElementById('focus_qty_minus');
-    const focus_qty_plus = document.getElementById('focus_qty_plus');
-    const focus_qty_input = document.getElementById('focus_qty_input');
-    const focus_btn_add_cart = document.getElementById('focus_btn_add_cart');
+    // Dedicated Product Detail Page Controller (Bike Shop PDP)
+    // =========================================================================
+    const catalog_view_container = document.getElementById('catalog_view_container');
+    const product_detail_section = document.getElementById('product_detail_section');
+    const btn_back_to_catalog = document.getElementById('btn_back_to_catalog');
+    const pdp_crumb_shop = document.getElementById('pdp_crumb_shop');
+    const pdp_crumb_category = document.getElementById('pdp_crumb_category');
+    const pdp_crumb_title = document.getElementById('pdp_crumb_title');
+    const pdp_badge_category = document.getElementById('pdp_badge_category');
+    const pdp_stock_badge = document.getElementById('pdp_stock_badge');
+    const pdp_product_img = document.getElementById('pdp_product_img');
+    const pdp_eyebrow_category = document.getElementById('pdp_eyebrow_category');
+    const pdp_product_title = document.getElementById('pdp_product_title');
+    const pdp_product_price = document.getElementById('pdp_product_price');
+    const pdp_product_desc = document.getElementById('pdp_product_desc');
+    const pdp_spec_category = document.getElementById('pdp_spec_category');
+    const pdp_spec_availability = document.getElementById('pdp_spec_availability');
+    const pdp_qty_minus = document.getElementById('pdp_qty_minus');
+    const pdp_qty_plus = document.getElementById('pdp_qty_plus');
+    const pdp_qty_input = document.getElementById('pdp_qty_input');
+    const btn_pdp_add_cart = document.getElementById('btn_pdp_add_cart');
+    const pdp_related_grid = document.getElementById('pdp_related_grid');
 
-    let current_focused_product = null;
+    let current_detail_product = null;
 
-    function openProductFocusMode(product) {
-        if (!product || !focus_modal) return;
-        current_focused_product = product;
+    function showProductDetailPage(product, pushHistory = true) {
+        if (!product || !product_detail_section) return;
+        current_detail_product = product;
 
         const prodName = product.name || 'Bicycle Component';
         const prodPrice = parseFloat(product.price) || 0;
-        const prodCategory = (product.category || 'general').replace(/_/g, ' ');
+        const prodCategory = (product.category || 'General').replace(/_/g, ' ');
         const prodStock = typeof product.stockQuantity === 'number' ? product.stockQuantity : (typeof product.stock_quantity === 'number' ? product.stock_quantity : 10);
         const prodImg = product.imageUrl || product.image_url || '/frontend/Pictures/placeholder.png';
-        const prodSku = product.sku || `TB-${String(product._id || product.id || '001').padStart(4, '0')}`;
         const prodDesc = product.description && product.description.trim().length > 0 
             ? product.description 
             : `High-performance ${prodCategory} manufactured for durability, precision control, and rider comfort. Available for immediate pickup or delivery with Taurus Bike Shop Marilao quality guarantee and free service tuning.`;
 
-        if (focus_product_img) {
-            focus_product_img.src = prodImg;
-            focus_product_img.alt = prodName;
+        // Update visual showcase
+        if (pdp_product_img) {
+            pdp_product_img.src = prodImg;
+            pdp_product_img.alt = prodName;
         }
-        if (focus_product_title) focus_product_title.textContent = prodName;
-        if (focus_product_sku) focus_product_sku.textContent = `SKU: ${prodSku}`;
-        if (focus_category_crumb) focus_category_crumb.textContent = prodCategory.toUpperCase();
-        if (focus_spec_category) focus_spec_category.textContent = prodCategory;
-        if (focus_product_desc) focus_product_desc.textContent = prodDesc;
-        if (focus_product_price) focus_product_price.textContent = `₱${prodPrice.toLocaleString()}`;
+        if (pdp_badge_category) pdp_badge_category.textContent = prodCategory;
+        if (pdp_crumb_category) pdp_crumb_category.textContent = prodCategory;
+        if (pdp_crumb_title) pdp_crumb_title.textContent = prodName;
+        if (pdp_eyebrow_category) pdp_eyebrow_category.textContent = `TAURUS BIKE SHOP • ${prodCategory.toUpperCase()}`;
+        if (pdp_product_title) pdp_product_title.textContent = prodName;
+        if (pdp_product_price) pdp_product_price.textContent = `₱${prodPrice.toLocaleString()}`;
+        if (pdp_product_desc) pdp_product_desc.textContent = prodDesc;
+        if (pdp_spec_category) pdp_spec_category.textContent = prodCategory;
 
-        if (focus_stock_badge && focus_spec_stock) {
-            if (prodStock <= 0) {
-                focus_stock_badge.className = 'focus_stock_badge out_of_stock';
-                focus_stock_badge.innerHTML = '<i class="fas fa-times-circle"></i> Out of Stock';
-                focus_spec_stock.textContent = 'Out of Stock';
-                if (focus_btn_add_cart) {
-                    focus_btn_add_cart.disabled = true;
-                    focus_btn_add_cart.innerHTML = '<span>Out of Stock</span>';
-                }
-            } else if (prodStock <= 3) {
-                focus_stock_badge.className = 'focus_stock_badge low_stock';
-                focus_stock_badge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Low Stock (Only ${prodStock} left!)`;
-                focus_spec_stock.textContent = `${prodStock} units left`;
-                if (focus_btn_add_cart) {
-                    focus_btn_add_cart.disabled = false;
-                    focus_btn_add_cart.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Add to Cart</span>';
-                }
+        // Stock status: STRICTLY NO STOCK COUNT NUMBER!
+        const isInStock = prodStock > 0;
+        if (pdp_stock_badge) {
+            if (isInStock) {
+                pdp_stock_badge.className = 'pdp_stock_badge in_stock';
+                pdp_stock_badge.innerHTML = '<i class="fas fa-check-circle"></i> In Stock';
             } else {
-                focus_stock_badge.className = 'focus_stock_badge in_stock';
-                focus_stock_badge.innerHTML = `<i class="fas fa-check-circle"></i> In Stock (${prodStock} units)`;
-                focus_spec_stock.textContent = `${prodStock} Available`;
-                if (focus_btn_add_cart) {
-                    focus_btn_add_cart.disabled = false;
-                    focus_btn_add_cart.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Add to Cart</span>';
-                }
+                pdp_stock_badge.className = 'pdp_stock_badge out_of_stock';
+                pdp_stock_badge.innerHTML = '<i class="fas fa-times-circle"></i> Out of Stock';
             }
         }
 
-        if (focus_qty_input) {
-            focus_qty_input.value = 1;
-            focus_qty_input.max = Math.max(1, prodStock);
+        if (pdp_spec_availability) {
+            if (isInStock) {
+                pdp_spec_availability.style.color = '#16a34a';
+                pdp_spec_availability.textContent = 'In Stock';
+            } else {
+                pdp_spec_availability.style.color = '#dc2626';
+                pdp_spec_availability.textContent = 'Out of Stock';
+            }
         }
 
-        focus_modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => {
-            focus_modal.classList.add('active');
-        }, 10);
+        // Quantity reset
+        if (pdp_qty_input) {
+            pdp_qty_input.value = 1;
+            pdp_qty_input.max = Math.max(1, prodStock);
+        }
+
+        // Button state
+        if (btn_pdp_add_cart) {
+            if (isInStock) {
+                btn_pdp_add_cart.disabled = false;
+                btn_pdp_add_cart.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Add to Cart</span>
+                `;
+            } else {
+                btn_pdp_add_cart.disabled = true;
+                btn_pdp_add_cart.innerHTML = '<span>Out of Stock</span>';
+            }
+        }
+
+        // Populate Related Products
+        renderRelatedProducts(product);
+
+        // Switch Sections: Hide Catalog, Show Product Detail Section
+        if (catalog_view_container) catalog_view_container.style.display = 'none';
+        product_detail_section.style.display = 'block';
+
+        // Smooth scroll to top of product section
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Update Browser URL
+        if (pushHistory) {
+            const prodId = product._id || product.id || encodeURIComponent(prodName);
+            const newUrl = `${window.location.pathname}?product=${encodeURIComponent(prodId)}`;
+            history.pushState({ productId: prodId }, '', newUrl);
+        }
     }
 
-    function closeProductFocusMode() {
-        if (!focus_modal) return;
-        focus_modal.classList.remove('active');
-        setTimeout(() => {
-            focus_modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }, 220);
+    function showCatalogView(pushHistory = true) {
+        if (product_detail_section) product_detail_section.style.display = 'none';
+        if (catalog_view_container) catalog_view_container.style.display = 'block';
+        current_detail_product = null;
+
+        if (pushHistory) {
+            history.pushState(null, '', window.location.pathname);
+        }
     }
 
-    if (focus_close_btn) focus_close_btn.addEventListener('click', closeProductFocusMode);
-    if (focus_back_link) {
-        focus_back_link.addEventListener('click', (e) => {
+    function renderRelatedProducts(currentProd) {
+        if (!pdp_related_grid) return;
+        pdp_related_grid.innerHTML = '';
+
+        const currentCat = (currentProd.category || '').toLowerCase();
+        const currentId = String(currentProd._id || currentProd.id || '');
+
+        // Find products in same category or other products, excluding current
+        let related = all_products.filter(p => {
+            const pId = String(p._id || p.id || '');
+            if (pId && pId === currentId) return false;
+            if (p.name && p.name === currentProd.name) return false;
+            return (p.category || '').toLowerCase() === currentCat;
+        });
+
+        // Fallback to other products if fewer than 4
+        if (related.length < 4) {
+            const others = all_products.filter(p => {
+                const pId = String(p._id || p.id || '');
+                if (pId && pId === currentId) return false;
+                return !related.includes(p);
+            });
+            related = related.concat(others);
+        }
+
+        const itemsToShow = related.slice(0, 4);
+        itemsToShow.forEach(relProd => {
+            const card = document.createElement('div');
+            card.className = 'pdp_related_card';
+            const price = parseFloat(relProd.price) || 0;
+            const img = relProd.imageUrl || relProd.image_url || '/frontend/Pictures/placeholder.png';
+            const cat = (relProd.category || 'Component').replace(/_/g, ' ');
+
+            card.innerHTML = `
+                <div>
+                    <div class="pdp_related_img_box">
+                        <img src="${img}" alt="${relProd.name || 'Product'}" loading="lazy">
+                    </div>
+                    <div class="pdp_related_cat">${cat}</div>
+                    <div class="pdp_related_name">${relProd.name || 'Bike Component'}</div>
+                </div>
+                <div class="pdp_related_bottom">
+                    <span class="pdp_related_price">₱${price.toLocaleString()}</span>
+                    <button type="button" class="pdp_related_btn">View Details</button>
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                showProductDetailPage(relProd);
+            });
+
+            pdp_related_grid.appendChild(card);
+        });
+    }
+
+    // Back button listeners
+    if (btn_back_to_catalog) {
+        btn_back_to_catalog.addEventListener('click', (e) => {
             e.preventDefault();
-            closeProductFocusMode();
+            showCatalogView();
+        });
+    }
+    if (pdp_crumb_shop) {
+        pdp_crumb_shop.addEventListener('click', (e) => {
+            e.preventDefault();
+            showCatalogView();
         });
     }
 
-    if (focus_modal) {
-        focus_modal.addEventListener('click', (e) => {
-            if (e.target === focus_modal) {
-                closeProductFocusMode();
+    // Browser back/forward button support (popstate)
+    window.addEventListener('popstate', (e) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const prodParam = urlParams.get('product') || urlParams.get('id');
+        if (prodParam) {
+            const match = all_products.find(p => String(p._id || p.id) === String(prodParam) || (p.name && p.name.toLowerCase() === decodeURIComponent(prodParam).toLowerCase()));
+            if (match) {
+                showProductDetailPage(match, false);
+                return;
             }
-        });
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && focus_modal && focus_modal.classList.contains('active')) {
-            closeProductFocusMode();
         }
+        showCatalogView(false);
     });
 
-    // Quantity stepper in focused mode
-    if (focus_qty_minus && focus_qty_input) {
-        focus_qty_minus.addEventListener('click', () => {
-            let val = parseInt(focus_qty_input.value, 10) || 1;
+    // Quantity stepper in product detail page
+    if (pdp_qty_minus && pdp_qty_input) {
+        pdp_qty_minus.addEventListener('click', () => {
+            let val = parseInt(pdp_qty_input.value, 10) || 1;
             if (val > 1) {
-                focus_qty_input.value = val - 1;
+                pdp_qty_input.value = val - 1;
             }
         });
     }
-    if (focus_qty_plus && focus_qty_input) {
-        focus_qty_plus.addEventListener('click', () => {
-            let val = parseInt(focus_qty_input.value, 10) || 1;
-            const maxVal = parseInt(focus_qty_input.max, 10) || 99;
+    if (pdp_qty_plus && pdp_qty_input) {
+        pdp_qty_plus.addEventListener('click', () => {
+            let val = parseInt(pdp_qty_input.value, 10) || 1;
+            const maxVal = parseInt(pdp_qty_input.max, 10) || 99;
             if (val < maxVal) {
-                focus_qty_input.value = val + 1;
+                pdp_qty_input.value = val + 1;
             }
         });
     }
 
-    // Add to cart from focus mode
-    if (focus_btn_add_cart) {
-        focus_btn_add_cart.addEventListener('click', () => {
-            if (!current_focused_product) return;
-            const qty = parseInt(focus_qty_input ? focus_qty_input.value : 1, 10) || 1;
+    // Add to cart from PDP section
+    if (btn_pdp_add_cart) {
+        btn_pdp_add_cart.addEventListener('click', () => {
+            if (!current_detail_product) return;
+            const qty = parseInt(pdp_qty_input ? pdp_qty_input.value : 1, 10) || 1;
             if (window.BICOBS_Cart) {
-                const added = window.BICOBS_Cart.addToCart(current_focused_product, qty);
+                const added = window.BICOBS_Cart.addToCart(current_detail_product, qty);
                 if (added) {
-                    const origHtml = focus_btn_add_cart.innerHTML;
-                    focus_btn_add_cart.innerHTML = '<span style="font-weight: 700;">✓ Added to Cart!</span>';
-                    focus_btn_add_cart.style.backgroundColor = '#16a34a';
+                    const origHtml = btn_pdp_add_cart.innerHTML;
+                    btn_pdp_add_cart.innerHTML = '<span style="font-weight: 700;">✓ Added to Cart!</span>';
+                    btn_pdp_add_cart.style.backgroundColor = '#16a34a';
                     setTimeout(() => {
-                        focus_btn_add_cart.innerHTML = origHtml;
-                        focus_btn_add_cart.style.backgroundColor = '';
+                        btn_pdp_add_cart.innerHTML = origHtml;
+                        btn_pdp_add_cart.style.backgroundColor = '';
                     }, 1400);
                 }
             }
         });
     }
 
-    // Delegated click handler on products_grid for card focus mode and direct add to cart
+    // Delegated click handler on products_grid for card PDP section and direct add to cart
     if (products_grid) {
         products_grid.addEventListener('click', (e) => {
             const addBtn = e.target.closest('.btn_card_add_cart');
@@ -526,13 +616,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Clicked on the product card itself -> Enter Focused Mode
+            // Clicked on the product card itself -> Enter Dedicated Product Detail Page
             const card = e.target.closest('.product_card_item');
             if (card) {
                 const productId = card.getAttribute('data-id');
                 const product = all_products.find(p => String(p._id || p.id) === String(productId));
                 if (product) {
-                    openProductFocusMode(product);
+                    showProductDetailPage(product);
                 }
             }
         });
@@ -923,13 +1013,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prodParam) {
             const match = all_products.find(p => String(p._id || p.id) === String(prodParam) || (p.name && p.name.toLowerCase() === decodeURIComponent(prodParam).toLowerCase()));
             if (match) {
-                setTimeout(() => openProductFocusMode(match), 120);
+                setTimeout(() => showProductDetailPage(match, false), 120);
             }
         } else if (window.location.hash && window.location.hash.startsWith('#product-')) {
             const hashId = window.location.hash.replace('#product-', '');
             const match = all_products.find(p => String(p._id || p.id) === String(hashId));
             if (match) {
-                setTimeout(() => openProductFocusMode(match), 120);
+                setTimeout(() => showProductDetailPage(match, false), 120);
             }
         }
     }

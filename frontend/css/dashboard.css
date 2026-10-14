@@ -3229,3 +3229,50 @@ body {
     border-color: #e2e8f0;
 }
 
+/* Transaction History Filter Header */
+.transaction_history_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-top: 4px;
+}
+.transaction_history_header .transaction_history_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+.transaction_filter_group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.transaction_filter_label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.transaction_filter_select {
+    padding: 7px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+    background-color: #ffffff;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.15s ease;
+}
+.transaction_filter_select:focus {
+    border-color: #8b1e28;
+    box-shadow: 0 0 0 2px rgba(139, 30, 40, 0.12);
+}
+
+

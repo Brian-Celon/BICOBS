@@ -209,7 +209,21 @@
 
             <!-- transaction history table section -->
             <section>
-                <h3 class="transaction_history_title">Transaction History</h3>
+                <div class="transaction_history_header">
+                    <h3 class="transaction_history_title">Transaction History</h3>
+                    <div class="transaction_filter_group">
+                        <label for="transaction_date_filter" class="transaction_filter_label">
+                            <i class="fas fa-calendar-alt"></i> Filter:
+                        </label>
+                        <select class="filter_select transaction_filter_select" id="transaction_date_filter" aria-label="Filter transactions by date">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="last_week">Last Week</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="last_year">This Year</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="table_container">
                     <table class="orders_table">
                         <thead>

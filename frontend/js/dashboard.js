@@ -228,13 +228,14 @@ async function load_user_orders_from_backend() {
     }
 }
 
-/* Fetch customer billing transactions from backend API for payments.html (Paginated: 5 per page) */
+/* Fetch customer billing transactions from backend API for payments.html (Paginated: 5 per page with Date Filtering) */
 async function load_user_payments_from_backend() {
     const tableBody = document.getElementById('payment_transactions_body');
     const noPayments = document.getElementById('no_payments_found');
     const paginationContainer = document.getElementById('payments_pagination_container');
     const paginationInfo = document.getElementById('payments_pagination_info');
     const paginationControls = document.getElementById('payments_pagination_controls');
+    const dateFilter = document.getElementById('transaction_date_filter');
     if (!tableBody) return;
 
     const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
@@ -252,30 +253,83 @@ async function load_user_payments_from_backend() {
 
         const result = await response.json();
         if (result.status === 'success' && Array.isArray(result.data)) {
-            const billings = result.data;
+            const rawBillings = result.data;
 
-            if (billings.length > 0) {
+            // Sort newest first
+            rawBillings.sort((a, b) => new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at));
+
+            function filterByPeriod(items, period) {
+                if (!period || period === 'all') return items;
+                const now = new Date();
+                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+                return items.filter(item => {
+                    const itemDate = new Date(item.createdAt || item.created_at);
+                    if (isNaN(itemDate.getTime())) return true;
+                    const itemTime = itemDate.getTime();
+
+                    if (period === 'today') {
+                        return itemTime >= todayStart;
+                    } else if (period === 'last_week') {
+                        const weekAgo = now.getTime() - (7 * 24 * 60 * 60 * 1000);
+                        return itemTime >= weekAgo;
+                    } else if (period === 'last_month') {
+                        const monthAgo = now.getTime() - (30 * 24 * 60 * 60 * 1000);
+                        return itemTime >= monthAgo;
+                    } else if (period === 'last_year') {
+                        const yearStart = new Date(now.getFullYear(), 0, 1).getTime();
+                        return itemTime >= yearStart;
+                    }
+                    return true;
+                });
+            }
+
+            const pageSize = 5;
+            let currentFilter = dateFilter ? dateFilter.value : 'all';
+
+            function updateDisplay() {
+                const filteredBillings = filterByPeriod(rawBillings, currentFilter);
+                const totalFiltered = filteredBillings.length;
+
+                if (totalFiltered === 0) {
+                    tableBody.innerHTML = '';
+                    if (noPayments) {
+                        noPayments.style.display = 'block';
+                        if (rawBillings.length > 0) {
+                            noPayments.innerHTML = `
+                                <i class="fas fa-filter cart_empty_icon" style="font-size: 38px; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
+                                <h3 style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No transactions for this period</h3>
+                                <p style="color: #64748b; margin-bottom: 14px;">No payment records match the selected date filter. Try selecting "All Time" to view all history.</p>
+                            `;
+                        } else {
+                            noPayments.innerHTML = `
+                                <i class="fas fa-receipt cart_empty_icon" style="font-size: 40px; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
+                                <h3 style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No transaction records yet</h3>
+                                <p style="color: #64748b; margin-bottom: 16px;">Completed purchases and billing invoices will appear here once you place an order.</p>
+                            `;
+                        }
+                    }
+                    if (paginationContainer) paginationContainer.style.display = 'none';
+                    return;
+                }
+
                 if (noPayments) noPayments.style.display = 'none';
 
-                // Sort newest first
-                billings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                const pageSize = 5;
-                let currentPage = 1;
-                const totalPages = Math.ceil(billings.length / pageSize);
+                const totalPages = Math.ceil(totalFiltered / pageSize);
 
                 function renderPage(page) {
-                    currentPage = page;
+                    let currentPage = page;
                     tableBody.innerHTML = '';
 
                     const startIdx = (currentPage - 1) * pageSize;
-                    const endIdx = Math.min(startIdx + pageSize, billings.length);
-                    const currentItems = billings.slice(startIdx, endIdx);
+                    const endIdx = Math.min(startIdx + pageSize, totalFiltered);
+                    const currentItems = filteredBillings.slice(startIdx, endIdx);
 
                     currentItems.forEach(item => {
                         const tr = document.createElement('tr');
-                        const invDate = new Date(item.createdAt).toISOString().slice(0, 10);
-                        const isPaid = item.paymentStatus === 'paid';
+                        const rawDate = item.createdAt || item.created_at;
+                        const invDate = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : '—';
+                        const isPaid = (item.paymentStatus || item.payment_status || '').toLowerCase() === 'paid';
                         const statusPill = isPaid 
                             ? '<span class="status_pill status_delivered"><i class="fas fa-check-circle"></i> Paid</span>'
                             : '<span class="status_pill status_processing"><i class="fas fa-clock"></i> Pending</span>';
@@ -283,8 +337,8 @@ async function load_user_payments_from_backend() {
                         tr.innerHTML = `
                             <td><strong>${item.invoiceNumber || '#' + (item._id || item.id || '').slice(-6).toUpperCase()}</strong></td>
                             <td>${invDate}</td>
-                            <td style="text-transform: capitalize;"><i class="fas fa-money-bill-wave" style="color: #10b981; margin-right: 6px;"></i> ${item.paymentMethod || 'Cash'}</td>
-                            <td><strong>₱${(item.totalAmount || 0).toLocaleString()}</strong></td>
+                            <td style="text-transform: capitalize;"><i class="fas fa-money-bill-wave" style="color: #10b981; margin-right: 6px;"></i> ${item.paymentMethod || item.payment_method || 'Cash'}</td>
+                            <td><strong>₱${(item.totalAmount || item.total_amount || 0).toLocaleString()}</strong></td>
                             <td>${statusPill}</td>
                         `;
                         tableBody.appendChild(tr);
@@ -292,7 +346,7 @@ async function load_user_payments_from_backend() {
 
                     // Update pagination info and controls
                     if (paginationContainer) {
-                        if (billings.length > pageSize) {
+                        if (totalFiltered > pageSize) {
                             paginationContainer.style.display = 'flex';
                         } else {
                             paginationContainer.style.display = 'none';
@@ -300,7 +354,8 @@ async function load_user_payments_from_backend() {
                     }
 
                     if (paginationInfo) {
-                        paginationInfo.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${billings.length}</span> transactions`;
+                        const filterLabel = currentFilter !== 'all' ? ` (Filtered)` : '';
+                        paginationInfo.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${totalFiltered}</span> transactions${filterLabel}`;
                     }
 
                     if (paginationControls) {
@@ -349,10 +404,21 @@ async function load_user_payments_from_backend() {
                 }
 
                 renderPage(1);
-            } else {
-                if (noPayments) noPayments.style.display = 'block';
-                if (paginationContainer) paginationContainer.style.display = 'none';
             }
+
+            // Hook up filter dropdown listener once
+            if (dateFilter && !dateFilter.dataset.bound) {
+                dateFilter.dataset.bound = 'true';
+                dateFilter.addEventListener('change', (e) => {
+                    currentFilter = e.target.value;
+                    updateDisplay();
+                });
+            }
+
+            updateDisplay();
+        } else {
+            if (noPayments) noPayments.style.display = 'block';
+            if (paginationContainer) paginationContainer.style.display = 'none';
         }
     } catch (err) {
         console.log('Payments backend sync offline:', err);
