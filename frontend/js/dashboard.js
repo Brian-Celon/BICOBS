@@ -1629,17 +1629,21 @@ function setup_search_and_filters() {
         const q = query.toLowerCase().trim();
 
         // Orders Table filter (myorders.html)
-        const orderRows = document.querySelectorAll('#orders_table_body tr');
-        let visibleOrders = 0;
-        orderRows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            const matches = text.includes(q);
-            row.style.display = matches ? '' : 'none';
-            if (matches) visibleOrders++;
-        });
-        const noOrdersMsg = document.getElementById('no_orders_found');
-        if (noOrdersMsg && orderRows.length > 0) {
-            noOrdersMsg.style.display = (visibleOrders === 0) ? 'block' : 'none';
+        if (typeof window.bicobsFilterOrders === 'function') {
+            window.bicobsFilterOrders(q);
+        } else {
+            const orderRows = document.querySelectorAll('#orders_table_body tr');
+            let visibleOrders = 0;
+            orderRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matches = text.includes(q);
+                row.style.display = matches ? '' : 'none';
+                if (matches) visibleOrders++;
+            });
+            const noOrdersMsg = document.getElementById('no_orders_found');
+            if (noOrdersMsg && orderRows.length > 0) {
+                noOrdersMsg.style.display = (visibleOrders === 0) ? 'block' : 'none';
+            }
         }
 
         // Support Tickets filter (support.html)
@@ -1676,24 +1680,6 @@ function setup_search_and_filters() {
             handleSearch(e.target.value);
         });
     });
-
-    // Status filter select for Orders (myorders.html)
-    const orderStatusFilter = document.getElementById('order_status_filter');
-    if (orderStatusFilter) {
-        orderStatusFilter.addEventListener('change', () => {
-            const val = orderStatusFilter.value.toLowerCase();
-            const orderRows = document.querySelectorAll('#orders_table_body tr');
-            let visible = 0;
-            orderRows.forEach(row => {
-                const status = (row.getAttribute('data-status') || '').toLowerCase();
-                const matches = (val === 'all' || status.includes(val));
-                row.style.display = matches ? '' : 'none';
-                if (matches) visible++;
-            });
-            const noOrdersMsg = document.getElementById('no_orders_found');
-            if (noOrdersMsg) noOrdersMsg.style.display = (visible === 0) ? 'block' : 'none';
-        });
-    }
 }
 
 /* "Add to Cart" Handlers across overview and products pages */

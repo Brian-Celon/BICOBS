@@ -189,19 +189,29 @@
                     <h1 class="header_title">My Order History</h1>
                     <p class="header_subtitle">Track and view detailed statuses of all your bike purchases.</p>
                 </div>
-                <div>
-                    <select class="filter_select" id="order_status_filter">
+                <div class="orders_filter_group">
+                    <label for="order_status_filter" class="orders_filter_label">
+                        <i class="fas fa-filter"></i> Filter Status:
+                    </label>
+                    <select class="filter_select orders_filter_select" id="order_status_filter" aria-label="Filter orders by status">
                         <option value="all">All Statuses</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Delivered">Delivered</option>
+                        <option value="pending">Placed (Pending)</option>
+                        <option value="payment_confirmation">Payment Confirmation</option>
+                        <option value="payment_confirmed">Payment Confirmed</option>
+                        <option value="processing">Processing</option>
+                        <option value="ready_for_pickup">Ready for Pickup</option>
+                        <option value="ready_for_delivery">Ready for Delivery</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="declined">Declined</option>
                     </select>
                 </div>
             </header>
 
             <!-- order history table section -->
             <section class="orders_section" style="padding: 0;">
-                <div class="table_container">
+                <div class="table_container" id="orders_table_container">
                     <table class="orders_table">
                         <thead>
                             <tr>
@@ -232,11 +242,16 @@
 
                 <div id="no_orders_found" class="cart_empty_state" style="display: block; text-align: center; padding: 48px 16px;">
                     <i class="fas fa-box-open cart_empty_icon" style="font-size: 40px; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
-                    <h3 style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No orders found yet</h3>
-                    <p style="color: #64748b; margin-bottom: 16px;">When you place orders in our shop, their tracking status will appear right here.</p>
-                    <a href="/frontend/pages/shop.html" class="action_button" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
-                        <i class="fas fa-shopping-bag"></i> Browse Shop Catalog
-                    </a>
+                    <h3 id="no_orders_title" style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No orders found yet</h3>
+                    <p id="no_orders_desc" style="color: #64748b; margin-bottom: 16px;">When you place orders in our shop, their tracking status will appear right here.</p>
+                    <div id="no_orders_actions">
+                        <a href="/frontend/pages/shop.html" class="action_button" id="btn_browse_shop_empty" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+                            <i class="fas fa-shopping-bag"></i> Browse Shop Catalog
+                        </a>
+                        <button type="button" class="action_button" id="btn_reset_order_filter" style="display: none; align-items: center; gap: 8px; background: #475569;">
+                            <i class="fas fa-undo"></i> Show All Orders
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>

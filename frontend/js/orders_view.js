@@ -5,8 +5,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const table_body = document.getElementById('orders_table_body');
+    const table_container = document.getElementById('orders_table_container');
     const status_filter = document.getElementById('order_status_filter');
     const no_orders_found = document.getElementById('no_orders_found');
+    const no_orders_title = document.getElementById('no_orders_title');
+    const no_orders_desc = document.getElementById('no_orders_desc');
+    const btn_browse_shop = document.getElementById('btn_browse_shop_empty');
+    const btn_reset_filter = document.getElementById('btn_reset_order_filter');
 
     // Details Modal Elements
     const details_modal = document.getElementById('order_details_modal');
@@ -173,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.status === 'success' && Array.isArray(data.data)) {
                 customerOrders = data.data;
-                renderOrdersTable(customerOrders);
+                applyOrdersFilter();
             }
         } catch (e) {
             console.warn('Could not load orders from API:', e);
@@ -195,11 +200,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (current_order_list.length === 0) {
             table_body.innerHTML = '';
-            if (no_orders_found) no_orders_found.style.display = 'block';
+            if (table_container) table_container.style.display = 'none';
             if (pagination_container) pagination_container.style.display = 'none';
+
+            if (no_orders_found) {
+                no_orders_found.style.display = 'block';
+                const hasExistingOrders = Array.isArray(customerOrders) && customerOrders.length > 0;
+                if (hasExistingOrders) {
+                    const selectedLabel = (status_filter && status_filter.options[status_filter.selectedIndex])
+                        ? status_filter.options[status_filter.selectedIndex].text
+                        : 'selected filter';
+                    if (no_orders_title) no_orders_title.textContent = 'No orders match this status';
+                    if (no_orders_desc) no_orders_desc.textContent = `You have no orders currently marked as "${selectedLabel}".`;
+                    if (btn_browse_shop) btn_browse_shop.style.display = 'none';
+                    if (btn_reset_filter) btn_reset_filter.style.display = 'inline-flex';
+                } else {
+                    if (no_orders_title) no_orders_title.textContent = 'No orders found yet';
+                    if (no_orders_desc) no_orders_desc.textContent = 'When you place orders in our shop, their tracking status will appear right here.';
+                    if (btn_browse_shop) btn_browse_shop.style.display = 'inline-flex';
+                    if (btn_reset_filter) btn_reset_filter.style.display = 'none';
+                }
+            }
             return;
         }
 
+        if (table_container) table_container.style.display = '';
         if (no_orders_found) no_orders_found.style.display = 'none';
 
         renderOrdersPage(1);
@@ -285,7 +310,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (pagination_info) {
-            pagination_info.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${totalItems}</span> orders`;
+            const isFiltered = (current_filter_status && current_filter_status !== 'all') || (current_search_query && current_search_query.length > 0);
+            if (isFiltered && customerOrders.length > totalItems) {
+                pagination_info.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${totalItems}</span> orders <span style="color:#64748b; font-weight:normal; font-size:12px;">(Filtered from ${customerOrders.length})</span>`;
+            } else {
+                pagination_info.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${totalItems}</span> orders`;
+            }
         }
 
         if (pagination_controls) {
@@ -342,25 +372,109 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Filter by status dropdown
+    // Filter & Live Search Engine
+    let current_filter_status = 'all';
+    let current_search_query = '';
+
+    function matchesOrderStatus(order, filterVal) {
+        if (!filterVal || filterVal === 'all') return true;
+        const rawStatus = (order.orderStatus || order.order_status || 'pending').toLowerCase().trim();
+        const f = filterVal.toLowerCase().trim();
+
+        if (f === 'pending') {
+            return rawStatus === 'pending' || rawStatus === 'placed' || !rawStatus;
+        }
+        if (f === 'payment_confirmation') {
+            return rawStatus === 'payment_confirmation' || rawStatus === 'payment_confirm';
+        }
+        if (f === 'payment_confirmed') {
+            return rawStatus === 'payment_confirmed';
+        }
+        if (f === 'processing') {
+            return rawStatus === 'processing';
+        }
+        if (f === 'ready_for_pickup') {
+            return rawStatus === 'ready_for_pickup';
+        }
+        if (f === 'ready_for_delivery' || f === 'ready_for_deliver') {
+            return rawStatus === 'ready_for_delivery' || rawStatus === 'ready_for_deliver';
+        }
+        if (f === 'out_for_delivery' || f === 'shipped') {
+            return rawStatus === 'out_for_delivery' || rawStatus === 'shipped';
+        }
+        if (f === 'completed' || f === 'delivered') {
+            return rawStatus === 'completed' || rawStatus === 'delivered';
+        }
+        if (f === 'cancelled') {
+            return rawStatus === 'cancelled';
+        }
+        if (f === 'declined') {
+            return rawStatus === 'declined';
+        }
+        return rawStatus === f || rawStatus.includes(f);
+    }
+
+    function applyOrdersFilter() {
+        let filtered = customerOrders || [];
+
+        // 1. Status Filter
+        if (current_filter_status && current_filter_status !== 'all') {
+            filtered = filtered.filter(order => matchesOrderStatus(order, current_filter_status));
+        }
+
+        // 2. Search Query
+        if (current_search_query) {
+            filtered = filtered.filter(order => {
+                const orderNum = (order.orderNumber || order.order_number || `#${(order._id || '').slice(-7)}`).toLowerCase();
+                const invoice = (order.invoiceNumber || order.invoice_number || '').toLowerCase();
+                const items = (order.orderItems || order.items || []).map(i => (i.name || '').toLowerCase()).join(' ');
+                const status = (order.orderStatus || order.order_status || 'pending').toLowerCase();
+                const total = String(order.totalPrice || order.total_amount || '');
+                return orderNum.includes(current_search_query) ||
+                       invoice.includes(current_search_query) ||
+                       items.includes(current_search_query) ||
+                       status.includes(current_search_query) ||
+                       total.includes(current_search_query);
+            });
+        }
+
+        renderOrdersTable(filtered);
+    }
+
+    // Status Filter dropdown change
     if (status_filter) {
         status_filter.addEventListener('change', (e) => {
-            const filterVal = e.target.value.toLowerCase();
-            if (filterVal === 'all') {
-                renderOrdersTable(customerOrders);
-            } else {
-                const filtered = customerOrders.filter(o => {
-                    const st = (o.orderStatus || 'pending').toLowerCase();
-                    if (filterVal === 'processing') return st === 'processing';
-                    if (filterVal === 'shipped') return st === 'shipped' || st === 'ready_for_pickup';
-                    if (filterVal === 'delivered') return st === 'delivered' || st === 'completed';
-                    if (filterVal === 'declined') return st === 'declined';
-                    return st.includes(filterVal);
-                });
-                renderOrdersTable(filtered);
-            }
+            current_filter_status = (e.target.value || 'all').toLowerCase().trim();
+            applyOrdersFilter();
         });
     }
+
+    // Reset filter button listener on empty state
+    if (btn_reset_filter) {
+        btn_reset_filter.addEventListener('click', () => {
+            if (status_filter) status_filter.value = 'all';
+            current_filter_status = 'all';
+            current_search_query = '';
+            const searchInputs = document.querySelectorAll('.search_input, #header_search_input, #global_search_input');
+            searchInputs.forEach(i => { i.value = ''; });
+            applyOrdersFilter();
+        });
+    }
+
+    // Header search inputs live listener
+    const searchInputs = document.querySelectorAll('.search_input, #header_search_input, #global_search_input');
+    searchInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            current_search_query = (e.target.value || '').toLowerCase().trim();
+            applyOrdersFilter();
+        });
+    });
+
+    // Global delegation hook for dashboard.js
+    window.bicobsFilterOrders = (query) => {
+        current_search_query = (query || '').toLowerCase().trim();
+        applyOrdersFilter();
+    };
 
     // Modal interactions
     if (table_body) {
