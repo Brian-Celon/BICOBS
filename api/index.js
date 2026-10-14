@@ -13,6 +13,13 @@ module.exports = (req, res) => {
       req.url = reconstructed;
       req.originalUrl = reconstructed;
     }
+
+    // Normalize pre-parsed Vercel body
+    if (typeof req.body === 'string' && req.body.trim().startsWith('{')) {
+      try {
+        req.body = JSON.parse(req.body);
+      } catch (e) {}
+    }
   } catch (e) {
     // Fall back to original req.url if URL parsing fails
   }

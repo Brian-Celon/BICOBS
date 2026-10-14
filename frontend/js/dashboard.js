@@ -186,24 +186,41 @@ async function load_user_orders_from_backend() {
                 if (noOrdersFound) noOrdersFound.style.display = 'none';
                 if (overviewNoOrders) overviewNoOrders.style.display = 'none';
 
+                // Sort newest first
+                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
                 if (overviewTable) {
                     overviewTable.innerHTML = '';
-                    orders.slice(0, 5).forEach(order => {
+                    const recentFive = orders.slice(0, 5); // Strictly limit to max 5 recent orders
+                    recentFive.forEach(order => {
                         const tr = document.createElement('tr');
                         const orderDate = new Date(order.createdAt).toISOString().slice(0, 10);
+                        const orderNum = order.orderNumber || '#' + (order._id || order.id || '').slice(-6).toUpperCase();
+                        const status = (order.orderStatus || 'processing').toLowerCase();
                         tr.innerHTML = `
-                            <td><strong>#${order._id.slice(-6).toUpperCase()}</strong></td>
+                            <td><strong style="color: #8b1e28;">${orderNum}</strong></td>
                             <td>${orderDate}</td>
-                            <td><span class="status_pill status_${order.orderStatus || 'processing'}">${(order.orderStatus || 'processing').replace('_', ' ').toUpperCase()}</span></td>
-                            <td>₱${(order.totalPrice || 0).toLocaleString()}</td>
+                            <td><span class="status_pill status_${status}">${status.replace(/_/g, ' ').toUpperCase()}</span></td>
+                            <td><strong>₱${(order.totalPrice || order.total_amount || 0).toLocaleString()}</strong></td>
                             <td><a href="myorders.html" class="action_link">View Details</a></td>
                         `;
                         overviewTable.appendChild(tr);
                     });
+
+                    const overviewFooter = document.getElementById('overview_orders_footer');
+                    const overviewCountText = document.getElementById('overview_orders_count_text');
+                    if (overviewFooter) {
+                        overviewFooter.style.display = 'flex';
+                        if (overviewCountText) {
+                            overviewCountText.textContent = `Showing ${recentFive.length} of ${orders.length} orders`;
+                        }
+                    }
                 }
             } else {
                 if (noOrdersFound) noOrdersFound.style.display = 'block';
                 if (overviewNoOrders) overviewNoOrders.style.display = 'block';
+                const overviewFooter = document.getElementById('overview_orders_footer');
+                if (overviewFooter) overviewFooter.style.display = 'none';
             }
         }
     } catch (err) {
@@ -211,15 +228,19 @@ async function load_user_orders_from_backend() {
     }
 }
 
-/* Fetch customer billing transactions from backend API for payments.html */
+/* Fetch customer billing transactions from backend API for payments.html (Paginated: 5 per page) */
 async function load_user_payments_from_backend() {
     const tableBody = document.getElementById('payment_transactions_body');
     const noPayments = document.getElementById('no_payments_found');
+    const paginationContainer = document.getElementById('payments_pagination_container');
+    const paginationInfo = document.getElementById('payments_pagination_info');
+    const paginationControls = document.getElementById('payments_pagination_controls');
     if (!tableBody) return;
 
     const token = localStorage.getItem('token') || localStorage.getItem('bicobs_token');
     if (!token) {
         if (noPayments) noPayments.style.display = 'block';
+        if (paginationContainer) paginationContainer.style.display = 'none';
         return;
     }
 
@@ -235,27 +256,102 @@ async function load_user_payments_from_backend() {
 
             if (billings.length > 0) {
                 if (noPayments) noPayments.style.display = 'none';
-                tableBody.innerHTML = '';
 
-                billings.forEach(item => {
-                    const tr = document.createElement('tr');
-                    const invDate = new Date(item.createdAt).toISOString().slice(0, 10);
-                    const isPaid = item.paymentStatus === 'paid';
-                    const statusPill = isPaid 
-                        ? '<span class="status_pill status_delivered"><i class="fas fa-check-circle"></i> Paid</span>'
-                        : '<span class="status_pill status_processing"><i class="fas fa-clock"></i> Pending (COD)</span>';
+                // Sort newest first
+                billings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-                    tr.innerHTML = `
-                        <td><strong>${item.invoiceNumber || '#' + item._id.slice(-6).toUpperCase()}</strong></td>
-                        <td>${invDate}</td>
-                        <td style="text-transform: capitalize;"><i class="fas fa-money-bill-wave" style="color: #10b981; margin-right: 6px;"></i> ${item.paymentMethod || 'Cash'}</td>
-                        <td><strong>₱${(item.totalAmount || 0).toLocaleString()}</strong></td>
-                        <td>${statusPill}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
+                const pageSize = 5;
+                let currentPage = 1;
+                const totalPages = Math.ceil(billings.length / pageSize);
+
+                function renderPage(page) {
+                    currentPage = page;
+                    tableBody.innerHTML = '';
+
+                    const startIdx = (currentPage - 1) * pageSize;
+                    const endIdx = Math.min(startIdx + pageSize, billings.length);
+                    const currentItems = billings.slice(startIdx, endIdx);
+
+                    currentItems.forEach(item => {
+                        const tr = document.createElement('tr');
+                        const invDate = new Date(item.createdAt).toISOString().slice(0, 10);
+                        const isPaid = item.paymentStatus === 'paid';
+                        const statusPill = isPaid 
+                            ? '<span class="status_pill status_delivered"><i class="fas fa-check-circle"></i> Paid</span>'
+                            : '<span class="status_pill status_processing"><i class="fas fa-clock"></i> Pending</span>';
+
+                        tr.innerHTML = `
+                            <td><strong>${item.invoiceNumber || '#' + (item._id || item.id || '').slice(-6).toUpperCase()}</strong></td>
+                            <td>${invDate}</td>
+                            <td style="text-transform: capitalize;"><i class="fas fa-money-bill-wave" style="color: #10b981; margin-right: 6px;"></i> ${item.paymentMethod || 'Cash'}</td>
+                            <td><strong>₱${(item.totalAmount || 0).toLocaleString()}</strong></td>
+                            <td>${statusPill}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+
+                    // Update pagination info and controls
+                    if (paginationContainer) {
+                        if (billings.length > pageSize) {
+                            paginationContainer.style.display = 'flex';
+                        } else {
+                            paginationContainer.style.display = 'none';
+                        }
+                    }
+
+                    if (paginationInfo) {
+                        paginationInfo.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${billings.length}</span> transactions`;
+                    }
+
+                    if (paginationControls) {
+                        paginationControls.innerHTML = '';
+
+                        // Prev button
+                        const prevBtn = document.createElement('button');
+                        prevBtn.type = 'button';
+                        prevBtn.className = 'pagination_btn';
+                        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                        prevBtn.title = 'Previous page';
+                        prevBtn.disabled = currentPage === 1;
+                        prevBtn.addEventListener('click', () => {
+                            if (currentPage > 1) renderPage(currentPage - 1);
+                        });
+                        paginationControls.appendChild(prevBtn);
+
+                        // Numbered page buttons
+                        for (let p = 1; p <= totalPages; p++) {
+                            const pageBtn = document.createElement('button');
+                            pageBtn.type = 'button';
+                            pageBtn.className = `pagination_btn ${p === currentPage ? 'active' : ''}`;
+                            pageBtn.textContent = p;
+                            pageBtn.title = `Page ${p}`;
+                            if (p === currentPage) {
+                                pageBtn.setAttribute('aria-current', 'page');
+                            }
+                            pageBtn.addEventListener('click', () => {
+                                if (p !== currentPage) renderPage(p);
+                            });
+                            paginationControls.appendChild(pageBtn);
+                        }
+
+                        // Next button
+                        const nextBtn = document.createElement('button');
+                        nextBtn.type = 'button';
+                        nextBtn.className = 'pagination_btn';
+                        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                        nextBtn.title = 'Next page';
+                        nextBtn.disabled = currentPage === totalPages;
+                        nextBtn.addEventListener('click', () => {
+                            if (currentPage < totalPages) renderPage(currentPage + 1);
+                        });
+                        paginationControls.appendChild(nextBtn);
+                    }
+                }
+
+                renderPage(1);
             } else {
                 if (noPayments) noPayments.style.display = 'block';
+                if (paginationContainer) paginationContainer.style.display = 'none';
             }
         }
     } catch (err) {

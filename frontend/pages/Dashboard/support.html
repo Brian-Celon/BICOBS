@@ -259,6 +259,16 @@
             <!-- Ticket Form -->
             <form id="create_ticket_form" class="modal_form_body">
                 <div class="form_group">
+                    <label class="form_label" for="ticket_name">YOUR FULL NAME</label>
+                    <input type="text" id="ticket_name" class="form_input" placeholder="e.g. Brian Celon" required autocomplete="name">
+                </div>
+
+                <div class="form_group">
+                    <label class="form_label" for="ticket_email">YOUR EMAIL ADDRESS</label>
+                    <input type="email" id="ticket_email" class="form_input" placeholder="e.g. brian@example.com" required autocomplete="email">
+                </div>
+
+                <div class="form_group">
                     <label class="form_label" for="ticket_category">ISSUE CATEGORY</label>
                     <select id="ticket_category" class="form_select" required>
                         <option value="Warranty / Repairs" selected>Warranty / Repairs</option>

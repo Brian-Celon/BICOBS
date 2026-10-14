@@ -226,6 +226,17 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Transaction History Pagination Controls (5 transactions per page) -->
+                <div id="payments_pagination_container" class="dashboard_pagination_wrapper" style="display: none;">
+                    <div class="pagination_info" id="payments_pagination_info">
+                        Showing <span>1</span>–<span>5</span> of <span>5</span> transactions
+                    </div>
+                    <div class="pagination_controls" id="payments_pagination_controls">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
                 <div id="no_payments_found" class="cart_empty_state" style="display: block; text-align: center; padding: 48px 16px;">
                     <i class="fas fa-receipt cart_empty_icon" style="font-size: 40px; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
                     <h3 style="font-size: 18px; color: #1e293b; margin-bottom: 6px;">No transaction records yet</h3>

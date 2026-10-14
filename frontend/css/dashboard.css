@@ -970,6 +970,8 @@ body {
 
 /* text and password input elements */
 .form_input {
+    width: 100%;
+    box-sizing: border-box;
     border: 1px solid #dce2e8;
     border-radius: 6px;
     padding: 10px 14px;
@@ -977,12 +979,13 @@ body {
     color: #333333;
     background: #ffffff;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* form input focus state */
 .form_input:focus {
     border-color: #8b1e28;
+    box-shadow: 0 0 0 3px rgba(139, 30, 40, 0.1);
 }
 
 /* save changes button */
@@ -1990,23 +1993,31 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 }
 .password_input_wrapper .form_input {
-    padding-right: 40px;
+    width: 100%;
+    flex: 1;
+    min-height: 44px;
+    padding-right: 44px;
+    box-sizing: border-box;
 }
 .btn_toggle_pwd {
     position: absolute;
     right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     background: transparent;
     border: none;
     color: #64748b;
     cursor: pointer;
-    font-size: 14px;
-    padding: 4px;
+    font-size: 15px;
+    padding: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: color 0.15s ease;
+    z-index: 2;
 }
 .btn_toggle_pwd:hover {
     color: #8b1e28;
@@ -3154,5 +3165,67 @@ body {
     .standalone_cart_grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Dashboard Pagination Controls (Payments & Orders) */
+.dashboard_pagination_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+.dashboard_pagination_wrapper .pagination_info {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+.dashboard_pagination_wrapper .pagination_info span {
+    font-weight: 700;
+    color: #1e293b;
+}
+.dashboard_pagination_wrapper .pagination_controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.dashboard_pagination_wrapper .pagination_btn {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.dashboard_pagination_wrapper .pagination_btn:hover:not(:disabled):not(.active) {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #8b1e28;
+}
+.dashboard_pagination_wrapper .pagination_btn.active {
+    background: #8b1e28;
+    border-color: #8b1e28;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: default;
+}
+.dashboard_pagination_wrapper .pagination_btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: #f8fafc;
+    border-color: #e2e8f0;
 }
 

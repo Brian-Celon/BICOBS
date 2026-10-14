@@ -322,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
+            card.title = 'Click to view full product details & focused mode';
             fragment.appendChild(card);
         });
 
@@ -335,34 +336,204 @@ document.addEventListener('DOMContentLoaded', () => {
         apply_filters();
     }
 
-    // Delegated Add to Cart click handler
+    // =========================================================================
+    // Product Focused Mode Controller
+    // =========================================================================
+    const focus_modal = document.getElementById('product_focus_modal');
+    const focus_card = document.getElementById('product_focus_card');
+    const focus_close_btn = document.getElementById('focus_close_btn');
+    const focus_product_img = document.getElementById('focus_product_img');
+    const focus_product_title = document.getElementById('focus_product_title');
+    const focus_product_sku = document.getElementById('focus_product_sku');
+    const focus_stock_badge = document.getElementById('focus_stock_badge');
+    const focus_product_price = document.getElementById('focus_product_price');
+    const focus_product_desc = document.getElementById('focus_product_desc');
+    const focus_spec_category = document.getElementById('focus_spec_category');
+    const focus_spec_stock = document.getElementById('focus_spec_stock');
+    const focus_category_crumb = document.getElementById('focus_category_crumb');
+    const focus_back_link = document.getElementById('focus_back_link');
+    const focus_qty_minus = document.getElementById('focus_qty_minus');
+    const focus_qty_plus = document.getElementById('focus_qty_plus');
+    const focus_qty_input = document.getElementById('focus_qty_input');
+    const focus_btn_add_cart = document.getElementById('focus_btn_add_cart');
+
+    let current_focused_product = null;
+
+    function openProductFocusMode(product) {
+        if (!product || !focus_modal) return;
+        current_focused_product = product;
+
+        const prodName = product.name || 'Bicycle Component';
+        const prodPrice = parseFloat(product.price) || 0;
+        const prodCategory = (product.category || 'general').replace(/_/g, ' ');
+        const prodStock = typeof product.stockQuantity === 'number' ? product.stockQuantity : (typeof product.stock_quantity === 'number' ? product.stock_quantity : 10);
+        const prodImg = product.imageUrl || product.image_url || '/frontend/Pictures/placeholder.png';
+        const prodSku = product.sku || `TB-${String(product._id || product.id || '001').padStart(4, '0')}`;
+        const prodDesc = product.description && product.description.trim().length > 0 
+            ? product.description 
+            : `High-performance ${prodCategory} manufactured for durability, precision control, and rider comfort. Available for immediate pickup or delivery with Taurus Bike Shop Marilao quality guarantee and free service tuning.`;
+
+        if (focus_product_img) {
+            focus_product_img.src = prodImg;
+            focus_product_img.alt = prodName;
+        }
+        if (focus_product_title) focus_product_title.textContent = prodName;
+        if (focus_product_sku) focus_product_sku.textContent = `SKU: ${prodSku}`;
+        if (focus_category_crumb) focus_category_crumb.textContent = prodCategory.toUpperCase();
+        if (focus_spec_category) focus_spec_category.textContent = prodCategory;
+        if (focus_product_desc) focus_product_desc.textContent = prodDesc;
+        if (focus_product_price) focus_product_price.textContent = `₱${prodPrice.toLocaleString()}`;
+
+        if (focus_stock_badge && focus_spec_stock) {
+            if (prodStock <= 0) {
+                focus_stock_badge.className = 'focus_stock_badge out_of_stock';
+                focus_stock_badge.innerHTML = '<i class="fas fa-times-circle"></i> Out of Stock';
+                focus_spec_stock.textContent = 'Out of Stock';
+                if (focus_btn_add_cart) {
+                    focus_btn_add_cart.disabled = true;
+                    focus_btn_add_cart.innerHTML = '<span>Out of Stock</span>';
+                }
+            } else if (prodStock <= 3) {
+                focus_stock_badge.className = 'focus_stock_badge low_stock';
+                focus_stock_badge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Low Stock (Only ${prodStock} left!)`;
+                focus_spec_stock.textContent = `${prodStock} units left`;
+                if (focus_btn_add_cart) {
+                    focus_btn_add_cart.disabled = false;
+                    focus_btn_add_cart.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Add to Cart</span>';
+                }
+            } else {
+                focus_stock_badge.className = 'focus_stock_badge in_stock';
+                focus_stock_badge.innerHTML = `<i class="fas fa-check-circle"></i> In Stock (${prodStock} units)`;
+                focus_spec_stock.textContent = `${prodStock} Available`;
+                if (focus_btn_add_cart) {
+                    focus_btn_add_cart.disabled = false;
+                    focus_btn_add_cart.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Add to Cart</span>';
+                }
+            }
+        }
+
+        if (focus_qty_input) {
+            focus_qty_input.value = 1;
+            focus_qty_input.max = Math.max(1, prodStock);
+        }
+
+        focus_modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            focus_modal.classList.add('active');
+        }, 10);
+    }
+
+    function closeProductFocusMode() {
+        if (!focus_modal) return;
+        focus_modal.classList.remove('active');
+        setTimeout(() => {
+            focus_modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 220);
+    }
+
+    if (focus_close_btn) focus_close_btn.addEventListener('click', closeProductFocusMode);
+    if (focus_back_link) {
+        focus_back_link.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeProductFocusMode();
+        });
+    }
+
+    if (focus_modal) {
+        focus_modal.addEventListener('click', (e) => {
+            if (e.target === focus_modal) {
+                closeProductFocusMode();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && focus_modal && focus_modal.classList.contains('active')) {
+            closeProductFocusMode();
+        }
+    });
+
+    // Quantity stepper in focused mode
+    if (focus_qty_minus && focus_qty_input) {
+        focus_qty_minus.addEventListener('click', () => {
+            let val = parseInt(focus_qty_input.value, 10) || 1;
+            if (val > 1) {
+                focus_qty_input.value = val - 1;
+            }
+        });
+    }
+    if (focus_qty_plus && focus_qty_input) {
+        focus_qty_plus.addEventListener('click', () => {
+            let val = parseInt(focus_qty_input.value, 10) || 1;
+            const maxVal = parseInt(focus_qty_input.max, 10) || 99;
+            if (val < maxVal) {
+                focus_qty_input.value = val + 1;
+            }
+        });
+    }
+
+    // Add to cart from focus mode
+    if (focus_btn_add_cart) {
+        focus_btn_add_cart.addEventListener('click', () => {
+            if (!current_focused_product) return;
+            const qty = parseInt(focus_qty_input ? focus_qty_input.value : 1, 10) || 1;
+            if (window.BICOBS_Cart) {
+                const added = window.BICOBS_Cart.addToCart(current_focused_product, qty);
+                if (added) {
+                    const origHtml = focus_btn_add_cart.innerHTML;
+                    focus_btn_add_cart.innerHTML = '<span style="font-weight: 700;">✓ Added to Cart!</span>';
+                    focus_btn_add_cart.style.backgroundColor = '#16a34a';
+                    setTimeout(() => {
+                        focus_btn_add_cart.innerHTML = origHtml;
+                        focus_btn_add_cart.style.backgroundColor = '';
+                    }, 1400);
+                }
+            }
+        });
+    }
+
+    // Delegated click handler on products_grid for card focus mode and direct add to cart
     if (products_grid) {
         products_grid.addEventListener('click', (e) => {
             const addBtn = e.target.closest('.btn_card_add_cart');
-            if (!addBtn || addBtn.disabled) return;
+            if (addBtn) {
+                if (addBtn.disabled) return;
+                const productId = addBtn.getAttribute('data-id');
+                const product = all_products.find(p => String(p._id || p.id) === String(productId));
 
-            const productId = addBtn.getAttribute('data-id');
-            const product = all_products.find(p => String(p._id || p.id) === String(productId));
-
-            if (product && window.BICOBS_Cart) {
-                const added = window.BICOBS_Cart.addToCart(product, 1);
-                if (added) {
-                    const originalHTML = addBtn.innerHTML;
-                    addBtn.innerHTML = '✓ Added!';
-                    addBtn.style.backgroundColor = '#16a34a';
-                    addBtn.style.color = '#ffffff';
-                    setTimeout(() => {
-                        addBtn.innerHTML = originalHTML;
-                        addBtn.style.backgroundColor = '';
-                        addBtn.style.color = '';
-                    }, 1200);
+                if (product && window.BICOBS_Cart) {
+                    const added = window.BICOBS_Cart.addToCart(product, 1);
+                    if (added) {
+                        const originalHTML = addBtn.innerHTML;
+                        addBtn.innerHTML = '✓ Added!';
+                        addBtn.style.backgroundColor = '#16a34a';
+                        addBtn.style.color = '#ffffff';
+                        setTimeout(() => {
+                            addBtn.innerHTML = originalHTML;
+                            addBtn.style.backgroundColor = '';
+                            addBtn.style.color = '';
+                        }, 1200);
+                    }
+                } else if (!product && window.BICOBS_Cart) {
+                    const card = addBtn.closest('.product_card_item');
+                    const name = card?.getAttribute('data-name') || 'Product';
+                    const price = parseFloat(card?.getAttribute('data-price')) || 0;
+                    const img = card?.querySelector('.card_image')?.src;
+                    window.BICOBS_Cart.addToCart({ id: productId || name, name, price, imageUrl: img, stockQuantity: 10 }, 1);
                 }
-            } else if (!product && window.BICOBS_Cart) {
-                const card = addBtn.closest('.product_card_item');
-                const name = card?.getAttribute('data-name') || 'Product';
-                const price = parseFloat(card?.getAttribute('data-price')) || 0;
-                const img = card?.querySelector('.card_image')?.src;
-                window.BICOBS_Cart.addToCart({ id: productId || name, name, price, imageUrl: img, stockQuantity: 10 }, 1);
+                return;
+            }
+
+            // Clicked on the product card itself -> Enter Focused Mode
+            const card = e.target.closest('.product_card_item');
+            if (card) {
+                const productId = card.getAttribute('data-id');
+                const product = all_products.find(p => String(p._id || p.id) === String(productId));
+                if (product) {
+                    openProductFocusMode(product);
+                }
             }
         });
     }
@@ -744,6 +915,21 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 const btn = document.querySelector(`.category_item_btn[data-category="${catParam}"]`);
                 if (btn) btn.click();
+            }
+        }
+
+        // Check for direct product deep link in URL
+        const prodParam = urlParams.get('product') || urlParams.get('id');
+        if (prodParam) {
+            const match = all_products.find(p => String(p._id || p.id) === String(prodParam) || (p.name && p.name.toLowerCase() === decodeURIComponent(prodParam).toLowerCase()));
+            if (match) {
+                setTimeout(() => openProductFocusMode(match), 120);
+            }
+        } else if (window.location.hash && window.location.hash.startsWith('#product-')) {
+            const hashId = window.location.hash.replace('#product-', '');
+            const match = all_products.find(p => String(p._id || p.id) === String(hashId));
+            if (match) {
+                setTimeout(() => openProductFocusMode(match), 120);
             }
         }
     }

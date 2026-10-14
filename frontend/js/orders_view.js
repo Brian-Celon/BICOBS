@@ -180,18 +180,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Pagination State for My Orders (10 orders per page)
+    const items_per_page = 10;
+    let current_page = 1;
+    let current_order_list = [];
+
+    const pagination_container = document.getElementById('orders_pagination_container');
+    const pagination_info = document.getElementById('orders_pagination_info');
+    const pagination_controls = document.getElementById('orders_pagination_controls');
+
     function renderOrdersTable(orders) {
         if (!table_body) return;
-        table_body.innerHTML = '';
+        current_order_list = orders || [];
 
-        if (orders.length === 0) {
+        if (current_order_list.length === 0) {
+            table_body.innerHTML = '';
             if (no_orders_found) no_orders_found.style.display = 'block';
+            if (pagination_container) pagination_container.style.display = 'none';
             return;
         }
 
         if (no_orders_found) no_orders_found.style.display = 'none';
 
-        orders.forEach(order => {
+        renderOrdersPage(1);
+    }
+
+    function renderOrdersPage(page) {
+        current_page = page;
+        table_body.innerHTML = '';
+
+        const totalItems = current_order_list.length;
+        const totalPages = Math.ceil(totalItems / items_per_page);
+        const startIdx = (current_page - 1) * items_per_page;
+        const endIdx = Math.min(startIdx + items_per_page, totalItems);
+        const pageOrders = current_order_list.slice(startIdx, endIdx);
+
+        pageOrders.forEach(order => {
             const tr = document.createElement('tr');
             const orderIdText = order.orderNumber || `#${order._id.slice(-7).toUpperCase()}`;
             const invoiceText = order.invoiceNumber || 'Pending';
@@ -250,6 +274,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
             table_body.appendChild(tr);
         });
+
+        // Update Pagination Controls
+        if (pagination_container) {
+            if (totalItems > items_per_page) {
+                pagination_container.style.display = 'flex';
+            } else {
+                pagination_container.style.display = 'none';
+            }
+        }
+
+        if (pagination_info) {
+            pagination_info.innerHTML = `Showing <span>${startIdx + 1}</span>–<span>${endIdx}</span> of <span>${totalItems}</span> orders`;
+        }
+
+        if (pagination_controls) {
+            pagination_controls.innerHTML = '';
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.type = 'button';
+            prevBtn.className = 'pagination_btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.title = 'Previous page';
+            prevBtn.disabled = current_page === 1;
+            prevBtn.addEventListener('click', () => {
+                if (current_page > 1) {
+                    renderOrdersPage(current_page - 1);
+                    table_body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+            pagination_controls.appendChild(prevBtn);
+
+            // Page numbers
+            for (let p = 1; p <= totalPages; p++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.type = 'button';
+                pageBtn.className = `pagination_btn ${p === current_page ? 'active' : ''}`;
+                pageBtn.textContent = p;
+                pageBtn.title = `Page ${p}`;
+                if (p === current_page) {
+                    pageBtn.setAttribute('aria-current', 'page');
+                }
+                pageBtn.addEventListener('click', () => {
+                    if (p !== current_page) {
+                        renderOrdersPage(p);
+                        table_body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                });
+                pagination_controls.appendChild(pageBtn);
+            }
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.type = 'button';
+            nextBtn.className = 'pagination_btn';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.title = 'Next page';
+            nextBtn.disabled = current_page === totalPages;
+            nextBtn.addEventListener('click', () => {
+                if (current_page < totalPages) {
+                    renderOrdersPage(current_page + 1);
+                    table_body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+            pagination_controls.appendChild(nextBtn);
+        }
     }
 
     // Filter by status dropdown

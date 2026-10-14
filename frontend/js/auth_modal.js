@@ -523,10 +523,26 @@ const BICOBS_Auth = (() => {
     const token = getToken();
 
     document.querySelectorAll('.btn_header, .header_actions_group a').forEach(el => {
+      const href = (el.getAttribute('href') || '').toLowerCase();
+      // Exclude cart button
+      if (href.includes('cart.html') || el.id === 'cart_badge_counter' || el.querySelector('.cart_badge_counter')) {
+        return;
+      }
+
       const text = el.textContent.trim().toLowerCase();
-      if (text.includes('sign in') || text.includes('sign up') || el.id === 'header_user_btn') {
+      const isAuthButton = el.id === 'header_user_btn' || 
+                           el.getAttribute('data-header-user') === 'true' || 
+                           text.includes('sign in') || 
+                           text.includes('sign up') || 
+                           href.includes('login.html') || 
+                           (href.includes('dashboard.html') && !href.includes('service.html') && !href.includes('shop.html'));
+
+      if (isAuthButton) {
+        el.id = 'header_user_btn';
+        el.setAttribute('data-header-user', 'true');
         if (token && user && user.name) {
-          el.innerHTML = `<i class="fas fa-user-circle" style="color: #dc2626; margin-right: 4px;"></i> <span>${user.name.split(' ')[0]}</span>`;
+          const firstName = user.name.split(' ')[0] || user.name;
+          el.innerHTML = `<i class="fas fa-user-circle" style="color: #dc2626; margin-right: 6px; font-size: 15px; vertical-align: middle;"></i><span>${firstName}</span>`;
           el.href = '/frontend/pages/Dashboard/dashboard.html';
           el.title = `Signed in as ${user.name}`;
         } else {

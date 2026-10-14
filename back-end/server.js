@@ -16,8 +16,16 @@ const app = express();
 
 // 4. Core Middlewares
 app.use(cors());
-app.use(express.json({ limit: '15mb' }));
-app.use(express.urlencoded({ extended: true, limit: '15mb' }));
+// Vercel-safe body parser: If req.body is already parsed by Vercel serverless runtime, skip raw-body stream reading
+app.use((req, res, next) => {
+  if (req.body && typeof req.body === 'object') {
+    return next();
+  }
+  express.json({ limit: '15mb' })(req, res, (err) => {
+    if (err) return next(err);
+    express.urlencoded({ extended: true, limit: '15mb' })(req, res, next);
+  });
+});
 
 // Serve frontend static files at both /frontend and /
 const frontendPath = path.join(__dirname, '../frontend');
