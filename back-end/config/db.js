@@ -23,6 +23,7 @@ const connectDB = async () => {
     const client = await pool.connect();
     const res = await client.query('SELECT current_database(), NOW() as current_time;');
     console.log(`[PostgreSQL] Connected to Supabase DB: ${res.rows[0].current_database} at ${res.rows[0].current_time}`);
+    await client.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS is_archived BOOLEAN DEFAULT false;');
     client.release();
   } catch (error) {
     console.error(`[PostgreSQL Error] Connection failed: ${error.message}`);

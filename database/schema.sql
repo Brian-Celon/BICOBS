@@ -85,6 +85,7 @@ CREATE TABLE products (
     image_url TEXT DEFAULT '',
     is_available BOOLEAN DEFAULT true,
     is_featured BOOLEAN DEFAULT false,
+    is_archived BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

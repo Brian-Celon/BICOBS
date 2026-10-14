@@ -44,11 +44,18 @@ const BIKE_CATEGORIES = [
 ];
 
 let storeProducts = [];
+let currentCatalogView = "active"; // "active" | "archived"
 let selectedCategory = "all";
 let currentSearchQuery = "";
 let currentSort = "default";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Check if URL has ?view=archived
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("view") === "archived") {
+        currentCatalogView = "archived";
+    }
+    syncCatalogViewUI();
     loadAdminProducts();
     initProductAutoSKU();
 });
@@ -81,7 +88,69 @@ function openAddProductModal() {
 }
 window.openAddProductModal = openAddProductModal;
 
-// Load live products from backend API
+// Update Active and Archived badges in catalog view toggle
+function updateCatalogViewBadges() {
+    const activeCount = storeProducts.filter(p => !p.is_archived && !p.isArchived).length;
+    const archivedCount = storeProducts.filter(p => p.is_archived || p.isArchived).length;
+
+    const activeBadge = document.getElementById("count_active_catalog");
+    const archivedBadge = document.getElementById("count_archived_catalog");
+
+    if (activeBadge) activeBadge.textContent = activeCount;
+    if (archivedBadge) archivedBadge.textContent = archivedCount;
+}
+
+// Sync UI headers, badges, and sidebar active indicators with current view
+function syncCatalogViewUI() {
+    const pageTitle = document.getElementById("admin_page_main_title");
+    const pageSubtitle = document.getElementById("admin_page_subtitle");
+    const addBtnHeader = document.getElementById("btn_open_add_product");
+    const addBtnToolbar = document.getElementById("btn_open_add_product_toolbar");
+    const sidebarActiveLink = document.getElementById("sidebar_link_products");
+    const sidebarArchivedLink = document.getElementById("sidebar_link_archived");
+
+    const btnActive = document.getElementById("btn_view_active_products");
+    const btnArchived = document.getElementById("btn_view_archived_products");
+
+    if (btnActive) btnActive.classList.toggle("view_toggle_active", currentCatalogView === "active");
+    if (btnArchived) btnArchived.classList.toggle("view_toggle_active", currentCatalogView === "archived");
+
+    if (sidebarActiveLink) sidebarActiveLink.classList.toggle("nav_link_active", currentCatalogView === "active");
+    if (sidebarArchivedLink) sidebarArchivedLink.classList.toggle("nav_link_active", currentCatalogView === "archived");
+
+    if (currentCatalogView === "archived") {
+        if (pageTitle) pageTitle.innerHTML = '<i class="fas fa-box-archive" style="color: #d97706; margin-right: 10px;"></i>Archived Products';
+        if (pageSubtitle) pageSubtitle.textContent = 'View and restore archived products. Archived items are hidden from customers and the public shop.';
+        if (addBtnHeader) addBtnHeader.style.display = "none";
+        if (addBtnToolbar) addBtnToolbar.style.display = "none";
+    } else {
+        if (pageTitle) pageTitle.textContent = 'Products';
+        if (pageSubtitle) pageSubtitle.textContent = 'Browse, filter, and add products available across all store categories.';
+        if (addBtnHeader) addBtnHeader.style.display = "inline-flex";
+        if (addBtnToolbar) addBtnToolbar.style.display = "inline-flex";
+    }
+}
+
+// Switch between Active Catalog and Archived Products views
+function switchProductCatalogView(view) {
+    currentCatalogView = view === "archived" ? "archived" : "active";
+
+    // Update URL query parameter without full reload
+    const newUrl = new URL(window.location);
+    if (currentCatalogView === "archived") {
+        newUrl.searchParams.set("view", "archived");
+    } else {
+        newUrl.searchParams.delete("view");
+    }
+    window.history.replaceState({}, '', newUrl);
+
+    syncCatalogViewUI();
+    updateCategoryCounters();
+    renderProductGrid();
+}
+window.switchProductCatalogView = switchProductCatalogView;
+
+// Load live products from backend API (with includeArchived=true)
 async function loadAdminProducts() {
     const grid = document.getElementById("products_grid");
     const emptyState = document.getElementById("empty_products_state");
@@ -96,15 +165,16 @@ async function loadAdminProducts() {
         `;
     }
 
-    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
-
     try {
-        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl("/api/products") : "/api/products";
+        const apiUrl = typeof getApiUrl === 'function' 
+            ? getApiUrl("/api/products?includeArchived=true") 
+            : "/api/products?includeArchived=true";
         const res = await fetch(apiUrl);
         const data = await res.json();
 
         if (res.ok && data.status === "success") {
             storeProducts = data.data || [];
+            updateCatalogViewBadges();
             updateCategoryCounters();
             renderProductGrid();
         } else {
@@ -142,23 +212,32 @@ function isBikeCategory(cat) {
     return BIKE_CATEGORIES.includes((cat || '').toLowerCase());
 }
 
+// Helper: Get products matching current catalog view mode (active vs archived)
+function getCatalogScopeProducts() {
+    return storeProducts.filter(p => {
+        const isArch = !!(p.is_archived || p.isArchived);
+        return currentCatalogView === "archived" ? isArch : !isArch;
+    });
+}
+
 // Update category tab badges and dropdown counters
 function updateCategoryCounters() {
+    const scopedList = getCatalogScopeProducts();
     const counts = {
-        all: storeProducts.length,
-        bicycles: storeProducts.filter(p => isBikeCategory(p.category)).length,
-        mountain_bikes: storeProducts.filter(p => p.category === "mountain_bikes").length,
-        road_bikes: storeProducts.filter(p => p.category === "road_bikes").length,
-        gravel_bikes: storeProducts.filter(p => p.category === "gravel_bikes").length,
-        bmx_urban: storeProducts.filter(p => p.category === "bmx_urban").length,
-        folding_commuter: storeProducts.filter(p => p.category === "folding_commuter").length,
-        frames: storeProducts.filter(p => p.category === "frame" || p.category === "frames" || p.category === "fork").length,
-        gears: storeProducts.filter(p => p.category === "upgrade_kit" || p.category === "chain" || p.category === "gears").length,
-        brakes: storeProducts.filter(p => p.category === "brakes").length,
-        pedals: storeProducts.filter(p => p.category === "pedals").length,
-        rims_tires: storeProducts.filter(p => p.category === "tires" || p.category === "rims" || p.category === "hubs" || p.category === "rims_tires").length,
-        handlebars_saddles: storeProducts.filter(p => p.category === "handle_bar" || p.category === "stem" || p.category === "saddle" || p.category === "handle_grip" || p.category === "handlebars_saddles").length,
-        apparel: storeProducts.filter(p => p.category === "apparel").length
+        all: scopedList.length,
+        bicycles: scopedList.filter(p => isBikeCategory(p.category)).length,
+        mountain_bikes: scopedList.filter(p => p.category === "mountain_bikes").length,
+        road_bikes: scopedList.filter(p => p.category === "road_bikes").length,
+        gravel_bikes: scopedList.filter(p => p.category === "gravel_bikes").length,
+        bmx_urban: scopedList.filter(p => p.category === "bmx_urban").length,
+        folding_commuter: scopedList.filter(p => p.category === "folding_commuter").length,
+        frames: scopedList.filter(p => p.category === "frame" || p.category === "frames" || p.category === "fork").length,
+        gears: scopedList.filter(p => p.category === "upgrade_kit" || p.category === "chain" || p.category === "gears").length,
+        brakes: scopedList.filter(p => p.category === "brakes").length,
+        pedals: scopedList.filter(p => p.category === "pedals").length,
+        rims_tires: scopedList.filter(p => p.category === "tires" || p.category === "rims" || p.category === "hubs" || p.category === "rims_tires").length,
+        handlebars_saddles: scopedList.filter(p => p.category === "handle_bar" || p.category === "stem" || p.category === "saddle" || p.category === "handle_grip" || p.category === "handlebars_saddles").length,
+        apparel: scopedList.filter(p => p.category === "apparel").length
     };
 
     for (const key in counts) {
@@ -180,7 +259,7 @@ function updateCategoryCounters() {
 
 // Get filtered and sorted products
 function getFilteredProducts() {
-    let list = [...storeProducts];
+    let list = getCatalogScopeProducts();
 
     // Filter by category
     if (selectedCategory && selectedCategory !== "all") {
@@ -230,7 +309,33 @@ function renderProductGrid(items = null) {
 
     if (list.length === 0) {
         if (grid) grid.style.display = "none";
-        if (emptyState) emptyState.style.display = "block";
+        if (emptyState) {
+            emptyState.style.display = "block";
+            const emptyTitle = document.getElementById("empty_products_title");
+            const emptyDesc = document.getElementById("empty_products_desc");
+            const emptyAction = document.getElementById("empty_products_action_btn");
+            const emptyIcon = document.getElementById("empty_products_icon");
+
+            if (currentCatalogView === "archived") {
+                if (emptyIcon) emptyIcon.className = "fas fa-box-archive";
+                if (emptyTitle) emptyTitle.textContent = "No Archived Products";
+                if (emptyDesc) emptyDesc.textContent = currentSearchQuery || selectedCategory !== "all"
+                    ? "No archived products match the active filter or search query."
+                    : "There are currently no archived products in the catalog.";
+                if (emptyAction) {
+                    emptyAction.innerHTML = '<i class="fas fa-boxes-stacked"></i> <span>View Active Catalog</span>';
+                    emptyAction.onclick = () => switchProductCatalogView('active');
+                }
+            } else {
+                if (emptyIcon) emptyIcon.className = "fas fa-search";
+                if (emptyTitle) emptyTitle.textContent = "No Products Found";
+                if (emptyDesc) emptyDesc.textContent = "No items match the selected category or search query.";
+                if (emptyAction) {
+                    emptyAction.innerHTML = '<i class="fas fa-plus"></i> <span>Add Product</span>';
+                    emptyAction.onclick = openAddProductModal;
+                }
+            }
+        }
         return;
     }
 
@@ -245,14 +350,38 @@ function renderProductGrid(items = null) {
             const sku = item.sku || `SKU-${id}`;
             const image = item.image_url || item.imageUrl || item.image || "/frontend/Pictures/placeholder.png";
             const catName = getCategoryDisplayName(item);
+            const isArchived = !!(item.is_archived || item.isArchived);
 
             const stockColor = stock === 0 ? "#dc2626" : (stock <= 3 ? "#d97706" : "#16a34a");
             const stockLabel = stock === 0 ? "Out of Stock" : `Stock: ${stock}`;
+
+            const archivedBadgeHtml = isArchived
+                ? `<span class="product_archived_pill"><i class="fas fa-box-archive"></i> Archived</span>`
+                : '';
+
+            const actionButtonsHtml = isArchived
+                ? `
+                    <button type="button" class="product_action_btn" onclick="openEditProduct('${id}')" title="Edit Product">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button type="button" class="product_action_btn product_action_btn_restore" onclick="unarchiveProductItem('${id}')" title="Restore Product to Active Catalog">
+                        <i class="fas fa-rotate-left"></i>
+                    </button>
+                  `
+                : `
+                    <button type="button" class="product_action_btn" onclick="openEditProduct('${id}')" title="Edit Product">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button type="button" class="product_action_btn product_action_btn_archive" onclick="archiveProductItem('${id}')" title="Archive Product">
+                        <i class="fas fa-box-archive"></i>
+                    </button>
+                  `;
 
             return `
                 <article class="product_card" data_item="${id}">
                     <div class="product_card_img_wrap" style="position: relative;">
                         <img src="${image}" alt="${title}" class="product_card_img" onerror="this.onerror=null; this.src='/frontend/Pictures/placeholder.png';">
+                        ${archivedBadgeHtml}
                         <span style="position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.85); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(4px);">
                             ${sku}
                         </span>
@@ -266,12 +395,7 @@ function renderProductGrid(items = null) {
                         <div class="product_card_footer" style="margin-top: 10px;">
                             <span class="product_card_price">₱${price.toLocaleString()}</span>
                             <div class="product_card_actions">
-                                <button type="button" class="product_action_btn" onclick="openEditProduct('${id}')" title="Edit Product">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
-                                <button type="button" class="product_action_btn product_action_btn_danger" onclick="deleteProductItem('${id}')" title="Delete Product">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                ${actionButtonsHtml}
                             </div>
                         </div>
                     </div>
@@ -519,21 +643,24 @@ async function handleEditProductSubmit(e) {
     }
 }
 
-// Delete Product from Catalog
-async function deleteProductItem(productId) {
+// Archive product from store catalog (replaces permanent delete)
+async function archiveProductItem(productId) {
     const item = storeProducts.find(p => String(p.id || p._id) === String(productId));
     const title = item ? (item.name || item.title) : `Product #${productId}`;
 
-    const confirmDelete = confirm(`Are you sure you want to permanently delete "${title}" from the store catalog?`);
-    if (!confirmDelete) return;
+    const confirmArchive = confirm(`Are you sure you want to archive "${title}"?\n\nArchived products will be removed from the public shop catalog, but can be viewed and restored at any time in the Archived Products section.`);
+    if (!confirmArchive) return;
 
     const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
-    if (!token) return;
+    if (!token) {
+        alert("Admin authorization token not found. Please log in again.");
+        return;
+    }
 
     try {
-        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${productId}`) : `/api/products/${productId}`;
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${productId}/archive`) : `/api/products/${productId}/archive`;
         const res = await fetch(apiUrl, {
-            method: "DELETE",
+            method: "PUT",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -541,13 +668,55 @@ async function deleteProductItem(productId) {
 
         const data = await res.json();
         if (res.ok && data.status === "success") {
-            if (typeof showToast === 'function') showToast(`Product "${title}" deleted from catalog.`, true);
+            if (typeof showToast === 'function') {
+                showToast(`Product "${title}" archived.`, true);
+            }
             await loadAdminProducts();
         } else {
-            alert(data.message || "Failed to delete product");
+            alert(data.message || "Failed to archive product");
         }
     } catch (err) {
-        console.error("Product deletion error:", err);
-        alert("Server error when deleting product.");
+        console.error("Product archive error:", err);
+        alert("Server error when archiving product.");
     }
 }
+window.archiveProductItem = archiveProductItem;
+
+// Unarchive / Restore product back to active catalog
+async function unarchiveProductItem(productId) {
+    const item = storeProducts.find(p => String(p.id || p._id) === String(productId));
+    const title = item ? (item.name || item.title) : `Product #${productId}`;
+
+    const confirmRestore = confirm(`Restore "${title}" back to the active store catalog?`);
+    if (!confirmRestore) return;
+
+    const token = typeof getAdminToken === 'function' ? getAdminToken() : localStorage.getItem("taurus_admin_token");
+    if (!token) {
+        alert("Admin authorization token not found. Please log in again.");
+        return;
+    }
+
+    try {
+        const apiUrl = typeof getApiUrl === 'function' ? getApiUrl(`/api/products/${productId}/unarchive`) : `/api/products/${productId}/unarchive`;
+        const res = await fetch(apiUrl, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await res.json();
+        if (res.ok && data.status === "success") {
+            if (typeof showToast === 'function') {
+                showToast(`Product "${title}" restored to active catalog.`, true);
+            }
+            await loadAdminProducts();
+        } else {
+            alert(data.message || "Failed to restore product");
+        }
+    } catch (err) {
+        console.error("Product restore error:", err);
+        alert("Server error when restoring product.");
+    }
+}
+window.unarchiveProductItem = unarchiveProductItem;

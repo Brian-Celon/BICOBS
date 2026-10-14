@@ -17,6 +17,8 @@ const formatProduct = (row) => ({
   is_available: row.is_available,
   isFeatured: row.is_featured,
   is_featured: row.is_featured,
+  isArchived: !!row.is_archived,
+  is_archived: !!row.is_archived,
   createdAt: row.created_at,
   updatedAt: row.updated_at
 });
@@ -56,9 +58,21 @@ const generateBackendSKU = (category, productName) => {
 // @access  Public
 const getProducts = async (req, res, next) => {
   try {
-    const { category, search, availableOnly } = req.query;
+    const { category, search, availableOnly, includeArchived, archived } = req.query;
     let sql = 'SELECT * FROM products WHERE 1=1';
     const params = [];
+
+    // Archive filtering:
+    // - archived === 'true': only archived products
+    // - archived === 'all' or includeArchived === 'true': both active and archived
+    // - default: only active products (COALESCE(is_archived, false) = false)
+    if (archived === 'true') {
+      sql += ' AND COALESCE(is_archived, false) = true';
+    } else if (archived === 'all' || includeArchived === 'true') {
+      // return all products
+    } else {
+      sql += ' AND COALESCE(is_archived, false) = false';
+    }
 
     if (category && category !== 'all') {
       const catLower = category.toLowerCase().trim();
@@ -238,22 +252,95 @@ const updateProduct = async (req, res, next) => {
     const imageUrl = b.imageUrl !== undefined ? b.imageUrl : (b.image_url !== undefined ? b.image_url : current.image_url);
     const isAvailable = b.isAvailable !== undefined ? b.isAvailable : (b.is_available !== undefined ? b.is_available : (stockQuantity > 0));
     const isFeatured = b.isFeatured !== undefined ? b.isFeatured : (b.is_featured !== undefined ? b.is_featured : current.is_featured);
+    const isArchived = b.isArchived !== undefined ? b.isArchived : (b.is_archived !== undefined ? b.is_archived : (current.is_archived || false));
 
     const updateSql = `
       UPDATE products
       SET name = $1, description = $2, category = $3, price = $4, stock_quantity = $5,
-          sku = $6, image_url = $7, is_available = $8, is_featured = $9, updated_at = CURRENT_TIMESTAMP
-      WHERE id = $10
+          sku = $6, image_url = $7, is_available = $8, is_featured = $9, is_archived = $10, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $11
       RETURNING *;
     `;
 
     const result = await db.query(updateSql, [
-      name, description, category, price, stockQuantity, sku, imageUrl, isAvailable, isFeatured, id
+      name, description, category, price, stockQuantity, sku, imageUrl, isAvailable, isFeatured, !!isArchived, id
     ]);
 
     res.status(200).json({
       status: 'success',
       message: 'Product updated successfully',
+      data: formatProduct(result.rows[0])
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Archive a product (soft delete)
+// @route   PUT /api/products/:id/archive
+// @access  Private (Admin / Staff)
+const archiveProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid product ID' });
+    }
+
+    const result = await db.query(
+      `UPDATE products 
+       SET is_archived = true, is_available = false, updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $1 
+       RETURNING *;`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product not found'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Product archived successfully',
+      data: formatProduct(result.rows[0])
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Unarchive / Restore a product
+// @route   PUT /api/products/:id/unarchive
+// @access  Private (Admin / Staff)
+const unarchiveProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid product ID' });
+    }
+
+    const result = await db.query(
+      `UPDATE products 
+       SET is_archived = false, is_available = true, updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $1 
+       RETURNING *;`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product not found'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Product restored successfully',
       data: formatProduct(result.rows[0])
     });
   } catch (error) {
@@ -312,6 +399,8 @@ module.exports = {
   getCategories,
   createProduct,
   updateProduct,
+  archiveProduct,
+  unarchiveProduct,
   deleteProduct
 };
 

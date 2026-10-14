@@ -6,6 +6,8 @@ const {
   getCategories,
   createProduct,
   updateProduct,
+  archiveProduct,
+  unarchiveProduct,
   deleteProduct
 } = require('../controllers/productController');
 const { protect, authorize } = require('../middleware/authMiddleware');
@@ -18,6 +20,9 @@ router.get('/:id', getProductById);
 // Protected routes (Admin / Staff)
 router.post('/', protect, authorize('admin', 'staff'), createProduct);
 router.put('/:id', protect, authorize('admin', 'staff'), updateProduct);
+router.put('/:id/archive', protect, authorize('admin', 'staff'), archiveProduct);
+router.put('/:id/unarchive', protect, authorize('admin', 'staff'), unarchiveProduct);
+router.put('/:id/restore', protect, authorize('admin', 'staff'), unarchiveProduct);
 router.delete('/:id', protect, authorize('admin'), deleteProduct);
 
 module.exports = router;

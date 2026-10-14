@@ -2467,6 +2467,101 @@ input:checked + .slider::before {
     color: #ef4444;
 }
 
+/* archive button hover (amber) */
+.product_action_btn_archive:hover {
+    background-color: #fef3c7;
+    border-color: #fde68a;
+    color: #d97706;
+}
+
+/* restore button hover (emerald success) */
+.product_action_btn_restore:hover {
+    background-color: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #059669;
+}
+
+/* archived pill tag over product card image */
+.product_archived_pill {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(217, 119, 6, 0.95);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+}
+
+/* catalog view toggle button group */
+.product_view_toggle_group {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    gap: 4px;
+}
+
+.view_toggle_btn {
+    border: none;
+    background: transparent;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.view_toggle_btn:hover {
+    color: #0f172a;
+    background-color: #ffffff;
+}
+
+.view_toggle_btn.view_toggle_active {
+    background-color: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.view_count_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 10px;
+    background-color: #e2e8f0;
+    color: #475569;
+    line-height: 1.2;
+}
+
+.view_toggle_btn.view_toggle_active .view_count_badge {
+    background-color: #b91c1c;
+    color: #ffffff;
+}
+
+.view_toggle_btn#btn_view_archived_products.view_toggle_active .view_count_badge {
+    background-color: #d97706;
+    color: #ffffff;
+}
+
 /* upload image box inside modal */
 .clean_upload_box {
     border: 2px dashed #cbd5e1;

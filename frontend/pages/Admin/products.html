@@ -94,9 +94,15 @@
                             </a>
                         </li>
                         <li class="sidebar_nav_item">
-                            <a href="products.html" class="sidebar_nav_link nav_link_active">
+                            <a href="products.html" class="sidebar_nav_link nav_link_active" id="sidebar_link_products" onclick="switchProductCatalogView('active'); return false;">
                                 <i class="fas fa-tags"></i>
                                 <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar_nav_item">
+                            <a href="products.html?view=archived" class="sidebar_nav_link" id="sidebar_link_archived" onclick="switchProductCatalogView('archived'); return false;">
+                                <i class="fas fa-box-archive"></i>
+                                <span>Archived Products</span>
                             </a>
                         </li>
                         <li class="sidebar_nav_item">
@@ -165,10 +171,22 @@
             <!-- page title header bar -->
             <div class="page_header">
                 <div class="page_title_group">
-                    <h1 class="page_title">Products</h1>
-                    <p class="page_subtitle">Browse, filter, and add products available across all store categories.</p>
+                    <h1 class="page_title" id="admin_page_main_title">Products</h1>
+                    <p class="page_subtitle" id="admin_page_subtitle">Browse, filter, and add products available across all store categories.</p>
                 </div>
                 <div class="page_header_actions">
+                    <div class="product_view_toggle_group" role="tablist" aria-label="Catalog View Mode">
+                        <button type="button" class="view_toggle_btn view_toggle_active" id="btn_view_active_products" onclick="switchProductCatalogView('active')">
+                            <i class="fas fa-boxes-stacked"></i>
+                            <span>Active Catalog</span>
+                            <span class="view_count_badge" id="count_active_catalog">0</span>
+                        </button>
+                        <button type="button" class="view_toggle_btn" id="btn_view_archived_products" onclick="switchProductCatalogView('archived')">
+                            <i class="fas fa-box-archive"></i>
+                            <span>Archived Products</span>
+                            <span class="view_count_badge" id="count_archived_catalog">0</span>
+                        </button>
+                    </div>
                     <button type="button" class="btn_primary" id="btn_open_add_product" onclick="openAddProductModal()">
                         <i class="fas fa-plus"></i>
                         <span>Add Product</span>
@@ -265,7 +283,7 @@
                         <option value="price_desc">Price: High to Low</option>
                         <option value="name_asc">Name: A to Z</option>
                     </select>
-                    <button type="button" class="btn_primary" onclick="openAddProductModal()" style="white-space: nowrap;">
+                    <button type="button" class="btn_primary" id="btn_open_add_product_toolbar" onclick="openAddProductModal()" style="white-space: nowrap;">
                         <i class="fas fa-plus"></i>
                         <span>Add Product</span>
                     </button>
@@ -279,13 +297,13 @@
 
             <!-- empty search state -->
             <div id="empty_products_state" style="display: none; padding: 48px 20px; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; margin-top: 10px;">
-                <i class="fas fa-search" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px;"></i>
-                <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">No Products Found</h3>
-                <p style="font-size: 13px; color: #64748b; margin: 0 0 16px 0;">No items match the selected category or search query.</p>
+                <i class="fas fa-search" id="empty_products_icon" style="font-size: 32px; color: #cbd5e1; margin-bottom: 12px;"></i>
+                <h3 id="empty_products_title" style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0;">No Products Found</h3>
+                <p id="empty_products_desc" style="font-size: 13px; color: #64748b; margin: 0 0 16px 0;">No items match the selected category or search query.</p>
                 <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
                     <button type="button" class="btn_secondary" onclick="resetProductFilters()">Clear Filter</button>
-                    <button type="button" class="btn_primary" onclick="openAddProductModal()">
-                        <i class="fas fa-plus"></i> Add Product
+                    <button type="button" class="btn_primary" id="empty_products_action_btn" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i> <span>Add Product</span>
                     </button>
                 </div>
             </div>
