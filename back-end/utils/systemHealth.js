@@ -146,7 +146,7 @@ async function checkProductsCatalog() {
 
         UPDATE categories c
         SET item_count = sub.cnt
-        FROM (SELECT category, COUNT(*) as cnt FROM products GROUP BY category) sub
+        FROM (SELECT category, COUNT(*) as cnt FROM products WHERE COALESCE(is_archived, false) = false GROUP BY category) sub
         WHERE c.slug = sub.category;
       `);
       return { status: 'ok', message: 'Legacy duplicates detected and auto-cleaned (139 unique catalog products)' };

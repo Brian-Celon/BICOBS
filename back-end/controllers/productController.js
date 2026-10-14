@@ -134,6 +134,7 @@ const getProducts = async (req, res, next) => {
 const getProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { includeArchived } = req.query;
 
     if (isNaN(id)) {
       return res.status(400).json({
@@ -151,9 +152,17 @@ const getProductById = async (req, res, next) => {
       });
     }
 
+    const row = result.rows[0];
+    if (row.is_archived && includeArchived !== 'true') {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product is archived and no longer available'
+      });
+    }
+
     res.status(200).json({
       status: 'success',
-      data: formatProduct(result.rows[0])
+      data: formatProduct(row)
     });
   } catch (error) {
     next(error);
@@ -382,7 +391,19 @@ const deleteProduct = async (req, res, next) => {
 // @access  Public
 const getCategories = async (req, res, next) => {
   try {
-    const result = await db.query('SELECT * FROM categories ORDER BY id ASC');
+    const result = await db.query(`
+      SELECT c.id, c.name, c.slug, c.description, c.image_url,
+             COALESCE(p.cnt, 0)::int as item_count,
+             c.created_at, c.updated_at
+      FROM categories c
+      LEFT JOIN (
+        SELECT category, COUNT(*) as cnt
+        FROM products
+        WHERE COALESCE(is_archived, false) = false
+        GROUP BY category
+      ) p ON LOWER(c.slug) = LOWER(p.category)
+      ORDER BY c.id ASC;
+    `);
     res.status(200).json({
       status: 'success',
       count: result.rows.length,
