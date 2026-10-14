@@ -2036,7 +2036,8 @@ async function setup_products_catalog() {
         const res = await fetch('/api/products');
         if (res.ok) {
             const result = await res.json();
-            const productsList = result.data || result.products || [];
+            const rawList = result.data || result.products || [];
+            const productsList = rawList.filter(p => !p.is_archived && !p.isArchived && p.is_available !== false && p.isAvailable !== false);
             if (Array.isArray(productsList) && productsList.length > 0) {
                 renderDashboardProductsGrid(productsList);
             }
@@ -2160,7 +2161,8 @@ async function load_recommended_products_from_backend() {
         const res = await fetch('/api/products');
         if (!res.ok) throw new Error('API fetch failed');
         const result = await res.json();
-        const products = result.data || result.products || [];
+        const rawProducts = result.data || result.products || [];
+        const products = rawProducts.filter(p => !p.is_archived && !p.isArchived && p.is_available !== false && p.isAvailable !== false);
 
         if (products.length === 0) {
             listEl.innerHTML = '<li style="text-align: center; width: 100%; padding: 16px; color: #64748b;">No recommendations available.</li>';

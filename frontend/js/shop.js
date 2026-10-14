@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error(`API error HTTP ${res.status}`);
             const result = await res.json();
             if (result.status === 'success' && Array.isArray(result.data) && result.data.length > 0) {
-                all_products = result.data;
+                all_products = result.data.filter(p => !p.is_archived && !p.isArchived && p.is_available !== false && p.isAvailable !== false);
                 updateSidebarCategoryCounts(all_products);
                 renderProductsGrid(all_products);
                 checkUrlParams();
@@ -237,7 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (fallbackRes && fallbackRes.ok) {
                     const fallbackData = await fallbackRes.json();
                     if (Array.isArray(fallbackData) && fallbackData.length > 0) {
-                        all_products = fallbackData.map((p, idx) => ({
+                        all_products = fallbackData
+                            .filter(p => !p.is_archived && !p.isArchived && p.is_available !== false && p.isAvailable !== false)
+                            .map((p, idx) => ({
                             _id: String(idx + 1),
                             id: idx + 1,
                             name: p.name,
@@ -1000,13 +1002,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const prodParam = urlParams.get('product') || urlParams.get('id');
         if (prodParam) {
             const match = all_products.find(p => String(p._id || p.id) === String(prodParam) || (p.name && p.name.toLowerCase() === decodeURIComponent(prodParam).toLowerCase()));
-            if (match) {
+            if (match && !match.is_archived && !match.isArchived && match.is_available !== false && match.isAvailable !== false) {
                 setTimeout(() => showProductDetailPage(match, false), 120);
             }
         } else if (window.location.hash && window.location.hash.startsWith('#product-')) {
             const hashId = window.location.hash.replace('#product-', '');
             const match = all_products.find(p => String(p._id || p.id) === String(hashId));
-            if (match) {
+            if (match && !match.is_archived && !match.isArchived && match.is_available !== false && match.isAvailable !== false) {
                 setTimeout(() => showProductDetailPage(match, false), 120);
             }
         }

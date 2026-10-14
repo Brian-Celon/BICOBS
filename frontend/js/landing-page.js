@@ -120,9 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let products = [];
             if (data.status === 'success' && Array.isArray(data.data)) {
-                products = data.data;
+                products = data.data.filter(p => !p.is_archived && !p.isArchived && p.is_available !== false && p.isAvailable !== false);
             } else if (Array.isArray(data.products)) {
-                products = data.products;
+                products = data.products.filter(p => !p.is_archived && !p.isArchived && p.is_available !== false && p.isAvailable !== false);
             }
 
             if (!products || products.length === 0) {

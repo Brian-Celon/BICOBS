@@ -15,6 +15,8 @@ const formatProduct = (row) => ({
   image_url: row.image_url || '',
   isAvailable: row.is_available,
   is_available: row.is_available,
+  isArchived: !!row.is_archived,
+  is_archived: !!row.is_archived,
   isFeatured: row.is_featured,
   is_featured: row.is_featured,
   createdAt: row.created_at,
@@ -26,9 +28,21 @@ const formatProduct = (row) => ({
 // @access  Public
 const getProducts = async (req, res, next) => {
   try {
-    const { category, search, availableOnly } = req.query;
+    const { category, search, availableOnly, includeArchived, archived } = req.query;
     let sql = 'SELECT * FROM products WHERE 1=1';
     const params = [];
+
+    // Archive filtering:
+    // - archived === 'true': only archived products
+    // - archived === 'all' or includeArchived === 'true': both active and archived
+    // - default: only active products (COALESCE(is_archived, false) = false AND COALESCE(is_available, true) = true)
+    if (archived === 'true') {
+      sql += ' AND COALESCE(is_archived, false) = true';
+    } else if (archived === 'all' || includeArchived === 'true') {
+      // return all products
+    } else {
+      sql += ' AND COALESCE(is_archived, false) = false AND COALESCE(is_available, true) = true';
+    }
 
     if (category && category !== 'all') {
       const catLower = category.toLowerCase().trim();
@@ -90,6 +104,7 @@ const getProducts = async (req, res, next) => {
 const getProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { includeArchived } = req.query;
 
     if (isNaN(id)) {
       return res.status(400).json({
@@ -107,9 +122,17 @@ const getProductById = async (req, res, next) => {
       });
     }
 
+    const row = result.rows[0];
+    if (row.is_archived && includeArchived !== 'true') {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product is archived and no longer available'
+      });
+    }
+
     res.status(200).json({
       status: 'success',
-      data: formatProduct(result.rows[0])
+      data: formatProduct(row)
     });
   } catch (error) {
     next(error);
@@ -285,6 +308,78 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+// @desc    Archive a product (hide from store catalog)
+// @route   PUT /api/products/:id/archive
+// @access  Private (Admin / Staff)
+const archiveProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid product ID' });
+    }
+
+    const result = await db.query(
+      `UPDATE products 
+       SET is_archived = true, is_available = false, updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $1 
+       RETURNING *;`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product not found'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Product archived successfully',
+      data: formatProduct(result.rows[0])
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Unarchive / Restore a product
+// @route   PUT /api/products/:id/unarchive
+// @access  Private (Admin / Staff)
+const unarchiveProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid product ID' });
+    }
+
+    const result = await db.query(
+      `UPDATE products 
+       SET is_archived = false, is_available = true, updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $1 
+       RETURNING *;`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product not found'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Product restored successfully',
+      data: formatProduct(result.rows[0])
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Delete a product
 // @route   DELETE /api/products/:id
 // @access  Private (Admin only)
@@ -319,7 +414,19 @@ const deleteProduct = async (req, res, next) => {
 // @access  Public
 const getCategories = async (req, res, next) => {
   try {
-    const result = await db.query('SELECT * FROM categories ORDER BY id ASC');
+    const result = await db.query(`
+      SELECT c.id, c.name, c.slug, c.description, c.image_url,
+             COALESCE(p.cnt, 0)::int as item_count,
+             c.created_at, c.updated_at
+      FROM categories c
+      LEFT JOIN (
+        SELECT category, COUNT(*) as cnt
+        FROM products
+        WHERE COALESCE(is_archived, false) = false
+        GROUP BY category
+      ) p ON LOWER(c.slug) = LOWER(p.category)
+      ORDER BY c.id ASC;
+    `);
     res.status(200).json({
       status: 'success',
       count: result.rows.length,
@@ -363,7 +470,7 @@ const cleanupDuplicates = async (req, res, next) => {
 
       UPDATE categories c
       SET item_count = sub.cnt
-      FROM (SELECT category, COUNT(*) as cnt FROM products GROUP BY category) sub
+      FROM (SELECT category, COUNT(*) as cnt FROM products WHERE COALESCE(is_archived, false) = false GROUP BY category) sub
       WHERE c.slug = sub.category;
     `);
 
@@ -387,6 +494,8 @@ module.exports = {
   getCategories,
   createProduct,
   updateProduct,
+  archiveProduct,
+  unarchiveProduct,
   deleteProduct,
   cleanupDuplicates
 };
