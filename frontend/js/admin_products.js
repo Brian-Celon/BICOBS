@@ -105,7 +105,6 @@ function syncCatalogViewUI() {
     const pageTitle = document.getElementById("admin_page_main_title");
     const pageSubtitle = document.getElementById("admin_page_subtitle");
     const addBtnHeader = document.getElementById("btn_open_add_product");
-    const addBtnToolbar = document.getElementById("btn_open_add_product_toolbar");
     const sidebarActiveLink = document.getElementById("sidebar_link_products");
     const sidebarArchivedLink = document.getElementById("sidebar_link_archived");
 
@@ -122,12 +121,10 @@ function syncCatalogViewUI() {
         if (pageTitle) pageTitle.innerHTML = '<i class="fas fa-box-archive" style="color: #d97706; margin-right: 10px;"></i>Archived Products';
         if (pageSubtitle) pageSubtitle.textContent = 'View and restore archived products. Archived items are hidden from customers and the public shop.';
         if (addBtnHeader) addBtnHeader.style.display = "none";
-        if (addBtnToolbar) addBtnToolbar.style.display = "none";
     } else {
         if (pageTitle) pageTitle.textContent = 'Products';
         if (pageSubtitle) pageSubtitle.textContent = 'Browse, filter, and add products available across all store categories.';
         if (addBtnHeader) addBtnHeader.style.display = "inline-flex";
-        if (addBtnToolbar) addBtnToolbar.style.display = "inline-flex";
     }
 }
 

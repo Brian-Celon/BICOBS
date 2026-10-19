@@ -399,33 +399,82 @@
             <!-- TAB PANEL 4: DELIVERY -->
             <div class="tab_panel" id="panel_delivery">
                 <article class="admin_card">
-                    <h2 class="card_title" style="margin-bottom: 8px;">Delivery & Fulfillment Configuration</h2>
-                    <p class="page_subtitle" style="margin-bottom: 20px;">Configure shipping rates, local delivery radius, and store pickup options.</p>
-                    <form onsubmit="handleSaveSettings(event, 'Delivery settings')">
+                    <h2 class="card_title" style="margin-bottom: 8px;">Delivery &amp; Third-Party Fulfillment Configuration</h2>
+                    <p class="page_subtitle" style="margin-bottom: 16px;">Store pickup hub details, third-party courier dispatch protocols, and operational fulfillment rules.</p>
+
+                    <!-- Zero Delivery Fee Policy Notice -->
+                    <div id="delivery_policy_notice" style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #b91c1c; border-radius: 8px; padding: 14px 16px; margin-bottom: 22px; display: flex; align-items: flex-start; gap: 12px;">
+                        <i class="fas fa-truck-fast" style="color: #b91c1c; font-size: 18px; margin-top: 2px;"></i>
+                        <div>
+                            <strong style="font-size: 13.5px; color: #0f172a; display: block; margin-bottom: 3px;">Third-Party Courier Fulfillment Policy (₱0.00 Store Delivery Fee)</strong>
+                            <p style="font-size: 12.5px; color: #475569; line-height: 1.5; margin: 0;">
+                                Taurus Bike Store charges <strong>₱0.00</strong> for shipping or delivery. Customers either pick up orders directly at our Marilao hub or book and pay third-party couriers (<strong>Lalamove, Grab Express, Transportify</strong>) directly upon dispatch readiness.
+                            </p>
+                        </div>
+                    </div>
+
+                    <form onsubmit="handleSaveSettings(event, 'Delivery &amp; dispatch protocols')">
                         <div class="settings_grid">
+                            <!-- Left Column: Store Pickup Hub Details -->
                             <div>
+                                <h3 style="font-size: 13px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 12px;">
+                                    <i class="fas fa-warehouse" style="color: #b91c1c; margin-right: 6px;"></i>Store Pickup Hub Details
+                                </h3>
                                 <div class="form_group">
-                                    <label class="form_label" for="setting_standard_fee">Standard Delivery Fee (₱)</label>
-                                    <input type="number" class="form_input" id="setting_standard_fee" value="150" required>
+                                    <label class="form_label" for="setting_pickup_hub_address">Pickup &amp; Courier Dispatch Hub Address</label>
+                                    <input type="text" class="form_input" id="setting_pickup_hub_address" value="1154 McArthur Highway, Brgy. Ibayo, Marilao, Bulacan" required>
                                 </div>
                                 <div class="form_group">
-                                    <label class="form_label" for="setting_free_threshold">Free Delivery Minimum Order Amount (₱)</label>
-                                    <input type="number" class="form_input" id="setting_free_threshold" value="5000" required>
+                                    <label class="form_label" for="setting_dispatch_hours">Dispatch &amp; Pickup Window</label>
+                                    <input type="text" class="form_input" id="setting_dispatch_hours" value="Monday – Saturday, 9:00 AM – 6:00 PM" required>
                                 </div>
                                 <div class="form_group">
-                                    <label class="form_label" for="setting_lead_time">Estimated Delivery Lead Time</label>
-                                    <input type="text" class="form_input" id="setting_lead_time" value="1 – 3 Business Days" required>
+                                    <label class="form_label" for="setting_dispatch_contact">Dispatch Counter Hotline</label>
+                                    <input type="text" class="form_input" id="setting_dispatch_contact" value="+63 917 123 4567" required>
+                                </div>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_lead_time">Order Preparation Lead Time</label>
+                                    <input type="text" class="form_input" id="setting_lead_time" value="Same-Day Dispatch (1 – 2 Hours Prep after Confirmation)" required>
                                 </div>
                             </div>
+
+                            <!-- Right Column: Third-Party Courier Dispatch Protocols & Notes -->
                             <div>
+                                <h3 style="font-size: 13px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 12px;">
+                                    <i class="fas fa-clipboard-check" style="color: #b91c1c; margin-right: 6px;"></i>Third-Party Courier Dispatch Protocols
+                                </h3>
                                 <div class="form_group">
-                                    <label class="form_label" for="setting_coverage_areas">Primary Serviceable Areas (Bulacan / Metro North)</label>
-                                    <textarea class="form_input" id="setting_coverage_areas" rows="4" style="height: auto; padding: 10px;">Marilao, Meycauayan, Bocaue, Santa Maria, Balagtas, Valenzuela North</textarea>
+                                    <label class="form_label" for="setting_supported_couriers">Supported Customer-Booked Couriers</label>
+                                    <input type="text" class="form_input" id="setting_supported_couriers" value="Lalamove (MPV / L300 / Motorcycle), Grab Express, Transportify" required>
                                 </div>
-                                <div class="preference_item" style="margin-top: 10px;">
-                                    <span class="preference_label">Allow In-Store Pickup (Free)</span>
+                                <div class="form_group">
+                                    <label class="form_label" for="setting_coverage_areas">Serviceable Dispatch Regions (Customer Courier Pin)</label>
+                                    <textarea class="form_input" id="setting_coverage_areas" rows="2" style="height: auto; padding: 10px;">Marilao, Meycauayan, Bocaue, Santa Maria, Balagtas, Valenzuela, Metro Manila &amp; Nearby Provinces</textarea>
+                                </div>
+
+                                <!-- Operational Notes Card -->
+                                <div id="courier_operational_notes" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+                                    <strong style="font-size: 12px; color: #0f172a; display: block; margin-bottom: 6px;">
+                                        <i class="fas fa-shield-halved" style="color: #16a34a; margin-right: 5px;"></i>Mandatory Staff Handover Checklist:
+                                    </strong>
+                                    <ul style="font-size: 12px; color: #475569; padding-left: 18px; margin: 0; line-height: 1.6;">
+                                        <li>Verify order payment is marked <strong>Paid</strong> before releasing items to any third-party rider.</li>
+                                        <li>Require courier driver to present valid <strong>Order ID (ORD-XXXX)</strong> and customer full name.</li>
+                                        <li>Advise 4-wheel utility vehicle (MPV/L300) for complete built bicycles and carbon framesets.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="preference_item" style="margin-top: 8px;">
+                                    <span class="preference_label">Allow In-Store Customer Pickup (₱0.00 Store Fee)</span>
                                     <label class="switch">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" id="setting_allow_store_pickup" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="preference_item" style="margin-top: 6px;">
+                                    <span class="preference_label">Allow Third-Party Courier Pickup (Lalamove / Grab)</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="setting_allow_third_party_courier" checked>
                                         <span class="slider"></span>
                                     </label>
                                 </div>
@@ -433,7 +482,7 @@
                         </div>
                         <div style="display: flex; justify-content: flex-end; padding-top: 16px;">
                             <button type="submit" class="btn_primary">
-                                <i class="fas fa-save"></i> <span>Save Delivery Settings</span>
+                                <i class="fas fa-save"></i> <span>Save Fulfillment Protocols</span>
                             </button>
                         </div>
                     </form>
@@ -466,7 +515,7 @@
                                     <span class="preference_label">Daily Low Stock Digest Email</span>
                                     <label class="switch">
                                         <input type="checkbox" checked>
-                                        <span class="slider"></span>
+                                    <span class="slider"></span>
                                     </label>
                                 </div>
                                 <div class="preference_item">
@@ -507,14 +556,14 @@
                                     <th>User</th>
                                     <th>Action Performed</th>
                                     <th>Target Resource</th>
-                                    <th>IP Address</th>
+                                    <th>Channel / Status</th>
                                 </tr>
                             </thead>
                             <tbody id="settings_audit_log_tbody">
                                 <tr>
                                     <td colspan="5" style="text-align: center; padding: 36px; color: #94a3b8;">
-                                        <i class="fas fa-shield-alt" style="font-size: 24px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
-                                        System audit initialized. All administrative actions are verified.
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
+                                        Loading live system audit logs...
                                     </td>
                                 </tr>
                             </tbody>
@@ -551,30 +600,6 @@
     <!-- script logic -->
     <script src="/frontend/js/config.js"></script>
     <script src="/frontend/js/admin.js"></script>
-    <script>
-        function switchSettingsTab(tabName) {
-            const tabs = document.querySelectorAll("#settings_tabs_bar .filter_tab_btn");
-            tabs.forEach(t => {
-                if (t.getAttribute("data-tab") === tabName) {
-                    t.classList.add("tab_active");
-                } else {
-                    t.classList.remove("tab_active");
-                }
-            });
-
-            const panels = document.querySelectorAll(".tab_panel");
-            panels.forEach(p => {
-                if (p.id === "panel_" + tabName) {
-                    p.classList.add("tab_panel_active");
-                } else {
-                    p.classList.remove("tab_panel_active");
-                }
-            });
-        }
-
-        function exportAuditLog() {
-            showToast("Exporting audit log CSV...");
-        }
-    </script>
+    <script src="/frontend/js/admin_settings.js"></script>
 </body>
 </html>

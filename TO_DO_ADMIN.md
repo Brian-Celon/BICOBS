@@ -212,36 +212,36 @@ The following endpoints built in the backend are ready for the admin pages to co
 
 ## 🛠️ Fix 1: Admin Panel UI, Data Flow & Delivery Refinements
 
-- [ ] **1. Admin > Inventory Tab: Remove Duplicate "Add Product" Button**
-  - [ ] Target: [`frontend/pages/Admin/inventory.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/inventory.html)
-  - [ ] Remove redundant button in `.toolbar_filters_group` (lines 218–221).
-  - [ ] Retain primary button in `.page_header_actions` (`#btn_open_add_inventory`).
+- [x] **1. Admin > Inventory Tab: Remove Duplicate "Add Product" Button**
+  - [x] Target: [`frontend/pages/Admin/inventory.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/inventory.html)
+  - [x] Remove redundant button in `.toolbar_filters_group` (lines 218–221).
+  - [x] Retain primary button in `.page_header_actions` (`#btn_open_add_inventory`).
 
-- [ ] **2. Admin > Products Tab: Remove Duplicate "Add Product" Button**
-  - [ ] Target: [`frontend/pages/Admin/products.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/products.html)
-  - [ ] Remove redundant button in `.toolbar_filters_group` (`#btn_open_add_product_toolbar`).
-  - [ ] Retain primary button in `.page_header_actions` (`#btn_open_add_product`).
+- [x] **2. Admin > Products Tab: Remove Duplicate "Add Product" Button**
+  - [x] Target: [`frontend/pages/Admin/products.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/products.html)
+  - [x] Remove redundant button in `.toolbar_filters_group` (`#btn_open_add_product_toolbar`).
+  - [x] Retain primary button in `.page_header_actions` (`#btn_open_add_product`).
 
-- [ ] **3. Admin > Reports Tab: Fix Sales Overview Graph to Work with Real Data**
-  - [ ] Target: [`frontend/pages/Admin/reports.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/reports.html)
-  - [ ] Replace static hardcoded mockup SVG (fixed September dates and fake bezier paths) with dynamic SVG chart renderer.
-  - [ ] Group live orders by timestamp/date, calculate dynamic Y-axis steps, generate responsive SVG paths (`.chart_line`, `.chart_area`, interactive `.chart_dot` tooltips).
-  - [ ] Provide clean empty state when no sales exist.
+- [x] **3. Admin > Reports Tab: Fix Sales Overview Graph to Work with Real Data**
+  - [x] Target: [`frontend/pages/Admin/reports.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/reports.html)
+  - [x] Replace static hardcoded mockup SVG (fixed September dates and fake bezier paths) with dynamic SVG chart renderer.
+  - [x] Group live orders by timestamp/date, calculate dynamic Y-axis steps, generate responsive SVG paths (`.chart_line`, `.chart_area`, interactive `.chart_dot` tooltips).
+  - [x] Provide clean empty state when no sales exist.
 
-- [ ] **4. Admin > Users Tab: Add Manual Account Verification Option in Edit Modal**
-  - [ ] Targets: [`frontend/pages/Admin/users.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/users.html), [`frontend/js/admin_users.js`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/js/admin_users.js)
-  - [ ] Keep table rows clean (no quick action buttons added to the table).
-  - [ ] Add an Account Verification status selector (`Verified` / `Unverified`) inside the "Manage User Account" modal (`#edit_user_modal`).
-  - [ ] Send `isVerified` via `PUT /api/users/:id`, update status badge on save, and display toast confirmation.
+- [x] **4. Admin > Users Tab: Add Manual Account Verification Option in Edit Modal**
+  - [x] Targets: [`frontend/pages/Admin/users.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/users.html), [`frontend/js/admin_users.js`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/js/admin_users.js)
+  - [x] Keep table rows clean (no quick action buttons added to the table).
+  - [x] Add an Account Verification status selector (`Verified` / `Unverified`) inside the "Manage User Account" modal (`#edit_user_modal`).
+  - [x] Send `isVerified` via `PUT /api/users/:id`, update status badge on save, and display toast confirmation.
 
-- [ ] **5. Admin > Settings Tab > Delivery: Third-Party Fulfillment Logic (No Delivery Fees)**
-  - [ ] Target: [`frontend/pages/Admin/settings.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/settings.html)
-  - [ ] Remove all delivery fee inputs and thresholds (the store charges ₱0; customers arrange and pay third-party couriers like Lalamove / Grab directly).
-  - [ ] Display store pickup hub details, third-party courier dispatch protocols, and operational notes.
+- [x] **5. Admin > Settings Tab > Delivery: Third-Party Fulfillment Logic (No Delivery Fees)**
+  - [x] Target: [`frontend/pages/Admin/settings.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/settings.html)
+  - [x] Remove all delivery fee inputs and thresholds (the store charges ₱0; customers arrange and pay third-party couriers like Lalamove / Grab directly).
+  - [x] Display store pickup hub details, third-party courier dispatch protocols, and operational notes.
 
-- [ ] **6. Admin > Settings Tab > Audit Log: Display Real Change Logs & Enable CSV Export**
-  - [ ] Targets: [`frontend/pages/Admin/settings.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/settings.html), [`frontend/js/admin_settings.js`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/js/admin_settings.js)
-  - [ ] Populate `#settings_audit_log_tbody` with live timestamped change logs (order status updates, payment verifications, product modifications, user verifications, settings saves).
-  - [ ] Render timestamp, user, action performed, target resource, and channel/status badges.
-  - [ ] Implement functional `exportAuditLog()` to download rendered audit rows as a real `.csv` file.
+- [x] **6. Admin > Settings Tab > Audit Log: Display Real Change Logs & Enable CSV Export**
+  - [x] Targets: [`frontend/pages/Admin/settings.html`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/pages/Admin/settings.html), [`frontend/js/admin_settings.js`](file:///c:/Users/Brian/OneDrive/Documents/BICOBS/frontend/js/admin_settings.js)
+  - [x] Populate `#settings_audit_log_tbody` with live timestamped change logs (order status updates, payment verifications, product modifications, user verifications, settings saves).
+  - [x] Render timestamp, user, action performed, target resource, and channel/status badges.
+  - [x] Implement functional `exportAuditLog()` to download rendered audit rows as a real `.csv` file.
 

@@ -336,6 +336,7 @@ function openEditUserModal(userId) {
     const nameInput = document.getElementById("edit_user_name");
     const emailInput = document.getElementById("edit_user_email");
     const roleSelect = document.getElementById("edit_user_role");
+    const verifiedSelect = document.getElementById("edit_user_verified");
 
     if (rowIdInput) rowIdInput.value = user.id;
     if (nameInput) nameInput.value = user.name || user.fullName || "";
@@ -343,6 +344,9 @@ function openEditUserModal(userId) {
     if (roleSelect) {
         const curRole = (user.role || "").toLowerCase();
         roleSelect.value = curRole === "admin" ? "admin" : (curRole === "staff" ? "staff" : "customer");
+    }
+    if (verifiedSelect) {
+        verifiedSelect.value = user.isVerified ? "true" : "false";
     }
 
     if (typeof openModal === 'function') openModal("edit_user_modal");
@@ -356,6 +360,8 @@ async function handleSaveEditedUser(e) {
     const name = (document.getElementById("edit_user_name")?.value || "").trim();
     const email = (document.getElementById("edit_user_email")?.value || "").trim();
     const role = (document.getElementById("edit_user_role")?.value || "customer").toLowerCase();
+    const verifiedSelect = document.getElementById("edit_user_verified");
+    const isVerified = verifiedSelect ? verifiedSelect.value === "true" : true;
 
     if (!id || !name || !email) {
         alert("Name and email are required.");
@@ -376,14 +382,19 @@ async function handleSaveEditedUser(e) {
             body: JSON.stringify({
                 name,
                 email,
-                role
+                role,
+                isVerified
             })
         });
 
         const data = await res.json();
         if (res.ok && data.status === "success") {
             if (typeof closeModal === 'function') closeModal("edit_user_modal");
-            if (typeof showToast === 'function') showToast(`User "${name}" updated!`, true);
+            const verLabel = isVerified ? "Verified" : "Unverified";
+            if (typeof showToast === 'function') showToast(`User "${name}" updated (${verLabel})!`, true);
+            if (typeof logAdminAuditAction === 'function') {
+                logAdminAuditAction("Updated User Account & Verification", `${name} (${verLabel}, ${role.toUpperCase()})`, "Users & Roles");
+            }
             await loadUsers();
         } else {
             alert(data.message || "Failed to update user");

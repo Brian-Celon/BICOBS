@@ -367,9 +367,40 @@ function handleAdminSessionExpired() {
     window.location.href = "login.html?session_expired=true";
 }
 
+// Global helper to record administrative change logs in localStorage for System Audit Log
+function logAdminAuditAction(actionPerformed, targetResource, channel = "Admin Portal") {
+    try {
+        const sessionRaw = localStorage.getItem("taurus_admin_session");
+        const sessionUser = sessionRaw ? JSON.parse(sessionRaw) : null;
+        const userName = sessionUser?.name || sessionUser?.fullName || sessionUser?.email || "Administrator";
+
+        const rawLogs = localStorage.getItem("taurus_audit_trail");
+        const logs = rawLogs ? JSON.parse(rawLogs) : [];
+
+        logs.unshift({
+            timestamp: new Date().toISOString(),
+            user: userName,
+            action: actionPerformed,
+            target: targetResource,
+            channel: channel,
+            badgeType: "admin_action"
+        });
+
+        // Keep up to 100 recent session audit entries
+        localStorage.setItem("taurus_audit_trail", JSON.stringify(logs.slice(0, 100)));
+
+        if (typeof renderAuditLogTable === "function") {
+            renderAuditLogTable();
+        }
+    } catch (e) {
+        console.warn("Audit log write error:", e);
+    }
+}
+
 // handle save settings action with feedback
 function handleSaveSettings(event, sectionName = "Store settings") {
     if (event) event.preventDefault();
+    logAdminAuditAction(`Saved ${sectionName}`, `System Settings (${sectionName})`, "Settings Config");
     showToast(`${sectionName} saved successfully!`);
 }
 
