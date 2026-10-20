@@ -509,6 +509,30 @@ async function handleAddProductSubmit(e) {
         return;
     }
 
+    // Prevent duplicate product by name (case-insensitive)
+    const normalizedTitle = title.toLowerCase();
+    const duplicateByName = storeProducts.find(p => (p.name || "").trim().toLowerCase() === normalizedTitle);
+    if (duplicateByName) {
+        const msg = duplicateByName.is_archived
+            ? `A product named "${duplicateByName.name}" already exists in Archived Products. Please restore it or use a different name.`
+            : `A product named "${duplicateByName.name}" already exists in the catalog. Duplicate products cannot be added.`;
+        if (typeof showToast === "function") showToast(msg, false);
+        alert(msg);
+        return;
+    }
+
+    // Prevent duplicate product by SKU (case-insensitive)
+    if (sku) {
+        const normalizedSku = sku.toLowerCase();
+        const duplicateBySku = storeProducts.find(p => (p.sku || "").trim().toLowerCase() === normalizedSku);
+        if (duplicateBySku) {
+            const msg = `A product with SKU "${duplicateBySku.sku}" already exists ("${duplicateBySku.name}"). Please use a unique SKU.`;
+            if (typeof showToast === "function") showToast(msg, false);
+            alert(msg);
+            return;
+        }
+    }
+
     const submitBtn = e.target.querySelector("button[type='submit']");
     if (submitBtn) {
         submitBtn.disabled = true;
@@ -545,7 +569,9 @@ async function handleAddProductSubmit(e) {
             }
             await loadAdminProducts();
         } else {
-            alert(data.message || "Failed to create product");
+            const errMsg = data.message || "Failed to create product";
+            if (typeof showToast === 'function') showToast(errMsg, false);
+            alert(errMsg);
         }
     } catch (err) {
         console.error("Product creation error:", err);

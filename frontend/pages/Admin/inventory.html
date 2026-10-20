@@ -172,7 +172,7 @@
             <div class="page_header">
                 <div class="page_title_group">
                     <h1 class="page_title">Inventory Management</h1>
-                    <p class="page_subtitle">Track your stock levels, add new products, and manage your inventory.</p>
+                    <p class="page_subtitle">Track your stock levels and manage store inventory.</p>
                 </div>
                 <div class="page_header_actions">
                     <a href="reports.html?tab=inventory" class="btn_secondary">
@@ -183,10 +183,6 @@
                         <i class="fas fa-tags"></i>
                         <span>Products Catalog</span>
                     </a>
-                    <button type="button" class="btn_primary" id="btn_open_add_inventory" onclick="openAddInventoryModal()">
-                        <i class="fas fa-plus"></i>
-                        <span>Add Product</span>
-                    </button>
                 </div>
             </div>
 
@@ -306,81 +302,6 @@
                 </div>
             </article>
         </main>
-    </div>
-
-    <!-- add product modal dialog -->
-    <div class="modal_backdrop" id="add_inventory_product_modal">
-        <div class="modal_card">
-            <div class="modal_header">
-                <h3 class="modal_title">Add New Inventory Product</h3>
-                <button type="button" class="modal_close_btn" aria-label="Close dialog">&times;</button>
-            </div>
-            <form onsubmit="handleCreateProduct(event)">
-                <div class="modal_body">
-                    <div class="form_group">
-                        <label class="form_label" for="inv_product_name">Product Name</label>
-                        <input type="text" class="form_input" id="inv_product_name" placeholder="e.g. Shimano XT Groupset" required>
-                    </div>
-                    <div class="form_group">
-                        <label class="form_label" for="inv_product_sku" style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>SKU Code *</span>
-                            <span style="font-size: 11px; font-weight: 600; color: #16a34a;"><i class="fas fa-magic"></i> Auto-generated</span>
-                        </label>
-                        <div class="sku_input_group">
-                            <input type="text" class="form_input" id="inv_product_sku" placeholder="e.g. TBS-SPA-SHM-010" required>
-                            <button type="button" class="sku_regen_btn" id="regen_inv_product_sku_btn" title="Generate fresh SKU code">
-                                <i class="fas fa-rotate"></i>
-                            </button>
-                        </div>
-                        <span class="sku_helper_text"><i class="fas fa-info-circle"></i> Automatically generated based on category & name.</span>
-                    </div>
-                    <div class="form_group">
-                        <label class="form_label" for="inv_product_category">Category</label>
-                        <select class="form_input admin_select" id="inv_product_category">
-                            <optgroup label="Bicycles">
-                                <option value="mountain_bikes">Mountain Bikes</option>
-                                <option value="road_bikes">Road Bikes</option>
-                                <option value="gravel_bikes">Gravel Bikes</option>
-                                <option value="bmx_urban">BMX & Urban</option>
-                                <option value="folding_commuter">Folding Bikes</option>
-                            </optgroup>
-                            <optgroup label="Frames & Steering">
-                                <option value="frame">Framesets</option>
-                                <option value="fork">Forks & Suspension</option>
-                                <option value="handle_bar">Handlebars</option>
-                                <option value="stem">Stems</option>
-                            </optgroup>
-                            <optgroup label="Drivetrain & Components">
-                                <option value="chain">Chains</option>
-                                <option value="upgrade_kit">Upgrade Kits & Groupsets</option>
-                                <option value="pedals">Pedals & Cleats</option>
-                            </optgroup>
-                            <optgroup label="Wheels & Tires">
-                                <option value="tires">Tires</option>
-                                <option value="rims">Rims & Wheelsets</option>
-                                <option value="hubs">Sealed Hubs</option>
-                            </optgroup>
-                            <optgroup label="Saddles & Grips">
-                                <option value="saddle">Saddles</option>
-                                <option value="handle_grip">Grips & Bartapes</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="form_group">
-                        <label class="form_label" for="inv_product_price">Unit Price (₱)</label>
-                        <input type="number" class="form_input" id="inv_product_price" placeholder="3500" required>
-                    </div>
-                    <div class="form_group">
-                        <label class="form_label" for="inv_product_stock">Stock Quantity</label>
-                        <input type="number" class="form_input" id="inv_product_stock" value="15" min="0" required>
-                    </div>
-                </div>
-                <div class="modal_footer">
-                    <button type="button" class="btn_secondary btn_modal_cancel">Cancel</button>
-                    <button type="submit" class="btn_primary">Save Product</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <!-- product detail modal dialog -->

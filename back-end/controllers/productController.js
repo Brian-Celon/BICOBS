@@ -203,6 +203,38 @@ const createProduct = async (req, res, next) => {
       });
     }
 
+    const trimmedName = String(name).trim();
+
+    // Check for duplicate product name (case-insensitive)
+    const existingNameCheck = await db.query(
+      'SELECT id, name, sku, is_archived FROM products WHERE LOWER(TRIM(name)) = LOWER($1)',
+      [trimmedName]
+    );
+    if (existingNameCheck.rows.length > 0) {
+      const existing = existingNameCheck.rows[0];
+      const isArchived = existing.is_archived === true;
+      return res.status(409).json({
+        status: 'error',
+        message: isArchived
+          ? `A product named "${existing.name}" already exists in archived products. Please restore it or use a different name.`
+          : `A product named "${existing.name}" already exists in the catalog. Duplicate products cannot be added.`
+      });
+    }
+
+    // Check for duplicate SKU (case-insensitive)
+    if (finalSku) {
+      const existingSkuCheck = await db.query(
+        'SELECT id, name, sku FROM products WHERE LOWER(TRIM(sku)) = LOWER($1)',
+        [finalSku.trim()]
+      );
+      if (existingSkuCheck.rows.length > 0) {
+        return res.status(409).json({
+          status: 'error',
+          message: `A product with SKU "${existingSkuCheck.rows[0].sku}" already exists (${existingSkuCheck.rows[0].name}). Please use a unique SKU.`
+        });
+      }
+    }
+
     const sql = `
       INSERT INTO products (name, description, category, price, stock_quantity, sku, image_url, is_available, is_featured)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -210,7 +242,7 @@ const createProduct = async (req, res, next) => {
     `;
 
     const values = [
-      name,
+      trimmedName,
       description || '',
       category.toLowerCase(),
       parseFloat(price),
@@ -229,6 +261,12 @@ const createProduct = async (req, res, next) => {
       data: formatProduct(result.rows[0])
     });
   } catch (error) {
+    if (error && error.code === '23505') {
+      return res.status(409).json({
+        status: 'error',
+        message: 'A product with this name or SKU already exists in the catalog.'
+      });
+    }
     next(error);
   }
 };
